@@ -212,7 +212,7 @@ def main(module="__main__"):
             if isinstance(c, object) and isinstance(c, type) and issubclass(c, TestCase):
                 yield c
 
-    m = __import__(module, fromlist=['']) # changed to permit non-top-level testing modules
+    m = __import__(module) # changed to permit non-top-level testing modules
     suite = TestSuite()
     for c in test_cases(m):
         suite.addTest(c)
