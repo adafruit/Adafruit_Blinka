@@ -2,6 +2,10 @@ import unittest
 
 
 class TestEnum(unittest.TestCase):
+    """
+        Verifies the repl() and str() behaviour of an example Enum
+        Enums represent configuration values such as digitalio.Direction, digitalio.Pull etc.
+    """
 
     def setUp(self):
         import mcp
