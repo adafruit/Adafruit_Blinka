@@ -1,23 +1,34 @@
 import machine
 from mcp import Enum
 
+
 class DriveMode(Enum):
     pass
-DriveMode.PUSH_PULL=DriveMode()
-DriveMode.OPEN_DRAIN=DriveMode()
+
+
+DriveMode.PUSH_PULL = DriveMode()
+DriveMode.OPEN_DRAIN = DriveMode()
+
 
 class Direction(Enum):
     pass
+
+
 Direction.INPUT = Direction()
 Direction.OUTPUT = Direction()
 
+
 class Pull(Enum):
     pass
+
+
 Pull.UP = Pull()
 Pull.DOWN = Pull()
 
+
 class DigitalInOut:
-    _pin=None
+    _pin = None
+
     def __init__(self, pin):
         self.pin = pin
         self._pin = None
@@ -52,7 +63,7 @@ class DigitalInOut:
     def __getattr__(self, key):
         if self._pin is not None:
             mode = self._pin.mode()
-            if key=="value:":
+            if key == "value:":
                 if mode is machine.Pin.OUTPUT:
                     raise AttributeError("Pin is output")
                 return self._pin.value()
@@ -63,7 +74,7 @@ class DigitalInOut:
                     return DriveMode.PUSH_PULL
                 elif mode is machine.Pin.IN:
                     raise AttributeError("Pin is input")
-            elif key=="direction":
+            elif key == "direction":
                 mode = self._pin.mode()
                 if mode is machine.Pin.IN:
                     return Direction.INPUT
@@ -71,7 +82,7 @@ class DigitalInOut:
                     return Direction.OUTPUT
                 elif mode is machine.Pin.OPEN_DRAIN:
                     return Direction.OUTPUT
-            elif key=="pull":
+            elif key == "pull":
                 if mode is machine.Pin.OUTPUT:
                     raise AttributeError("Pin is output")
                 pull = self._pin.pull()
@@ -83,7 +94,6 @@ class DigitalInOut:
                     return None
         else:
             raise ValueError("Deinitialised")
-
 
     def switch_to_output(self, value=False, drive_mode=DriveMode.PUSH_PULL):
         self._pin = machine.Pin(0, machine.Pin.IN, machine.Pin.PULL_UP)
@@ -105,4 +115,4 @@ class DigitalInOut:
     def pull(self, *a):
         pass
 
-__all__ = ['DigitalInOut', 'DriveMode', 'Direction','Pull']
+# __all__ = ['DigitalInOut', 'DriveMode', 'Direction','Pull']
