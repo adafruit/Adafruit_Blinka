@@ -1,5 +1,6 @@
 import unittest
-from testing.platform import led_pin,default_pin
+from testing import yes_no
+from testing.board import led_pin,default_pin
 
 class TestDigitalInOut(unittest.TestCase):
 
@@ -15,13 +16,14 @@ class TestDigitalInOut(unittest.TestCase):
     def test_blink(self):
         import digitalio
         from agnostic import time
+        self.assertTrue(yes_no("Is LED wired to {}".format(led_pin)))
         with digitalio.DigitalInOut(led_pin) as led:
             led.direction = digitalio.Direction.OUTPUT
-            result = input("LED wired to {} (Y/n)?".format(led))
-            if result.lower() != 'n':
+            # should now be OUT, PUSH_PULL, value=0, and LED should light
+            self.assertTrue(yes_no("Is LED lit"))
+            for count in range(3):
                 led.value = True
-                time.sleep(0.1)
+                time.sleep(1.0)
                 led.value = False
-                time.sleep(0.1)
-                result = input("Blinked (Y/n)?")
-                self.assertTrue(result.lower() != 'n')
+                time.sleep(1.0)
+            self.assertTrue(yes_no("Did LED wink thrice"))
