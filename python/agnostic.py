@@ -8,13 +8,14 @@ try:
 except:
     platform = None
 
+# TODO switch name of platform below to be microcontroller
 if platform is not None:
     if platform == "esp8266":
-        board = "huzzah"
-    elif platform == "Atmel SAMD21":
+        board = "feather_huzzah"
+    elif platform == "samd21":
         board="feather_m0_express"
     elif platform == "pyboard":
-        platform="STM32F405RG"
+        platform="stm32"
         board="pyboard"
 else:
     board = None
