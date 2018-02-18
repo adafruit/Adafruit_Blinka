@@ -1,4 +1,4 @@
-import microcontroller.Pin as pin
+from microcontroller import pin
 
 X1=pin.A0
 X2=pin.A1
