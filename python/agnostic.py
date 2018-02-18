@@ -1,21 +1,24 @@
 """Allows useful indirection to test Pin naming logic by switching platform in testing
-    or where auto-detection is not feasible (e.g. multiple ESP8266 boards architecturally identical)
+    or provide bootstrapping logic for board identification where auto-detection is not
+    feasible (e.g. multiple ESP8266 boards architecturally identical). Once runtime
+    environment is established, can choose various routes to make available and re-export
+    common modules and operations, depending on platform support
 """
 import sys
 
 try:
-    platform = sys.platform
+    microcontroller = sys.platform
 except:
-    platform = None
+    microcontroller = None
 
 # TODO switch name of platform below to be microcontroller
-if platform is not None:
-    if platform == "esp8266":
+if microcontroller is not None:
+    if microcontroller == "esp8266":
         board = "feather_huzzah"
-    elif platform == "samd21":
+    elif microcontroller == "samd21":
         board="feather_m0_express"
-    elif platform == "pyboard":
-        platform="stm32"
+    elif microcontroller == "pyboard":
+        microcontroller= "stm32"
         board="pyboard"
 else:
     board = None
