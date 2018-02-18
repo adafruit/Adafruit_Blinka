@@ -29,3 +29,9 @@ class Enum(object):
             if getattr(cls, key) is self:
                 return "{}.{}.{}".format(cls.__module__, cls.__qualname__, key)
         return repr(self)
+
+class Pin(Enum):
+    def __init__(self, id):
+        """ id type is likely platform-specific"""
+        self.id = id
+    pass
