@@ -30,8 +30,7 @@ class DigitalInOut:
     _pin = None
 
     def __init__(self, pin):
-        self.pin = pin
-        self._pin = None
+        self._pin = machine.Pin(pin.id)
         self.switch_to_input()
         pass
 
@@ -104,16 +103,5 @@ class DigitalInOut:
         self._pin = machine.Pin(0, machine.Pin.IN, machine.Pin.PULL_UP)
         pass
 
-    def direction(self, *a):
-        pass
-
-    def value(self, *a):
-        pass
-
-    def drive_mode(self, *a):
-        pass
-
-    def pull(self, *a):
-        pass
 
 # __all__ = ['DigitalInOut', 'DriveMode', 'Direction','Pull']
