@@ -65,7 +65,7 @@ e.g.
 digitalio module regardless of platform
 * testing.implementation.circuitpython.digitalio - tests of digitalio against a 
 native circuitpython host
-* testing.implementation.mcp.digitalio - tests of digitalio against the MCP
+* testing.implementation.micropython.digitalio - tests of digitalio against the MCP
 compatibility layer
 
 
