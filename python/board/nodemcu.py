@@ -1,18 +1,16 @@
-from microcontroller.pin import *
-# note GPIO0 and GPIO2 have built-in pull-ups on common ESP8266
-# breakout boards making them suitable for I2C SDA and SCL
+from microcontroller import pin
 
-D0 = GPIO16
-D1 = GPIO5
-D2 = GPIO4
-D3 = GPIO0
-D4 = GPIO2
-D5 = GPIO14
-D6 = GPIO12
-D7 = GPIO13
-D8 = GPIO15
-D9 = GPIO3
-D10 = GPIO1
+D0 = pin.GPIO16
+D1 = pin.GPIO5
+D2 = pin.GPIO4
+D3 = pin.GPIO0
+D4 = pin.GPIO2
+D5 = pin.GPIO14
+D6 = pin.GPIO12
+D7 = pin.GPIO13
+D8 = pin.GPIO15
+D9 = pin.GPIO3
+D10 = pin.GPIO1
 
 TX1 = D4
 """Transmit pin from second (transmit-only) UART """
@@ -26,3 +24,6 @@ MOSI = D7
 
 RX0 = D9
 TX0 = D10
+
+# GPIO0 and GPIO2 have built-in pull-ups on common ESP8266
+# breakout boards making them suitable for I2C SDA and SCL
