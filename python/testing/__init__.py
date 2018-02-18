@@ -74,5 +74,5 @@ def test_prepare(casetype):
 
 def main():
     test_interactive(
-        "testing.platform.embedded",
+        "testing.implementation.all.digitalio",
     )
