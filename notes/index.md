@@ -48,23 +48,24 @@ simply loading the unittest module already busts the available memory.
 
 # Test Suite Structure
 
-The structure of the testing modules is as follows...
+The structure of the testing modules is as follows, to permit test suites to be imported selectively
+on different implementations, platforms and boards (see agnostic.py for definitions of these terms)...
 
 * _testing_ - common function definitions for suite-execution
 * _testing.mcp_ - test suite for hardware-agnostic elements of MCP layer (e.g. Enum)
-* _testing.platform_ - calculates platform-specific parameters for test fixtures
-* _testing.platform.all_ - suites expected to run on all platforms
-* _testing.platform.mcp_ - suites testing MCP-specific classes and behaviours (under the hood of the hardware compatibility layer) and only 
+* _testing.implementation_ - calculates implementation-specific parameters for test fixtures
+* _testing.implementation.all_ - suites expected to run on all platforms
+* _testing.implementation.micropython_ - suites testing MCP-specific classes and behaviours (under the hood of the hardware compatibility layer) and only 
 expected to run on Micropython
-* _testing.platform.circuitpython - suites testing CircuitPython-specific 
+* _testing.implementation.circuitpython - suites testing CircuitPython-specific 
 classes and behaviours, and only expected to run in CircuitPython_
 
 e.g.
-* testing.platform.all.digitalio - tests against the 
+* testing.implementation.all.digitalio - tests against the 
 digitalio module regardless of platform
-* testing.platform.circuitpython.digitalio - tests of digitalio against a 
+* testing.implementation.circuitpython.digitalio - tests of digitalio against a 
 native circuitpython host
-* testing.platform.mcp.digitalio - tests of digitalio against the mcp 
+* testing.implementation.mcp.digitalio - tests of digitalio against the MCP
 compatibility layer
 
 
