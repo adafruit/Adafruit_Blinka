@@ -8,6 +8,7 @@ class TestEnum(unittest.TestCase):
     """
 
     def setUp(self):
+        """Create an example Enum, mocking __module__ and __qualname__"""
         import mcp
         class Cls(mcp.Enum):
             pass
@@ -20,11 +21,13 @@ class TestEnum(unittest.TestCase):
 
 
     def test_iteritems(self):
+        """A subtype of Enum can list all attributes of its own type"""
         items = list(self.Cls.iteritems())
         self.assertEqual( items, [("one",self.Cls.one),("two",self.Cls.two),])
 
 
     def test_repr(self):
+        """A repr() call on an Enum gives its fully-qualified name"""
         name = "one"
         actual = repr(getattr(self.Cls, name))
         expected = "{}.{}.{}".format(self.Cls.__module__, self.Cls.__qualname__, name)
@@ -32,4 +35,5 @@ class TestEnum(unittest.TestCase):
 
 
     def test_str(self):
+        """A str() call on an Enum performs the same as repr()"""
         self.assertEqual(str(self.Cls.one), repr(self.Cls.one))
