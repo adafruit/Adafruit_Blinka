@@ -56,6 +56,7 @@ class DigitalInOut:
                     self._pin.mode(machine.Pin.OUT)
                 elif val is Direction.INPUT:
                     self._pin.mode(machine.Pin.IN)
+            #TODO more attribute assignments
 
         else:
             raise ValueError("Deinitialised")
