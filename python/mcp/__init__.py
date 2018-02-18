@@ -1,8 +1,17 @@
-class Enum(object):
+"""Module providing runtime utility objects to support the Micro/CircuitPython api"""
 
+class Enum(object):
+    """
+        Object supporting CircuitPython-style of static symbols
+        as seen with Direction.OUTPUT, Pull.UP
+    """
 
     @classmethod
     def iteritems(cls):
+        """
+            Inspects attributes of the class for instances of the class
+            and returns as key,value pairs mirroring dict#iteritems
+        """
         for key in dir(cls):
             val = getattr(cls, key)
             if type(val) is cls:
@@ -11,8 +20,9 @@ class Enum(object):
 
     def __repr__(self):
         """
-        Assumes instance will be found as attribute of own
-        class. Returns dot-subscripted path to instance
+        Assumes instance will be found as attribute of own class.
+        Returns dot-subscripted path to instance
+        (assuming absolute import of containing package)
         """
         cls = type(self)
         for key in dir(cls):
