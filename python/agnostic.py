@@ -11,20 +11,19 @@ try:
 except:
     microcontroller = None
 
-# TODO switch name of platform below to be microcontroller
 if microcontroller is not None:
     if microcontroller == "esp8266":
         board = "feather_huzzah"
     elif microcontroller == "samd21":
-        board="feather_m0_express"
+        board = "feather_m0_express"
     elif microcontroller == "pyboard":
-        microcontroller= "stm32"
-        board="pyboard"
+        microcontroller = "stm32"
+        board = "pyboard"
 else:
     board = None
 
 implementation = sys.implementation.name
 if implementation == "micropython":
-    import utime as time
+    from utime import sleep, time
 elif implementation == "circuitpython":
-    import time
+    from time import sleep, time
