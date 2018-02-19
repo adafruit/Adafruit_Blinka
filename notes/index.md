@@ -24,9 +24,7 @@ testing.main()
 
 ## Comments
 
-There is a routine in the top level of the repo called `upload_feather_m0_watch.py` which monitors the repo folder (on a regular 
-filesystem) and selectively synchronizes it with the CIRCUITPY folder 
-when any changes are saved, which assists with development.
+There are routines in the top level of the repo like `upload_feather_m0_watch.py` which selectively synchronize files it with the CIRCUITPY or PYBFLASH folder for stm32 and samd21 (with a file-watching behaviour for edits), or which execute a selective ampy upload for CircuitPython/Micropython on esp8266.
 
 Given the limited memory available, on the Feather M0 Express, running the test case requires that 
 the [micropython-lib unittest library](https://github.com/micropython/micropython-lib/blob/master/unittest/unittest.py) 
