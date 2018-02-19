@@ -21,17 +21,7 @@ minimise heap fragmentation, and ensure there is enough memory to run the partic
 ```python
 import gc
 import testing
-gc.collect()
-import testing.platform.all.digitalio as suite
-gc.collect()
-case = suite.TestDigitalInOut()
-gc.collect()
-if hasattr(case, 'setUp'):
-    case.setUp()
-gc.collect()
-
-gc.mem_free()
-case.test_default()
+testing.main()
 ```
 
 ## Comments
