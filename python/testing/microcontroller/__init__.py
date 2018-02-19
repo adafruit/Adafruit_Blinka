@@ -5,4 +5,4 @@ if microcontroller == "esp8266":
 elif microcontroller == "samd21":
     pin_count = 38
 else:
-    raise NotImplementedError
+    raise NotImplementedError("Microcontroller not supported")

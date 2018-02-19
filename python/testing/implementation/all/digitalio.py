@@ -62,7 +62,7 @@ class TestDigitalInOutInteractive(unittest.TestCase):
                 print()
                 print(e)
                 return  # test trivially passed
-            if yes_no("Is Button wired to {} to GND".format(default_pin)):
+            if yes_no("Is Button wired from {} to GND".format(default_pin)):
                 self.assertTrue(button.value == 1)
                 self.assertTrue(await_true("button pressed", lambda: button.value == 0))
 

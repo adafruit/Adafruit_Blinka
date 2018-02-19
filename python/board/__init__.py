@@ -43,3 +43,5 @@ elif board == "nodemcu":
     from board.nodemcu import *
 elif board == "pyboard":
     from board.pyboard import *
+else:
+    raise NotImplementedError("Board not supported")
