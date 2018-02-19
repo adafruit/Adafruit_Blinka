@@ -1,5 +1,4 @@
 import unittest
-import agnostic
 
 class TestMicrocontrollerModule(unittest.TestCase):
 
@@ -7,7 +6,7 @@ class TestMicrocontrollerModule(unittest.TestCase):
         """The microcontroller module should contain pin references"""
         import microcontroller
         from microcontroller import pin
-        from testing.board import pin_count
+        from testing.microcontroller import pin_count
         entries = [getattr(pin, key) for key in dir(pin)]
         # is this filter line needed? any other types valid in pin module?
         entries = list(filter(lambda val: type(val) is microcontroller.Pin, entries))
