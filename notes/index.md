@@ -19,7 +19,6 @@ constructor, to configure a pin as an input with no pull. The gc.collect() calls
 minimise heap fragmentation, and ensure there is enough memory to run the particular test. 
 
 ```python
-import gc
 import testing
 testing.main()
 ```
