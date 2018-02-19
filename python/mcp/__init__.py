@@ -6,18 +6,6 @@ class Enum(object):
         as seen with Direction.OUTPUT, Pull.UP
     """
 
-    @classmethod
-    def iteritems(cls):
-        """
-            Inspects attributes of the class for instances of the class
-            and returns as key,value pairs mirroring dict#iteritems
-        """
-        for key in dir(cls):
-            val = getattr(cls, key)
-            if type(val) is cls:
-                yield (key, val)
-
-
     def __repr__(self):
         """
         Assumes instance will be found as attribute of own class.
@@ -29,6 +17,18 @@ class Enum(object):
             if getattr(cls, key) is self:
                 return "{}.{}.{}".format(cls.__module__, cls.__qualname__, key)
         return repr(self)
+
+    @classmethod
+    def iteritems(cls):
+        """
+            Inspects attributes of the class for instances of the class
+            and returns as key,value pairs mirroring dict#iteritems
+        """
+        for key in dir(cls):
+            val = getattr(cls, key)
+            if type(val) is cls:
+                yield (key, val)
+
 
 class Pin(Enum):
     def __init__(self, id):
