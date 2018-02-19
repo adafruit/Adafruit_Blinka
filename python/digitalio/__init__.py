@@ -1,4 +1,4 @@
-import machine
+from machine import Pin
 from mcp import Enum
 
 
@@ -24,15 +24,27 @@ class Pull(Enum):
 
 Pull.UP = Pull()
 Pull.DOWN = Pull()
+Pull.NONE = Pull()
 
 
-class DigitalInOut:
+class DigitalInOut(object):
     _pin = None
 
     def __init__(self, pin):
-        self._pin = machine.Pin(pin.id)
-        self.switch_to_input()
-        pass
+        self._pin = Pin(pin.id)
+        self.direction = Direction.INPUT
+
+
+    def switch_to_output(self, value=False, drive_mode=DriveMode.PUSH_PULL):
+        self.direction=Direction.OUTPUT
+        self.value=value
+        self.drive_mode=drive_mode
+
+
+    def switch_to_input(self, pull=None):
+        self.direction=Direction.INPUT
+        self.pull=pull
+
 
     def deinit(self):
         del self._pin
@@ -43,65 +55,69 @@ class DigitalInOut:
     def __exit__(self):
         self.deinit()
 
-    def __setattr__(self, key, val):
-        if self._pin is not None:
-            mode = self._pin.mode()
-            if key == "value":
-                if mode is machine.Pin.INPUT:
-                    raise AttributeError("Pin is output")
-                self._pin.value(val)
-            elif key == "direction":
-                if val is Direction.OUTPUT:
-                    self._pin.mode(machine.Pin.OUT)
-                elif val is Direction.INPUT:
-                    self._pin.mode(machine.Pin.IN)
-            #TODO more attribute assignments
+    @property
+    def direction(self):
+        return self.__direction
 
+    @direction.setter
+    def direction(self, dir):
+        self.__direction = dir
+        if dir is Direction.OUTPUT:
+            self._pin.init(mode=Pin.OUT)
+            self.value = False
+            self.drive_mode = DriveMode.PUSH_PULL
+        elif dir is Direction.INPUT:
+            self._pin.init(mode=Pin.IN)
+            self.pull = None
         else:
-            raise ValueError("Deinitialised")
+            raise AttributeError("Not a Direction")
 
-    def __getattr__(self, key):
-        if self._pin is not None:
-            mode = self._pin.mode()
-            if key == "value:":
-                if mode is machine.Pin.OUTPUT:
-                    raise AttributeError("Pin is output")
-                return self._pin.value()
-            elif key == "drive_mode":
-                if mode is machine.Pin.OPEN_DRAIN:
-                    return DriveMode.OPEN_DRAIN
-                elif mode is machine.Pin.OUT:
-                    return DriveMode.PUSH_PULL
-                elif mode is machine.Pin.IN:
-                    raise AttributeError("Pin is input")
-            elif key == "direction":
-                mode = self._pin.mode()
-                if mode is machine.Pin.IN:
-                    return Direction.INPUT
-                elif mode is machine.Pin.OUT:
-                    return Direction.OUTPUT
-                elif mode is machine.Pin.OPEN_DRAIN:
-                    return Direction.OUTPUT
-            elif key == "pull":
-                if mode is machine.Pin.OUTPUT:
-                    raise AttributeError("Pin is output")
-                pull = self._pin.pull()
-                if pull is machine.Pin.PULL_UP:
-                    return Pull.UP
-                elif pull is machine.Pin.PULL_DOWN:
-                    return Pull.DOWN
-                elif pull is None:
-                    return None
+    @property
+    def value(self):
+        return self._pin.value()
+
+    @value.setter
+    def value(self, val):
+        if self.direction is Direction.OUTPUT:
+            self._pin.value(val)
         else:
-            raise ValueError("Deinitialised")
+            raise AttributeError("Not an output")
 
-    def switch_to_output(self, value=False, drive_mode=DriveMode.PUSH_PULL):
-        self._pin = machine.Pin(0, machine.Pin.IN, machine.Pin.PULL_UP)
-        pass
+    @property
+    def pull(self):
+        if self.direction is Direction.INPUT:
+            return self.__pull
+        else:
+            raise AttributeError("Not an input")  #
 
-    def switch_to_input(self, pull=None):
-        self._pin = machine.Pin(0, machine.Pin.IN, machine.Pin.PULL_UP)
-        pass
+    @pull.setter
+    def pull(self, pul):
+        if self.direction is Direction.INPUT:
+            self.__pull = pul
+            if pul is Pull.UP:
+                self._pin.init(mode=Pin.IN, pull=Pin.PULL_UP)
+            elif pul is Pull.DOWN:
+                self._pin.init(mode=Pin.IN, pull=Pin.PULL_DOWN)
+            elif pul is None:
+                self._pin.init(mode=Pin.IN, pull=None)
+            else:
+                raise AttributeError("Not a Pull")#
+        else:
+            raise AttributeError("Not an input")  #
 
+    @property
+    def drive_mode(self):
+        if self.direction is Direction.OUTPUT:
+            return self.__drive_mode#
+        else:
+            raise AttributeError("Not an output")
+
+    @drive_mode.setter
+    def drive_mode(self, mod):
+        self.__drive_mode = mod
+        if mod is DriveMode.OPEN_DRAIN:
+            self._pin.init(mode=Pin.OPEN_DRAIN)
+        elif mod is DriveMode.PUSH_PULL:
+            self._pin.init(mode=Pin.OUT)
 
 # __all__ = ['DigitalInOut', 'DriveMode', 'Direction','Pull']
