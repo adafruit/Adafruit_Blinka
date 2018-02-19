@@ -1,4 +1,4 @@
-from mcp import Pin as pin
+from microcontroller import Pin as pin
 
 pin.GPIO0=pin(0)
 pin.GPIO1=pin(1)

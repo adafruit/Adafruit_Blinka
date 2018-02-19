@@ -1,4 +1,4 @@
-from mcp import Pin as pin
+from microcontroller import Pin as pin
 
 pin.A0=pin('A0')
 pin.A1=pin('A1')
