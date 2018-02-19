@@ -39,12 +39,14 @@ Usage Example
 =============
 
 At the time of writing (`git:3b2fc268 <https://github.com/cefn/Adafruit_Micropython_Blinka/tree/3b2fc268d89aee6a648da456224e6d48d2476baa>`_),
-the following sequence runs through some basic testing of the digitalio compatibility layer, which looks like `this <https://github.com/cefn/Adafruit_Micropython_Blinka/issues/2#issuecomment-366713394>`_ .
+the following sequence runs through some basic testing of the digitalio compatibility layer... 
 
 .. code-block:: python
 
     import testing
     testing.main()
+
+A typical log from running the suites is `here <https://github.com/cefn/Adafruit_Micropython_Blinka/issues/2#issuecomment-366713394>`_ .
 
 
 Contributing
