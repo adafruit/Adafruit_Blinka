@@ -1,5 +1,7 @@
 from microcontroller.esp8266 import pin
 
+# TODO need equiv of INPUT_PULL_DOWN_16 ? see https://tttapa.github.io/ESP8266/Chap04%20-%20Microcontroller.html
+
 GPIO0=pin.GPIO0
 GPIO1=pin.GPIO1
 GPIO2=pin.GPIO2
@@ -21,12 +23,7 @@ SCK=GPIO14
 RX=GPIO3
 TX=GPIO1
 
-# GPIO0 and GPIO2 have built-in pull-ups on common ESP8266
-# breakout boards making them suitable for I2C SDA and SCL
-SDA=GPIO0
-SCL=GPIO2
-
-
-
+SDA=GPIO4
+SCL=GPIO5
 
 ['ADC', 'GPIO16', 'GPIO14', 'SCK', 'GPIO12', 'MISO', 'GPIO13', 'MOSI', 'GPIO15', 'GPIO2', 'GPIO0', 'GPIO4', 'SDA', 'RX', 'TX', 'GPIO5', 'SCL']
