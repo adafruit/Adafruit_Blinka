@@ -1,7 +1,10 @@
-"""Copied from https://raw.githubusercontent.com/micropython/micropython-lib/cfa1b9cce0c93a3115bbff3886c9bbcddd9e8047/unittest/unittest.py """
+"""Based on https://raw.githubusercontent.com/micropython/micropython-lib/cfa1b9cce0c93a3115bbff3886c9bbcddd9e8047/unittest/unittest.py """
+import sys
 class SkipTest(Exception):
     pass
 
+raiseException = False
+raiseBaseException = True
 
 class AssertRaisesContext:
 
@@ -195,12 +198,22 @@ def run_class(c, test_result):
             except SkipTest as e:
                 print(" skipped:", e.args[0])
                 test_result.skippedNum += 1
-            except:
+            except Exception as e: # user exception
                 print(" FAIL")
-                test_result.failuresNum += 1
-                # Uncomment to investigate failure in detail
-                #raise
-                continue
+                if raiseException:
+                    raise
+                else:
+                    print(e)
+                    test_result.failuresNum += 1
+                    continue
+            except BaseException as e: # system exception
+                print(" FAIL")
+                if raiseBaseException:
+                    raise
+                else:
+                    print(e)
+                    test_result.failuresNum += 1
+                    continue
             finally:
                 tear_down()
 
