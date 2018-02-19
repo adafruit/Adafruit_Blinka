@@ -2,7 +2,9 @@
 PORT=/dev/ttyUSB0
 
 # filter directories, and create relevant ones on the board
-find . -mindepth 1 -type d | grep -v -E "(.(git|idea|vscode)|__pycache__)" | xargs -n1 ampy --port ${PORT} mkdir
+find testing -type d | \
+        grep -v -E "(.(git|idea|vscode)|__pycache__)" | \
+        xargs -n1 -I {} sh -c "echo Creating directory {} ...; ampy --port ${PORT} mkdir --exists-okay  {}"
 
 # put top-level modules in place
 for NAME in agnostic unittest

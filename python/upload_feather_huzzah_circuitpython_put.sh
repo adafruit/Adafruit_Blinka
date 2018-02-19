@@ -5,7 +5,7 @@ PORT=/dev/ttyUSB0
 find testing -type d | \
         grep -v -E "(.(git|idea|vscode)|__pycache__)" | \
         grep -v -E '^testing/implementation/micropython*' | \
-        xargs -n1 -I {} sh -c "echo Creating directory {} ...; ampy --port ${PORT} mkdir {}"
+        xargs -n1 -I {} sh -c "echo Creating directory {} ...; ampy --port ${PORT} mkdir --exists-okay  {}"
 
 # put top-level modules in place
 for NAME in agnostic unittest
