@@ -43,11 +43,13 @@ on Micropython and testing.implementation.circuitpython should only be run on Ci
 Usage Example
 =============
 
-At the time of writing (git:3b2fc268)[https://github.com/cefn/Adafruit_Micropython_Blinka/tree/3b2fc268d89aee6a648da456224e6d48d2476baa],
-the following sequence runs through some basic testing of the digitalio compatibility layer. ::
+At the time of writing `git:3b2fc268 <https://github.com/cefn/Adafruit_Micropython_Blinka/tree/3b2fc268d89aee6a648da456224e6d48d2476baa>`,
+the following sequence runs through some basic testing of the digitalio compatibility layer.
 
-import testing
-testing.main()
+.. code-block:: python
+
+    import testing
+    testing.main()
 
 
 Contributing
