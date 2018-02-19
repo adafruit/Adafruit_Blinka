@@ -13,41 +13,40 @@ Introduction
     :target: https://travis-ci.org/adafruit/Adafruit__Micropython_Blinka
     :alt: Build Status
 
-Description
-===========
-
 This repository contains a selection of packages mirroring the CircuitPython API
-on hosts running micropython. At the time of writing drafts exist for
+on hosts running micropython. Working code exists to emulate the CircuitPython packages;
 
-* board - breakout-specific pin identities
-* microcontroller - chip-specific pin identities
-* digitalio - digital input/output pins, using pin identities from board/microcontroller
+* **board** - breakout-specific pin identities
+* **microcontroller** - chip-specific pin identities
+* **digitalio** - digital input/output pins, using pin identities from board+microcontroller packages
 
 
 Dependencies
 =============
 
-The CircuitPython compatibility layers described above are intended for devices which
-are running Micropython. Given the top level packages should be provided by any standard
-CircuitPython image, you shouldn't be trying to put those packages on any board
-with CircuitPython already installed.
+The Micropython compatibility layers described above are intended to provide a CircuitPython-like API for devices which
+are running Micropython. Since corresponding packages should be built-in to any standard
+CircuitPython image, they have no value on a device already running CircuitPython and would likely conflict in unhappy ways.
 
-However, the test suites under testing.implementation.all are by design
-intended to run on either CircuitPython or the Micropython+compatibility layer, so that
-conformance can be achieved.
+The test suites under **testing.implementation.all** are by design
+intended to run on *either* CircuitPython *or* Micropython+compatibility layer to prove conformance. 
 
-Similarly the test suites under testing.implementation.micropython should only be run
-on Micropython and testing.implementation.circuitpython should only be run on CircuitPython
+The test suites under **testing.implementation.micropython** will only run
+on Micropython and **testing.implementation.circuitpython** will only run on CircuitPython
 
 
 Usage Example
 =============
 
-At the time of writing (git:3b2fc268)[https://github.com/cefn/Adafruit_Micropython_Blinka/tree/3b2fc268d89aee6a648da456224e6d48d2476baa],
-the following sequence runs through some basic testing of the digitalio compatibility layer. ::
+At the time of writing (`git:3b2fc268 <https://github.com/cefn/Adafruit_Micropython_Blinka/tree/3b2fc268d89aee6a648da456224e6d48d2476baa>`_),
+the following sequence runs through some basic testing of the digitalio compatibility layer... 
 
-import testing
-testing.main()
+.. code-block:: python
+
+    import testing
+    testing.main()
+
+A typical log from running the suites is `here <https://github.com/cefn/Adafruit_Micropython_Blinka/issues/2#issuecomment-366713394>`_ .
 
 
 Contributing
