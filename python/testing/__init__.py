@@ -93,4 +93,6 @@ def main():
     if agnostic.implementation == "micropython":
         moduleNames.extend([ "testing.implementation.micropython.digitalio",])
 
+    unittest.raiseException = True # terminates with stack information on userspace Exception
+    unittest.raiseBaseException = True # terminates with stack information on system Exception
     test_interactive(*moduleNames)
