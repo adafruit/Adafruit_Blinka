@@ -1,6 +1,6 @@
 import unittest
 from testing import yes_no, await_true
-from testing.board import led_pin, default_pin
+from testing.board import led_pin, default_pin, led_hardwired
 import digitalio
 from digitalio import * # TODO refactor below for wildcard import
 
@@ -34,12 +34,15 @@ class TestDigitalInOutInteractive(unittest.TestCase):
 
     def test_blink(self):
         """LED blinks when proper attributes set"""
+        print()
         from agnostic import sleep
-        self.assertTrue(yes_no("Is LED wired to {}".format(led_pin)))
+        if not(led_hardwired) and not(yes_no("Is LED wired to {}".format(led_pin))):
+            return # test trivially passed
         with digitalio.DigitalInOut(led_pin) as led:
             led.direction = digitalio.Direction.OUTPUT
             # should now be OUT, PUSH_PULL, value=0, and LED should light
             self.assertTrue(yes_no("Is LED lit"))
+            print("Winking LED...")
             for count in range(2):
                 led.value = True
                 sleep(0.5)
@@ -48,28 +51,31 @@ class TestDigitalInOutInteractive(unittest.TestCase):
             self.assertTrue(yes_no("Did LED wink twice"))
 
     def test_button_pull_up(self):
+        print()
         """Pull-up button configured and detected"""
-        if yes_no("Is Button wired to {} to GND".format(default_pin)):
-            with digitalio.DigitalInOut(default_pin) as button:
-                button.direction = digitalio.Direction.INPUT
-                try:
-                    button.pull = digitalio.Pull.UP
-                except NotImplementedError as e:
-                    print(e)
-                    return
+        with digitalio.DigitalInOut(default_pin) as button:
+            #button.direction = digitalio.Direction.INPUT # implied
+            try:
+                button.pull = digitalio.Pull.UP
+            except NotImplementedError as e:
+                print()
+                print(e)
+                return  # test trivially passed
+            if yes_no("Is Button wired to {} to GND".format(default_pin)):
                 self.assertTrue(button.value == 1)
                 self.assertTrue(await_true("button pressed", lambda: button.value == 0))
 
     def test_button_pull_down(self):
+        print()
         """Pull-down button configured and detected"""
-        if(yes_no("Is Button wired from {} to VCC".format(default_pin))):
-            with digitalio.DigitalInOut(default_pin) as button:
-                button.direction = digitalio.Direction.INPUT
-                try:
-                    button.pull = digitalio.Pull.DOWN
-                except NotImplementedError as e:
-                    print(e)
-                    return
+        with digitalio.DigitalInOut(default_pin) as button:
+            #button.direction = digitalio.Direction.INPUT # implied
+            try:
+                button.pull = digitalio.Pull.DOWN
+            except NotImplementedError as e:
+                print(e)
+                return  # test trivially passed
+            if (yes_no("Is Button wired from {} to VCC".format(default_pin))):
                 self.assertTrue(button.value == 0)
                 self.assertTrue(await_true("button pressed", lambda: button.value == 1))
 
