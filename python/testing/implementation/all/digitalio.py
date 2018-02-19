@@ -1,6 +1,6 @@
 import unittest
 from testing import yes_no, await_true
-from testing.board import led_pin, default_pin, led_hardwired
+from testing.board import led_pin, default_pin, led_hardwired, led_inverted
 import digitalio
 from digitalio import * # TODO refactor below for wildcard import
 
@@ -41,12 +41,13 @@ class TestDigitalInOutInteractive(unittest.TestCase):
         with digitalio.DigitalInOut(led_pin) as led:
             led.direction = digitalio.Direction.OUTPUT
             # should now be OUT, PUSH_PULL, value=0, and LED should light
+            led.value = 0 if led_inverted else 1
             self.assertTrue(yes_no("Is LED lit"))
             print("Winking LED...")
             for count in range(2):
-                led.value = True
+                led.value = not(led.value)
                 sleep(0.5)
-                led.value = False
+                led.value = not(led.value)
                 sleep(0.5)
             self.assertTrue(yes_no("Did LED wink twice"))
 
