@@ -18,7 +18,7 @@ class TestDigitalInOut(unittest.TestCase):
         with digitalio.DigitalInOut(default_pin) as dio:
             dio.switch_to_output()
             self.assertEqual(dio.direction, digitalio.Direction.OUTPUT)
-            self.assertEqual(dio.value, 0)
+            self.assertEqual(dio.value, False)
             self.assertEqual(dio.drive_mode, digitalio.DriveMode.PUSH_PULL)
 
     def test_switch_to_input(self):
@@ -41,7 +41,7 @@ class TestDigitalInOutInteractive(unittest.TestCase):
         with digitalio.DigitalInOut(led_pin) as led:
             led.direction = digitalio.Direction.OUTPUT
             # should now be OUT, PUSH_PULL, value=0, and LED should light
-            led.value = 0 if led_inverted else 1
+            led.value = False if led_inverted else True
             self.assertTrue(yes_no("Is LED lit"))
             print("Winking LED...")
             for count in range(2):
@@ -63,8 +63,8 @@ class TestDigitalInOutInteractive(unittest.TestCase):
                 print(e)
                 return  # test trivially passed
             if yes_no("Is Button wired from {} to GND".format(default_pin)):
-                self.assertTrue(button.value == 1)
-                self.assertTrue(await_true("button pressed", lambda: button.value == 0))
+                self.assertTrue(button.value == True)
+                self.assertTrue(await_true("button pressed", lambda: button.value == False))
 
     def test_button_pull_down(self):
         print()
@@ -77,6 +77,6 @@ class TestDigitalInOutInteractive(unittest.TestCase):
                 print(e)
                 return  # test trivially passed
             if (yes_no("Is Button wired from {} to VCC".format(default_pin))):
-                self.assertTrue(button.value == 0)
-                self.assertTrue(await_true("button pressed", lambda: button.value == 1))
+                self.assertTrue(button.value == False)
+                self.assertTrue(await_true("button pressed", lambda: button.value == True))
 

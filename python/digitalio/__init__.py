@@ -70,12 +70,12 @@ class DigitalInOut(object):
 
     @property
     def value(self):
-        return self._pin.value()
+        return self._pin.value() is 1
 
     @value.setter
     def value(self, val):
         if self.direction is Direction.OUTPUT:
-            self._pin.value(val)
+            self._pin.value(1 if val else 0)
         else:
             raise AttributeError("Not an output")
 
