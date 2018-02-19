@@ -67,13 +67,16 @@ def test_module(module, runner=None):
     return runner.run(suite)
 
 def test_module_name(absolute, runner=None):
-    print("Testing {}".format(absolute))
-    module=__import__(absolute)
-    relatives = absolute.split(".")
-    if len(relatives) > 1:
-        for relative in relatives[1:]:
-            module = getattr(module, relative)
-    return test_module(module, runner)
+    try:
+        print("Suite begin: {}".format(absolute))
+        module=__import__(absolute)
+        relatives = absolute.split(".")
+        if len(relatives) > 1:
+            for relative in relatives[1:]:
+                module = getattr(module, relative)
+        return test_module(module, runner)
+    finally:
+        print("Suite end: {}".format(absolute))
 
 def test_interactive(*module_names):
     for module_name in module_names:
