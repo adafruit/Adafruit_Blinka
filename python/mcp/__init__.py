@@ -30,8 +30,3 @@ class Enum(object):
                 yield (key, val)
 
 
-class Pin(Enum):
-    def __init__(self, id):
-        """ id type is likely platform-specific"""
-        self.id = id
-    pass
