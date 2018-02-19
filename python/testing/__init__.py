@@ -36,6 +36,21 @@ def multi_choice(q, choices, defaultPos=None):
         print(e)
         return None
 
+def await_true(name, fun, interval=0, patience=60):
+    from agnostic import sleep
+    from utime import ticks_ms, ticks_add, ticks_diff
+    print("Waiting {} sec until {} (CTRL+C give up)".format(patience, name))
+    deadline = ticks_add(ticks_ms(), int(patience * 1000))
+    try:
+        while ticks_diff(deadline, ticks_ms()) > 0:
+            if fun():
+                return True
+            else:
+                sleep(interval)
+        return False
+    except KeyboardInterrupt:
+        return False
+
 
 def test_module(module, runner=None):
     import unittest
@@ -62,7 +77,7 @@ def test_module_name(absolute, runner=None):
 
 def test_interactive(*module_names):
     for module_name in module_names:
-        if yes_no("Test {}".format(module_name)):
+        if yes_no("Run suite {}".format(module_name)):
             gc.collect()
             test_module_name(module_name)
 
@@ -73,6 +88,9 @@ def test_prepare(casetype):
 
 
 def main():
-    test_interactive(
-        "testing.implementation.all.digitalio",
-    )
+    import microcontroller.esp8266 # temporary workaround for stack recursion error
+    moduleNames = ["testing.implementation.all.digitalio",]
+    if agnostic.implementation == "micropython":
+        moduleNames.extend([ "testing.implementation.micropython.digitalio",])
+
+    test_interactive(*moduleNames)
