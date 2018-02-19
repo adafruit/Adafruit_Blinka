@@ -15,8 +15,7 @@ MCP layer are in fact already served from the CP layer.
 # Example
 
 To take a minimal example, the following asserts the default behaviour of the DigitalInOut 
-constructor, to configure a pin as an input with no pull. The gc.collect() calls help to 
-minimise heap fragmentation, and ensure there is enough memory to run the particular test. 
+constructor, checks the behaviour of switch_to_input/output(), configures a pin as a pull-up button, a pull-down button and an LED.
 
 ```python
 import testing
