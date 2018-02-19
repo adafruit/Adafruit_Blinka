@@ -1,30 +1,29 @@
 from machine import Pin
+from agnostic import board as boardId
 from mcp import Enum
 
 
 class DriveMode(Enum):
-    pass
-
-
+    PUSH_PULL=None
+    OPEN_DRAIN=None
 DriveMode.PUSH_PULL = DriveMode()
 DriveMode.OPEN_DRAIN = DriveMode()
 
 
 class Direction(Enum):
-    pass
-
-
+    INPUT=None
+    OUTPUT=None
 Direction.INPUT = Direction()
 Direction.OUTPUT = Direction()
 
 
 class Pull(Enum):
-    pass
-
-
+    UP=None
+    DOWN=None
+    #NONE=None
 Pull.UP = Pull()
 Pull.DOWN = Pull()
-Pull.NONE = Pull()
+#Pull.NONE = Pull()
 
 
 class DigitalInOut(object):
@@ -34,25 +33,22 @@ class DigitalInOut(object):
         self._pin = Pin(pin.id)
         self.direction = Direction.INPUT
 
-
     def switch_to_output(self, value=False, drive_mode=DriveMode.PUSH_PULL):
-        self.direction=Direction.OUTPUT
-        self.value=value
-        self.drive_mode=drive_mode
-
+        self.direction = Direction.OUTPUT
+        self.value = value
+        self.drive_mode = drive_mode
 
     def switch_to_input(self, pull=None):
-        self.direction=Direction.INPUT
-        self.pull=pull
-
+        self.direction = Direction.INPUT
+        self.pull = pull
 
     def deinit(self):
         del self._pin
 
     def __enter__(self):
-        pass
+        return self
 
-    def __exit__(self):
+    def __exit__(self, exc_type, exc_value, traceback):
         self.deinit()
 
     @property
@@ -88,7 +84,7 @@ class DigitalInOut(object):
         if self.direction is Direction.INPUT:
             return self.__pull
         else:
-            raise AttributeError("Not an input")  #
+            raise AttributeError("Not an input")
 
     @pull.setter
     def pull(self, pul):
@@ -97,18 +93,21 @@ class DigitalInOut(object):
             if pul is Pull.UP:
                 self._pin.init(mode=Pin.IN, pull=Pin.PULL_UP)
             elif pul is Pull.DOWN:
-                self._pin.init(mode=Pin.IN, pull=Pin.PULL_DOWN)
+                if hasattr(Pin, "PULL_DOWN"):
+                    self._pin.init(mode=Pin.IN, pull=Pin.PULL_DOWN)
+                else:
+                    raise NotImplementedError("{} unsupported on {}".format(Pull.DOWN, boardId))
             elif pul is None:
                 self._pin.init(mode=Pin.IN, pull=None)
             else:
-                raise AttributeError("Not a Pull")#
+                raise AttributeError("Not a Pull")
         else:
-            raise AttributeError("Not an input")  #
+            raise AttributeError("Not an input")
 
     @property
     def drive_mode(self):
         if self.direction is Direction.OUTPUT:
-            return self.__drive_mode#
+            return self.__drive_mode  #
         else:
             raise AttributeError("Not an output")
 
