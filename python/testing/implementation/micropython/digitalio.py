@@ -10,7 +10,7 @@ class TestDigitalInOut(unittest.TestCase):
 
 
     def test_context_manager(self):
-        """Deinitialisation is triggered by __exit__()"""
+        """Deinitialisation is triggered by __exit__() and should dispose machine.pin reference"""
         dio = digitalio.DigitalInOut(default_pin)
         self.assertIsNotNone(dio._pin)
         with dio:
