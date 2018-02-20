@@ -1,0 +1,2 @@
+# don't mistakenly commit implementation-specific bytecode files
+*.mpy
