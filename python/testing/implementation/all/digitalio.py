@@ -1,32 +1,30 @@
 import unittest
 from testing import yes_no, await_true
 from testing.board import led_pin, default_pin, led_hardwired, led_inverted
-import digitalio
-from digitalio import * # TODO refactor below for wildcard import
-
+from digitalio import *
 
 class TestDigitalInOut(unittest.TestCase):
 
     def test_default(self):
         """DigitalInOut is input with no pull when constructed"""
-        with digitalio.DigitalInOut(default_pin) as dio:
-            self.assertEqual(dio.direction, digitalio.Direction.INPUT)
+        with DigitalInOut(default_pin) as dio:
+            self.assertEqual(dio.direction, Direction.INPUT)
             self.assertEqual(dio.pull, None)
 
     def test_switch_to_output(self):
         """Default configuration of switch_to_output is respected"""
-        with digitalio.DigitalInOut(default_pin) as dio:
+        with DigitalInOut(default_pin) as dio:
             dio.switch_to_output()
-            self.assertEqual(dio.direction, digitalio.Direction.OUTPUT)
+            self.assertEqual(dio.direction, Direction.OUTPUT)
             self.assertEqual(dio.value, False)
-            self.assertEqual(dio.drive_mode, digitalio.DriveMode.PUSH_PULL)
+            self.assertEqual(dio.drive_mode, DriveMode.PUSH_PULL)
 
     def test_switch_to_input(self):
         """Default configuration of switch_to_input is respected"""
-        with digitalio.DigitalInOut(default_pin) as dio:
+        with DigitalInOut(default_pin) as dio:
             dio.switch_to_output() # starts as input anyway
             dio.switch_to_input()
-            self.assertEqual(dio.direction, digitalio.Direction.INPUT)
+            self.assertEqual(dio.direction, Direction.INPUT)
             self.assertEqual(dio.pull, None)
 
 
@@ -38,8 +36,8 @@ class TestDigitalInOutInteractive(unittest.TestCase):
         from agnostic import sleep
         if not(led_hardwired) and not(yes_no("Is LED wired to {}".format(led_pin))):
             return # test trivially passed
-        with digitalio.DigitalInOut(led_pin) as led:
-            led.direction = digitalio.Direction.OUTPUT
+        with DigitalInOut(led_pin) as led:
+            led.direction = Direction.OUTPUT
             # should now be OUT, PUSH_PULL, value=0, and LED should light
             led.value = False if led_inverted else True
             self.assertTrue(yes_no("Is LED lit"))
@@ -54,10 +52,10 @@ class TestDigitalInOutInteractive(unittest.TestCase):
     def test_button_pull_up(self):
         print()
         """Pull-up button configured and detected"""
-        with digitalio.DigitalInOut(default_pin) as button:
-            #button.direction = digitalio.Direction.INPUT # implied
+        with DigitalInOut(default_pin) as button:
+            #button.direction = Direction.INPUT # implied
             try:
-                button.pull = digitalio.Pull.UP
+                button.pull = Pull.UP
             except NotImplementedError as e:
                 print()
                 print(e)
@@ -69,10 +67,10 @@ class TestDigitalInOutInteractive(unittest.TestCase):
     def test_button_pull_down(self):
         print()
         """Pull-down button configured and detected"""
-        with digitalio.DigitalInOut(default_pin) as button:
-            #button.direction = digitalio.Direction.INPUT # implied
+        with DigitalInOut(default_pin) as button:
+            #button.direction = Direction.INPUT # implied
             try:
-                button.pull = digitalio.Pull.DOWN
+                button.pull = Pull.DOWN
             except NotImplementedError as e:
                 print(e)
                 return  # test trivially passed
