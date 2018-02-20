@@ -4,7 +4,9 @@
     environment is established, can choose various routes to make available and re-export
     common modules and operations, depending on platform support
 """
+import gc
 import sys
+gc.collect()
 
 try:
     microcontroller = sys.platform
@@ -24,6 +26,7 @@ else:
 
 implementation = sys.implementation.name
 if implementation == "micropython":
-    from utime import sleep, time
+    from utime import sleep
 elif implementation == "circuitpython":
-    from time import sleep, time
+    from time import sleep
+gc.collect()
