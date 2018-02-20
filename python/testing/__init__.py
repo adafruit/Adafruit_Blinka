@@ -91,11 +91,16 @@ def test_prepare(casetype):
 
 
 def main():
-    import microcontroller.esp8266 # temporary workaround for stack recursion error
+    """
     moduleNames = ["testing.implementation.all.digitalio",]
     if agnostic.implementation == "micropython":
         moduleNames.extend([ "testing.implementation.micropython.digitalio",])
 
+    """
+    moduleNames = ["testing.implementation.all.bitbangio"]
+
     unittest.raiseException = True # terminates with stack information on userspace Exception
     unittest.raiseBaseException = True # terminates with stack information on system Exception
     test_interactive(*moduleNames)
+
+gc.collect()
