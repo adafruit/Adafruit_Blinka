@@ -28,8 +28,11 @@ platform introspection
 * Author(s): cefn
 """
 
+import gc
 import sys
+gc.collect()
 from agnostic import board
+gc.collect()
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_Micropython_Blinka.git"
@@ -45,3 +48,4 @@ elif board == "pyboard":
     from board.pyboard import *
 else:
     raise NotImplementedError("Board not supported")
+gc.collect()
