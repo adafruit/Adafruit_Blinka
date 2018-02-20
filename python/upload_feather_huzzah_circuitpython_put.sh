@@ -3,7 +3,7 @@ PORT=/dev/ttyUSB0
 
 # create only relevant directories on the board
 find testing -type d | \
-        grep -v -E "(.(git|idea|vscode)|__pycache__)" | \
+        grep -v -E "(^./.git|^./.idea|^./.vscode|__pycache__)" | \
         grep -v -E '^testing/implementation/micropython*' | \
         xargs -n1 -I {} sh -c "echo Creating directory {} ...; ampy --port ${PORT} mkdir --exists-okay  {}"
 
