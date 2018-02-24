@@ -8,8 +8,8 @@ class Pin(Enum):
     pass
 
 if agnostic.microcontroller == "esp8266":
-    from microcontroller.esp8266 import pin
+    from microcontroller.esp8266 import *
 elif agnostic.microcontroller == "stm32":
-    from microcontroller.stm32 import pin
+    from microcontroller.stm32 import *
 else:
     raise NotImplementedError("Microcontroller not supported")
