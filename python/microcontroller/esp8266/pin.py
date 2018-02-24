@@ -1,17 +1,17 @@
-from microcontroller import Pin as pin
+from microcontroller import Pin
 
-pin.GPIO0=pin(0)
-pin.GPIO1=pin(1)
-pin.GPIO2=pin(2)
-pin.GPIO3=pin(3)
-pin.GPIO4=pin(4)
-pin.GPIO5=pin(5)
-pin.GPIO12=pin(12)
-pin.GPIO13=pin(13)
-pin.GPIO14=pin(14)
-pin.GPIO15=pin(15)
-pin.GPIO16=pin(16)
-pin.TOUT=pin("TOUT")
+GPIO0=Pin(0)
+GPIO1=Pin(1)
+GPIO2=Pin(2)
+GPIO3=Pin(3)
+GPIO4=Pin(4)
+GPIO5=Pin(5)
+GPIO12=Pin(12)
+GPIO13=Pin(13)
+GPIO14=Pin(14)
+GPIO15=Pin(15)
+GPIO16=Pin(16)
+TOUT=Pin("TOUT")
 
 """
 From introspection of microcontroller.pin on Feather Huzzah running CircuitPython
