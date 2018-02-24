@@ -63,5 +63,5 @@ class SPI(Lockable):
     def readinto(self, buf):
         return self.readinto(buf)
 
-    def write_readinto(self, buffer_out, buffer_in)
+    def write_readinto(self, buffer_out, buffer_in):
         return self.write_readinto(buffer_out, buffer_in)
