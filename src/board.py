@@ -29,9 +29,9 @@ platform introspection
 """
 
 import gc
-import sys
+
 gc.collect()
-from agnostic import board
+from adafruit_blinka.agnostic import board
 gc.collect()
 
 __version__ = "0.0.0-auto.0"
@@ -39,13 +39,13 @@ __repo__ = "https://github.com/adafruit/Adafruit_Micropython_Blinka.git"
 
 
 if board == "feather_huzzah":
-    from board.feather_huzzah import *
+    pass
 elif board == "feather_m0_express":
-    from board.feather_m0_express import *
+    pass
 elif board == "nodemcu":
-    from board.nodemcu import *
+    pass
 elif board == "pyboard":
-    from board.pyboard import *
+    pass
 else:
     raise NotImplementedError("Board not supported")
 gc.collect()
