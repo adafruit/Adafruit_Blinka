@@ -28,7 +28,7 @@ for NAME in testing
 do
     find ${NAME} -name '*.py'| \
     grep -v -E '^testing/implementation/micropython*' | \
-    grep -v -E '^testing/mcp.py' | \
+    grep -v -E '^testing/adafruit_blinka.py' | \
     xargs -n1 -I {} sh -c "echo Copying {} ...; ampy --port ${PORT} put {} {}"
 done
 

@@ -18,7 +18,7 @@ command = (
     # prefer unittest.mpy bytecode
     '--exclude="/unittest.py" '
     # should never be used by tests targeting feather m0
-    '--exclude="mcp" '
+    '--exclude="adafruit_blinka" '
     # don't upload upload https://www.youtube.com/watch?v=iEwW6D0sht0
     '--exclude="upload_*_watch.py" '
     # recurse in search
