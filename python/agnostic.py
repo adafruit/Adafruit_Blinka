@@ -13,16 +13,15 @@ try:
 except:
     microcontroller = None
 
+board = None
 if microcontroller is not None:
-    if microcontroller == "esp8266":
+    if microcontroller == "esp8266": # TODO more conservative board-guessing
         board = "feather_huzzah"
     elif microcontroller == "samd21":
         board = "feather_m0_express"
     elif microcontroller == "pyboard":
         microcontroller = "stm32"
         board = "pyboard"
-else:
-    board = None
 
 implementation = sys.implementation.name
 if implementation == "micropython":
