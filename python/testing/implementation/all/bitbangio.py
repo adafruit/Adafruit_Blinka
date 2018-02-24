@@ -9,7 +9,7 @@ class TestBME280Interactive(TestCase):
     def test_read_value(self):
         import board
         gc.collect()
-        if not(yes_no("Is BME280 wired to SDA {}".format(board.SCL, board.SDA))):
+        if not(yes_no("Is BME280 wired to SCL {} SDA {}".format(board.SCL, board.SDA))):
             return # test trivially passed
 
         import board
