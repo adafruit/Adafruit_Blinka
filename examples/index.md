@@ -9,8 +9,8 @@ the same routines can be carried out on Micropython boards, dual boards running 
 or dedicated CP boards. 
 
 From a project-management point of view, tests can provide a strictly-interpreted way to 
-communicate missing features, with the means of verifying that intended features for the 
-MCP layer are in fact already served from the CP layer.
+communicate missing features, also providing the implicit means of verifying that intended 
+features for the MCP layer are in fact already served from the CP layer.
 
 # Example
 
