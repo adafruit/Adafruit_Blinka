@@ -1,5 +1,5 @@
-import agnostic
-from mcp import Enum
+from adafruit_blinka import Enum, agnostic
+
 
 class Pin(Enum):
     def __init__(self, id):
@@ -8,8 +8,8 @@ class Pin(Enum):
     pass
 
 if agnostic.microcontroller == "esp8266":
-    from microcontroller.esp8266 import *
+    pass
 elif agnostic.microcontroller == "stm32":
-    from microcontroller.stm32 import *
+    pass
 else:
     raise NotImplementedError("Microcontroller not supported")
