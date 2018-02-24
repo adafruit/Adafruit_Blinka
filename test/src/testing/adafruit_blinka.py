@@ -9,8 +9,8 @@ class TestEnum(unittest.TestCase):
 
     def setUp(self):
         """Create an example Enum, mocking __module__ and __qualname__"""
-        import mcp
-        class Cls(mcp.Enum):
+        import adafruit_blinka
+        class Cls(adafruit_blinka.Enum):
             pass
         Cls.one = Cls()
         Cls.two = Cls()

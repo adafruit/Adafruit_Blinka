@@ -1,4 +1,4 @@
-from agnostic import microcontroller
+from adafruit_blinka.agnostic import microcontroller
 
 if microcontroller == "esp8266":
     pin_count = 10

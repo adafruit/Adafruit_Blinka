@@ -1,7 +1,6 @@
 # mitigate heap fragmentation issues by pre-loading major libraries
 import gc
 gc.collect()
-import agnostic
 gc.collect()
 import unittest
 gc.collect()
@@ -37,7 +36,7 @@ def multi_choice(q, choices, defaultPos=None):
         return None
 
 def await_true(name, fun, interval=0, patience=60):
-    from agnostic import sleep
+    from adafruit_blinka.agnostic import sleep
     from utime import ticks_ms, ticks_add, ticks_diff
     print("Waiting {} sec until {} (CTRL+C give up)".format(patience, name))
     deadline = ticks_add(ticks_ms(), int(patience * 1000))

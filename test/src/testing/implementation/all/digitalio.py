@@ -33,7 +33,7 @@ class TestDigitalInOutInteractive(unittest.TestCase):
     def test_blink(self):
         """LED blinks when proper attributes set"""
         print()
-        from agnostic import sleep
+        from adafruit_blinka.agnostic import sleep
         if not(led_hardwired) and not(yes_no("Is LED wired to {}".format(led_pin))):
             return # test trivially passed
         with DigitalInOut(led_pin) as led:
