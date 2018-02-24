@@ -1,6 +1,6 @@
 from machine import Pin
 from agnostic import board as boardId
-from mcp import Enum
+from mcp import Enum,ContextManaged
 
 
 class DriveMode(Enum):
@@ -26,7 +26,7 @@ Pull.DOWN = Pull()
 #Pull.NONE = Pull()
 
 
-class DigitalInOut(object):
+class DigitalInOut(ContextManaged):
     _pin = None
 
     def __init__(self, pin):
@@ -44,12 +44,6 @@ class DigitalInOut(object):
 
     def deinit(self):
         del self._pin
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        self.deinit()
 
     @property
     def direction(self):

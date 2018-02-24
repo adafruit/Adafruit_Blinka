@@ -30,3 +30,25 @@ class Enum(object):
                 yield (key, val)
 
 
+class ContextManaged:
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.deinit()
+
+def Lockable(ContextManaged):
+    _locked = False
+
+    def try_lock(self):
+        if self._locked:
+            return False
+        else:
+            self._locked=True
+            return True
+
+    def unlock(self):
+        if self._locked:
+            self._locked = False
+        else:
+            raise ValueError("Not locked")
