@@ -1,7 +1,7 @@
-from mcp import Lockable
+from adafruit_blinka import Lockable
 from machine import I2C as _I2C
 from machine import Pin
-import agnostic
+
 
 class I2C(Lockable):
     def __init__(self, scl, sda, frequency=400000):

@@ -1,6 +1,6 @@
 from machine import Pin
-from agnostic import board as boardId
-from mcp import Enum,ContextManaged
+from adafruit_blinka.agnostic import board as boardId
+from adafruit_blinka import Enum,ContextManaged
 
 
 class DriveMode(Enum):

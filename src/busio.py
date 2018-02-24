@@ -1,5 +1,5 @@
-import agnostic
-from mcp import Enum, Lockable
+from adafruit_blinka import Enum, Lockable, agnostic
+
 
 class SPI(Lockable):
     def __init__(self, clock, MOSI=None, MISO=None):
