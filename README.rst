@@ -38,7 +38,7 @@ on Micropython and **testing.implementation.circuitpython** will only run on Cir
 Usage Example
 =============
 
-At the time of writing (`git:3b2fc268 <https://github.com/cefn/Adafruit_Micropython_Blinka/tree/3b2fc268d89aee6a648da456224e6d48d2476baa>`_),
+At the time of writing (`git:b70fd42a <https://github.com/cefn/Adafruit_Micropython_Blinka/tree/b70fd42adf2b81c7f8b176decc0bec4fb93abfe9>`_),
 the following sequence runs through some basic testing of the digitalio compatibility layer... 
 
 .. code-block:: python
