@@ -1,52 +1,51 @@
 #!/bin/sh
 PORT=/dev/ttyUSB0
 
-# needs a git repo with micropython sharing a top-level directory
-# where make has been run in the mpy-cross directory
+export MPYCROSS=`realpath ../../../micropython/mpy-cross/mpy-cross`
 
-# Compile unittest to bytecode
-../../micropython/mpy-cross/mpy-cross unittest.py
+# switch to test sources
+cd ../src
+# create test source directories on board
+find testing -type d | \
+        grep -v -E "(^./.git.*|^./.idea|^./.vscode|__pycache__)" | \
+        xargs -n1 -I {} sh -c "echo Creating directory {} ...; ampy --port ${PORT} mkdir --exists-okay  {}"
+# compile source .py files to .mpy
+find . -type f -name '*.py' | \
+    xargs -n1 -I {} sh -c "echo compiling {} ...; ${MPYCROSS} {}"
+# upload bytecode .mpy files
+find . -type f -name '*.mpy' | \
+        xargs -n1 -I {} sh -c "echo uploading {} ...; ampy --port ${PORT} put {} {}"
 
-# filter directories, and create relevant ones on the board
-find . -type d -mindepth 1 | \
-        grep -v -E "(^./.git|^./.idea|^./.vscode|__pycache__)" | \
-        xargs -n1 -I {} sh -c "echo Creating directory {} ...; ampy --port ${PORT} mkdir --exists-okay {}"
+#switch to test libraries
+cd ../libraries/
 
-# put top-level .py modules in place
-for NAME in agnostic
+# Compile adafruit libraries to bytecode and upload
+for SUBMODULE in `find . -mindepth 1 -maxdepth 1 -type d `
 do
-    echo "Copying ${NAME}.py ..."
-    ampy --port ${PORT} put ${NAME}.py ${NAME}.py
+    cd ${SUBMODULE}
+    # create adafruit library directories on board
+    find . -mindepth 1 -type d | \
+            grep -v -E "(^./.git.*|__pycache__|^./doc.*|^./example.*)" | \
+            xargs -n1 -I {} sh -c "echo Creating directory {} ...; ampy --port ${PORT} mkdir --exists-okay  {}"
+    # compile adafruit library .py files to .mpy
+    find . -type f -name '*.py' | \
+        grep -v -E "(^./conf.py|^./docs/conf.py|^./setup.py|^./example.*)" | \
+        xargs -n1 -I {} sh -c "echo compiling {} ...; ${MPYCROSS} {}"
+    # upload adafruit library .mpy files
+    find . -type f -name '*.mpy' | \
+        xargs -n1 -I {} sh -c "echo uploading {} ...; ampy --port ${PORT} put {} {}"
+    cd ../
 done
 
-# put top-level .mpy modules in place
-for NAME in unittest
-do
-    echo "Copying ${NAME}.mpy ..."
-    ampy --port ${PORT} put ${NAME}.mpy ${NAME}.mpy
-done
+# switch to adafruit_blinka source
+cd ../../src
 
-# recursively sync folders of nested packages
-for NAME in board digitalio mcp microcontroller testing
-do
-    find ${NAME} -name '*.py'| xargs -n1 -I {} sh -c "echo Copying {} ...; ampy --port ${PORT} put {} {}"
-done
-
-cd ../../ # change into folder containing repo
-
-# I2C dependencies
-echo "Copying module adafruit_bus_device..."
-cd Adafruit_CircuitPython_BusDevice # change into different repo
-ampy --port ${PORT} mkdir --exists-okay adafruit_bus_device
-ampy --port ${PORT} put adafruit_bus_device/__init__.py adafruit_bus_device/__init__.py
-ampy --port ${PORT} put adafruit_bus_device/i2c_device.py adafruit_bus_device/i2c_device.py
-cd ../
-
-# Compile BME280 to bytecode
-./micropython/mpy-cross/mpy-cross ./Adafruit_CircuitPython_BME280/adafruit_bme280.py
-
-# BME280 dependencies
-echo "Copying module adafruit_bme..."
-cd Adafruit_CircuitPython_BME280 # change into different repo
-ampy --port ${PORT} put adafruit_bme280.mpy adafruit_bme280.mpy
-cd ../
+find . -mindepth 1 -type d | \
+        grep -v -E "(^./.git.*|__pycache__)" | \
+        xargs -n1 -I {} sh -c "echo Creating directory {} ...; ampy --port ${PORT} mkdir --exists-okay  {}"
+# compile adafruit blinka .py files to .mpy
+find . -type f -name '*.py' | \
+    xargs -n1 -I {} sh -c "echo compiling {} ...; ${MPYCROSS} {}"
+# upload adafruit blinka .mpy files
+find . -type f -name '*.mpy' | \
+    xargs -n1 -I {} sh -c "echo uploading {} ...; ampy --port ${PORT} put {} {}"
