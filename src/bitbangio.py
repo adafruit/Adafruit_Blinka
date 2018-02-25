@@ -5,7 +5,6 @@ from machine import Pin
 
 class I2C(Lockable):
     def __init__(self, scl, sda, frequency=400000):
-        super().__init()
         self.init(scl, sda, frequency)
 
     def init(self, scl, sda, frequency):

@@ -1,4 +1,4 @@
-from microcontroller import pin
+from adafruit_blinka.microcontroller.esp8266 import pin
 
 D0 = pin.GPIO16
 D1 = pin.GPIO5

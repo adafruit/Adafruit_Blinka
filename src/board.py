@@ -39,13 +39,11 @@ __repo__ = "https://github.com/adafruit/Adafruit_Micropython_Blinka.git"
 
 
 if board == "feather_huzzah":
-    pass
-elif board == "feather_m0_express":
-    pass
+    from adafruit_blinka.board.feather_huzzah import *
 elif board == "nodemcu":
-    pass
+    from adafruit_blinka.board.nodemcu import *
 elif board == "pyboard":
-    pass
+    from adafruit_blinka.board.pyboard import *
 else:
     raise NotImplementedError("Board not supported")
 gc.collect()

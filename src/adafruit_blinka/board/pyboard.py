@@ -1,4 +1,4 @@
-from microcontroller import pin
+from adafruit_blinka.microcontroller.stm32 import pin
 
 X1=pin.A0
 X2=pin.A1

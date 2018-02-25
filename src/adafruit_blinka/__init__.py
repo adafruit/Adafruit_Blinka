@@ -37,7 +37,7 @@ class ContextManaged:
     def __exit__(self, exc_type, exc_value, traceback):
         self.deinit()
 
-def Lockable(ContextManaged):
+class Lockable(ContextManaged):
     _locked = False
 
     def try_lock(self):
