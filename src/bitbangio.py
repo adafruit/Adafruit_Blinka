@@ -9,7 +9,7 @@ class I2C(Lockable):
 
     def init(self, scl, sda, frequency):
         self.deinit()
-        id = -1 # force bitbanging implementation - in future introspect platform if SDA/SCL matches hardware I2C
+        id = -1  # force bitbanging implementation - in future introspect platform if SDA/SCL matches hardware I2C
         self._i2c = _I2C(id, Pin(scl.id), Pin(sda.id), freq=frequency)
 
     def deinit(self):
@@ -32,7 +32,7 @@ class I2C(Lockable):
             if end is None:
                 end = len(buffer)
             buffer = memoryview(buffer)[start:end]
-        stop = True # remove for efficiency later
+        stop = True  # remove for efficiency later
         return self._i2c.readfrom_into(address, buffer, stop)
 
     def writeto(self, address, buffer, start=0, end=None, stop=True, *a, **k):
@@ -41,6 +41,7 @@ class I2C(Lockable):
                 end = len(buffer)
             buffer = memoryview(buffer)[start:end]
         return self._i2c.writeto(address, buffer, stop)
+
 
 # TODO untested, as actually busio.SPI was on tasklist https://github.com/adafruit/Adafruit_Micropython_Blinka/issues/2 :(
 class SPI(Lockable):
@@ -52,7 +53,15 @@ class SPI(Lockable):
         if self._locked:
             # TODO verify if _spi obj 'caches' sck, mosi, miso to avoid storing in _attributeIds (duplicated in busio)
             # i.e. #init ignores MOSI=None rather than unsetting
-            self._spi.init(baudrate=baudrate, polarity=polarity, phase=phase, bits = bits, firstbit = SPI.MSB, sck = Pin(self._pins[0]), mosi=Pin(self._pins[1]), miso=Pin(self._pins[2]))
+            self._spi.init(
+                baudrate=baudrate,
+                polarity=polarity,
+                phase=phase,
+                bits=bits,
+                firstbit=SPI.MSB,
+                sck=Pin(self._pins[0]),
+                mosi=Pin(self._pins[1]),
+                miso=Pin(self._pins[2]))
         else:
             raise RuntimeError("First call try_lock()")
 

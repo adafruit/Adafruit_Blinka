@@ -1,10 +1,7 @@
 from microcontroller import pin
 
 # ordered as spiId, sckId, mosiId, misoId
-spiPorts = (
-    (1, "B13", "B15", "B14"),
-    (2, "A5", "A6", "A7")
-)
+spiPorts = ((1, "B13", "B15", "B14"), (2, "A5", "A6", "A7"))
 
 # ordered as uartId, txId, rxId
 uartPorts = (

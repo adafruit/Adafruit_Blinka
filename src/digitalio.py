@@ -1,28 +1,35 @@
 from machine import Pin
 from adafruit_blinka.agnostic import board as boardId
-from adafruit_blinka import Enum,ContextManaged
+from adafruit_blinka import Enum, ContextManaged
 
 
 class DriveMode(Enum):
-    PUSH_PULL=None
-    OPEN_DRAIN=None
+    PUSH_PULL = None
+    OPEN_DRAIN = None
+
+
 DriveMode.PUSH_PULL = DriveMode()
 DriveMode.OPEN_DRAIN = DriveMode()
 
 
 class Direction(Enum):
-    INPUT=None
-    OUTPUT=None
+    INPUT = None
+    OUTPUT = None
+
+
 Direction.INPUT = Direction()
 Direction.OUTPUT = Direction()
 
 
 class Pull(Enum):
-    UP=None
-    DOWN=None
+    UP = None
+    DOWN = None
     #NONE=None
+
+
 Pull.UP = Pull()
 Pull.DOWN = Pull()
+
 #Pull.NONE = Pull()
 
 
@@ -90,7 +97,8 @@ class DigitalInOut(ContextManaged):
                 if hasattr(Pin, "PULL_DOWN"):
                     self._pin.init(mode=Pin.IN, pull=Pin.PULL_DOWN)
                 else:
-                    raise NotImplementedError("{} unsupported on {}".format(Pull.DOWN, boardId))
+                    raise NotImplementedError("{} unsupported on {}".format(
+                        Pull.DOWN, boardId))
             elif pul is None:
                 self._pin.init(mode=Pin.IN, pull=None)
             else:
@@ -112,5 +120,6 @@ class DigitalInOut(ContextManaged):
             self._pin.init(mode=Pin.OPEN_DRAIN)
         elif mod is DriveMode.PUSH_PULL:
             self._pin.init(mode=Pin.OUT)
+
 
 # __all__ = ['DigitalInOut', 'DriveMode', 'Direction','Pull']

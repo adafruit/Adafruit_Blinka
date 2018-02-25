@@ -1,5 +1,6 @@
 """Module providing runtime utility objects to support the Micro/CircuitPython api"""
 
+
 class Enum(object):
     """
         Object supporting CircuitPython-style of static symbols
@@ -37,6 +38,7 @@ class ContextManaged:
     def __exit__(self, exc_type, exc_value, traceback):
         self.deinit()
 
+
 class Lockable(ContextManaged):
     _locked = False
 
@@ -44,7 +46,7 @@ class Lockable(ContextManaged):
         if self._locked:
             return False
         else:
-            self._locked=True
+            self._locked = True
             return True
 
     def unlock(self):

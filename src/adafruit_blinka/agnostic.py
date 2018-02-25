@@ -15,7 +15,7 @@ except:
 
 board = None
 if microcontroller is not None:
-    if microcontroller == "esp8266": # TODO more conservative board-guessing
+    if microcontroller == "esp8266":  # TODO more conservative board-guessing
         board = "feather_huzzah"
     elif microcontroller == "samd21":
         board = "feather_m0_express"
