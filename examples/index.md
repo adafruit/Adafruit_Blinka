@@ -1,3 +1,5 @@
+# About Adafruit_Micropython_Blinka
+
 This repository is structured around integration tests rooted at the `test/src`
 directory, intended to test the compatibility layer rooted in `src`. 
 
@@ -11,6 +13,8 @@ so the same routines can be carried out on Micropython boards, dual boards runni
 
 Typically the tests have first run on a native CircuitPython platform, and are then used to 
 prove equivalence on a Micropython platform running the **adafruit_blinka** compatibility layer.
+
+# Tests so far
 
 Tests of compatible versions of **digitalio**, **board** and **microcontroller** have successfully demonstrated
 the same code running on either platform, setting and getting pin values and using pull.
@@ -32,6 +36,20 @@ constructor, checks the behaviour of switch_to_input/output(), configures a pin 
 from testing import test_module_name
 test_module_name("testing.universal.digitalio")
 ```
+
+To prove this on a newly-flashed Feather Huzzah running Micropython 1.9.3, 
+it should be possible (on a posix-compliant platform with adafruit_ampy installed) 
+to `cd test/scripts` then run `./upload_feather_huzzah_micropython_put.sh` to 
+synchronize relevant files to the filesystem of the huzzah, reset the huzzah then 
+connect using `screen /dev/ttyUSB0 115200` before running the above commands.
+
+Micropython hosts require a micropython repository alongside
+the Adafruit_Micropython_Blinka repository. For circuitpython, 
+the repository is expected to be called circuitpython_2.2.3. 
+In each case, the matching version should have been checked out from github
+and `make` needs to have been run in the `mpy-cross` folder. This provides a tool 
+to make bytecode-compiled .mpy versions of all .py files before upload so that 
+tests can be achieved within the limited memory available on many target platforms. 
 
 ## Comments
 
