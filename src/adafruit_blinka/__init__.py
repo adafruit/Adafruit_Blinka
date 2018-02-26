@@ -57,5 +57,5 @@ class Lockable(ContextManaged):
 
 def patch_system():
     import sys
-    from adafruit_blinka import time
+    from adafruit_blinka.agnostic import time
     sys.modules['time'] = time

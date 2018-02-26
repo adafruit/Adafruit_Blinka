@@ -36,12 +36,12 @@ def multi_choice(q, choices, defaultPos=None):
         return None
 
 def await_true(name, fun, interval=0, patience=60):
-    from adafruit_blinka.agnostic import sleep
-    from utime import ticks_ms, ticks_add, ticks_diff
+    from adafruit_blinka.agnostic.time import sleep, monotonic
     print("Waiting {} sec until {} (CTRL+C give up)".format(patience, name))
-    deadline = ticks_add(ticks_ms(), int(patience * 1000))
+
+    deadline =  monotonic() + patience
     try:
-        while ticks_diff(deadline, ticks_ms()) > 0:
+        while deadline - monotonic() > 0:
             if fun():
                 return True
             else:
