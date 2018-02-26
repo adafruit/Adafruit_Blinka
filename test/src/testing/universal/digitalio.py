@@ -57,9 +57,11 @@ class TestDigitalInOutInteractive(unittest.TestCase):
             try:
                 button.pull = Pull.UP
             except NotImplementedError as e:
-                print()
                 print(e)
-                return  # test trivially passed
+                return  # pull unsupported, test trivially passed
+            except Exception as e:
+                print(e)
+                return  # pull unsupported, test trivially passed
             if yes_no("Is Button wired from {} to GND".format(default_pin)):
                 self.assertTrue(button.value == True)
                 self.assertTrue(await_true("button pressed", lambda: button.value == False))
@@ -73,7 +75,10 @@ class TestDigitalInOutInteractive(unittest.TestCase):
                 button.pull = Pull.DOWN
             except NotImplementedError as e:
                 print(e)
-                return  # test trivially passed
+                return  # pull unsupported, test trivially passed
+            except Exception as e:
+                print(e)
+                return  # pull unsupported, test trivially passed
             if (yes_no("Is Button wired from {} to VCC".format(default_pin))):
                 self.assertTrue(button.value == False)
                 self.assertTrue(await_true("button pressed", lambda: button.value == True))
