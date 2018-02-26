@@ -91,12 +91,12 @@ def test_prepare(casetype):
 
 def main():
     """
-    moduleNames = ["testing.implementation.all.digitalio",]
+    moduleNames = ["testing.implementation.universal.digitalio",]
     if agnostic.implementation == "micropython":
         moduleNames.extend([ "testing.implementation.micropython.digitalio",])
 
     """
-    moduleNames = ["testing.implementation.all.bitbangio"]
+    moduleNames = ["testing.implementation.universal.bitbangio"]
 
     unittest.raiseException = True # terminates with stack information on userspace Exception
     unittest.raiseBaseException = True # terminates with stack information on system Exception

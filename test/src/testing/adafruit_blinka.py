@@ -37,3 +37,16 @@ class TestEnum(unittest.TestCase):
     def test_str(self):
         """A str() call on an Enum performs the same as repr()"""
         self.assertEqual(str(self.Cls.one), repr(self.Cls.one))
+
+class TestDigitalInOut(unittest.TestCase):
+
+
+    def test_context_manager(self):
+        import digitalio
+        from testing.board import default_pin
+        """Deinitialisation is triggered by __exit__() and should dispose machine.pin reference"""
+        dio = digitalio.DigitalInOut(default_pin)
+        self.assertIsNotNone(dio._pin)
+        with dio:
+            pass
+        self.assertIsNone(dio._pin)
