@@ -9,13 +9,15 @@ gc.collect()
 class TestBME280Interactive(TestCase):
 
     def test_read_value(self):
-        if not(yes_no("Is BME280 wired to SCL {} SDA {}".format(board.SCL, board.SDA))):
-            return # test trivially passed
 
         import board
         gc.collect()
         import adafruit_bme280
         gc.collect()
+
+        if not(yes_no("Is BME280 wired to SCL {} SDA {}".format(board.SCL, board.SDA))):
+            return # test trivially passed
+
         i2c = I2C(board.SCL, board.SDA)
         bme280 = adafruit_bme280.Adafruit_BME280_I2C(i2c)
         temperature = bme280.temperature
@@ -70,6 +72,8 @@ class TestBNO055Interactive(TestCase):
         """
         Access all sensor values as per
         https://github.com/adafruit/Adafruit_CircuitPython_BNO055/blob/bdf6ada21e7552c242bc470d4d2619b480b4c574/examples/values.py
+        Note I have not successfully run this test. Possibly a hardware issue with module I have.
+        See https://forums.adafruit.com/viewtopic.php?f=60&t=131665
         """
         import board
         gc.collect()
