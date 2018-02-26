@@ -36,3 +36,11 @@ do
         xargs -n1 -I {} sh -c "echo uploading {} ...; ampy --port ${PORT} put {} {}"
     cd ../
 done
+
+# switch to adafruit_blinka source
+cd ../../src
+
+# upload agnostic/mpy for platform detection used by tests
+ampy --port $PORT mkdir --exists-okay adafruit_blinka
+$MPYCROSS adafruit_blinka/agnostic.py
+ampy --port $PORT put adafruit_blinka/agnostic.mpy adafruit_blinka/agnostic.mpy
