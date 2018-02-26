@@ -54,3 +54,8 @@ class Lockable(ContextManaged):
             self._locked = False
         else:
             raise ValueError("Not locked")
+
+def patch_system():
+    import sys
+    from adafruit_blinka import time
+    sys.modules['time'] = time
