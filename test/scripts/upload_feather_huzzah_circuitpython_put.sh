@@ -40,7 +40,12 @@ done
 # switch to adafruit_blinka source
 cd ../../src
 
-# upload agnostic/mpy for platform detection used by tests
+# create adafruit_blinka agnostic package for cross-platform logic
 ampy --port $PORT mkdir --exists-okay adafruit_blinka
-$MPYCROSS adafruit_blinka/agnostic.py
-ampy --port $PORT put adafruit_blinka/agnostic.mpy adafruit_blinka/agnostic.mpy
+ampy --port $PORT mkdir --exists-okay adafruit_blinka/agnostic
+# upload agnostic.mpy for platform detection
+$MPYCROSS adafruit_blinka/agnostic/__init__.py
+ampy --port $PORT put adafruit_blinka/agnostic/__init__.mpy adafruit_blinka/agnostic/__init__.mpy
+# upload time.mpy for time logic
+$MPYCROSS adafruit_blinka/agnostic/time.py
+ampy --port $PORT put adafruit_blinka/agnostic/time.mpy adafruit_blinka/agnostic/time.mpy
