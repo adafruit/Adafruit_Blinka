@@ -37,6 +37,19 @@ from testing import test_module_name
 test_module_name("testing.universal.digitalio")
 ```
 
+Or to take a more involved example of constructing a test suite requiring hardware, 
+the following should verify I2C communication with a BME280 module.
+
+```python
+import unittest
+import testing.universal.i2c
+suite = unittest.TestSuite()
+suite.addTest(testing.universal.i2c.TestBME280Interactive)
+runner = unittest.TestRunner()
+runner.run(suite)
+```
+
+
 To prove this on a newly-flashed Feather Huzzah running Micropython 1.9.3, 
 it should be possible (on a posix-compliant platform with adafruit_ampy installed) 
 to `cd test/scripts` then run `./upload_feather_huzzah_micropython_put.sh` to 
