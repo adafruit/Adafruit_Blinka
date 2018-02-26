@@ -16,3 +16,6 @@
 [submodule "test/libraries/mma8451"]
 	path = test/libraries/mma8451
 	url = https://github.com/adafruit/Adafruit_CircuitPython_MMA8451.git
+[submodule "test/libraries/register"]
+	path = test/libraries/register
+	url = https://github.com/adafruit/Adafruit_CircuitPython_Register.git
