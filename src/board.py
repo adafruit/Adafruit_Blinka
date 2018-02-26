@@ -29,13 +29,9 @@ platform introspection
 """
 
 import gc
-
 gc.collect()
 from adafruit_blinka.agnostic import board
 gc.collect()
-
-__version__ = "0.0.0-auto.0"
-__repo__ = "https://github.com/adafruit/Adafruit_Micropython_Blinka.git"
 
 if board == "feather_huzzah":
     from adafruit_blinka.board.feather_huzzah import *
