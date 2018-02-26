@@ -25,3 +25,14 @@ class cpu():
         from machine import freq
         return freq()
 """
+
+# ordered as spiId, sckId, mosiId, misoId
+spiPorts = ((1, GPIO14, GPIO13, GPIO12))
+
+# ordered as uartId, txId, rxId
+uartPorts = (
+    (0, GPIO1, GPIO3),
+    # (0, GPIO15, GPIO13) # TODO secondary pins for UART0 configurable from Micropython? How to flag?
+    (1, GPIO2, None))
+
+i2cPorts = ()
