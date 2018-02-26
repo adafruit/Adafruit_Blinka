@@ -18,7 +18,7 @@ command = (
     # recurse in search
     '--include="*/" '
     # filter for python source files and micropython bytecode files
-    '--include="*.py" '
+    #'--include="*.py" '
     '--include="*.mpy" '
     # exclude everything else
     '--exclude="*" '
