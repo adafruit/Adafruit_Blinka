@@ -25,8 +25,3 @@ TX = GPIO1
 
 SDA = GPIO4
 SCL = GPIO5
-
-[
-    'ADC', 'GPIO16', 'GPIO14', 'SCK', 'GPIO12', 'MISO', 'GPIO13', 'MOSI',
-    'GPIO15', 'GPIO2', 'GPIO0', 'GPIO4', 'SDA', 'RX', 'TX', 'GPIO5', 'SCL'
-]

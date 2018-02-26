@@ -99,7 +99,6 @@ class UART(Lockable):
     Parity.ODD = Parity()
     Parity.EVEN = Parity()
 
-    # TODO investigate UART receiver_buffer_size as e.g. read_buf_len in https://github.com/micropython/micropython/blob/3eb0694b97c6a8f0e93b874549aac40d8b78b0e5/ports/stm32/uart.c
     def __init__(self,
                  tx,
                  rx,

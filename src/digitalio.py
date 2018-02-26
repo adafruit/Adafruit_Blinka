@@ -120,6 +120,3 @@ class DigitalInOut(ContextManaged):
             self._pin.init(mode=Pin.OPEN_DRAIN)
         elif mod is DriveMode.PUSH_PULL:
             self._pin.init(mode=Pin.OUT)
-
-
-# __all__ = ['DigitalInOut', 'DriveMode', 'Direction','Pull']

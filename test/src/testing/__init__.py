@@ -1,7 +1,6 @@
 # mitigate heap fragmentation issues by pre-loading major libraries
 import gc
 gc.collect()
-gc.collect()
 import unittest
 gc.collect()
 

@@ -12,19 +12,6 @@ GPIO14 = Pin(14)
 GPIO15 = Pin(15)
 GPIO16 = Pin(16)
 TOUT = Pin("TOUT")
-"""
-From introspection of microcontroller.pin on Feather Huzzah running CircuitPython
->>> dir(microcontroller.pin)
-['TOUT', 'XPD_DCDC', 'MTMS', 'MTDI', 'MTCK', 'MTDO', 'GPIO2', 'GPIO0', 'GPIO4', 'SD_DATA_2', 'SD_DATA_3', 'SD_CMD', 'SD_CLK', 'SD_DATA_0', 'SD_DATA_1', 'DVDD', 'U0RXD', 'U0TXD']
->>> dir(board)
-['ADC', 'GPIO16', 'GPIO14', 'SCK', 'GPIO12', 'MISO', 'GPIO13', 'MOSI', 'GPIO15', 'GPIO2', 'GPIO0', 'GPIO4', 'SDA', 'RX', 'TX', 'GPIO5', 'SCL']
-"""
-"""
-class cpu():
-    def frequency(self):
-        from machine import freq
-        return freq()
-"""
 
 # ordered as spiId, sckId, mosiId, misoId
 spiPorts = ((1, GPIO14, GPIO13, GPIO12))
