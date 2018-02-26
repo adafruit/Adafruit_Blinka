@@ -1,13 +1,60 @@
 from adafruit_blinka import Enum, Lockable, agnostic
 
+class I2C(Lockable):
+    def __init__(self, scl, sda, frequency=400000):
+        self.init(scl, sda, frequency)
+
+    def init(self, scl, sda, frequency):
+        self.deinit()
+        from machine import I2C as _I2C
+        from microcontroller.pin import i2cPorts
+        for portId, portScl, portSda in i2cPorts:
+            if scl == portScl and sda == portSda:
+                self._i2c = I2C(portId, mode=_I2C.MASTER, baudrate=frequency)
+                break
+        else:
+            raise NotImplementedError("No Hardware I2C on (scl,sda)={}\nValid UART ports".format(
+        (scl, sda), i2cPorts))
+
+    def deinit(self):
+        try:
+            del self._i2c
+        except AttributeError:
+            pass
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.deinit()
+
+    def scan(self):
+        return self._i2c.scan()
+
+    def readfrom_into(self, address, buffer, start=0, end=None):
+        if start is not 0 or end is not None:
+            if end is None:
+                end = len(buffer)
+            buffer = memoryview(buffer)[start:end]
+        stop = True  # remove for efficiency later
+        return self._i2c.readfrom_into(address, buffer, stop)
+
+    def writeto(self, address, buffer, start=0, end=None, stop=True):
+        if start is not 0 or end is not None:
+            if end is None:
+                return self._i2c.writeto(address, memoryview(buffer)[start:], stop)
+            else:
+                return self._i2c.writeto(address, memoryview(buffer)[start:end], stop)
+        return self._i2c.writeto(address, buffer, stop)
+
 
 class SPI(Lockable):
     def __init__(self, clock, MOSI=None, MISO=None):
-        from microcontroller import spiPorts
-        for spiId, sck, mosi, miso in spiPorts:
-            if sck == clock.id and mosi == MOSI.id and miso == MISO.id:
-                self._spi = SPI(spiId)
-                self._pinIds = (sck, mosi, miso)
+        from microcontroller.pin import spiPorts
+        for portId, portSck, portMosi, portMiso in spiPorts:
+            if clock == portSck and MOSI == portMosi and MISO == portMiso:
+                self._spi = SPI(portId)
+                self._pins = (portSck, portMosi, portMiso)
                 break
         else:
             raise NotImplementedError(
@@ -17,7 +64,6 @@ class SPI(Lockable):
     def configure(self, baudrate=100000, polarity=0, phase=0, bits=8):
         if self._locked:
             from machine import Pin
-            from microcontroller import spiPorts
             # TODO check if #init ignores MOSI=None rather than unsetting, to save _pinIds attribute
             self._spi.init(
                 baudrate=baudrate,
@@ -25,9 +71,10 @@ class SPI(Lockable):
                 phase=phase,
                 bits=bits,
                 firstbit=SPI.MSB,
-                sck=Pin(self._pinIds[0]),
-                mosi=Pin(self._pinIds[1]),
-                miso=Pin(self._pinIds[2]))
+                sck=Pin(self._pins[0].id),
+                mosi=Pin(self._pins[1].id),
+                miso=Pin(self._pins[2].id)
+            )
         else:
             raise RuntimeError("First call try_lock()")
 
@@ -60,22 +107,14 @@ class UART(Lockable):
                  bits=8,
                  parity=None,
                  stop=1,
-                 timeout=None,
-                 receiver_buffer_size=None,
+                 timeout=1000,
+                 receiver_buffer_size=64,
                  flow=None):
-        from microcontroller import uartPorts
-        from machine import UART
+        from machine import UART as _UART
+        from microcontroller.pin import uartPorts
 
         self.baudrate = baudrate
 
-        if timeout is not None:  # default 1000
-            raise NotImplementedError(
-                "Parameter '{}' unsupported on {}".format(
-                    "timeout", agnostic.board))
-        if receiver_buffer_size is not None:  # default 64
-            raise NotImplementedError(
-                "Parameter '{}' unsupported on {}".format(
-                    "receiver_buffer_size", agnostic.board))
         if flow is not None:  # default 0
             raise NotImplementedError(
                 "Parameter '{}' unsupported on {}".format(
@@ -93,14 +132,16 @@ class UART(Lockable):
 
         # check tx and rx have hardware support
         for portId, portTx, portRx in uartPorts:  #
-            if portTx == tx.id and portRx == rx.id:
-                self._uart = UART(
+            if portTx == tx and portRx == rx:
+                self._uart = _UART(
                     portId,
                     baudrate,
                     bits=bits,
                     parity=parity,
                     stop=stop,
-                    timeout=timeout)
+                    timeout=timeout,
+                    read_buf_len=receiver_buffer_size
+                )
                 break
         else:
             raise NotImplementedError(
