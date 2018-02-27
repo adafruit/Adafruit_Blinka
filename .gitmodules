@@ -1,0 +1,21 @@
+[submodule "test/libraries/bme280"]
+	path = test/libraries/bme280
+	url = https://github.com/adafruit/Adafruit_CircuitPython_BME280.git
+[submodule "test/libraries/gps"]
+	path = test/libraries/gps
+	url = https://github.com/adafruit/Adafruit_CircuitPython_GPS.git
+[submodule "test/libraries/Adafruit_CircuitPython_RFM69"]
+	path = test/libraries/rfm69
+	url = https://github.com/adafruit/Adafruit_CircuitPython_RFM69.git
+[submodule "test/libraries/bus_device"]
+	path = test/libraries/bus_device
+	url = https://github.com/adafruit/Adafruit_CircuitPython_BusDevice.git
+[submodule "test/libraries/bno055"]
+	path = test/libraries/bno055
+	url = https://github.com/adafruit/Adafruit_CircuitPython_BNO055.git
+[submodule "test/libraries/mma8451"]
+	path = test/libraries/mma8451
+	url = https://github.com/adafruit/Adafruit_CircuitPython_MMA8451.git
+[submodule "test/libraries/register"]
+	path = test/libraries/register
+	url = https://github.com/adafruit/Adafruit_CircuitPython_Register.git

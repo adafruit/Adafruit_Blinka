@@ -20,15 +20,25 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 """
-`adafruit_Blinka`
-====================================================
-
-.. todo:: Describe what the module does
+`board` - Define ids for available pins
+=================================================
+Conditionally imports and re-exports a submodule, such as boards.esp8266 based on 
+platform introspection
 
 * Author(s): cefn
 """
 
-# imports
+import gc
+gc.collect()
+from adafruit_blinka.agnostic import board
+gc.collect()
 
-__version__ = "0.0.0-auto.0"
-__repo__ = "https://github.com/adafruit/Adafruit_Micropython_Blinka.git"
+if board == "feather_huzzah":
+    from adafruit_blinka.board.feather_huzzah import *
+elif board == "nodemcu":
+    from adafruit_blinka.board.nodemcu import *
+elif board == "pyboard":
+    from adafruit_blinka.board.pyboard import *
+else:
+    raise NotImplementedError("Board not supported")
+gc.collect()

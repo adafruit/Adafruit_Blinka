@@ -13,18 +13,40 @@ Introduction
     :target: https://travis-ci.org/adafruit/Adafruit__Micropython_Blinka
     :alt: Build Status
 
-.. todo:: Describe what the library does.
+This repository contains a selection of packages mirroring the CircuitPython API
+on hosts running micropython. Working code exists to emulate the CircuitPython packages;
+
+* **board** - breakout-specific pin identities
+* **microcontroller** - chip-specific pin identities
+* **digitalio** - digital input/output pins, using pin identities from board+microcontroller packages
+* **bitbangio** - software-driven interfaces for I2C, SPI
+* **busio** - hardware-driven interfaces for I2C, SPI, UART
+* **time** * - substitute functions monkey-patched to time module
+
 
 Dependencies
 =============
-This driver depends on:
 
-* Micropython
+The Micropython compatibility layers described above are intended to provide a CircuitPython-like API for devices which
+are running Micropython. Since corresponding packages should be built-in to any standard
+CircuitPython image, they have no value on a device already running CircuitPython and would likely conflict in unhappy ways.
+
+The test suites in the test/src folder under **testing.universal** are by design
+intended to run on *either* CircuitPython *or* Micropython+compatibility layer to prove conformance. 
 
 Usage Example
 =============
 
-.. todo:: Add a quick, simple example. It and other examples should live in the examples folder and be included in docs/examples.rst.
+At the time of writing (`git:7fc1f8ab <https://github.com/cefn/Adafruit_Micropython_Blinka/tree/7fc1f8ab477124628a5afebbf6826005955805f9>`_),
+the following sequence runs through some basic testing of the digitalio compatibility layer... 
+
+.. code-block:: python
+
+    from testing import test_module_name
+    test_module_name("testing.universal.digitalio")
+
+An example log from running the suites is `here <https://github.com/cefn/Adafruit_Micropython_Blinka/issues/2#issuecomment-366713394>`_ .
+
 
 Contributing
 ============
