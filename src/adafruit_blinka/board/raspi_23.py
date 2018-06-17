@@ -1,13 +1,10 @@
-# Pins dont exist in CPython so...lets make our own!
-class Pin:
-    def __init__(self, name, bcm_number):
-        self._name = name
-        self._number = bcm_number
+from adafruit_blinka.microcontroller.raspi_23 import pin
 
-SDA = Pin("SDA", 2)
-SCL = Pin("SCL", 3)
-D4 = Pin("BCM 4", 4)
-D17 = Pin("BCM 17", 17)
-D18 = Pin("BCM 18", 18)
-
-# TODO: more here...
+SDA = pin.SDA
+SCL = pin.SCL
+D4 = pin.D4
+D14 = pin.D14
+D15 = pin.D15
+D17 = pin.D17
+D18 = pin.D18
+D19 = pin.D19

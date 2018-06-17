@@ -10,7 +10,6 @@ print("hello blinka!")
 print("Found system type: %s (sys.plaform %s implementation %s) " % (agnostic_board, sys.platform, sys.implementation.name))
 
 import board
-
-print(dir(board))
+print("board contents: ", dir(board))
 
 #print(adafruit_blinka.adafruit_blinka.agnostic.microcontroller)
