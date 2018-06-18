@@ -8,6 +8,7 @@ See `CircuitPython:busio` in CircuitPython for more details.
 """
 
 from adafruit_blinka import Enum, Lockable, agnostic
+from adafruit_blinka.agnostic import board as boardId
 
 class I2C(Lockable):
     def __init__(self, scl, sda, frequency=400000):
@@ -15,7 +16,10 @@ class I2C(Lockable):
 
     def init(self, scl, sda, frequency):
         self.deinit()
-        from machine import I2C as _I2C
+        if boardId == "raspi_3" or boardId == "raspi_2":
+            from adafruit_blinka.microcontroller.raspi_23.i2c import I2C as _I2C
+        else:
+            from machine import I2C as _I2C
         from microcontroller.pin import i2cPorts
         for portId, portScl, portSda in i2cPorts:
             if scl == portScl and sda == portSda:

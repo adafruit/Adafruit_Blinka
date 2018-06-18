@@ -26,5 +26,7 @@ if agnostic.microcontroller == "esp8266":
     from adafruit_blinka.microcontroller.esp8266 import *
 elif agnostic.microcontroller == "stm32":
     from adafruit_blinka.microcontroller.stm32 import *
+elif agnostic.microcontroller == "raspi_3":
+    from adafruit_blinka.microcontroller.raspi_23 import *
 else:
-    raise NotImplementedError("Microcontroller not supported")
+    raise NotImplementedError("Microcontroller not supported: ", agnostic.microcontroller)
