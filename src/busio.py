@@ -23,7 +23,7 @@ class I2C(Lockable):
         from microcontroller.pin import i2cPorts
         for portId, portScl, portSda in i2cPorts:
             if scl == portScl and sda == portSda:
-                self._i2c = I2C(portId, mode=_I2C.MASTER, baudrate=frequency)
+                self._i2c = _I2C(portId, mode=_I2C.MASTER, baudrate=frequency)
                 break
         else:
             raise NotImplementedError("No Hardware I2C on (scl,sda)={}\nValid UART ports".format(

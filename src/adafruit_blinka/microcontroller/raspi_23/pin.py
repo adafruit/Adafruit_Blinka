@@ -18,6 +18,9 @@ class Pin:
     def __init__(self, bcm_number):
         self.id = bcm_number
 
+    def __repr__(self):
+        return "BCM #%d" % self.id
+
     def init(self, mode=IN, pull=None):
         if mode != None:
             print("set %d to mode %d" % (self.id, mode))
@@ -91,6 +94,6 @@ uartPorts = (
 )
 
 i2cPorts = (
-    (1, SDA, SCL),
+    (1, SCL, SDA),
 )
 
