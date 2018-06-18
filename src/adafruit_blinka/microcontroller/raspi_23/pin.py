@@ -1,36 +1,86 @@
+import RPi.GPIO as GPIO
+GPIO.setmode(GPIO.BCM)
+
 # Pins dont exist in CPython so...lets make our own!
 class Pin:
-    def __init__(self, name, bcm_number):
-        self._name = name
-        self._number = bcm_number
+    IN = 0
+    OUT = 1
+    LOW = 0
+    HIGH = 1
+    PULL_NONE = 0
+    PULL_UP = 1
+    PULL_DOWN = 2
+    
+    id = None
+    _value = LOW
+    _mode = IN
+    
+    def __init__(self, bcm_number):
+        self.id = bcm_number
 
-SDA = Pin("SDA/D2", 2)
-SCL = Pin("SCL/D3", 3)
-D2 = Pin("SDA/D2", 2)
-D3 = Pin("SCL/D3", 3)
-D4 = Pin("BCM 4", 4)
-D9 = Pin("MISO/D9", 9)
-D10 = Pin("MOSI/D10", 10)
-D11 = Pin("SCLK/D11", 11)
-MISO = Pin("MISO/D9", 9)
-MOSI = Pin("MOSI/D10", 10)
-SCLK = Pin("SCLK/D11", 11)
-D14 = Pin("TXD/D14", 14)
-D15 = Pin("RXD/D15", 15)
-TXD = Pin("TXD/D14", 14)
-RXD = Pin("RXD/D15", 15)
-D17 = Pin("BCM 17", 17)
-D18 = Pin("BCM 18", 18)
-D19 = Pin("BCM 19", 19)
-D20 = Pin("BCM 20", 20)
-MISO_2 = Pin("MISO_2/19", 19)
-MOSI_2 = Pin("MOSI_2/20", 20)
-SCLK_2 = Pin("SCLK_2/21", 21)
-D21 = Pin("BCM 21", 21)
-D22 = Pin("BCM 22", 22)
-D23 = Pin("BCM 23", 23)
-D24 = Pin("BCM 24", 24)
-D27 = Pin("BCM 27", 27)
+    def init(self, mode=IN, pull=None):
+        if mode != None:
+            print("set %d to mode %d" % (self.id, mode))
+            if mode == self.IN:
+                self._mode = self.IN
+                GPIO.setup(self.id, GPIO.IN)
+            elif mode == self.OUT:
+                self._mode = self.OUT
+                GPIO.setup(self.id, GPIO.OUT)
+            else:
+                raise RuntimeError("Invalid mode for pin: %s" % self.id)
+        if pull != None:
+            print("set %d to pull %d" % (self.id, pull))
+            if self._mode != self.IN:
+                raise RuntimeError("Cannot set pull resistor on output")
+            if pull == self.PULL_UP:
+                GPIO.setup(self.id, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+            elif pull == self.PULL_DOWN:
+                GPIO.setup(self.id, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+            else:
+                raise RuntimeError("Invalid pull for pin: %s" % self.id)       
+
+    def value(self, val=None):
+        if val != None:
+            print("set %d to value %d" %(self.id, val))
+            if val == self.LOW:
+                self._value = val
+                GPIO.output(self.id, val)
+            elif val == self.HIGH:
+                self._value = val
+                GPIO.output(self.id, val)
+            else:
+                raise RuntimeError("Invalid value for pin")
+        else:
+            return GPIO.input(self.id)
+
+SDA = Pin(2)
+SCL = Pin(3)
+D2 = Pin(2)
+D3 = Pin(3)
+D4 = Pin(4)
+D9 = Pin(9)
+D10 = Pin(10)
+D11 = Pin(11)
+MISO = Pin(9)
+MOSI = Pin(10)
+SCLK = Pin(11)
+D14 = Pin(14)
+D15 = Pin(15)
+TXD = Pin(14)
+RXD = Pin(15)
+D17 = Pin(17)
+D18 = Pin(18)
+D19 = Pin(19)
+D20 = Pin(20)
+MISO_2 = Pin(19)
+MOSI_2 = Pin(20)
+SCLK_2 = Pin(21)
+D21 = Pin(21)
+D22 = Pin(22)
+D23 = Pin(23)
+D24 = Pin(24)
+D27 = Pin(27)
 
 # ordered as spiId, sckId, mosiId, misoId
 spiPorts = ((1, SCLK, MOSI, MISO), (2, SCLK_2, MOSI_2, MISO_2))
