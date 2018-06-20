@@ -1,4 +1,4 @@
-import smbus
+import Adafruit_PureIO.smbus as smbus
 import time
 
 class I2C:
@@ -22,11 +22,20 @@ class I2C:
             raise RuntimeError("I2C Bus #%d not found, check if enabled in config!" % bus_num)
 
     def scan(self):
+        """Try to read a byte from each address, if you get an OSError it means the device isnt there"""
         found = []
-        for addr in range(0,0x7F):
+        for addr in range(0,0x80):
             try:
                 self._i2c_bus.read_byte(addr)
             except OSError:
                 continue
             found.append(addr)
         return found
+
+    def writeto(self, address, buffer, stop=True):
+        self._i2c_bus.write_i2c_block_data(address, buffer[0], buffer[1:])
+
+    def readfrom_into(self, address, buffer, stop=True):
+        readin = self._i2c_bus.read_bytes(address, len(buffer))
+        for i in range(len(buffer)):
+            buffer[i] = readin[i]
