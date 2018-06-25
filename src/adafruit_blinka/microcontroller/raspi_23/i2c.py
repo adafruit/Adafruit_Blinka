@@ -33,7 +33,7 @@ class I2C:
         return found
 
     def writeto(self, address, buffer, stop=True):
-        self._i2c_bus.write_i2c_block_data(address, buffer[0], buffer[1:])
+        self._i2c_bus.write_bytes(address, buffer)
 
     def readfrom_into(self, address, buffer, stop=True):
         readin = self._i2c_bus.read_bytes(address, len(buffer))
