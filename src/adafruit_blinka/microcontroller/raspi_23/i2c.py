@@ -13,8 +13,8 @@ class I2C:
             raise NotImplementedError("Only I2C Master supported!")
         _mode = self.MASTER
 
-        if baudrate != None:
-            print("I2C frequency is not settable in python, ignoring!")
+        #if baudrate != None:
+        #    print("I2C frequency is not settable in python, ignoring!")
         
         try:
             self._i2c_bus = smbus.SMBus(bus_num)

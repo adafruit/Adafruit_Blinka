@@ -19,7 +19,10 @@ class Pin:
         self.id = bcm_number
 
     def __repr__(self):
-        return "BCM #%d" % self.id
+        return str(self.id)
+
+    def __eq__(self, other):
+        return self.id == other
 
     def init(self, mode=IN, pull=None):
         if mode != None:
@@ -86,7 +89,7 @@ D24 = Pin(24)
 D27 = Pin(27)
 
 # ordered as spiId, sckId, mosiId, misoId
-spiPorts = ((1, SCLK, MOSI, MISO), (2, SCLK_2, MOSI_2, MISO_2))
+spiPorts = ((0, SCLK, MOSI, MISO), (1, SCLK_2, MOSI_2, MISO_2))
 
 # ordered as uartId, txId, rxId
 uartPorts = (

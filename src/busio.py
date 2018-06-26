@@ -63,27 +63,38 @@ class I2C(Lockable):
 
 class SPI(Lockable):
     def __init__(self, clock, MOSI=None, MISO=None):
+        self.deinit()
+        if boardId == "raspi_3" or boardId == "raspi_2":
+            from adafruit_blinka.microcontroller.raspi_23.spi import SPI as _SPI
+        else:
+            from machine import SPI as _SPI
         from microcontroller.pin import spiPorts
         for portId, portSck, portMosi, portMiso in spiPorts:
             if clock == portSck and MOSI == portMosi and MISO == portMiso:
-                self._spi = SPI(portId)
+                self._spi = _SPI(portId)
                 self._pins = (portSck, portMosi, portMiso)
                 break
         else:
             raise NotImplementedError(
-                "No Hardware SPI on (clock, MOSI, MISO)={}\nValid SPI ports:{}".
+                "No Hardware SPI on (SCLK, MOSI, MISO)={}\nValid SPI ports:{}".
                 format((clock, MOSI, MISO), spiPorts))
 
     def configure(self, baudrate=100000, polarity=0, phase=0, bits=8):
-        if self._locked:
+        if boardId == "raspi_3" or boardId == "raspi_2":
+            from adafruit_blinka.microcontroller.raspi_23.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.raspi_23.pin import Pin
+        else:
+            from machine import SPI as _SPI
             from machine import Pin
+
+        if self._locked:
             # TODO check if #init ignores MOSI=None rather than unsetting, to save _pinIds attribute
             self._spi.init(
                 baudrate=baudrate,
                 polarity=polarity,
                 phase=phase,
                 bits=bits,
-                firstbit=SPI.MSB,
+                firstbit=_SPI.MSB,
                 sck=Pin(self._pins[0].id),
                 mosi=Pin(self._pins[1].id),
                 miso=Pin(self._pins[2].id)
