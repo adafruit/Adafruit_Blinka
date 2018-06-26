@@ -12,9 +12,9 @@ from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
 # Package meta-data.
-NAME = 'Adafruit-Micropython-Blinka'
-DESCRIPTION = 'A selection of packages for mirroring the CircuitPython API on hosts running micropython.'
-URL = 'https://github.com/adafruit/Adafruit_Micropython_Blinka'
+NAME = 'Adafruit-Blinka'
+DESCRIPTION = 'CircuitPython APIs for non-CircuitPython versions of Python such as CPython on Linux and MicroPython.'
+URL = 'https://github.com/adafruit/Adafruit_Blinka'
 EMAIL = 'python@adafruit.com'
 AUTHOR = 'Adafruit Industries'
 REQUIRES_PYTHON = '>=3.6.0'
@@ -75,7 +75,7 @@ class UploadCommand(Command):
         self.status('Pushing git tags…')
         os.system('git tag v{0}'.format(about['__version__']))
         os.system('git push --tags')
-        
+
         sys.exit()
 
 
