@@ -26,7 +26,6 @@ class Pin:
 
     def init(self, mode=IN, pull=None):
         if mode != None:
-            print("set %d to mode %d" % (self.id, mode))
             if mode == self.IN:
                 self._mode = self.IN
                 GPIO.setup(self.id, GPIO.IN)
@@ -36,7 +35,6 @@ class Pin:
             else:
                 raise RuntimeError("Invalid mode for pin: %s" % self.id)
         if pull != None:
-            print("set %d to pull %d" % (self.id, pull))
             if self._mode != self.IN:
                 raise RuntimeError("Cannot set pull resistor on output")
             if pull == self.PULL_UP:
@@ -48,7 +46,6 @@ class Pin:
 
     def value(self, val=None):
         if val != None:
-            print("set %d to value %d" %(self.id, val))
             if val == self.LOW:
                 self._value = val
                 GPIO.output(self.id, val)
