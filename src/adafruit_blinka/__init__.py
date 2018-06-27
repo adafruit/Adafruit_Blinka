@@ -1,5 +1,9 @@
-"""Module providing runtime utility objects to support the Micro/CircuitPython api"""
+"""
+`adafruit_blinka` - Runtime utility objects for re-implementation of CircuitPython API
+======================================================================================
 
+* Author(s): cefn
+"""
 
 class Enum(object):
     """

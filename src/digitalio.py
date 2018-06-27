@@ -1,7 +1,15 @@
+"""
+`digitalio` - Digital input and output control
+=================================================
+
+See `CircuitPython:digitalio` in CircuitPython for more details.
+
+* Author(s): cefn
+"""
+
 from machine import Pin
 from adafruit_blinka.agnostic import board as boardId
 from adafruit_blinka import Enum, ContextManaged
-
 
 class DriveMode(Enum):
     PUSH_PULL = None
