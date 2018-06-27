@@ -1,10 +1,12 @@
+"""Microcontroller pins"""
+
 from adafruit_blinka import Enum, agnostic
 
-
 class Pin(Enum):
-    def __init__(self, id):
+    """Reference Pin object"""
+    def __init__(self, pin_id):
         """Identifier for pin, referencing platform-specific pin id"""
-        self.id = id
+        self._id = pin_id
 
     def __repr__(self):
         import board
@@ -17,6 +19,8 @@ class Pin(Enum):
                 return "microcontroller.pin.{}".format(key)
         return repr(self)
 
+# We intentionally are patching into this namespace so skip the wildcard check.
+# pylint: disable=unused-wildcard-import,wildcard-import
 
 if agnostic.microcontroller == "esp8266":
     from adafruit_blinka.microcontroller.esp8266 import *

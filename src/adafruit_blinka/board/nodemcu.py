@@ -1,3 +1,5 @@
+"""NodeMCU pin names"""
+
 from adafruit_blinka.microcontroller.esp8266 import pin
 
 D0 = pin.GPIO16

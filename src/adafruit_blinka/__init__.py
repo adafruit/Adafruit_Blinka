@@ -27,35 +27,43 @@ class Enum(object):
         """
         for key in dir(cls):
             val = getattr(cls, key)
-            if type(val) is cls:
+            if isinstance(cls, val):
                 yield (key, val)
 
 
 class ContextManaged:
+    """An object that automatically deinitializes hardware with a context manager."""
     def __enter__(self):
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
         self.deinit()
 
+    def deinit(self):
+        """Free any hardware used by the object."""
+        pass
+
 
 class Lockable(ContextManaged):
+    """An object that must be locked to prevent collisions on a microcontroller resource."""
     _locked = False
 
     def try_lock(self):
+        """Attempt to grab the lock. Return True on success, False if the lock is already taken."""
         if self._locked:
             return False
-        else:
-            self._locked = True
-            return True
+        self._locked = True
+        return True
 
     def unlock(self):
+        """Release the lock so others may use the resource."""
         if self._locked:
             self._locked = False
         else:
             raise ValueError("Not locked")
 
 def patch_system():
+    """Patch modules that may be different due to the platform."""
     import sys
     from adafruit_blinka.agnostic import time
     sys.modules['time'] = time
