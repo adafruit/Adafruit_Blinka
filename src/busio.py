@@ -1,3 +1,12 @@
+"""
+`busio` - Bus protocol support like I2C and SPI
+=================================================
+
+See `CircuitPython:busio` in CircuitPython for more details.
+
+* Author(s): cefn
+"""
+
 from adafruit_blinka import Enum, Lockable, agnostic
 
 class I2C(Lockable):

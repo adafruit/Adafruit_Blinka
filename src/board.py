@@ -22,16 +22,14 @@
 """
 `board` - Define ids for available pins
 =================================================
-Conditionally imports and re-exports a submodule, such as boards.esp8266 based on 
-platform introspection
+
+See `CircuitPython:board` in CircuitPython for more details.
 
 * Author(s): cefn
 """
+import sys
 
-import gc
-gc.collect()
 from adafruit_blinka.agnostic import board
-gc.collect()
 
 if board == "feather_huzzah":
     from adafruit_blinka.board.feather_huzzah import *
@@ -39,6 +37,7 @@ elif board == "nodemcu":
     from adafruit_blinka.board.nodemcu import *
 elif board == "pyboard":
     from adafruit_blinka.board.pyboard import *
+elif "sphinx" in sys.modules:
+    pass
 else:
     raise NotImplementedError("Board not supported")
-gc.collect()

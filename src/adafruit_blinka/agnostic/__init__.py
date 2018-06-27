@@ -8,10 +8,10 @@ import gc
 import sys
 gc.collect()
 
-try:
-    microcontroller = sys.platform
-except:
-    microcontroller = None
+
+# We intentionally are patching into this namespace as module names so skip the name check.
+# pylint: disable=invalid-name
+microcontroller = sys.platform
 
 board = None
 if microcontroller is not None:

@@ -1,3 +1,5 @@
+"""STM32 pins"""
+
 from microcontroller import Pin
 
 A0 = Pin('A0')
@@ -49,10 +51,10 @@ C13 = Pin('C13')
 D2 = Pin('D2')
 
 # ordered as spiId, sckId, mosiId, misoId
-spiPorts = ((1, B13, B15, B14), (2, A5, A6, A7))
+SPI_PORTS = ((1, B13, B15, B14), (2, A5, A6, A7))
 
 # ordered as uartId, txId, rxId
-uartPorts = (
+UART_PORTS = (
     (1, B6, B7),
     (2, A2, A3),
     (3, B10, B11),
@@ -60,8 +62,7 @@ uartPorts = (
     (6, C6, C7),
 )
 
-i2cPorts = (
+I2C_PORTS = (
     (1, B6, B7),
     (2, B10, B11),
 )
-

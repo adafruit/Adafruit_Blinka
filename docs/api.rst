@@ -6,3 +6,21 @@
 
 .. automodule:: adafruit_blinka
    :members:
+
+.. automodule:: adafruit_blinka.agnostic
+  :members:
+
+.. automodule:: adafruit_blinka.microcontroller
+  :members:
+
+.. automodule:: bitbangio
+  :members:
+
+.. automodule:: board
+  :members:
+
+.. automodule:: busio
+  :members:
+
+.. automodule:: digitalio
+  :members:

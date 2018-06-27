@@ -1,3 +1,5 @@
+"""ESP8266 pin names"""
+
 from microcontroller import Pin
 
 GPIO0 = Pin(0)
@@ -14,12 +16,13 @@ GPIO16 = Pin(16)
 TOUT = Pin("TOUT")
 
 # ordered as spiId, sckId, mosiId, misoId
-spiPorts = ((1, GPIO14, GPIO13, GPIO12))
+SPI_PORTS = ((1, GPIO14, GPIO13, GPIO12))
 
 # ordered as uartId, txId, rxId
-uartPorts = (
+UART_PORTS = (
     (0, GPIO1, GPIO3),
-    # (0, GPIO15, GPIO13) # TODO secondary pins for UART0 configurable from Micropython? How to flag?
+    # TODO secondary pins for UART0 configurable from Micropython? How to flag?
+    # (0, GPIO15, GPIO13)
     (1, GPIO2, None))
 
-i2cPorts = ()
+I2C_PORTS = ()

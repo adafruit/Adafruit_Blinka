@@ -1,6 +1,9 @@
+"""Feather Huzzah pin names"""
+
 from adafruit_blinka.microcontroller.esp8266 import pin
 
-# TODO need equiv of INPUT_PULL_DOWN_16 ? see https://tttapa.github.io/ESP8266/Chap04%20-%20Microcontroller.html
+# TODO need equiv of INPUT_PULL_DOWN_16 ?
+# See https://tttapa.github.io/ESP8266/Chap04%20-%20Microcontroller.html
 
 GPIO0 = pin.GPIO0
 GPIO1 = pin.GPIO1

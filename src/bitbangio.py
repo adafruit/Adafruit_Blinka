@@ -1,3 +1,12 @@
+"""
+`bitbangio` - Bitbanged bus protocols
+==============================================================
+
+See `CircuitPython:bitbangio` in CircuitPython for more details.
+
+* Author(s): cefn
+"""
+
 from adafruit_blinka import Lockable, agnostic
 
 

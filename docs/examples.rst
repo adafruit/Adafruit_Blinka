@@ -1,8 +1,5 @@
-Simple test
-------------
+examples
+--------
 
-Ensure your device works with this simple test.
-
-.. literalinclude:: ../examples/blinka_simpletest.py
-    :caption: examples/blinka_simpletest.py
-    :linenos:
+No examples are currently available. See the `CircuitPython docs
+<https://circuitpython.readthedocs.io/>`_ for extensive API documentation.
