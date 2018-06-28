@@ -9,8 +9,8 @@ Introduction
     :target: https://discord.gg/nBQh6qu
     :alt: Discord
 
-.. image:: https://travis-ci.org/adafruit/Adafruit_Micropython_Blinka.svg?branch=master
-    :target: https://travis-ci.org/adafruit/Adafruit__Micropython_Blinka
+.. image:: https://travis-ci.org/adafruit/Adafruit_Blinka.svg?branch=master
+    :target: https://travis-ci.org/adafruit/Adafruit_Blinka
     :alt: Build Status
 
 This repository contains a selection of packages mirroring the CircuitPython API
@@ -32,13 +32,13 @@ are running Micropython. Since corresponding packages should be built-in to any 
 CircuitPython image, they have no value on a device already running CircuitPython and would likely conflict in unhappy ways.
 
 The test suites in the test/src folder under **testing.universal** are by design
-intended to run on *either* CircuitPython *or* Micropython+compatibility layer to prove conformance. 
+intended to run on *either* CircuitPython *or* Micropython+compatibility layer to prove conformance.
 
 Usage Example
 =============
 
 At the time of writing (`git:7fc1f8ab <https://github.com/cefn/Adafruit_Micropython_Blinka/tree/7fc1f8ab477124628a5afebbf6826005955805f9>`_),
-the following sequence runs through some basic testing of the digitalio compatibility layer... 
+the following sequence runs through some basic testing of the digitalio compatibility layer...
 
 .. code-block:: python
 
@@ -52,7 +52,7 @@ Contributing
 ============
 
 Contributions are welcome! Please read our `Code of Conduct
-<https://github.com/adafruit/Adafruit_Micropython_Blinka/blob/master/CODE_OF_CONDUCT.md>`_
+<https://github.com/adafruit/Adafruit_Blinka/blob/master/CODE_OF_CONDUCT.md>`_
 before contributing to help this project stay welcoming.
 
 Building locally

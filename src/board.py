@@ -37,6 +37,8 @@ elif board == "nodemcu":
     from adafruit_blinka.board.nodemcu import *
 elif board == "pyboard":
     from adafruit_blinka.board.pyboard import *
+elif board == "raspi_2" or board == "raspi_3":
+    from adafruit_blinka.board.raspi_23 import *
 elif "sphinx" in sys.modules:
     pass
 else:

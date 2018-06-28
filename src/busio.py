@@ -8,6 +8,7 @@ See `CircuitPython:busio` in CircuitPython for more details.
 """
 
 from adafruit_blinka import Enum, Lockable, agnostic
+from adafruit_blinka.agnostic import board as boardId
 
 class I2C(Lockable):
     def __init__(self, scl, sda, frequency=400000):
@@ -15,11 +16,14 @@ class I2C(Lockable):
 
     def init(self, scl, sda, frequency):
         self.deinit()
-        from machine import I2C as _I2C
+        if boardId == "raspi_3" or boardId == "raspi_2":
+            from adafruit_blinka.microcontroller.raspi_23.i2c import I2C as _I2C
+        else:
+            from machine import I2C as _I2C
         from microcontroller.pin import i2cPorts
         for portId, portScl, portSda in i2cPorts:
             if scl == portScl and sda == portSda:
-                self._i2c = I2C(portId, mode=_I2C.MASTER, baudrate=frequency)
+                self._i2c = _I2C(portId, mode=_I2C.MASTER, baudrate=frequency)
                 break
         else:
             raise NotImplementedError("No Hardware I2C on (scl,sda)={}\nValid UART ports".format(
@@ -59,27 +63,38 @@ class I2C(Lockable):
 
 class SPI(Lockable):
     def __init__(self, clock, MOSI=None, MISO=None):
+        self.deinit()
+        if boardId == "raspi_3" or boardId == "raspi_2":
+            from adafruit_blinka.microcontroller.raspi_23.spi import SPI as _SPI
+        else:
+            from machine import SPI as _SPI
         from microcontroller.pin import spiPorts
         for portId, portSck, portMosi, portMiso in spiPorts:
             if clock == portSck and MOSI == portMosi and MISO == portMiso:
-                self._spi = SPI(portId)
+                self._spi = _SPI(portId)
                 self._pins = (portSck, portMosi, portMiso)
                 break
         else:
             raise NotImplementedError(
-                "No Hardware SPI on (clock, MOSI, MISO)={}\nValid SPI ports:{}".
+                "No Hardware SPI on (SCLK, MOSI, MISO)={}\nValid SPI ports:{}".
                 format((clock, MOSI, MISO), spiPorts))
 
     def configure(self, baudrate=100000, polarity=0, phase=0, bits=8):
-        if self._locked:
+        if boardId == "raspi_3" or boardId == "raspi_2":
+            from adafruit_blinka.microcontroller.raspi_23.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.raspi_23.pin import Pin
+        else:
+            from machine import SPI as _SPI
             from machine import Pin
+
+        if self._locked:
             # TODO check if #init ignores MOSI=None rather than unsetting, to save _pinIds attribute
             self._spi.init(
                 baudrate=baudrate,
                 polarity=polarity,
                 phase=phase,
                 bits=bits,
-                firstbit=SPI.MSB,
+                firstbit=_SPI.MSB,
                 sck=Pin(self._pins[0].id),
                 mosi=Pin(self._pins[1].id),
                 miso=Pin(self._pins[2].id)

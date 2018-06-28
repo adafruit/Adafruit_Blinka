@@ -21,9 +21,8 @@ REQUIRES_PYTHON = '>=3.6.0'
 VERSION = None
 
 # What packages are required for this module to be executed?
-REQUIRED = [
-    # 'requests', 'maya', 'records',
-]
+with open('requirements.txt') as f:
+    requirements = f.read().splitlines()
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -106,7 +105,7 @@ setup(
     # entry_points={
     #     'console_scripts': ['mycli=mymodule:cli'],
     # },
-    install_requires=REQUIRED,
+    install_requires=requirements,
     include_package_data=True,
     license='MIT',
     classifiers=[
