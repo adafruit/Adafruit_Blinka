@@ -22,4 +22,4 @@ install:
 script:
   - pylint src/**/*.py
   - ([[ ! -d "examples" ]] || pylint --disable=missing-docstring,invalid-name,bad-whitespace examples/*.py)
-  - cd docs && sphinx-build -E -W -b html . _build/html
+  - cd docs && sphinx-build -E -W -b html . _build/html && cd ..
