@@ -29,6 +29,7 @@ deploy:
       tags: true
 
 install:
+  - pip install -r requirements.txt
   - pip install pylint circuitpython-build-tools Sphinx sphinx-rtd-theme
 
 script:
