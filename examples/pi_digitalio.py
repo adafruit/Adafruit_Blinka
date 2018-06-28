@@ -1,8 +1,4 @@
-import sys
 import time
-sys.path.append('/home/pi/Adafruit_Micropython_Blinka/src')
-sys.path.append('/home/pi/Adafruit_Python_GPIO')
-
 import board
 import digitalio
 
