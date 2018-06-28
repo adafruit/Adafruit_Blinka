@@ -19,7 +19,8 @@ with io.open(os.path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='Adafruit-Blinka',
-    use_scm_version=True
+    use_scm_version=True,
+    setup_requires=["setuptools_scm"],
     description='CircuitPython APIs for non-CircuitPython versions of Python such as CPython on Linux and MicroPython.',
     long_description=long_description,
     long_description_content_type='text/x-rst',
@@ -40,7 +41,6 @@ setup(
     # If your package is a single module, use this instead of 'packages':
     py_modules=['bitbangio', 'board', 'busio', 'digitalio'],
     install_requires=['Adafruit-GPIO'],
-    include_package_data=True,
     license='MIT',
     classifiers=[
         # Trove classifiers
