@@ -7,22 +7,8 @@
 import io
 import os
 import sys
-from shutil import rmtree
 
-from setuptools import find_packages, setup, Command
-
-# Package meta-data.
-NAME = 'Adafruit-Blinka'
-DESCRIPTION = 'CircuitPython APIs for non-CircuitPython versions of Python such as CPython on Linux and MicroPython.'
-URL = 'https://github.com/adafruit/Adafruit_Blinka'
-EMAIL = 'python@adafruit.com'
-AUTHOR = 'Adafruit Industries'
-REQUIRES_PYTHON = '>=3.6.0'
-VERSION = None
-
-# What packages are required for this module to be executed?
-with open('requirements.txt') as f:
-    requirements = f.read().splitlines()
+from setuptools import setup
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -31,66 +17,17 @@ here = os.path.abspath(os.path.dirname(__file__))
 with io.open(os.path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = '\n' + f.read()
 
-# Load the package's __version__.py module as a dictionary.
-about = {}
-if not VERSION:
-    # with open(os.path.join(here, NAME, '__version__.py')) as f:
-    with open(os.path.join(here, 'src', '__version__.py')) as f:
-        exec(f.read(), about)
-else:
-    about['__version__'] = VERSION
-
-
-class UploadCommand(Command):
-    """Support setup.py upload."""
-
-    description = 'Build and publish the package.'
-    user_options = []
-
-    @staticmethod
-    def status(s):
-        """Prints things in bold."""
-        print('\033[1m{0}\033[0m'.format(s))
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        try:
-            self.status('Removing previous builds…')
-            rmtree(os.path.join(here, 'dist'))
-        except OSError:
-            pass
-
-        self.status('Building Source and Wheel (universal) distribution…')
-        os.system('{0} setup.py sdist bdist_wheel --universal'.format(sys.executable))
-
-        self.status('Uploading the package to PyPi via Twine…')
-        os.system('twine upload dist/*')
-
-        self.status('Pushing git tags…')
-        os.system('git tag v{0}'.format(about['__version__']))
-        os.system('git push --tags')
-
-        sys.exit()
-
-
-# Where the magic happens:
 setup(
-    name=NAME,
-    version=about['__version__'],
-    description=DESCRIPTION,
+    name='Adafruit-Blinka',
+    use_scm_version=True
+    description='CircuitPython APIs for non-CircuitPython versions of Python such as CPython on Linux and MicroPython.',
     long_description=long_description,
     long_description_content_type='text/x-rst',
-    author=AUTHOR,
-    author_email=EMAIL,
-    python_requires=REQUIRES_PYTHON,
-    url=URL,
+    author='Adafruit Industries',
+    author_email='circuitpython@adafruit.com',
+    python_requires='>=3.6.0',
+    url='https://github.com/adafruit/Adafruit_Blinka',
     package_dir={'': 'src'},
-    #packages=find_packages(exclude=('tests',)),
     packages=[
         'adafruit_blinka',
         'adafruit_blinka.agnostic',
@@ -102,10 +39,7 @@ setup(
     ],
     # If your package is a single module, use this instead of 'packages':
     py_modules=['bitbangio', 'board', 'busio', 'digitalio'],
-    # entry_points={
-    #     'console_scripts': ['mycli=mymodule:cli'],
-    # },
-    install_requires=requirements,
+    install_requires=['Adafruit-GPIO'],
     include_package_data=True,
     license='MIT',
     classifiers=[
@@ -117,8 +51,4 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: Implementation :: MicroPython',
     ],
-    # $ setup.py publish support.
-    cmdclass={
-        'upload': UploadCommand,
-    },
 )
