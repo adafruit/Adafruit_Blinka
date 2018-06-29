@@ -39,7 +39,7 @@ setup(
         'microcontroller'
     ],
     # If your package is a single module, use this instead of 'packages':
-    py_modules=['bitbangio', 'board', 'busio', 'digitalio'],
+    py_modules=['bitbangio', 'board', 'busio', 'digitalio', 'micropython'],
     install_requires=['Adafruit-GPIO'],
     license='MIT',
     classifiers=[
