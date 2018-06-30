@@ -8,7 +8,7 @@ import io
 import os
 import sys
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -29,15 +29,7 @@ setup(
     python_requires='>=3.4.0',
     url='https://github.com/adafruit/Adafruit_Blinka',
     package_dir={'': 'src'},
-    packages=[
-        'adafruit_blinka',
-        'adafruit_blinka.agnostic',
-        'adafruit_blinka.board',
-        'adafruit_blinka.microcontroller',
-        'adafruit_blinka.microcontroller.esp8266',
-        'adafruit_blinka.microcontroller.stm32',
-        'microcontroller'
-    ],
+    packages=find_packages("src"),
     # If your package is a single module, use this instead of 'packages':
     py_modules=['bitbangio', 'board', 'busio', 'digitalio', 'micropython'],
     install_requires=['Adafruit-GPIO'],

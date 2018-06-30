@@ -7,3 +7,6 @@ _build
 build*
 bundles
 *.DS_Store
+.eggs
+dist
+**/*.egg-info
