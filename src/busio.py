@@ -53,6 +53,8 @@ class I2C(Lockable):
         return self._i2c.readfrom_into(address, buffer, stop)
 
     def writeto(self, address, buffer, start=0, end=None, stop=True):
+        if isinstance(buffer, str):
+            buffer = bytes([ord(x) for x in buffer])
         if start is not 0 or end is not None:
             if end is None:
                 return self._i2c.writeto(address, memoryview(buffer)[start:], stop)
