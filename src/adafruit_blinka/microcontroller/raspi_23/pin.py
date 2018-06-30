@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
-GPIO.setmode(GPIO.BCM)
+GPIO.setmode(GPIO.BCM)    # Use BCM pins D4 = GPIO #4
+GPIO.setwarnings(False)   # shh!
 
 # Pins dont exist in CPython so...lets make our own!
 class Pin:
