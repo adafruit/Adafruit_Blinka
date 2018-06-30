@@ -110,10 +110,10 @@ class SPI(Lockable):
         return self._spi.write(buf)
 
     def readinto(self, buf):
-        return self.readinto(buf)
+        return self._spi.readinto(buf)
 
     def write_readinto(self, buffer_out, buffer_in):
-        return self.write_readinto(buffer_out, buffer_in)
+        return self._spi.write_readinto(buffer_out, buffer_in)
 
 
 class UART(Lockable):
