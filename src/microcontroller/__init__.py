@@ -1,7 +1,7 @@
 """Microcontroller pins"""
 
-from adafruit_blinka import Enum, agnostic
-from adafruit_blinka.agnostic import board as board_id
+from adafruit_blinka import Enum
+from adafruit_blinka.agnostic import board_id, platform
 
 class Pin(Enum):
     """Reference Pin object"""
@@ -23,14 +23,14 @@ class Pin(Enum):
 # We intentionally are patching into this namespace so skip the wildcard check.
 # pylint: disable=unused-wildcard-import,wildcard-import
 
-if agnostic.microcontroller == "esp8266":
+if platform == "esp8266":
     from adafruit_blinka.microcontroller.esp8266 import *
-elif agnostic.microcontroller == "stm32":
+elif platform == "stm32":
     from adafruit_blinka.microcontroller.stm32 import *
-elif agnostic.microcontroller == "linux":
+elif platform == "linux":
     if board_id == "raspi_3" or board_id == "raspi_2":
         from adafruit_blinka.microcontroller.raspi_23 import *
     else:
-        raise NotImplementedError("Board not supported: ", board_id)
+        raise NotImplementedError("Board not supported:", board_id)
 else:
-    raise NotImplementedError("Microcontroller not supported: ", agnostic.microcontroller)
+    raise NotImplementedError("Platform not supported:", platform)
