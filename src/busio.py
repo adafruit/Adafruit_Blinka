@@ -8,7 +8,7 @@ See `CircuitPython:busio` in CircuitPython for more details.
 """
 
 from adafruit_blinka import Enum, Lockable, agnostic
-from adafruit_blinka.agnostic import board as boardId
+from adafruit_blinka.agnostic import board_id
 
 class I2C(Lockable):
     def __init__(self, scl, sda, frequency=400000):
@@ -16,7 +16,7 @@ class I2C(Lockable):
 
     def init(self, scl, sda, frequency):
         self.deinit()
-        if boardId == "raspi_3" or boardId == "raspi_2":
+        if board_id == "raspi_3" or board_id == "raspi_2":
             from adafruit_blinka.microcontroller.raspi_23.i2c import I2C as _I2C
         else:
             from machine import I2C as _I2C
@@ -64,7 +64,7 @@ class I2C(Lockable):
 class SPI(Lockable):
     def __init__(self, clock, MOSI=None, MISO=None):
         self.deinit()
-        if boardId == "raspi_3" or boardId == "raspi_2":
+        if board_id == "raspi_3" or board_id == "raspi_2":
             from adafruit_blinka.microcontroller.raspi_23.spi import SPI as _SPI
         else:
             from machine import SPI as _SPI
@@ -80,7 +80,7 @@ class SPI(Lockable):
                 format((clock, MOSI, MISO), spiPorts))
 
     def configure(self, baudrate=100000, polarity=0, phase=0, bits=8):
-        if boardId == "raspi_3" or boardId == "raspi_2":
+        if board_id == "raspi_3" or board_id == "raspi_2":
             from adafruit_blinka.microcontroller.raspi_23.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.raspi_23.pin import Pin
         else:

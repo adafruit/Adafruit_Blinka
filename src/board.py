@@ -29,15 +29,15 @@ See `CircuitPython:board` in CircuitPython for more details.
 """
 import sys
 
-from adafruit_blinka.agnostic import board
+from adafruit_blinka.agnostic import board_id
 
-if board == "feather_huzzah":
+if board_id == "feather_huzzah":
     from adafruit_blinka.board.feather_huzzah import *
-elif board == "nodemcu":
+elif board_id == "nodemcu":
     from adafruit_blinka.board.nodemcu import *
-elif board == "pyboard":
+elif board_id == "pyboard":
     from adafruit_blinka.board.pyboard import *
-elif board == "raspi_2" or board == "raspi_3":
+elif board_id == "raspi_2" or board_id == "raspi_3":
     from adafruit_blinka.board.raspi_23 import *
 elif "sphinx" in sys.modules:
     pass

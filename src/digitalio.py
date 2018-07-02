@@ -7,10 +7,10 @@ See `CircuitPython:digitalio` in CircuitPython for more details.
 * Author(s): cefn
 """
 
-from adafruit_blinka.agnostic import board as boardId
-if boardId == "raspi_3" or boardId == "raspi_2":
+from adafruit_blinka.agnostic import board_id
+if board_id == "raspi_3" or board_id == "raspi_2":
     from adafruit_blinka.microcontroller.raspi_23.pin import Pin
-else:
+elif board_id == "pyboard":
     from machine import Pin
 from adafruit_blinka import Enum, ContextManaged
 

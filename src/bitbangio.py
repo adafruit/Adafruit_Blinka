@@ -13,7 +13,7 @@ from adafruit_blinka import Lockable, agnostic
 class I2C(Lockable):
     def __init__(self, scl, sda, frequency=400000):
         if agnostic.microcontroller == "stm32":
-            raise NotImplementedError("No software I2C on {}".format(agnostic.board))
+            raise NotImplementedError("No software I2C on {}".format(agnostic.board_id))
         self.init(scl, sda, frequency)
 
     def init(self, scl, sda, frequency):
