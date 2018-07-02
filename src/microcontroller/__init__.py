@@ -31,6 +31,6 @@ elif platform == "linux":
     if board_id == "raspi_3" or board_id == "raspi_2":
         from adafruit_blinka.microcontroller.raspi_23 import *
     else:
-        raise NotImplementedError("Board not supported: ", board_id)
+        raise NotImplementedError("Board not supported:", board_id)
 else:
-    raise NotImplementedError("Microcontroller not supported: ", agnostic.microcontroller)
+    raise NotImplementedError("Platform not supported:", platform)
