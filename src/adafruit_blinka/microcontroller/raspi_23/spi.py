@@ -68,9 +68,11 @@ class SPI:
             print("Could not open SPI device - check if SPI is enabled in kernel!")
             raise
 
-    def write_readinto(self, self, buffer_out, buffer_in, out_start, out_end, in_start, in_end):
+    def write_readinto(self, buffer_out, buffer_in, out_start=0, out_end=len(buffer_out), in_start=0, in_end=len(buffer_in)):
         if not buffer_out or not buffer_in:
             return
+        if out_end - out_start != in_end - in_start:
+            raise RuntimeError
         try:
             print('opening spi')
             self._spi.open(self._port, 0)
