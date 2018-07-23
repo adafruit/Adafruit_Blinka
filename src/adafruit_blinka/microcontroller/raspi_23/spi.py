@@ -67,3 +67,23 @@ class SPI:
         except FileNotFoundError as not_found:
             print("Could not open SPI device - check if SPI is enabled in kernel!")
             raise
+
+    def write_readinto(self, self, buffer_out, buffer_in, out_start, out_end, in_start, in_end):
+        if not buffer_out or not buffer_in:
+            return
+        try:
+            print('opening spi')
+            self._spi.open(self._port, 0)
+            try:
+                self._spi.no_cs = True  # this doesn't work but try anyways
+            except AttributeError:
+                pass
+            self._spi.max_speed_hz = self.baudrate
+            self._spi.mode = self.mode
+            self._spi.bits_per_word = self.bits
+            buffer_in = self._spi.xfer(buffer_out)
+            self._spi.close()
+            return buffer_in
+        except FileNotFoundError as not_found:
+            print("Could not open SPI device - check if SPI is enabled in kernel!")
+            raise
