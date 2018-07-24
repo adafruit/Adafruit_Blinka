@@ -71,12 +71,9 @@ class SPI:
     def write_readinto(self, buffer_out, buffer_in, out_start=0, out_end=None, in_start=0, in_end=None):
         if not buffer_out or not buffer_in:
             return
-        out_end = len(buffer_out)
-        in_end = len(buffer_in)
         if out_end - out_start != in_end - in_start:
             raise RuntimeError
         try:
-            print('opening spi')
             self._spi.open(self._port, 0)
             try:
                 self._spi.no_cs = True  # this doesn't work but try anyways
