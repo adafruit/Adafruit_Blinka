@@ -82,7 +82,9 @@ class SPI:
             self._spi.max_speed_hz = self.baudrate
             self._spi.mode = self.mode
             self._spi.bits_per_word = self.bits
-            buffer_in = self._spi.xfer(list(buffer_out))
+            data = self._spi.xfer(list(buffer_out))
+            for i in range(len(buffer_in)): # 'readinto' the given buffer
+                buffer_in[i] = data[i]
             self._spi.close()
         except FileNotFoundError as not_found:
             print("Could not open SPI device - check if SPI is enabled in kernel!")
