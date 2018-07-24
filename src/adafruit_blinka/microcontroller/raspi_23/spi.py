@@ -71,8 +71,11 @@ class SPI:
     def write_readinto(self, buffer_out, buffer_in, out_start=0, out_end=None, in_start=0, in_end=None):
         if not buffer_out or not buffer_in:
             return
+        if out_end is None or in_end is None:
+            out_end = len(buffer_out)
+            in_end = len(buffer_in)
         if out_end - out_start != in_end - in_start:
-            raise RuntimeError
+            raise RuntimeError('Buffer slices must be of equal length.')
         try:
             self._spi.open(self._port, 0)
             try:
@@ -82,8 +85,8 @@ class SPI:
             self._spi.max_speed_hz = self.baudrate
             self._spi.mode = self.mode
             self._spi.bits_per_word = self.bits
-            data = self._spi.xfer(list(buffer_out))
-            for i in range(len(buffer_in)): # 'readinto' the given buffer
+            data = self._spi.xfer(list(buffer_out[out_start:out_end]))
+            for i in range(len(buffer_in[in_start:in_end])): # 'readinto' the given buffer
                 buffer_in[i] = data[i]
             self._spi.close()
         except FileNotFoundError as not_found:
