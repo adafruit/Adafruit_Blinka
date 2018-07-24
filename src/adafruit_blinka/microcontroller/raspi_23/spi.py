@@ -83,7 +83,6 @@ class SPI:
             self._spi.mode = self.mode
             self._spi.bits_per_word = self.bits
             buffer_in = self._spi.xfer(list(buffer_out))
-            buffer_in = bytearray(buffer_in)
             self._spi.close()
         except FileNotFoundError as not_found:
             print("Could not open SPI device - check if SPI is enabled in kernel!")
