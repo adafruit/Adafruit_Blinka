@@ -108,11 +108,11 @@ class SPI(Lockable):
         self._spi = None
         self._pinIds = None
 
-    def write(self, buf):
-        return self._spi.write(buf)
+    def write(self, buf, start=0, end=None):
+        return self._spi.write(buf, start, end)
 
-    def readinto(self, buf):
-        return self._spi.readinto(buf)
+    def readinto(self, buf, start=0, end=None, write_value=0):
+        return self._spi.readinto(buf, start, end)
 
     def write_readinto(self, buffer_out, buffer_in,  out_start=0, out_end=None, in_start=0, in_end=None):
         return self._spi.write_readinto(buffer_out, buffer_in, out_start, out_end, in_start, in_end)
