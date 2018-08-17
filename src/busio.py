@@ -72,7 +72,9 @@ class SPI(Lockable):
             from machine import SPI as _SPI
         from microcontroller.pin import spiPorts
         for portId, portSck, portMosi, portMiso in spiPorts:
-            if clock == portSck and MOSI == portMosi and MISO == portMiso:
+            if ((clock == portSck) and                   # Clock is required!
+                (MOSI == portMosi or MOSI == None) and   # But can do with just output
+                (MISO == portMiso or MISO == None)):      # Or just input
                 self._spi = _SPI(portId)
                 self._pins = (portSck, portMosi, portMiso)
                 break
