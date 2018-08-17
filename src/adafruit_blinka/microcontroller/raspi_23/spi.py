@@ -19,9 +19,9 @@ class SPI:
                   firstbit=MSB, sck=None, mosi=None, miso=None):
         mode = 0
         if polarity:
-            mode |= CPOL
+            mode |= self.CPOL
         if phase:
-            mode |= CPHA
+            mode |= self.CPHA
 
         self.clock_pin = sck
         self.mosi_pin = mosi
