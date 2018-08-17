@@ -32,12 +32,12 @@ class I2C:
             found.append(addr)
         return found
 
-    def writeto(self, address, buffer, start=0, end=None, stop=True):
+    def writeto(self, address, buffer, *, start=0, end=None, stop=True):
         if end is None:
             end = len(buffer)
         self._i2c_bus.write_bytes(address, buffer[start:end])
 
-    def readfrom_into(self, address, buffer, start=0, end=None, stop=True):
+    def readfrom_into(self, address, buffer, *, start=0, end=None, stop=True):
         if end is None:
             end = len(buffer)
         
@@ -45,7 +45,7 @@ class I2C:
         for i in range(end-start):
             buffer[i+start] = readin[i]
 
-    def writeto_then_readfrom(self, address, buffer_out, buffer_in,
+    def writeto_then_readfrom(self, address, buffer_out, buffer_in, *,
                        out_start=0, out_end=None,
                        in_start=0, in_end=None, stop=False):
         if out_end is None:
