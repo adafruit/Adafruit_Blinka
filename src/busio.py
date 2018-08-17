@@ -63,7 +63,7 @@ class I2C(Lockable):
         return self._i2c.writeto(address, buffer, stop)
 
     def writeto_then_readfrom(self, address, buffer_out, buffer_in, out_start=0, out_end=None, in_start=0, in_end=None, stop=False):
-        return self._i2c.write_readinto(address, buffer_out, buffer_in, out_start, out_end, in_start, in_end, stop)
+        return self._i2c.writeto_then_readfrom(address, buffer_out, buffer_in, out_start, out_end, in_start, in_end, stop)
 
 class SPI(Lockable):
     def __init__(self, clock, MOSI=None, MISO=None):
