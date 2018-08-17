@@ -44,7 +44,7 @@ class I2C(Lockable):
     def scan(self):
         return self._i2c.scan()
 
-    def readfrom_into(self, address, buffer, start=0, end=None):
+    def readfrom_into(self, address, buffer, *, start=0, end=None):
         if start is not 0 or end is not None:
             if end is None:
                 end = len(buffer)
@@ -52,7 +52,7 @@ class I2C(Lockable):
         stop = True  # remove for efficiency later
         return self._i2c.readfrom_into(address, buffer, stop)
 
-    def writeto(self, address, buffer, start=0, end=None, stop=True):
+    def writeto(self, address, buffer, *, start=0, end=None, stop=True):
         if isinstance(buffer, str):
             buffer = bytes([ord(x) for x in buffer])
         if start is not 0 or end is not None:
@@ -62,6 +62,8 @@ class I2C(Lockable):
                 return self._i2c.writeto(address, memoryview(buffer)[start:end], stop)
         return self._i2c.writeto(address, buffer, stop)
 
+    def writeto_then_readfrom(self, address, buffer_out, buffer_in, *, out_start=0, out_end=None, in_start=0, in_end=None, stop=False):
+        return self._i2c.writeto_then_readfrom(address, buffer_out, buffer_in, out_start, out_end, in_start, in_end, stop)
 
 class SPI(Lockable):
     def __init__(self, clock, MOSI=None, MISO=None):

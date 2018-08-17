@@ -32,10 +32,35 @@ class I2C:
             found.append(addr)
         return found
 
-    def writeto(self, address, buffer, stop=True):
-        self._i2c_bus.write_bytes(address, buffer)
+    def writeto(self, address, buffer, *, start=0, end=None, stop=True):
+        if end is None:
+            end = len(buffer)
+        self._i2c_bus.write_bytes(address, buffer[start:end])
 
-    def readfrom_into(self, address, buffer, stop=True):
-        readin = self._i2c_bus.read_bytes(address, len(buffer))
-        for i in range(len(buffer)):
-            buffer[i] = readin[i]
+    def readfrom_into(self, address, buffer, *, start=0, end=None, stop=True):
+        if end is None:
+            end = len(buffer)
+        
+        readin = self._i2c_bus.read_bytes(address, end-start)
+        for i in range(end-start):
+            buffer[i+start] = readin[i]
+
+    def writeto_then_readfrom(self, address, buffer_out, buffer_in, *,
+                       out_start=0, out_end=None,
+                       in_start=0, in_end=None, stop=False):
+        if out_end is None:
+            out_end = len(buffer_out)        
+        if in_end is None:
+            in_end = len(buffer_in)
+        if stop:
+            # To generate a stop in linux, do in two transactions
+            self.writeto(address, buffer_out, start=out_start, end=out_end, stop=True)
+            self.readfrom_into(address, buffer_in, start=in_start, end=in_end)
+        else:
+            # To generate without a stop, do in one block transaction
+            if out_end-out_start != 1:
+                raise NotImplementedError("Currently can only write a single byte in writeto_then_readfrom")
+            readin = self._i2c_bus.read_i2c_block_data(address, buffer_out[out_start:out_end][0], in_end-in_start)
+            for i in range(in_end-in_start):
+                buffer_in[i+in_start] = readin[i]
+
