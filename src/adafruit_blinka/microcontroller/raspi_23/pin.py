@@ -91,12 +91,12 @@ D16 = Pin(16)
 D17 = Pin(17)
 D18 = Pin(18)
 D19 = Pin(19)
-MISO_2 = Pin(19)
+MISO_1 = Pin(19)
 D20 = Pin(20)
-MOSI_2 = Pin(20)
+MOSI_1 = Pin(20)
 D21 = Pin(21)
-SCLK_2 = Pin(21)
-SCK_2 = Pin(21)
+SCLK_1 = Pin(21)
+SCK_1 = Pin(21)
 D22 = Pin(22)
 D23 = Pin(23)
 D24 = Pin(24)
@@ -105,7 +105,7 @@ D26 = Pin(26)
 D27 = Pin(27)
 
 # ordered as spiId, sckId, mosiId, misoId
-spiPorts = ((0, SCLK, MOSI, MISO), (1, SCLK_2, MOSI_2, MISO_2))
+spiPorts = ((0, SCLK, MOSI, MISO), (1, SCLK_1, MOSI_1, MISO_1))
 
 # ordered as uartId, txId, rxId
 uartPorts = (
