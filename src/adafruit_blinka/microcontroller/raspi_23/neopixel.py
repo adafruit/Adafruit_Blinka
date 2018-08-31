@@ -70,8 +70,6 @@ def neopixel_write(gpio, buf):
     if resp != ws.WS2811_SUCCESS:
         message = ws.ws2811_get_return_t_str(resp)
         raise RuntimeError('ws2811_render failed with code {0} ({1})'.format(resp, message))
-    if resp == 5:
-        print("You'll need to prefix python with 'sudo' to use neopixel_write.")
     time.sleep(0.001 * ((len(buf)//100)+1))  # about 1ms per 100 bytes
 
 
