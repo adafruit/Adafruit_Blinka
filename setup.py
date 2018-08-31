@@ -31,8 +31,8 @@ setup(
     package_dir={'': 'src'},
     packages=find_packages("src"),
     # If your package is a single module, use this instead of 'packages':
-    py_modules=['bitbangio', 'board', 'busio', 'digitalio', 'micropython'],
-    install_requires=['Adafruit-GPIO'],
+    py_modules=['bitbangio', 'board', 'busio', 'digitalio', 'micropython', 'neopixel_write'],
+    install_requires=['Adafruit-GPIO', 'rpi_ws281x'],
     license='MIT',
     classifiers=[
         # Trove classifiers
