@@ -58,9 +58,9 @@ def neopixel_write(gpio, buf):
 
     # assign all colors!
     for i in range(len(buf) // 3):
-        r = buf[3*i] & 0xFF
-        g = buf[3*i+1] & 0xFF
-        b = buf[3*i+2] & 0xFF
+        r = buf[3*i]
+        g = buf[3*i+1]
+        b = buf[3*i+2]
         pixel = (r << 16) | (g << 8) | b
         ws.ws2811_led_set(channel, i, pixel)
     
