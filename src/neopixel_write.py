@@ -21,4 +21,7 @@ else:
 
 def neopixel_write(gpio, buf):
     """Write buf out on the given DigitalInOut."""
-    return _neopixel.neopixel_write(gpio, buf)
+    try:
+      return _neopixel.neopixel_write(gpio, buf)
+    except RuntimeError:
+      print("You'll need to prefix python with 'sudo' to use neopixel_write.")
