@@ -11,6 +11,7 @@ import sys
 platform = sys.platform
 
 board_id = None
+
 if platform is not None:
     if platform == "esp8266":  # TODO more conservative board-guessing
         board_id = "feather_huzzah"
@@ -28,6 +29,8 @@ if platform is not None:
                 board_id = "raspi_2"
             elif Platform.pi_version() == 3:
                 board_id = "raspi_3"
+        elif Platform.platform_detect() == Platform.BEAGLEBONE_BLACK:
+            board_id = "beaglebone_black"
 
 implementation = sys.implementation.name
 if implementation == "micropython":
