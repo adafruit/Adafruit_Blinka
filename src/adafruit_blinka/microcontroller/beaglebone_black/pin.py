@@ -1,3 +1,5 @@
+import Adafruit_BBIO.GPIO as GPIO
+
 # Pins dont exist in CPython so...lets make our own!
 class Pin:
     IN = 0
@@ -54,9 +56,16 @@ class Pin:
         else:
             return GPIO.input(self.id)
 
-P8_19 = Pin('P8_19')
 P8_13 = Pin('P8_13')
+P8_19 = Pin('P8_19')
 
+P9_12 = Pin('P9_12')
+
+
+USR0 = Pin('USR0')
+USR1 = Pin('USR1')
+USR2 = Pin('USR2')
+USR3 = Pin('USR3')
 
 # ordered as spiId, sckId, mosiId, misoId
 spiPorts = ()
