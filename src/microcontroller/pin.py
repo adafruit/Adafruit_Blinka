@@ -12,6 +12,8 @@ elif agnostic.platform == "stm32":
 elif agnostic.platform == "linux":
     if agnostic.board_id == "raspi_3" or agnostic.board_id == "raspi_2":
         from adafruit_blinka.microcontroller.raspi_23.pin import *
+    elif agnostic.board_id == "beaglebone_black":
+        from adafruit_blinka.microcontroller.beaglebone_black.pin import *
     else:
         raise NotImplementedError("Board not supported: ", agnostic.board_id)
 else:

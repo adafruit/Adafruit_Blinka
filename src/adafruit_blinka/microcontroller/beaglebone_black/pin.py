@@ -129,6 +129,9 @@ USR1 = Pin('USR1')
 USR2 = Pin('USR2')
 USR3 = Pin('USR3')
 
+SCL = Pin('P9_19')
+SDA = Pin('P9_20')
+
 # ordered as spiId, sckId, mosiId, misoId
 spiPorts = ()
 
@@ -138,6 +141,6 @@ uartPorts = (
 )
 
 i2cPorts = (
-    (),
+    (1, SCL, SDA),
 )
 

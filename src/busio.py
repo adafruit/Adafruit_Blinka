@@ -18,6 +18,8 @@ class I2C(Lockable):
         self.deinit()
         if board_id == "raspi_3" or board_id == "raspi_2":
             from adafruit_blinka.microcontroller.raspi_23.i2c import I2C as _I2C
+        if board_id == "beaglebone_black":
+            from adafruit_blinka.microcontroller.raspi_23.i2c import I2C as _I2C
         else:
             from machine import I2C as _I2C
         from microcontroller.pin import i2cPorts
@@ -72,6 +74,8 @@ class SPI(Lockable):
         self.deinit()
         if board_id == "raspi_3" or board_id == "raspi_2":
             from adafruit_blinka.microcontroller.raspi_23.spi import SPI as _SPI
+        elif board_id == "beaglebone_black":
+            from adafruit_blinka.microcontroller.beaglebone_black.spi import SPI as _SPI
         else:
             from machine import SPI as _SPI
         from microcontroller.pin import spiPorts
@@ -91,6 +95,9 @@ class SPI(Lockable):
         if board_id == "raspi_3" or board_id == "raspi_2":
             from adafruit_blinka.microcontroller.raspi_23.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.raspi_23.pin import Pin
+        elif board_id == "beaglebone_black":
+            from adafruit_blinka.microcontroller.beaglebone_black.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.beaglebone_black.pin import Pin
         else:
             from machine import SPI as _SPI
             from machine import Pin

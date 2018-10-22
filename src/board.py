@@ -44,4 +44,5 @@ elif board_id == "beaglebone_black":
 elif "sphinx" in sys.modules:
     pass
 else:
+    print("board.py: board not supported")
     raise NotImplementedError("Board not supported")
