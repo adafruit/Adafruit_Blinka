@@ -73,3 +73,23 @@ LED_USR0 = pin.USR0
 LED_USR1 = pin.USR1
 LED_USR2 = pin.USR2
 LED_USR3 = pin.USR3
+
+# I2C and SPI pins from:
+# src/adafruit_blinka/board/raspi_23.py
+# SDA = pin.SDA
+# SCL = pin.SCL
+# CE1 = pin.D7
+# CE0 = pin.D8
+# MISO = pin.D9
+# MOSI = pin.D10
+# SCLK = pin.D11
+# SCK = pin.D11
+# TXD = pin.D14
+# RXD = pin.D15
+# MISO_1 = pin.D19
+# MOSI_1 = pin.D20
+# SCLK_1 = pin.D21
+# SCK_1 = pin.D21
+
+SDA = pin.SDA
+SCL = pin.SCL
