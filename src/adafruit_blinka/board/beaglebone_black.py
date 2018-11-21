@@ -104,3 +104,5 @@ CE0 = pin.CE0
 MOSI = pin.MOSI
 MISO = pin.MISO
 SCLK = pin.SCLK
+#CircuitPython naming convention for SPI Clock
+SCK = pin.SCK

@@ -151,13 +151,12 @@ CE0 = Pin('P9_17')
 MOSI = Pin('P9_18')
 MISO = Pin('P9_21')
 SCLK = Pin('P9_22')
+#CircuitPython naming convention for SPI Clock
+SCK = Pin('P9_22')
 
-# example from RPi:
-# spiPorts = ((0, SCLK, MOSI, MISO), (1, SCLK_1, MOSI_1, MISO_1))
 # ordered as spiId, sckId, mosiId, misoId
-spiPorts = (
-   (0, SCLK, MOSI, MISO)
-)
+#spiPorts = ((0, SCLK, MOSI, MISO), (1, SCLK_1, MOSI_1, MISO_1))
+spiPorts = ((0, SCLK, MOSI, MISO), (1, SCLK, MOSI, MISO))
 
 # ordered as uartId, txId, rxId
 uartPorts = (
