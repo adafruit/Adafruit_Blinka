@@ -132,8 +132,32 @@ USR3 = Pin('USR3')
 SCL = Pin('P9_19')
 SDA = Pin('P9_20')
 
+# Refer to header default pin modes
+# http://beagleboard.org/static/images/cape-headers.png
+#
+# P9_17 (SPI0_CSO => CE0) enables peripheral device
+# P9_18 (SPI0_D1 => MOSI) outputs data to peripheral device
+# P9_21 (SPIO_DO => MISO) receives data from peripheral device
+# P9_22 (SPI0_SCLK => SCLK) outputs clock signal
+# 
+# Use config-pin to set pin mode for SPI pins
+# https://github.com/beagleboard/bb.org-overlays/tree/master/tools/beaglebone-universal-io
+# config-pin p9.17 spi_cs
+# config-pin p9.18 spi
+# config-pin p9.21 spi
+# config-pin p9.22 spi_sclk
+#
+CE0 = Pin('P9_17')
+MOSI = Pin('P9_18')
+MISO = Pin('P9_21')
+SCLK = Pin('P9_22')
+
+# example from RPi:
+# spiPorts = ((0, SCLK, MOSI, MISO), (1, SCLK_1, MOSI_1, MISO_1))
 # ordered as spiId, sckId, mosiId, misoId
-spiPorts = ()
+spiPorts = (
+   (0, SCLK, MOSI, MISO)
+)
 
 # ordered as uartId, txId, rxId
 uartPorts = (

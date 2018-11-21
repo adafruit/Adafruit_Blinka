@@ -93,3 +93,14 @@ LED_USR3 = pin.USR3
 
 SDA = pin.SDA
 SCL = pin.SCL
+
+# Refer to header default pin modes
+# http://beagleboard.org/static/images/cape-headers.png
+# P9_17 (SPI0_CSO => CE0) enables peripheral device
+# P9_18 (SPI0_D1 => MOSI) outputs data to peripheral device
+# P9_21 (SPIO_DO => MISO) receives data from peripheral device
+# P9_22 (SPI0_SCLK => SCLK) outputs clock signal
+CE0 = pin.CE0
+MOSI = pin.MOSI
+MISO = pin.MISO
+SCLK = pin.SCLK
