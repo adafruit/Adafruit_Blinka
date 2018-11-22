@@ -132,8 +132,60 @@ USR3 = Pin('USR3')
 SCL = Pin('P9_19')
 SDA = Pin('P9_20')
 
+# Refer to header default pin modes
+# http://beagleboard.org/static/images/cape-headers.png
+#
+# P9_17 (SPI0_CSO => CE0) enables peripheral device
+# P9_18 (SPI0_D1 => MOSI) outputs data to peripheral device
+# P9_21 (SPIO_DO => MISO) receives data from peripheral device
+# P9_22 (SPI0_SCLK => SCLK) outputs clock signal
+# 
+# Use config-pin to set pin mode for SPI pins
+# https://github.com/beagleboard/bb.org-overlays/tree/master/tools/beaglebone-universal-io
+# config-pin p9.17 spi_cs
+# config-pin p9.18 spi
+# config-pin p9.21 spi
+# config-pin p9.22 spi_sclk
+#
+CE0 = Pin('P9_17')
+MOSI = Pin('P9_18')
+MISO = Pin('P9_21')
+SCLK = Pin('P9_22')
+#CircuitPython naming convention for SPI Clock
+SCK = Pin('P9_22')
+
+# Pins for SPI1
+# refer to:
+# http://beagleboard.org/static/images/cape-headers-spi.png
+#
+# CE1 P9.28 SPI1_CS0
+# MISO_1 P9.29 SPI1_D0
+# MOSI_1 P9.30 SPI1_D1
+# SCLK_1 P9.31 SPI_SCLK
+#
+# SPI1 conflicts with HDMI Audio (McASP)
+#
+# Refer to:
+# https://elinux.org/Beagleboard:BeagleBoneBlack_Debian#U-Boot_Overlays
+#
+# To Disable HDMI AUDIO, uncomment this line in /boot/uEnv.txt:
+# disable_uboot_overlay_audio=1
+#
+# Set pin modes for SPI1 with:
+#
+# config-pin p9.28 spi1_cs
+# config-pin p9.29 spi1
+# config-pin p9.30 spi1
+# config-pin p9.31 spi_sclk
+CE1 = Pin('P9_28')
+MOSI_1 = Pin('P9_29')
+MISO_1 = Pin('P9_30')
+SCLK_1 = Pin('P9_31')
+#CircuitPython naming convention for SPI Clock
+SCK_1 = Pin('P9_31')
+
 # ordered as spiId, sckId, mosiId, misoId
-spiPorts = ()
+spiPorts = ((0, SCLK, MOSI, MISO), (1, SCLK_1, MOSI_1, MISO_1))
 
 # ordered as uartId, txId, rxId
 uartPorts = (

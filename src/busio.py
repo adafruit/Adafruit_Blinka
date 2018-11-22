@@ -71,18 +71,26 @@ class I2C(Lockable):
 
 class SPI(Lockable):
     def __init__(self, clock, MOSI=None, MISO=None):
+        print("SPI(): __init()")
         self.deinit()
         if board_id == "raspi_3" or board_id == "raspi_2":
             from adafruit_blinka.microcontroller.raspi_23.spi import SPI as _SPI
         elif board_id == "beaglebone_black":
-            from adafruit_blinka.microcontroller.beaglebone_black.spi import SPI as _SPI
+            print("SPI(): beaglebone_black: from adafruit_blinka.microcontroller.raspi_23.spi import SPI as _SPI")
+            from adafruit_blinka.microcontroller.raspi_23.spi import SPI as _SPI
         else:
             from machine import SPI as _SPI
         from microcontroller.pin import spiPorts
+        print("spiPorts: {0}".format(spiPorts))
+        print("for:")
         for portId, portSck, portMosi, portMiso in spiPorts:
+            print(portId, portSck, portMosi, portMiso)
             if ((clock == portSck) and                   # Clock is required!
                 (MOSI == portMosi or MOSI == None) and   # But can do with just output
                 (MISO == portMiso or MISO == None)):      # Or just input
+                print("Line 91")
+                print(_SPI)
+                print(_SPI(portId))
                 self._spi = _SPI(portId)
                 self._pins = (portSck, portMosi, portMiso)
                 break
@@ -96,7 +104,8 @@ class SPI(Lockable):
             from adafruit_blinka.microcontroller.raspi_23.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.raspi_23.pin import Pin
         elif board_id == "beaglebone_black":
-            from adafruit_blinka.microcontroller.beaglebone_black.spi import SPI as _SPI
+            # reuse the raspberry pi class as both boards use Linux spidev
+            from adafruit_blinka.microcontroller.raspi_23.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.beaglebone_black.pin import Pin
         else:
             from machine import SPI as _SPI
