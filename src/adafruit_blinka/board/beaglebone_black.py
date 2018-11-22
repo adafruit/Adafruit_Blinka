@@ -106,3 +106,12 @@ MISO = pin.MISO
 SCLK = pin.SCLK
 #CircuitPython naming convention for SPI Clock
 SCK = pin.SCK
+
+# SPI1 pins
+# http://beagleboard.org/static/images/cape-headers-spi.png
+CE1 = pin.CE1
+MOSI_1 = pin.MOSI_1
+MISO_1 = pin.MISO_1
+SCLK_1 = pin.SCLK_1
+#CircuitPython naming convention for SPI Clock
+SCK_1 = pin.SCK_1

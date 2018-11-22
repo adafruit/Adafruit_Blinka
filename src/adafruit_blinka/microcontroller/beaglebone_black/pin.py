@@ -154,9 +154,38 @@ SCLK = Pin('P9_22')
 #CircuitPython naming convention for SPI Clock
 SCK = Pin('P9_22')
 
+# Pins for SPI1
+# refer to:
+# http://beagleboard.org/static/images/cape-headers-spi.png
+#
+# CE1 P9.28 SPI1_CS0
+# MISO_1 P9.29 SPI1_D0
+# MOSI_1 P9.30 SPI1_D1
+# SCLK_1 P9.31 SPI_SCLK
+#
+# SPI1 conflicts with HDMI Audio (McASP)
+#
+# Refer to:
+# https://elinux.org/Beagleboard:BeagleBoneBlack_Debian#U-Boot_Overlays
+#
+# To Disable HDMI AUDIO, uncomment this line in /boot/uEnv.txt:
+# disable_uboot_overlay_audio=1
+#
+# Set pin modes for SPI1 with:
+#
+# config-pin p9.28 spi1_cs
+# config-pin p9.29 spi1
+# config-pin p9.30 spi1
+# config-pin p9.31 spi_sclk
+CE1 = Pin('P9_28')
+MOSI_1 = Pin('P9_29')
+MISO_1 = Pin('P9_30')
+SCLK_1 = Pin('P9_31')
+#CircuitPython naming convention for SPI Clock
+SCK_1 = Pin('P9_31')
+
 # ordered as spiId, sckId, mosiId, misoId
-#spiPorts = ((0, SCLK, MOSI, MISO), (1, SCLK_1, MOSI_1, MISO_1))
-spiPorts = ((0, SCLK, MOSI, MISO), (1, SCLK, MOSI, MISO))
+spiPorts = ((0, SCLK, MOSI, MISO), (1, SCLK_1, MOSI_1, MISO_1))
 
 # ordered as uartId, txId, rxId
 uartPorts = (
