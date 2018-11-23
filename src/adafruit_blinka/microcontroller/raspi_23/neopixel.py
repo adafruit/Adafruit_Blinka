@@ -9,7 +9,7 @@ LED_FREQ_HZ    = 800000     # Frequency of the LED signal.  We only support 800K
 LED_DMA_NUM    = 10         # DMA channel to use, can be 0-14.
 LED_BRIGHTNESS = 255        # We manage the brightness in the neopixel library
 LED_INVERT     = 0          # We don't support inverted logic
-LED_STRIP      = ws.WS2811_STRIP_RGB # We manage the color order within the neopixel library
+LED_STRIP      = None # We manage the color order within the neopixel library
 
 # a 'static' object that we will use to manage our PWM DMA channel
 # we only support one LED strip per raspi
@@ -36,7 +36,18 @@ def neopixel_write(gpio, buf):
         channel = ws.ws2811_channel_get(_led_strip, LED_CHANNEL)
 
         # Initialize the channel in use
-        ws.ws2811_channel_t_count_set(channel, math.ceil(len(buf)/3)) # we manage 4 vs 3 bytes in the library
+        count = 0
+        if len(buf) % 3 == 0:            
+            # most common, divisible by 3 is likely RGB
+            LED_STRIP = ws.WS2811_STRIP_RGB
+            count = len(buf)//3
+        elif len(buf) % 4 == 0:
+            LED_STRIP = ws.SK6812_STRIP_RGBW
+            count = len(buf)//4
+        else:
+            raise RuntimeError("We only support 3 or 4 bytes-per-pixel")
+
+        ws.ws2811_channel_t_count_set(channel, count) # we manage 4 vs 3 bytes in the library
         ws.ws2811_channel_t_gpionum_set(channel, gpio._pin.id)
         ws.ws2811_channel_t_invert_set(channel, LED_INVERT)
         ws.ws2811_channel_t_brightness_set(channel, LED_BRIGHTNESS)
