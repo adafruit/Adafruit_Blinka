@@ -47,8 +47,8 @@ class PulseIn:
         if DEBUG:
             print(cmd)
         
-        self.process = subprocess.Popen(cmd)
-        procs.append(self.process)
+        self._process = subprocess.Popen(cmd)
+        procs.append(self._process)
 
         # wait for it to start up
         if DEBUG:
@@ -58,18 +58,18 @@ class PulseIn:
             raise RuntimeError("Could not establish message queue with subprocess")
 
 
-    def __deinit__(self):
-        print("deinit")
-        
-    # TODO: this doesnt work?
-    def __enter__(self):
-        print("enter")
-        pass # no-op
+    def deinit(self):
+        # Clean up after ourselves
+        self._process.terminate()
+        procs.remove(self._process)
+        self._mq.remove()
+        queues.remove(self._mq)
 
-    # TODO: this doesnt work?
+    def __enter__(self):
+        return self
+
     def __exit__(self, exc_type, exc_value, tb):
-        print("exit")
-        #self.process.kill()
+        self.deinit()
 
     def resume(self, trigger_duration=0):
         if trigger_duration != 0:
