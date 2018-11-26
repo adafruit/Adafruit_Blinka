@@ -16,10 +16,8 @@ class I2C(Lockable):
 
     def init(self, scl, sda, frequency):
         self.deinit()
-        if board_id == "raspi_3" or board_id == "raspi_2":
-            from adafruit_blinka.microcontroller.raspi_23.i2c import I2C as _I2C
-        if board_id == "beaglebone_black":
-            from adafruit_blinka.microcontroller.raspi_23.i2c import I2C as _I2C
+        if board_id == "raspi_3" or board_id == "raspi_2" or board_id == "beaglebone_black":
+            from adafruit_blinka.microcontroller.generic_linux.i2c import I2C as _I2C
         else:
             from machine import I2C as _I2C
         from microcontroller.pin import i2cPorts
@@ -73,11 +71,8 @@ class SPI(Lockable):
     def __init__(self, clock, MOSI=None, MISO=None):
         print("SPI(): __init()")
         self.deinit()
-        if board_id == "raspi_3" or board_id == "raspi_2":
-            from adafruit_blinka.microcontroller.raspi_23.spi import SPI as _SPI
-        elif board_id == "beaglebone_black":
-            print("SPI(): beaglebone_black: from adafruit_blinka.microcontroller.raspi_23.spi import SPI as _SPI")
-            from adafruit_blinka.microcontroller.raspi_23.spi import SPI as _SPI
+        if board_id == "raspi_3" or board_id == "raspi_2" or board_id == "beaglebone_black":
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         else:
             from machine import SPI as _SPI
         from microcontroller.pin import spiPorts
@@ -101,12 +96,12 @@ class SPI(Lockable):
 
     def configure(self, baudrate=100000, polarity=0, phase=0, bits=8):
         if board_id == "raspi_3" or board_id == "raspi_2":
-            from adafruit_blinka.microcontroller.raspi_23.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.raspi_23.pin import Pin
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == "beaglebone_black":
             # reuse the raspberry pi class as both boards use Linux spidev
-            from adafruit_blinka.microcontroller.raspi_23.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.beaglebone_black.pin import Pin
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         else:
             from machine import SPI as _SPI
             from machine import Pin
