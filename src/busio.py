@@ -18,7 +18,7 @@ class I2C(Lockable):
         self.deinit()
         if board_id == "raspi_3" or board_id == "raspi_2":
             from adafruit_blinka.microcontroller.raspi_23.i2c import I2C as _I2C
-        if board_id == "beaglebone_black":
+        elif board_id == "beaglebone_black":
             from adafruit_blinka.microcontroller.raspi_23.i2c import I2C as _I2C
         else:
             from machine import I2C as _I2C
