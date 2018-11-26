@@ -44,7 +44,8 @@ class PulseIn:
         except sysv_ipc.ExistentialError:
             raise RuntimeError("Message queue creation failed")
 
-        cmd = ["/home/pi/libgpiod_pulsein/src/libgpiod_pulsein",
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        cmd = [dir_path+"/libgpiod_pulsein",
                "--pulses", str(maxlen),
                "--queue", str(self._mq.key)]
         if not idle_state:
