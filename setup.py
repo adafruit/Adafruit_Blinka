@@ -34,8 +34,8 @@ setup(
     py_modules=['bitbangio', 'board', 'busio', 'digitalio', 'micropython', 'neopixel_write'],
     install_requires=[
         'Adafruit-GPIO',
-        "RPi.GPIO; platform_machine=='armv7l' or platform_machine=='armv61'",
-        "rpi_ws281x>=4.0.0; platform_machine=='armv7l' or platform_machine=='armv61'"
+        "RPi.GPIO; platform_machine=='armv7l' or platform_machine=='armv6l'",
+        "rpi_ws281x>=4.0.0; platform_machine=='armv7l' or platform_machine=='armv6l'"
     ],
     license='MIT',
     classifiers=[
