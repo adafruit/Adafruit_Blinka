@@ -59,6 +59,8 @@ def neopixel_write(gpio, buf):
     
         resp = ws.ws2811_init(_led_strip)
         if resp != ws.WS2811_SUCCESS:
+            if resp == -5:
+                raise RuntimeError("NeoPixel support requires running with sudo, please try again!")
             message = ws.ws2811_get_return_t_str(resp)
             raise RuntimeError('ws2811_init failed with code {0} ({1})'.format(resp, message))
         atexit.register(neopixel_cleanup)
