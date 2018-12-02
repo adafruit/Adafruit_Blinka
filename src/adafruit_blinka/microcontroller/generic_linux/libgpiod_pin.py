@@ -33,16 +33,16 @@ class Pin:
     def init(self, mode=IN, pull=None):
         if not self._line:
             self._line = self._chip.get_line(int(self.id))
-            print("init line: ", int(self.id), self._line)
+            #print("init line: ", int(self.id), self._line)
 
         if mode != None:
             if mode == self.IN:
                 flags = 0
                 if pull != None:
                     if pull == self.PULL_UP:
-                        flags |= gpiod.LINE_REQ_FLAG_ACTIVE_LOW
+                        raise NotImplementedError("Internal pullups not supported in libgpiod, use physical resistor instead!")
                     elif pull == self.PULL_DOWN:
-                        flags |= gpiod.LINE_REQ_FLAG_ACTIVE_HIGH
+                        raise NotImplementedError("Internal pullups not supported in libgpiod, use physical resistor instead!")                    
                     else:
                         raise RuntimeError("Invalid pull for pin: %s" % self.id)
 
