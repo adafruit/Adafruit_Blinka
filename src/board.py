@@ -41,6 +41,8 @@ elif board_id == "raspi_2" or board_id == "raspi_3":
     from adafruit_blinka.board.raspi_23 import *
 elif board_id == "beaglebone_black":
     from adafruit_blinka.board.beaglebone_black import *
+elif board_id == "orangepipc":
+    from adafruit_blinka.board.orangepipc import *
 elif "sphinx" in sys.modules:
     pass
 else:

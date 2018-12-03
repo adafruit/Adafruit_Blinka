@@ -10,8 +10,10 @@ See `CircuitPython:digitalio` in CircuitPython for more details.
 from adafruit_blinka.agnostic import board_id
 if board_id == "raspi_3" or board_id == "raspi_2":
     from adafruit_blinka.microcontroller.raspi_23.pin import Pin
-if board_id == "beaglebone_black":
+elif board_id == "beaglebone_black":
     from adafruit_blinka.microcontroller.beaglebone_black.pin import Pin
+elif board_id == "orangepipc":
+    from adafruit_blinka.microcontroller.allwinner_h3.pin import Pin
 elif board_id == "pyboard":
     from machine import Pin
 from adafruit_blinka import Enum, ContextManaged

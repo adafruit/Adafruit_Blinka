@@ -4,7 +4,6 @@ from adafruit_blinka import agnostic
 
 # We intentionally are patching into this namespace so skip the wildcard check.
 # pylint: disable=unused-wildcard-import,wildcard-import
-
 if agnostic.platform == "esp8266":
     from adafruit_blinka.microcontroller.esp8266.pin import *
 elif agnostic.platform == "stm32":
@@ -14,6 +13,8 @@ elif agnostic.platform == "linux":
         from adafruit_blinka.microcontroller.raspi_23.pin import *
     elif agnostic.board_id == "beaglebone_black":
         from adafruit_blinka.microcontroller.beaglebone_black.pin import *
+    elif agnostic.board_id == "orangepipc":
+        from adafruit_blinka.microcontroller.allwinner_h3.pin import *
     else:
         raise NotImplementedError("Board not supported: ", agnostic.board_id)
 else:
