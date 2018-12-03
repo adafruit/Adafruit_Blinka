@@ -16,7 +16,7 @@ class I2C(Lockable):
 
     def init(self, scl, sda, frequency):
         self.deinit()
-        if board_id == "raspi_3" or board_id == "raspi_2" or board_id == "beaglebone_black" or board_id == "orangepipc":
+        if board_id in ("raspi_3", "raspi_2", "beaglebone_black", "orangepipc"):
             from adafruit_blinka.microcontroller.generic_linux.i2c import I2C as _I2C
         else:
             from machine import I2C as _I2C
@@ -70,7 +70,7 @@ class I2C(Lockable):
 class SPI(Lockable):
     def __init__(self, clock, MOSI=None, MISO=None):
         self.deinit()
-        if board_id == "raspi_3" or board_id == "raspi_2" or board_id == "beaglebone_black" or board_id == "orangepipc":
+        if board_id in ("raspi_3", "raspi_2", "beaglebone_black", "orangepipc"):
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         else:
             from machine import SPI as _SPI
