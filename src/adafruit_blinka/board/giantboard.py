@@ -1,4 +1,4 @@
-from adafruit_blinka.microcontroller.giantboard import pin
+from adafruit_blinka.microcontroller.sama5d2 import pin
 
 PD23 = pin.PD23
 PD21 = pin.PD21
