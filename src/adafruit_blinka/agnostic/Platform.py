@@ -28,7 +28,7 @@ RASPBERRY_PI     = 1
 BEAGLEBONE_BLACK = 2
 MINNOWBOARD      = 3
 ORANGEPIPC       = 4
-GIANTBOARD      = 5
+GIANTBOARD       = 5
 
 def platform_detect():
 	"""Detect if running on the Raspberry Pi or Beaglebone Black and return the
