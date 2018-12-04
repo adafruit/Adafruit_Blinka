@@ -28,6 +28,7 @@ RASPBERRY_PI     = 1
 BEAGLEBONE_BLACK = 2
 MINNOWBOARD      = 3
 ORANGEPIPC       = 4
+GIANT_BOARD      = 5
 
 def platform_detect():
 	"""Detect if running on the Raspberry Pi or Beaglebone Black and return the
@@ -46,6 +47,8 @@ def platform_detect():
 		return BEAGLEBONE_BLACK
 	elif plat.lower().find('xunlong orange pi 2') > -1:
 		return ORANGEPIPC
+	elif plat.lower().find('giant board') > -1:
+		return GIANT_BOARD
 		
 	# Handle Minnowboard
 	# Assumption is that mraa is installed

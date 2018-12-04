@@ -34,6 +34,8 @@ elif platform == "linux":
         from adafruit_blinka.microcontroller.beaglebone_black import *
     elif board_id == "orangepipc":
         from adafruit_blinka.microcontroller.allwinner_h3 import *
+	elif board_id == "giant_board":
+        from adafruit_blinka.microcontroller.giant_board import *
     else:
         raise NotImplementedError("Board not supported:", board_id)
 else:
