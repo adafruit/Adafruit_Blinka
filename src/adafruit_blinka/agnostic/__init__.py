@@ -21,7 +21,7 @@ if platform is not None:
 		platform = "stm32"
 		board_id = "pyboard"
 	elif platform == "linux":
-		import Platform
+		from adafruit_blinka import Platform
 		if Platform.platform_detect() == Platform.RASPBERRY_PI:
 			if Platform.pi_version() == 1:
 				board_id = "raspi_1"
