@@ -14,6 +14,8 @@ elif board_id == "beaglebone_black":
     from adafruit_blinka.microcontroller.beaglebone_black.pin import Pin
 elif board_id == "orangepipc":
     from adafruit_blinka.microcontroller.allwinner_h3.pin import Pin
+elif board_id == "giantboard":
+    from adafruit_blinka.microcontroller.sama5d2.pin import Pin
 elif board_id == "pyboard":
     from machine import Pin
 from adafruit_blinka import Enum, ContextManaged
