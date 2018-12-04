@@ -33,8 +33,8 @@ if platform is not None:
 			board_id = "beaglebone_black"
 		elif Platform.platform_detect() == Platform.ORANGEPIPC:
 			board_id = "orangepipc"
-		elif Platform.platform_detect() == Platform.ORANGEPIPC:
-			board_id = "giant_board"
+		elif Platform.platform_detect() == Platform.GIANTBOARD:
+			board_id = "giantboard"
 			
 
 implementation = sys.implementation.name

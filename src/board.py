@@ -43,6 +43,8 @@ elif board_id == "beaglebone_black":
     from adafruit_blinka.board.beaglebone_black import *
 elif board_id == "orangepipc":
     from adafruit_blinka.board.orangepipc import *
+elif board_id == "giantboard":
+    from adafruit_blinka.board.giantboard import *
 elif "sphinx" in sys.modules:
     pass
 else:

@@ -1,11 +1,11 @@
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
-PD23 = Pin(119) #AD4
-PD21 = Pin(117) #AD2
-PD20 = Pin(116) #AD1
-PD24 = Pin(120) #AD5
-PD22 = Pin(118) #AD3
-PD19 = Pin(115) #AD0
+PD23 = Pin(119)
+PD21 = Pin(117)
+PD20 = Pin(116)
+PD24 = Pin(120)
+PD22 = Pin(118)
+PD19 = Pin(115)
 
 SPI0_SCLK = PA14
 SPI0_MOSI = PA15
@@ -28,4 +28,4 @@ i2cPorts = ( (0, TWI0_SCL, TWI0_SDA), )
 # ordered as spiId, sckId, mosiId, misoId
 spiPorts = ( (0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO), )
 # ordered as uartId, txId, rxId
-uartPorts = ( (3, UART1_TX, UART1_RX), )
+uartPorts = ( (1, UART1_TX, UART1_RX), )
