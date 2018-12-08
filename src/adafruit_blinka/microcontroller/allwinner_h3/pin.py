@@ -56,5 +56,4 @@ i2cPorts = ( (0, TWI0_SCL, TWI0_SDA), )
 # ordered as spiId, sckId, mosiId, misoId
 spiPorts = ( (0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO), )
 # ordered as uartId, txId, rxId
-uartPorts = ( (1, UART1_TX, UART1_RX), 
-              (3, UART3_TX, UART3_RX), )
+uartPorts = ( (3, UART3_TX, UART3_RX), )
