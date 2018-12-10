@@ -11,7 +11,7 @@ from adafruit_blinka import Enum, Lockable, agnostic
 from adafruit_blinka.agnostic import board_name
 import adafruit_platformdetect.board as ap_board
 
-SUPPORTED_BOARDS = (
+EMBEDDED_LINUX_BOARDS = (
     ap_board.RASPBERRY_PI_2B,
     ap_board.RASPBERRY_PI_3B,
     ap_board.RASPBERRY_PI_3B_PLUS,
@@ -25,7 +25,7 @@ class I2C(Lockable):
 
     def init(self, scl, sda, frequency):
         self.deinit()
-        if board_name in SUPPORTED_BOARDS:
+        if board_name in EMBEDDED_LINUX_BOARDS:
             from adafruit_blinka.microcontroller.generic_linux.i2c import I2C as _I2C
         else:
             from machine import I2C as _I2C
@@ -79,7 +79,7 @@ class I2C(Lockable):
 class SPI(Lockable):
     def __init__(self, clock, MOSI=None, MISO=None):
         self.deinit()
-        if board_name in SUPPORTED_BOARDS:
+        if board_name in EMBEDDED_LINUX_BOARDS:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         else:
             from machine import SPI as _SPI
