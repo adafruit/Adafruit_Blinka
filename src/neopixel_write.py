@@ -9,9 +9,10 @@ See `CircuitPython:neopixel_write` in CircuitPython for more details.
 
 import sys
 
-from adafruit_blinka.agnostic import board_id
+from adafruit_blinka.agnostic import board_name
+import adafruit_platformdetect.board as ap_board
 
-if board_id == "raspi_2" or board_id == "raspi_3":
+if board_name in (ap_board.RASPBERRY_PI_2B, ap_board.RASPBERRY_PI_3B, ap_board.RASPBERRY_PI_B_PLUS):
     from adafruit_blinka.microcontroller.raspi_23 import neopixel as _neopixel
 elif "sphinx" in sys.modules:
     pass

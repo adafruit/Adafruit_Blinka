@@ -8,7 +8,16 @@ See `CircuitPython:busio` in CircuitPython for more details.
 """
 
 from adafruit_blinka import Enum, Lockable, agnostic
-from adafruit_blinka.agnostic import board_id
+from adafruit_blinka.agnostic import board_name
+import adafruit_platformdetect.board as ap_board
+
+SUPPORTED_BOARDS = (
+    ap_board.RASPBERRY_PI_2B,
+    ap_board.RASPBERRY_PI_3B,
+    ap_board.RASPBERRY_PI_3B_PLUS,
+    ap_board.BEAGLEBONE_BLACK,
+    ap_board.ORANGEPI_PC,
+)
 
 class I2C(Lockable):
     def __init__(self, scl, sda, frequency=400000):
@@ -16,7 +25,7 @@ class I2C(Lockable):
 
     def init(self, scl, sda, frequency):
         self.deinit()
-        if board_id in ("raspi_3", "raspi_2", "beaglebone_black", "orangepipc"):
+        if board_name in SUPPORTED_BOARDS:
             from adafruit_blinka.microcontroller.generic_linux.i2c import I2C as _I2C
         else:
             from machine import I2C as _I2C
@@ -70,7 +79,7 @@ class I2C(Lockable):
 class SPI(Lockable):
     def __init__(self, clock, MOSI=None, MISO=None):
         self.deinit()
-        if board_id in ("raspi_3", "raspi_2", "beaglebone_black", "orangepipc"):
+        if board_name in SUPPORTED_BOARDS:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         else:
             from machine import SPI as _SPI
@@ -88,14 +97,14 @@ class SPI(Lockable):
                 format((clock, MOSI, MISO), spiPorts))
 
     def configure(self, baudrate=100000, polarity=0, phase=0, bits=8):
-        if board_id == "raspi_3" or board_id == "raspi_2":
+        if board_name in ap_board.ANY_RASPBERRY_PI_2_OR_3:
             from adafruit_blinka.microcontroller.raspi_23.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif board_id == "beaglebone_black":
+        elif board_name == ap_board.BEAGLEBONE_BLACK:
             # reuse the raspberry pi class as both boards use Linux spidev
             from adafruit_blinka.microcontroller.beaglebone_black.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif board_id == "orangepipc":
+        elif board_name == ap_board.ORANGEPI_PC:
             from adafruit_blinka.microcontroller.allwinner_h3.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         else:
