@@ -98,11 +98,10 @@ class SPI(Lockable):
 
     def configure(self, baudrate=100000, polarity=0, phase=0, bits=8):
         if board_name in ap_board.ANY_RASPBERRY_PI_2_OR_3:
-            from adafruit_blinka.microcontroller.raspi_23.pin import Pin
+            from adafruit_blinka.microcontroller.bcm283x.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_name == ap_board.BEAGLEBONE_BLACK:
-            # reuse the raspberry pi class as both boards use Linux spidev
-            from adafruit_blinka.microcontroller.beaglebone_black.pin import Pin
+            from adafruit_blinka.microcontroller.am335x.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_name == ap_board.ORANGEPI_PC:
             from adafruit_blinka.microcontroller.allwinner_h3.pin import Pin

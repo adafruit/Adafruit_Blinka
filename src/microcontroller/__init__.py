@@ -29,9 +29,9 @@ elif platform == "stm32":
     from adafruit_blinka.microcontroller.stm32 import *
 elif platform == "linux":
     if board_id == "raspi_3" or board_id == "raspi_2":
-        from adafruit_blinka.microcontroller.raspi_23 import *
+        from adafruit_blinka.microcontroller.bcm283x import *
     elif board_id == "beaglebone_black":
-        from adafruit_blinka.microcontroller.beaglebone_black import *
+        from adafruit_blinka.microcontroller.am335x import *
     elif board_id == "orangepipc":
         from adafruit_blinka.microcontroller.allwinner_h3 import *
     else:

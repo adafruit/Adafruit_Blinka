@@ -10,9 +10,9 @@ if agnostic.chip_name == ap_chip.ESP8266:
 elif agnostic.chip_name == ap_chip.STM32:
     from adafruit_blinka.microcontroller.stm32.pin import *
 elif agnostic.detect.any_raspberry_pi_or_3:
-    from adafruit_blinka.microcontroller.raspi_23.pin import *
+    from adafruit_blinka.microcontroller.bcm283x.pin import *
 elif agnostic.detect.beaglebone_black:
-    from adafruit_blinka.microcontroller.beaglebone_black.pin import *
+    from adafruit_blinka.microcontroller.am335x.pin import *
 elif agnostic.detect.orangepi_pc:
     from adafruit_blinka.microcontroller.allwinner_h3.pin import *
 else:

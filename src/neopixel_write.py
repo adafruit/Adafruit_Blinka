@@ -13,7 +13,7 @@ from adafruit_blinka.agnostic import board_name
 import adafruit_platformdetect.board as ap_board
 
 if board_name in (ap_board.RASPBERRY_PI_2B, ap_board.RASPBERRY_PI_3B, ap_board.RASPBERRY_PI_B_PLUS):
-    from adafruit_blinka.microcontroller.raspi_23 import neopixel as _neopixel
+    from adafruit_blinka.microcontroller.bcm283x import neopixel as _neopixel
 elif "sphinx" in sys.modules:
     pass
 else:

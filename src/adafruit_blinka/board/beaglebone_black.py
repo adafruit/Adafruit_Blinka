@@ -1,4 +1,4 @@
-from adafruit_blinka.microcontroller.beaglebone_black import pin
+from adafruit_blinka.microcontroller.am335x import pin
 
 # initial pins, to mimic bonescript demo
 P8_3 = pin.P8_3
