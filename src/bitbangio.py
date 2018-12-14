@@ -14,8 +14,8 @@ import adafruit_platformdetect.board as ap_board
 class I2C(Lockable):
     def __init__(self, scl, sda, frequency=400000):
         # TODO: This one is a bit questionable:
-        if agnostic.board_name == ap_board.PYBOARD:
-            raise NotImplementedError("No software I2C on {}".format(agnostic.board_name))
+        if agnostic.board_id == ap_board.PYBOARD:
+            raise NotImplementedError("No software I2C on {}".format(agnostic.board_id))
         self.init(scl, sda, frequency)
 
     def init(self, scl, sda, frequency):

@@ -10,13 +10,16 @@ import adafruit_platformdetect
 # We intentionally are patching into this namespace as module names so skip the name check.
 # pylint: disable=invalid-name
 
-detect = adafruit_platformdetect.PlatformDetect()
+# We'll define board and chip id values in agnostic rather than accessing
+# detector directly elsewhere, just in case additional indirection is necessary
+# at some later point:
 
-board_name = detect.board.name()
-chip_name = detect.chip.name()
+detector = adafruit_platformdetect.Detector()
+chip_id = detector.chip.id
+board_id = detector.board.id
 
 implementation = sys.implementation.name
 if implementation == "micropython":
     from utime import sleep
-elif implementation == "circuitpython" or implementation == "cpython":
+elif implementation in ("circuitpython", "cpython"):
     from time import sleep
