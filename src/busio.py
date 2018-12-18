@@ -16,7 +16,7 @@ EMBEDDED_LINUX_BOARDS = (
     ap_board.RASPBERRY_PI_3B,
     ap_board.RASPBERRY_PI_3B_PLUS,
     ap_board.BEAGLEBONE_BLACK,
-    ap_board.ORANGEPI_PC,
+    ap_board.ORANGE_PI_PC,
 )
 
 class I2C(Lockable):
@@ -104,7 +104,7 @@ class SPI(Lockable):
         elif board_id == ap_board.BEAGLEBONE_BLACK:
             from adafruit_blinka.microcontroller.am335x.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif board_id == ap_board.ORANGEPI_PC:
+        elif board_id == ap_board.ORANGE_PI_PC:
             from adafruit_blinka.microcontroller.allwinner_h3.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         else:

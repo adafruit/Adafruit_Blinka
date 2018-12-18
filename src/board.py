@@ -49,7 +49,7 @@ elif board_id in ap_board.ANY_RASPBERRY_PI_2_OR_3:
 elif board_id == ap_board.BEAGLEBONE_BLACK:
     from adafruit_blinka.board.beaglebone_black import *
 
-elif board_id == ap_board.ORANGEPI_PC:
+elif board_id == ap_board.ORANGE_PI_PC:
     from adafruit_blinka.board.orangepipc import *
 
 elif "sphinx" in sys.modules:
