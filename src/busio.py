@@ -8,7 +8,7 @@ See `CircuitPython:busio` in CircuitPython for more details.
 """
 
 from adafruit_blinka import Enum, Lockable, agnostic
-from adafruit_blinka.agnostic import board_id
+from adafruit_blinka.agnostic import board_id, detector
 import adafruit_platformdetect.board as ap_board
 
 EMBEDDED_LINUX_BOARDS = (
@@ -98,7 +98,7 @@ class SPI(Lockable):
                 format((clock, MOSI, MISO), spiPorts))
 
     def configure(self, baudrate=100000, polarity=0, phase=0, bits=8):
-        if board_id in ap_board.ANY_RASPBERRY_PI_2_OR_3:
+        if detector.board.any_raspberry_pi:
             from adafruit_blinka.microcontroller.bcm283x.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.BEAGLEBONE_BLACK:
