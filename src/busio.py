@@ -17,7 +17,7 @@ class I2C(Lockable):
 
     def init(self, scl, sda, frequency):
         self.deinit()
-        if detector.board.any_linux:
+        if detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.i2c import I2C as _I2C
         else:
             from machine import I2C as _I2C
@@ -72,7 +72,7 @@ class I2C(Lockable):
 class SPI(Lockable):
     def __init__(self, clock, MOSI=None, MISO=None):
         self.deinit()
-        if detector.board.any_linux:
+        if detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         else:
             from machine import SPI as _SPI
