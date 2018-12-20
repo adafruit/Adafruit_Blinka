@@ -11,13 +11,13 @@ from adafruit_blinka.agnostic import board_id, detector
 
 # pylint: disable=ungrouped-imports,wrong-import-position
 
-if detector.board.any_raspberry_pi_2_or_3:
+if detector.chip.BCM2XXX:
     from adafruit_blinka.microcontroller.bcm283x.pin import Pin
-elif detector.board.BEAGLEBONE_BLACK:
+elif detector.chip.AM33XX:
     from adafruit_blinka.microcontroller.am335x.pin import Pin
-elif detector.board.ORANGE_PI_PC:
+elif detector.chip.SUN8I:
     from adafruit_blinka.microcontroller.allwinner_h3.pin import Pin
-elif detector.board.PYBOARD:
+elif detector.chip.STM32:
     from machine import Pin
 from adafruit_blinka import Enum, ContextManaged
 
