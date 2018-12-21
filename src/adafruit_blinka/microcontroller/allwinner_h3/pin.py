@@ -1,7 +1,9 @@
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
 PA0 = Pin(0)
+UART2_TX = PA0
 PA1 = Pin(1)
+UART2_RX = PA1
 PA2 = Pin(2)
 PA3 = Pin(3)
 PA6 = Pin(6)
@@ -17,6 +19,9 @@ PA13 = Pin(13)
 UART3_TX = PA13
 PA14 = Pin(14)
 UART3_RX = PA14
+PA15 = Pin(15)
+PA16 = Pin(16)
+PA17 = Pin(17)
 PA18 = Pin(18)
 PA19 = Pin(19)
 PA20 = Pin(20)
@@ -36,9 +41,16 @@ PC7 = Pin(71)
 PD14 = Pin(110)
 
 PG6 = Pin(198)
+UART1_TX = PG6
 PG7 = Pin(199)
+UART1_RX = PG7
 PG8 = Pin(200)
 PG9 = Pin(201)
+PG10 = Pin(202)
+PG11 = Pin(203)
+PG12 = Pin(204)
+PG13 = Pin(205)
+
 
 i2cPorts = ( (0, TWI0_SCL, TWI0_SDA), )
 # ordered as spiId, sckId, mosiId, misoId
