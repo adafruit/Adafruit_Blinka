@@ -44,7 +44,7 @@ elif board_id == ap_board.PYBOARD:
     from adafruit_blinka.board.pyboard import *
 
 elif detector.any_raspberry_pi_40_pin:
-    from adafruit_blinka.board.raspi_23 import *
+    from adafruit_blinka.board.raspi_40pin import *
 
 elif board_id == ap_board.BEAGLEBONE_BLACK:
     from adafruit_blinka.board.beaglebone_black import *
