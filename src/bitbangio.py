@@ -8,11 +8,13 @@ See `CircuitPython:bitbangio` in CircuitPython for more details.
 """
 
 from adafruit_blinka import Lockable, agnostic
+import adafruit_platformdetect.board as ap_board
 
 
 class I2C(Lockable):
     def __init__(self, scl, sda, frequency=400000):
-        if agnostic.microcontroller == "stm32":
+        # TODO: This one is a bit questionable:
+        if agnostic.board_id == ap_board.PYBOARD:
             raise NotImplementedError("No software I2C on {}".format(agnostic.board_id))
         self.init(scl, sda, frequency)
 

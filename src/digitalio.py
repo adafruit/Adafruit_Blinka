@@ -7,14 +7,17 @@ See `CircuitPython:digitalio` in CircuitPython for more details.
 * Author(s): cefn
 """
 
-from adafruit_blinka.agnostic import board_id
-if board_id == "raspi_3" or board_id == "raspi_2":
-    from adafruit_blinka.microcontroller.raspi_23.pin import Pin
-elif board_id == "beaglebone_black":
-    from adafruit_blinka.microcontroller.beaglebone_black.pin import Pin
-elif board_id == "orangepipc":
+from adafruit_blinka.agnostic import board_id, detector
+
+# pylint: disable=ungrouped-imports,wrong-import-position
+
+if detector.chip.BCM2XXX:
+    from adafruit_blinka.microcontroller.bcm283x.pin import Pin
+elif detector.chip.AM33XX:
+    from adafruit_blinka.microcontroller.am335x.pin import Pin
+elif detector.chip.SUN8I:
     from adafruit_blinka.microcontroller.allwinner_h3.pin import Pin
-elif board_id == "pyboard":
+elif detector.chip.STM32:
     from machine import Pin
 from adafruit_blinka import Enum, ContextManaged
 
@@ -113,7 +116,7 @@ class DigitalInOut(ContextManaged):
                     self._pin.init(mode=Pin.IN, pull=Pin.PULL_DOWN)
                 else:
                     raise NotImplementedError("{} unsupported on {}".format(
-                        Pull.DOWN, boardId))
+                        Pull.DOWN, board_id))
             elif pul is None:
                 self._pin.init(mode=Pin.IN, pull=None)
             else:

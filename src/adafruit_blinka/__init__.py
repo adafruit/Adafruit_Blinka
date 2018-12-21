@@ -5,7 +5,7 @@
 * Author(s): cefn
 """
 
-class Enum(object):
+class Enum():
     """
         Object supporting CircuitPython-style of static symbols
         as seen with Direction.OUTPUT, Pull.UP
@@ -43,9 +43,11 @@ class ContextManaged:
     def __exit__(self, exc_type, exc_value, traceback):
         self.deinit()
 
+    # pylint: disable=no-self-use
     def deinit(self):
         """Free any hardware used by the object."""
-        pass
+        return
+    # pylint: enable=no-self-use
 
 
 class Lockable(ContextManaged):

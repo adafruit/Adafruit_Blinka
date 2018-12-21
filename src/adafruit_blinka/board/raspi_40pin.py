@@ -1,4 +1,4 @@
-from adafruit_blinka.microcontroller.raspi_23 import pin
+from adafruit_blinka.microcontroller.bcm283x import pin
 
 D2 = pin.D2
 SDA = pin.SDA

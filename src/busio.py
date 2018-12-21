@@ -8,7 +8,8 @@ See `CircuitPython:busio` in CircuitPython for more details.
 """
 
 from adafruit_blinka import Enum, Lockable, agnostic
-from adafruit_blinka.agnostic import board_id
+from adafruit_blinka.agnostic import board_id, detector
+import adafruit_platformdetect.board as ap_board
 
 class I2C(Lockable):
     def __init__(self, scl, sda, frequency=400000):
@@ -16,7 +17,7 @@ class I2C(Lockable):
 
     def init(self, scl, sda, frequency):
         self.deinit()
-        if board_id in ("raspi_3", "raspi_2", "beaglebone_black", "orangepipc"):
+        if detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.i2c import I2C as _I2C
         else:
             from machine import I2C as _I2C
@@ -26,8 +27,9 @@ class I2C(Lockable):
                 self._i2c = _I2C(portId, mode=_I2C.MASTER, baudrate=frequency)
                 break
         else:
-            raise NotImplementedError("No Hardware I2C on (scl,sda)={}\nValid UART ports".format(
-        (scl, sda), i2cPorts))
+            raise NotImplementedError(
+                "No Hardware I2C on (scl,sda)={}\nValid UART ports: {}".format((scl, sda), i2cPorts)
+            )
 
     def deinit(self):
         try:
@@ -70,7 +72,7 @@ class I2C(Lockable):
 class SPI(Lockable):
     def __init__(self, clock, MOSI=None, MISO=None):
         self.deinit()
-        if board_id in ("raspi_3", "raspi_2", "beaglebone_black", "orangepipc"):
+        if detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         else:
             from machine import SPI as _SPI
@@ -88,14 +90,13 @@ class SPI(Lockable):
                 format((clock, MOSI, MISO), spiPorts))
 
     def configure(self, baudrate=100000, polarity=0, phase=0, bits=8):
-        if board_id == "raspi_3" or board_id == "raspi_2":
-            from adafruit_blinka.microcontroller.raspi_23.pin import Pin
+        if detector.board.any_raspberry_pi:
+            from adafruit_blinka.microcontroller.bcm283x.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif board_id == "beaglebone_black":
-            # reuse the raspberry pi class as both boards use Linux spidev
-            from adafruit_blinka.microcontroller.beaglebone_black.pin import Pin
+        elif board_id == ap_board.BEAGLEBONE_BLACK:
+            from adafruit_blinka.microcontroller.am335x.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif board_id == "orangepipc":
+        elif board_id == ap_board.ORANGE_PI_PC:
             from adafruit_blinka.microcontroller.allwinner_h3.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         else:
@@ -156,7 +157,7 @@ class UART(Lockable):
         if flow is not None:  # default 0
             raise NotImplementedError(
                 "Parameter '{}' unsupported on {}".format(
-                    "flow", agnostic.board))
+                    "flow", agnostic.board_id))
 
         # translate parity flag for Micropython
         if parity is UART.Parity.ODD:
@@ -183,8 +184,8 @@ class UART(Lockable):
                 break
         else:
             raise NotImplementedError(
-                "No Hardware UART on (tx,rx)={}\nValid UART ports".format(
-                    (tx, rx), uartPorts))
+                "No Hardware UART on (tx,rx)={}\nValid UART ports: {}".format((tx, rx), uartPorts)
+            )
 
     def deinit(self):
         self._uart = None

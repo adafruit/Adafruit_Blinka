@@ -37,7 +37,7 @@ def neopixel_write(gpio, buf):
 
         # Initialize the channel in use
         count = 0
-        if len(buf) % 3 == 0:            
+        if len(buf) % 3 == 0:
             # most common, divisible by 3 is likely RGB
             LED_STRIP = ws.WS2811_STRIP_RGB
             count = len(buf)//3
@@ -56,7 +56,7 @@ def neopixel_write(gpio, buf):
         # Initialize the controller
         ws.ws2811_t_freq_set(_led_strip, LED_FREQ_HZ)
         ws.ws2811_t_dmanum_set(_led_strip, LED_DMA_NUM)
-    
+
         resp = ws.ws2811_init(_led_strip)
         if resp != ws.WS2811_SUCCESS:
             if resp == -5:
@@ -84,7 +84,7 @@ def neopixel_write(gpio, buf):
             w = buf[bpp*i+3]
             pixel = (w << 24) | (r << 16) | (g << 8) | b
         ws.ws2811_led_set(channel, i, pixel)
-    
+
     resp = ws.ws2811_render(_led_strip)
     if resp != ws.WS2811_SUCCESS:
         message = ws.ws2811_get_return_t_str(resp)

@@ -29,21 +29,31 @@ See `CircuitPython:board` in CircuitPython for more details.
 """
 import sys
 
-from adafruit_blinka.agnostic import board_id
+from adafruit_blinka.agnostic import board_id, detector
+import adafruit_platformdetect.board as ap_board
 
-if board_id == "feather_huzzah":
+# pylint: disable=wildcard-import,unused-wildcard-import,ungrouped-imports
+
+if board_id == ap_board.FEATHER_HUZZAH:
     from adafruit_blinka.board.feather_huzzah import *
-elif board_id == "nodemcu":
+
+elif board_id == ap_board.NODEMCU:
     from adafruit_blinka.board.nodemcu import *
-elif board_id == "pyboard":
+
+elif board_id == ap_board.PYBOARD:
     from adafruit_blinka.board.pyboard import *
-elif board_id == "raspi_2" or board_id == "raspi_3":
-    from adafruit_blinka.board.raspi_23 import *
-elif board_id == "beaglebone_black":
+
+elif detector.board.any_raspberry_pi_40_pin:
+    from adafruit_blinka.board.raspi_40pin import *
+
+elif board_id == ap_board.BEAGLEBONE_BLACK:
     from adafruit_blinka.board.beaglebone_black import *
-elif board_id == "orangepipc":
+
+elif board_id == ap_board.ORANGE_PI_PC:
     from adafruit_blinka.board.orangepipc import *
+
 elif "sphinx" in sys.modules:
     pass
+
 else:
     raise NotImplementedError("Board not supported")

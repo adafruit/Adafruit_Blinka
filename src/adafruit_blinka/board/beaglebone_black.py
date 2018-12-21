@@ -1,4 +1,4 @@
-from adafruit_blinka.microcontroller.beaglebone_black import pin
+from adafruit_blinka.microcontroller.am335x import pin
 
 # initial pins, to mimic bonescript demo
 P8_3 = pin.P8_3
@@ -75,7 +75,7 @@ LED_USR2 = pin.USR2
 LED_USR3 = pin.USR3
 
 # I2C and SPI pins from:
-# src/adafruit_blinka/board/raspi_23.py
+# src/adafruit_blinka/board/raspi_40pin.py
 # SDA = pin.SDA
 # SCL = pin.SCL
 # CE1 = pin.D7
