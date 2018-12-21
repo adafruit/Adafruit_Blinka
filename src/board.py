@@ -29,7 +29,7 @@ See `CircuitPython:board` in CircuitPython for more details.
 """
 import sys
 
-from adafruit_blinka.agnostic import board_id
+from adafruit_blinka.agnostic import board_id, detector
 import adafruit_platformdetect.board as ap_board
 
 # pylint: disable=wildcard-import,unused-wildcard-import,ungrouped-imports
@@ -43,7 +43,7 @@ elif board_id == ap_board.NODEMCU:
 elif board_id == ap_board.PYBOARD:
     from adafruit_blinka.board.pyboard import *
 
-elif board_id in ap_board.ANY_RASPBERRY_PI_40PIN:
+elif detector.any_raspberry_pi_40_pin:
     from adafruit_blinka.board.raspi_23 import *
 
 elif board_id == ap_board.BEAGLEBONE_BLACK:
