@@ -37,7 +37,7 @@ setup(
         "Adafruit-PureIO",
         "RPi.GPIO; platform_machine=='armv7l' or platform_machine=='armv6l'",
         "rpi_ws281x>=4.0.0; platform_machine=='armv7l' or platform_machine=='armv6l'",
-        "spidev"
+        "spidev; sys_platform=='linux'"
     ],
     license='MIT',
     classifiers=[
