@@ -1,15 +1,12 @@
-"""Pin definitions for 40-pin Raspberry Pi models."""
+"""Pin definitions for the Raspberry Pi Model B Revision 2."""
 
 from adafruit_blinka.microcontroller.bcm283x import pin
 
 D2 = pin.D2
-SDA = pin.SDA
 D3 = pin.D3
-SCL = pin.SCL
-
+SDA = pin.D2
+SCL = pin.D3
 D4 = pin.D4
-D5 = pin.D5
-D6 = pin.D6
 
 D7 = pin.D7
 CE1 = pin.D7
@@ -23,27 +20,15 @@ D11 = pin.D11
 SCLK = pin.D11
 SCK = pin.D11
 
-D12 = pin.D12
-D13 = pin.D13
-
 D14 = pin.D14
 TXD = pin.D14
 D15 = pin.D15
 RXD = pin.D15
 
-D16 = pin.D16
 D17 = pin.D17
 D18 = pin.D18
-D19 = pin.D19
-MISO_1 = pin.D19
-D20 = pin.D20
-MOSI_1 = pin.D20
-D21 = pin.D21
-SCLK_1 = pin.D21
-SCK_1 = pin.D21
 D22 = pin.D22
 D23 = pin.D23
 D24 = pin.D24
 D25 = pin.D25
-D26 = pin.D26
 D27 = pin.D27

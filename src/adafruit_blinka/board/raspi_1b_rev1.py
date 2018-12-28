@@ -1,3 +1,5 @@
+"""Pin definitions for the Raspberry Pi Model B Revision 1."""
+
 from adafruit_blinka.microcontroller.bcm283x import pin
 
 D0 = pin.D0
