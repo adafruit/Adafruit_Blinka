@@ -1,3 +1,5 @@
+"""Pin definitions for the Tritium H3."""
+
 from adafruit_blinka.microcontroller.allwinner_h3 import pin
 
 PA12 = pin.PA12
@@ -11,7 +13,7 @@ PA3 = pin.PA3
 PC0 = pin.PC0
 MOSI = pin.PC0
 PC1 = pin.PC1
-MISO = pin.PC1 
+MISO = pin.PC1
 PC2 = pin.PC2
 SCK = pin.PC2
 SCLK = pin.PC2

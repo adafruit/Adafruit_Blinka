@@ -1,4 +1,4 @@
-"""Feather Huzzah pin names"""
+"""Pin definitions for the Feather Huzzah."""
 
 from adafruit_blinka.microcontroller.esp8266 import pin
 

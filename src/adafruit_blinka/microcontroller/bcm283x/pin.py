@@ -58,6 +58,10 @@ class Pin:
         else:
             return GPIO.input(self.id)
 
+# Pi 1B rev1 only?
+D0 = Pin(0)
+D1 = Pin(1)
+
 D2 = Pin(2)
 SDA = Pin(2)
 D3 = Pin(3)

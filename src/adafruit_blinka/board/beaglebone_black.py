@@ -1,3 +1,4 @@
+"""Pin definitions for the Beaglebone Black."""
 from adafruit_blinka.microcontroller.am335x import pin
 
 # initial pins, to mimic bonescript demo
