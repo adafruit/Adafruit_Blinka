@@ -149,7 +149,10 @@ class UART(Lockable):
                  timeout=1000,
                  receiver_buffer_size=64,
                  flow=None):
-        from machine import UART as _UART
+        if detector.board.any_embedded_linux:
+            raise RuntimeError('busio.UART not supported on this platform.')
+        else:
+            from machine import UART as _UART
         from microcontroller.pin import uartPorts
 
         self.baudrate = baudrate
