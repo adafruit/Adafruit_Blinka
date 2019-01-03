@@ -150,7 +150,7 @@ class UART(Lockable):
                  receiver_buffer_size=64,
                  flow=None):
         if detector.board.any_embedded_linux:
-            raise RuntimeError('busio.UART not supported on this platform.')
+            raise RuntimeError('busio.UART not supported on this platform. Please use pyserial instead.')
         else:
             from machine import UART as _UART
         from microcontroller.pin import uartPorts
