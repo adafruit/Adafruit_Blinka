@@ -99,6 +99,9 @@ class SPI(Lockable):
         elif board_id == ap_board.ORANGE_PI_PC:
             from adafruit_blinka.microcontroller.allwinner_h3.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+        elif board_id == ap_board.GIANT_BOARD:
+            from adafruit_blinka.microcontroller.sama5.pin import Pin
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         else:
             from machine import SPI as _SPI
             from machine import Pin
