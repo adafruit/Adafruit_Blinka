@@ -30,14 +30,16 @@ setup(
     url='https://github.com/adafruit/Adafruit_Blinka',
     package_dir={'': 'src'},
     packages=find_packages("src"),
-    # If your package is a single module, use this instead of 'packages':
-    py_modules=['bitbangio', 'board', 'busio', 'digitalio', 'micropython', 'neopixel_write'],
+    # This seems to override find_packages above - I suspect but don't know for sure that
+    # we're doing this for a reason -- bpb 2019-01-15:
+    py_modules=['bitbangio', 'board', 'busio', 'digitalio', 'micropython', 'pulseio', 'neopixel_write'],
     install_requires=[
         "Adafruit-PlatformDetect",
         "Adafruit-PureIO",
         "RPi.GPIO; platform_machine=='armv7l' or platform_machine=='armv6l'",
         "rpi_ws281x>=4.0.0; platform_machine=='armv7l' or platform_machine=='armv6l'",
-        "spidev; sys_platform=='linux'"
+        "spidev; sys_platform=='linux'",
+        "sysv_ipc"
     ],
     license='MIT',
     classifiers=[
