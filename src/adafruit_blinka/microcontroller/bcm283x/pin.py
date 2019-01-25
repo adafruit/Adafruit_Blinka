@@ -1,4 +1,6 @@
 import RPi.GPIO as GPIO
+from adafruit_blinka.agnostic import detector
+
 GPIO.setmode(GPIO.BCM)    # Use BCM pins D4 = GPIO #4
 GPIO.setwarnings(False)   # shh!
 
@@ -116,7 +118,12 @@ uartPorts = (
     (1, TXD, RXD),
 )
 
-i2cPorts = (
-    (1, SCL, SDA),
-)
-
+# Set correct i2c bus - original Pi used 0, subsequent models use 1:
+if detector.board.RASPBERRY_PI_B_REV1:
+    i2cPorts = (
+        (0, SCL, SDA),
+    )
+else:
+    i2cPorts = (
+        (1, SCL, SDA),
+    )
