@@ -22,9 +22,12 @@ class I2C(Lockable):
         else:
             from machine import I2C as _I2C
         from microcontroller.pin import i2cPorts
-        for portId, portScl, portSda in i2cPorts:
+        for portId, portScl, portSda, portId2, portScl2, portSda2 in i2cPorts:
             if scl == portScl and sda == portSda:
                 self._i2c = _I2C(portId, mode=_I2C.MASTER, baudrate=frequency)
+                break
+            if scl == portScl2 and sda == portSda2:
+                self._i2c = _I2C(portId2, mode=_I2C.MASTER, baudrate=frequency)
                 break
         else:
             raise NotImplementedError(
