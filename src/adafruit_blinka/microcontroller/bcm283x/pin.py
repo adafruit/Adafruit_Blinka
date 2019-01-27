@@ -117,6 +117,6 @@ uartPorts = (
 )
 
 i2cPorts = (
-    (1, SCL, SDA),
+    (1, SCL, SDA, 3, D17, D4),
 )
 
