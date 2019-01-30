@@ -9,8 +9,8 @@ Introduction
     :target: https://discord.gg/nBQh6qu
     :alt: Discord
 
-.. image:: https://travis-ci.org/adafruit/Adafruit_Blinka.svg?branch=master
-    :target: https://travis-ci.org/adafruit/Adafruit_Blinka
+.. image:: https://travis-ci.com/adafruit/Adafruit_Blinka.svg?branch=master
+    :target: https://travis-ci.com/adafruit/Adafruit_Blinka
     :alt: Build Status
 
 This repository contains a selection of packages mirroring the CircuitPython API
