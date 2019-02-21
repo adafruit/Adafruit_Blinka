@@ -61,6 +61,9 @@ elif board_id == ap_board.ORANGE_PI_PC:
 elif board_id == ap_board.GIANT_BOARD:
     from adafruit_blinka.board.giantboard import *
 
+elif detector.board.any_jetson_board:
+    from adafruit_blinka.board.jetson_pin import *
+
 elif "sphinx" in sys.modules:
     pass
 
