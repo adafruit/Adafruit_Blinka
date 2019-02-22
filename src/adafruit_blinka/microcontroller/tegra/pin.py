@@ -62,7 +62,7 @@ class Pin:
             return GPIO.input(self.id)
 
     def cleanup(self, channel=None):
-        if channel == None:
+        if channel is None:
             GPIO.cleanup()
         elif channel == self:
             GPIO.cleanup(self.id)

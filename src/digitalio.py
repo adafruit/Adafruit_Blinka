@@ -74,7 +74,10 @@ class DigitalInOut(ContextManaged):
         del self._pin
 
     def cleanup(self, channel=None):
-        Pin.cleanup(self, channel)
+        if channel == self:
+            Pin.cleanup(self._pin, self._pin)
+        else:
+            Pin.cleanup(self, channel)
 
     @property
     def direction(self):
