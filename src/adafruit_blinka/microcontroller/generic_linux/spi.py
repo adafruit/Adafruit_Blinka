@@ -50,7 +50,7 @@ class SPI:
             print("Could not open SPI device - check if SPI is enabled in kernel!")
             raise
 
-    def readinto(self, buf, start=0, end=None):
+    def readinto(self, buf, start=0, end=None, write_value=0):
         if not buf:
             return
         if end is None:
@@ -64,7 +64,7 @@ class SPI:
             self._spi.max_speed_hz = self.baudrate
             self._spi.mode = self.mode
             self._spi.bits_per_word = self.bits
-            data = self._spi.readbytes(end-start)
+            data = self._spi.xfer([write_value]*(end-start))
             for i in range(end-start):  # 'readinto' the given buffer
               buf[start+i] = data[i]
             self._spi.close()
@@ -77,7 +77,7 @@ class SPI:
         if not buffer_out or not buffer_in:
             return
         if out_end is None:
-            out_end = len(buffer_out)        
+            out_end = len(buffer_out)
         if in_end is None:
             in_end = len(buffer_in)
         if out_end - out_start != in_end - in_start:
