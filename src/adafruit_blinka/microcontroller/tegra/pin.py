@@ -1,9 +1,21 @@
 import sys
+import Jetson.GPIO as GPIO
 sys.path.append("/opt/nvidia/jetson-gpio/lib/python")
 sys.path.append("/opt/nvidia/jetson-gpio/lib/python/Jetson/GPIO")
-import Jetson.GPIO as GPIO
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)   # shh!
+
+# Each Jetson model uses different I2C busses
+JETSON_I2C_BUS_DEFS = {
+    "JETSON_TX1": [0, 1],
+    "JETSON_TX2": [1, 0],
+    "JETSON_XAVIER": [8, 1],
+    "JETSON_NANO": [1, 0]
+}
+
+model = GPIO.get_model()
+I2C_BUS = JETSON_I2C_BUS_DEFS[model][0]
+I2C_BUS_1 = JETSON_I2C_BUS_DEFS[model][1]
 
 # Pins dont exist in CPython so...lets make our own!
 class Pin:
@@ -72,8 +84,10 @@ class Pin:
 D1 = Pin(1)
 D2 = Pin(2)
 D3 = Pin(3)
+SDA = Pin(3)
 D4 = Pin(4)
 D5 = Pin(5)
+SCL = Pin(5)
 D6 = Pin(6)
 D7 = Pin(7)
 D8 = Pin(8)
@@ -96,7 +110,9 @@ D24 = Pin(24)
 D25 = Pin(25)
 D26 = Pin(26)
 D27 = Pin(27)
+SDA_1 = Pin(27)
 D28 = Pin(28)
+SCL_1 = Pin(28)
 D29 = Pin(29)
 D30 = Pin(30)
 D31 = Pin(31)
@@ -109,3 +125,8 @@ D37 = Pin(37)
 D38 = Pin(38)
 D39 = Pin(39)
 D40 = Pin(40)
+
+i2cPorts = (
+    (I2C_BUS, SCL, SDA), (I2C_BUS_1, SCL_1, SDA_1),
+)
+

@@ -54,6 +54,7 @@ Pull.DOWN = Pull()
 
 #Pull.NONE = Pull()
 
+
 class DigitalInOut(ContextManaged):
     _pin = None
 
