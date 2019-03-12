@@ -19,8 +19,14 @@ elif detector.chip.SUN8I:
     from adafruit_blinka.microcontroller.allwinner_h3.pin import Pin
 elif detector.chip.SAMA5:
     from adafruit_blinka.microcontroller.sama5.pin import Pin
-elif detector.chip.TEGRAXXX:
-    from adafruit_blinka.microcontroller.tegra.pin import Pin
+elif detector.chip.TEGRA_TX1:
+    from adafruit_blinka.microcontroller.tegra.tx1.pin import Pin
+elif detector.chip.TEGRA_TX2:
+    from adafruit_blinka.microcontroller.tegra.tx2.pin import Pin
+elif detector.chip.TEGRA_XAVIER:
+    from adafruit_blinka.microcontroller.tegra.xavier.pin import Pin
+elif detector.chip.TEGRA_TXX:
+    from adafruit_blinka.microcontroller.tegra.txx.pin import Pin
 elif detector.chip.STM32:
     from machine import Pin
 from adafruit_blinka import Enum, ContextManaged
@@ -73,12 +79,6 @@ class DigitalInOut(ContextManaged):
 
     def deinit(self):
         del self._pin
-
-    def cleanup(self, channel=None):
-        if channel == self:
-            Pin.cleanup(self._pin, self._pin)
-        else:
-            Pin.cleanup(self, channel)
 
     @property
     def direction(self):

@@ -1,21 +1,10 @@
 import sys
-import Jetson.GPIO as GPIO
+import atexit
 sys.path.append("/opt/nvidia/jetson-gpio/lib/python")
 sys.path.append("/opt/nvidia/jetson-gpio/lib/python/Jetson/GPIO")
-GPIO.setmode(GPIO.BCM)
+import Jetson.GPIO as GPIO
+GPIO.setmode(GPIO.TEGRA_SOC)
 GPIO.setwarnings(False)   # shh!
-
-# Each Jetson model uses different I2C busses
-JETSON_I2C_BUS_DEFS = {
-    "JETSON_TX1": [0, 1],
-    "JETSON_TX2": [1, 0],
-    "JETSON_XAVIER": [8, 1],
-    "JETSON_TXX": [1, 0]
-}
-
-model = GPIO.get_model()
-I2C_BUS = JETSON_I2C_BUS_DEFS[model][0]
-I2C_BUS_1 = JETSON_I2C_BUS_DEFS[model][1]
 
 # Pins dont exist in CPython so...lets make our own!
 class Pin:
@@ -73,60 +62,54 @@ class Pin:
         else:
             return GPIO.input(self.id)
 
-    def cleanup(self, channel=None):
-        if channel is None:
-            GPIO.cleanup()
-        elif channel == self:
-            GPIO.cleanup(self.id)
-        else:
-            raise RuntimeError("Invalid pin to cleanup")
+    @atexit.register
+    def cleanup():
+        print("Exiting... \nCleaning up pins")
+        GPIO.cleanup()
 
-D1 = Pin(1)
-D2 = Pin(2)
-D3 = Pin(3)
-SDA = Pin(3)
-D4 = Pin(4)
-D5 = Pin(5)
-SCL = Pin(5)
-D6 = Pin(6)
-D7 = Pin(7)
-D8 = Pin(8)
-D9 = Pin(9)
-D10 = Pin(10)
-D11 = Pin(11)
-D12 = Pin(12)
-D13 = Pin(13)
-D14 = Pin(14)
-D15 = Pin(15)
-D16 = Pin(16)
-D17 = Pin(17)
-D18 = Pin(18)
-D19 = Pin(19)
-D20 = Pin(20)
-D21 = Pin(21)
-D22 = Pin(22)
-D23 = Pin(23)
-D24 = Pin(24)
-D25 = Pin(25)
-D26 = Pin(26)
-D27 = Pin(27)
-SDA_1 = Pin(27)
-D28 = Pin(28)
-SCL_1 = Pin(28)
-D29 = Pin(29)
-D30 = Pin(30)
-D31 = Pin(31)
-D32 = Pin(32)
-D33 = Pin(33)
-D34 = Pin(34)
-D35 = Pin(35)
-D36 = Pin(36)
-D37 = Pin(37)
-D38 = Pin(38)
-D39 = Pin(39)
-D40 = Pin(40)
+# Cannot be used as GPIO
+SDA = Pin('DP_AUX_CH3_N')
+SCL = Pin('DP_AUX_CH3_P')
+SDA_1 = Pin('GEN2_I2C_SDA')
+SCL_1 = Pin('GEN2_I2C_SCL')
+
+Q06 = Pin('SOC_GPIO42')
+AA03 = Pin('CAN0_DIN')
+AA02 = Pin('CAN0_DOUT')
+Z07 = Pin('SPI1_CS1_N')
+Z06 = Pin('SPI1_CS0_N')
+Z04 = Pin('SPI1_MISO')
+Z05 = Pin('SPI1_MOSI')
+Z03 = Pin('SPI1_SCK')
+BB01 = Pin('CAN1_EN')
+AA00 = Pin('CAN1_DOUT')
+R05 = Pin('UART1_CTS')
+R04 = Pin('UART1_RTS')
+H07 = Pin('DAP2_SCLK')
+I02 = Pin('DAP2_FS')
+I01 = Pin('DAP2_DIN')
+I00 = Pin('DAP2_DOUT')
+N01 = Pin('SOC_GPIO54')
+BB00 = Pin('CAN1_STB')
+H00 = Pin('SOC_GPIO12')
+Q01 = Pin('SOC_GPIO21')
+AA01 = Pin('CAN1_DIN')
+R00 = Pin('SOC_GPIO44')
 
 i2cPorts = (
-    (I2C_BUS, SCL, SDA), (I2C_BUS_1, SCL_1, SDA_1),
+    (8, SCL, SDA), (1, SCL_1, SDA_1),
 )
+
+
+
+
+
+
+
+
+
+
+
+
+
 

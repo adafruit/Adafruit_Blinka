@@ -18,7 +18,13 @@ elif chip_id == ap_chip.SUN8I:
     from adafruit_blinka.microcontroller.allwinner_h3.pin import *
 elif chip_id == ap_chip.SAMA5:
     from adafruit_blinka.microcontroller.sama5.pin import *
-elif chip_id == ap_chip.TEGRAXXX:
-    from adafruit_blinka.microcontroller.tegra.pin import *
+elif chip_id == ap_chip.TEGRA_TX1:
+    from adafruit_blinka.microcontroller.tegra.tx1.pin import *
+elif chip_id == ap_chip.TEGRA_TX2:
+    from adafruit_blinka.microcontroller.tegra.tx2.pin import *
+elif chip_id == ap_chip.TEGRA_XAVIER:
+    from adafruit_blinka.microcontroller.tegra.xavier.pin import *
+elif chip_id == ap_chip.TEGRA_TXX:
+    from adafruit_blinka.microcontroller.tegra.txx.pin import *
 else:
     raise NotImplementedError("Microcontroller not supported: ", chip_id)
