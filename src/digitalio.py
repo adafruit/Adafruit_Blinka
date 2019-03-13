@@ -19,14 +19,15 @@ elif detector.chip.SUN8I:
     from adafruit_blinka.microcontroller.allwinner_h3.pin import Pin
 elif detector.chip.SAMA5:
     from adafruit_blinka.microcontroller.sama5.pin import Pin
-elif detector.chip.TEGRA_TX1:
-    from adafruit_blinka.microcontroller.tegra.tx1.pin import Pin
-elif detector.chip.TEGRA_TX2:
-    from adafruit_blinka.microcontroller.tegra.tx2.pin import Pin
-elif detector.chip.TEGRA_XAVIER:
-    from adafruit_blinka.microcontroller.tegra.xavier.pin import Pin
-elif detector.chip.TEGRA_TXX:
-    from adafruit_blinka.microcontroller.tegra.txx.pin import Pin
+elif detector.chip.T210:
+    if detector.board.JETSON_TX1:
+        from adafruit_blinka.microcontroller.tegra.t210.x1_pin import Pin
+    elif detector.board.JETSON_TXX:
+        from adafruit_blinka.microcontroller.tegra.t210.xx_pin import Pin
+elif detector.chip.T186:
+    from adafruit_blinka.microcontroller.tegra.t186.pin import Pin
+elif detector.chip.T194:
+    from adafruit_blinka.microcontroller.tegra.t194.pin import Pin
 elif detector.chip.STM32:
     from machine import Pin
 from adafruit_blinka import Enum, ContextManaged

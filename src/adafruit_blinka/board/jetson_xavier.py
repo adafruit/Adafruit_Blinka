@@ -1,6 +1,6 @@
 """Pin definitions for Jetson XAVIER."""
 
-from adafruit_blinka.microcontroller.tegra.xavier import pin
+from adafruit_blinka.microcontroller.tegra.t194 import pin
 
 SDA = pin.SDA
 SCL = pin.SCL

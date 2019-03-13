@@ -1,6 +1,6 @@
 """Pin definitions for Jetson TX2."""
 
-from adafruit_blinka.microcontroller.tegra.tx2 import pin
+from adafruit_blinka.microcontroller.tegra.t186 import pin
 
 SDA = pin.SDA
 SCL = pin.SCL
