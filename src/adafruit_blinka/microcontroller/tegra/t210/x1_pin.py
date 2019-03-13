@@ -99,17 +99,3 @@ E06 = Pin('GPIO_PE6')
 i2cPorts = (
     (0, SCL, SDA), (1, SCL_1, SDA_1),
 )
-
-
-
-
-
-
-
-
-
-
-
-
-
-

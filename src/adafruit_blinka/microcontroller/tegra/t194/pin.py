@@ -99,17 +99,3 @@ R00 = Pin('SOC_GPIO44')
 i2cPorts = (
     (8, SCL, SDA), (1, SCL_1, SDA_1),
 )
-
-
-
-
-
-
-
-
-
-
-
-
-
-

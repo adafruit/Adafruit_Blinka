@@ -98,17 +98,3 @@ J05 = Pin('GPIO_AUD0')
 i2cPorts = (
     (1, SCL, SDA), (0, SCL_1, SDA_1),
 )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
