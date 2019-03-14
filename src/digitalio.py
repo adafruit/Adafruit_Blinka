@@ -20,10 +20,7 @@ elif detector.chip.SUN8I:
 elif detector.chip.SAMA5:
     from adafruit_blinka.microcontroller.sama5.pin import Pin
 elif detector.chip.T210:
-    if detector.board.JETSON_TX1:
-        from adafruit_blinka.microcontroller.tegra.t210.x1_pin import Pin
-    elif detector.board.JETSON_TXX:
-        from adafruit_blinka.microcontroller.tegra.t210.xx_pin import Pin
+    from adafruit_blinka.microcontroller.tegra.t210.pin import Pin
 elif detector.chip.T186:
     from adafruit_blinka.microcontroller.tegra.t186.pin import Pin
 elif detector.chip.T194:

@@ -68,21 +68,32 @@ class Pin:
         GPIO.cleanup()
 
 # Cannot be used as GPIO
-SDA = Pin('GEN2_I2C_SDA')
-SCL = Pin('GEN2_I2C_SCL')
-SDA_1 = Pin('GEN1_I2C_SDA')
-SCL_1 = Pin('GEN1_I2C_SCL')
+SDA = Pin('GEN1_I2C_SDA')
+SCL = Pin('GEN1_I2C_SCL')
+SDA_1 = Pin('GEN2_I2C_SDA')
+SCL_1 = Pin('GEN2_I2C_SCL')
 
-BB00 = Pin('AUD_MCLK')
+# These pins are native to TX1
+BB03 = Pin('GPIO_X1_AUD')
+X02 = Pin('MOTION_INT')
+H07 = Pin('AP_WAKE_NFC')
+E04 = Pin('DMIC3_CLK')
+U03 = Pin('UART1_CTS')
+U02 = Pin('UART1_RTS')
+B03 = Pin('DAP1_SCLK')
+B00 = Pin('DAP1_FS')
+B01 = Pin('DAP1_DIN')
+B02 = Pin('DAP1_DOUT')
+P17 = Pin('GPIO_EXP_P17')
+E05 = Pin('DMIC3_DAT')
+X00 = Pin('MODEM_WAKE_AP')
+P16 = Pin('GPIO_EXP_P16')
+X03 = Pin('ALS_PROX_INT')
+
+# These pins are native to TXX
 S05 = Pin('CAM_AF_EN')
 Z00 = Pin('GPIO_PZ0')
-C04 = Pin('SPI1_CS1')
-C03 = Pin('SPI1_CS0')
-C01 = Pin('SPI1_MISO')
-C00 = Pin('SPI1_MOSI')
-C02 = Pin('SPI1_SCK')
 V00 = Pin('LCD_BL_PW')
-E06 = Pin('GPIO_PE6')
 G03 = Pin('UART2_CTS')
 G02 = Pin('UART2_RTS')
 J07 = Pin('DAP4_SCLK')
@@ -96,6 +107,15 @@ B05 = Pin('SPI2_MISO')
 B04 = Pin('SPI2_MOSI')
 B06 = Pin('SPI2_SCK')
 
+# These pins are shared across T210
+BB00 = Pin('AUD_MCLK')
+C04 = Pin('SPI1_CS1')
+C03 = Pin('SPI1_CS0')
+C01 = Pin('SPI1_MISO')
+C00 = Pin('SPI1_MOSI')
+C02 = Pin('SPI1_SCK')
+E06 = Pin('GPIO_PE6')
+
 i2cPorts = (
-    (1, SCL, SDA), (0, SCL_1, SDA_1),
+    (0, SCL, SDA), (1, SCL_1, SDA_1),
 )
