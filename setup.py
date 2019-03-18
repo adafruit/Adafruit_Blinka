@@ -30,9 +30,10 @@ setup(
     url='https://github.com/adafruit/Adafruit_Blinka',
     package_dir={'': 'src'},
     packages=find_packages("src"),
-    # This seems to override find_packages above - I suspect but don't know for sure that
-    # we're doing this for a reason -- bpb 2019-01-15:
+    # py_modules lists top-level single file packages to include.
+    # find_packages only finds packages in directories with __init__.py files.
     py_modules=['bitbangio', 'board', 'busio', 'digitalio', 'micropython', 'pulseio', 'neopixel_write'],
+    package_data={'adafruit_blinka.microcontroller.bcm283x.pulseio': ['libgpiod_pulsein']},
     install_requires=[
         "Adafruit-PlatformDetect",
         "Adafruit-PureIO",
