@@ -1,4 +1,4 @@
-"""Pin definitions for Jetson TXX."""
+"""Pin definitions for Jetson Nano."""
 
 from adafruit_blinka.microcontroller.tegra.t210 import pin
 

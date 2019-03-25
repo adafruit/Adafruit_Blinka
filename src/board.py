@@ -70,8 +70,8 @@ elif board_id == ap_board.JETSON_TX2:
 elif board_id == ap_board.JETSON_XAVIER:
     from adafruit_blinka.board.jetson_xavier import *
 
-elif board_id == ap_board.JETSON_TXX:
-    from adafruit_blinka.board.jetson_txx import *
+elif board_id == ap_board.JETSON_NANO:
+    from adafruit_blinka.board.jetson_nano import *
 
 elif "sphinx" in sys.modules:
     pass
