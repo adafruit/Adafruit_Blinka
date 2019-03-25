@@ -28,7 +28,7 @@ Dependencies
 =============
 
 The Micropython compatibility layers described above are intended to provide a CircuitPython-like API for devices which
-are running Micropython. Since corresponding packages should be built-in to any standard
+are running CPython or Micropython. Since corresponding packages should be built-in to any standard
 CircuitPython image, they have no value on a device already running CircuitPython and would likely conflict in unhappy ways.
 
 The test suites in the test/src folder under **testing.universal** are by design
