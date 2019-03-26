@@ -90,7 +90,7 @@ X00 = Pin('MODEM_WAKE_AP')
 P16 = Pin('GPIO_EXP_P16')
 X03 = Pin('ALS_PROX_INT')
 
-# These pins are native to TXX
+# These pins are native to NANO
 S05 = Pin('CAM_AF_EN')
 Z00 = Pin('GPIO_PZ0')
 V00 = Pin('LCD_BL_PW')
