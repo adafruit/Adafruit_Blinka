@@ -9,11 +9,11 @@ class Pin:
     PULL_NONE = 0
     PULL_UP = 1
     PULL_DOWN = 2
-    
+
     id = None
     _value = LOW
     _mode = IN
-    
+
     def __init__(self, pin_name):
         self.id = pin_name
 
@@ -41,7 +41,7 @@ class Pin:
             elif pull == self.PULL_DOWN:
                 GPIO.setup(self.id, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
             else:
-                raise RuntimeError("Invalid pull for pin: %s" % self.id)       
+                raise RuntimeError("Invalid pull for pin: %s" % self.id)
 
     def value(self, val=None):
         if val != None:
@@ -56,6 +56,75 @@ class Pin:
         else:
             return GPIO.input(self.id)
 
+
+# PocketBeagle
+P1_2 = Pin('P1_2')
+P1_3 = Pin('P1_3')
+P1_4 = Pin('P1_4')
+
+P1_6 = Pin('P1_6')
+
+P1_8 = Pin('P1_8')
+
+P1_10 = Pin('P1_10')
+
+P1_12 = Pin('P1_12')
+
+P1_19 = Pin('P1_19')
+P1_20 = Pin('P1_20')
+P1_21 = Pin('P1_21')
+
+P1_23 = Pin('P1_23')
+
+P1_25 = Pin('P1_25')
+P1_26 = Pin('P1_26')
+P1_27 = Pin('P1_27')
+P1_28 = Pin('P1_28')
+P1_29 = Pin('P1_29')
+P1_30 = Pin('P1_30')
+P1_31 = Pin('P1_31')
+P1_32 = Pin('P1_32')
+P1_33 = Pin('P1_33')
+P1_34 = Pin('P1_34')
+P1_35 = Pin('P1_35')
+P1_36 = Pin('P1_36')
+
+
+P2_1 = Pin('P2_1')
+P2_2 = Pin('P2_2')
+P2_3 = Pin('P2_3')
+P2_4 = Pin('P2_4')
+P2_5 = Pin('P2_5')
+P2_6 = Pin('P2_6')
+P2_7 = Pin('P2_7')
+P2_8 = Pin('P2_8')
+P2_9 = Pin('P2_9')
+P2_10 = Pin('P2_10')
+P2_11 = Pin('P2_11')
+
+P2_17 = Pin('P2_17')
+P2_18 = Pin('P2_18')
+P2_19 = Pin('P2_19')
+P2_20 = Pin('P2_20')
+
+P2_22 = Pin('P2_22')
+
+P2_24 = Pin('P2_24')
+
+P2_26 = Pin('P2_26')
+P2_27 = Pin('P2_27')
+P2_28 = Pin('P2_28')
+P2_29 = Pin('P2_29')
+P2_30 = Pin('P2_30')
+P2_31 = Pin('P2_31')
+P2_32 = Pin('P2_32')
+P2_33 = Pin('P2_33')
+P2_34 = Pin('P2_34')
+P2_35 = Pin('P2_35')
+P2_36 = Pin('P2_36')
+
+
+# BeagleBone Black
 P8_3 = Pin('P8_3')
 P8_4 = Pin('P8_4')
 P8_5 = Pin('P8_5')
@@ -124,10 +193,12 @@ P9_31 = Pin('P9_31')
 P9_41 = Pin('P9_41')
 P9_42 = Pin('P9_42')
 
+# common to all beagles
 USR0 = Pin('USR0')
 USR1 = Pin('USR1')
 USR2 = Pin('USR2')
 USR3 = Pin('USR3')
+
 
 SCL = Pin('P9_19')
 SDA = Pin('P9_20')
@@ -139,7 +210,7 @@ SDA = Pin('P9_20')
 # P9_18 (SPI0_D1 => MOSI) outputs data to peripheral device
 # P9_21 (SPIO_DO => MISO) receives data from peripheral device
 # P9_22 (SPI0_SCLK => SCLK) outputs clock signal
-# 
+#
 # Use config-pin to set pin mode for SPI pins
 # https://github.com/beagleboard/bb.org-overlays/tree/master/tools/beaglebone-universal-io
 # config-pin p9.17 spi_cs
@@ -195,4 +266,3 @@ uartPorts = (
 i2cPorts = (
     (2, SCL, SDA),
 )
-
