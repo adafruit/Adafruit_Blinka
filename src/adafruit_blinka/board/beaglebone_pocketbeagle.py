@@ -84,35 +84,71 @@ LED_USR3 = pin.USR3
 # I2C1 pins
 # P2_11 (I2C1_SDA => SDA_1) data signal
 # P2_9 (I2C1_SCL => SCL_1) clock signal
-SDA_1 = pin.SDA_1
-SCL_1 = pin.SCL_1
+SDA_1 = pin.P2_11
+SCL_1 = pin.P2_9
 
 # I2C2 pins
 # P1_26 (I2C2_SDA => SDA_2) data signal
 # P1_28 (I2C2_SCL => SCL_2) clock signal
-SDA_2 = pin.SDA_2
-SCL_2 = pin.SCL_2
+SDA_2 = pin.P1_26
+SCL_2 = pin.P1_28
 
 # SPI0 pins
 # P1_6 (SPI0_CSO => CE0) enables peripheral device
 # P1_12 (SPI0_MOSI => MOSI) outputs data to peripheral device
 # P1_10 (SPIO_MISO => MISO) receives data from peripheral device
 # P1_8 (SPI0_CLK => SCLK) outputs clock signal
-CE0 = pin.CE0
-MOSI = pin.MOSI
-MISO = pin.MISO
-SCLK = pin.SCLK
+CE0 = pin.P1_6
+MOSI = pin.P1_12
+MISO = pin.P1_10
+SCLK = pin.P1_8
 # CircuitPython naming convention for SPI Clock
-SCK = pin.SCK
+SCK = SCLK
 
 # SPI1 pins
 # P2_31 (SPI1_CS1 => CE1) enables peripheral device
 # P2_25 (SPI1_MOSI => MOSI) outputs data to peripheral device
 # P2_27 (SPI1_MISO => MISO) receives data from peripheral device
 # P2_29 (SPI1_CLK => SCLK) outputs clock signal
-CE1 = pin.CE1
-MOSI_1 = pin.MOSI_1
-MISO_1 = pin.MISO_1
-SCLK_1 = pin.SCLK_1
+CE1 = pin.P2_31
+MOSI_1 = pin.P2_25
+MISO_1 = pin.P2_27
+SCLK_1 = pin.P2_29
 # CircuitPython naming convention for SPI Clock
-SCK_1 = pin.SCK_1
+SCK_1 = SCLK_1
+
+
+# UART0
+TX_0 = pin.P1_30
+RX_0 = pin.P1_32
+
+TX = TX_0
+RX = RX_0
+
+
+# UART2
+# pins already in use by SPI0
+# TX_2 = pin.P1_8
+# RX_2 = pin.P1_10
+
+# UART4
+TX_4 = pin.P2_7
+RX_4 = pin.P2_5
+
+
+# ordered as spiId, sckId, mosiId, misoId
+spiPorts = (
+    (0, SCLK, MOSI, MISO),
+    (1, SCLK_1, MOSI_1, MISO_1),
+)
+
+# ordered as uartId, txId, rxId
+uartPorts = (
+    (0, TX_0, RX_0),
+    (4, TX_4, RX_4),
+)
+
+i2cPorts = (
+    (1, SCL_1, SDA_1),
+    (2, SCL_2, SDA_2),
+)
