@@ -5,7 +5,7 @@
 # 1) connect anode (+) lead of LED to P1_33 pin
 # 2) connect cathode (-) lead to 1K Ohm resistor
 # 3) connect that 1K Ohm resistor to GND
-# 
+#
 # NOTE: the pin mode can be verified with the command line
 # utility config-pin on the BeagleBoard.org Debian image
 #
