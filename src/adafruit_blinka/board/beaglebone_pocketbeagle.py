@@ -98,6 +98,10 @@ LED_USR3 = pin.USR3
 # P2_9 (I2C1_SCL => SCL_1) clock signal
 SDA_1 = pin.P2_11
 SCL_1 = pin.P2_9
+# for Example compatibility
+SDA = SDA_1
+SCL = SCL_1
+
 
 # I2C2 pins
 # P1_26 (I2C2_SDA => SDA_2) data signal
