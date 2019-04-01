@@ -58,24 +58,30 @@ class Pin:
 
 
 # PocketBeagle
+# P1_1 = SYS VIN
 P1_2 = Pin('P1_2')
 P1_3 = Pin('P1_3')
 P1_4 = Pin('P1_4')
-
+# P1_5 = USB VBUS
 P1_6 = Pin('P1_6')
-
+# P1_7 = USB VIN
 P1_8 = Pin('P1_8')
-
+# P1_9 = USB DN
 P1_10 = Pin('P1_10')
-
+# P1_11 = USB DP
 P1_12 = Pin('P1_12')
-
+# P1_13 = USB ID
+# P1_14 = SYS 3.3V
+# P1_15 = SYS GND
+# P1_16 = SYS GND
+# P1_17 = AIN 1.8V REF-
+# P1_18 = AIN 1.8V REF+
 P1_19 = Pin('P1_19')
 P1_20 = Pin('P1_20')
 P1_21 = Pin('P1_21')
-
+# P1_22 = SYS GND
 P1_23 = Pin('P1_23')
-
+# P1_22 = SYS VOUT
 P1_25 = Pin('P1_25')
 P1_26 = Pin('P1_26')
 P1_27 = Pin('P1_27')
@@ -101,17 +107,21 @@ P2_8 = Pin('P2_8')
 P2_9 = Pin('P2_9')
 P2_10 = Pin('P2_10')
 P2_11 = Pin('P2_11')
-
+# P2_12 = SYS  PWR BTN
+# P2_13 = SYS VOUT
+# P2_14 = BAT VIN
+# P2_15 = SYS GND
+# P2_16 = BAT TEMP
 P2_17 = Pin('P2_17')
 P2_18 = Pin('P2_18')
 P2_19 = Pin('P2_19')
 P2_20 = Pin('P2_20')
-
+# P2_21 = SYS GND
 P2_22 = Pin('P2_22')
-
+# P2_23 = SYS 3.3V
 P2_24 = Pin('P2_24')
 P2_25 = Pin('P2_25')
-P2_26 = Pin('P2_26')
+# P2_26 = SYS NRST
 P2_27 = Pin('P2_27')
 P2_28 = Pin('P2_28')
 P2_29 = Pin('P2_29')
@@ -125,6 +135,8 @@ P2_36 = Pin('P2_36')
 
 
 # BeagleBone Black
+# P8_1 = ?
+# P8_2 = ?
 P8_3 = Pin('P8_3')
 P8_4 = Pin('P8_4')
 P8_5 = Pin('P8_5')
@@ -169,6 +181,17 @@ P8_43 = Pin('P8_43')
 P8_44 = Pin('P8_44')
 P8_45 = Pin('P8_45')
 P8_46 = Pin('P8_46')
+
+# P9_1 = ?
+# P9_2 = ?
+# P9_3 = ?
+# P9_4 = ?
+# P9_5 = ?
+# P9_6 = ?
+# P9_7 = ?
+# P9_8 = ?
+# P9_9 = ?
+# P9_10 = ?
 P9_11 = Pin('P9_11')
 P9_12 = Pin('P9_12')
 P9_13 = Pin('P9_13')
@@ -190,8 +213,21 @@ P9_28 = Pin('P9_28')
 P9_29 = Pin('P9_29')
 P9_30 = Pin('P9_30')
 P9_31 = Pin('P9_31')
+# P9_32 = ?
+# P9_33 = ?
+# P9_34 = ?
+# P9_35 = ?
+# P9_36 = ?
+# P9_37 = ?
+# P9_38 = ?
+# P9_39 = ?
+# P9_40 = ?
 P9_41 = Pin('P9_41')
 P9_42 = Pin('P9_42')
+# P9_43 = ?
+# P9_44 = ?
+# P9_45 = ?
+# P9_46 = ?
 
 # common to all beagles
 USR0 = Pin('USR0')
