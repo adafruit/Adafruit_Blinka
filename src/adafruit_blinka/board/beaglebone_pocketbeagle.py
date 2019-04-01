@@ -7,24 +7,30 @@ https://github.com/beagleboard/pocketbeagle/wiki/System-Reference-Manual#figure-
 from adafruit_blinka.microcontroller.am335x import pin
 
 # initial pins, to mimic bonescript demo
+# P1_1 = SYS VIN
 P1_2 = pin.P1_2
 P1_3 = pin.P1_3
 P1_4 = pin.P1_4
-
+# P1_5 = USB VBUS
 P1_6 = pin.P1_6
-
+# P1_7 = USB VIN
 P1_8 = pin.P1_8
-
+# P1_9 = USB DN
 P1_10 = pin.P1_10
-
+# P1_11 = USB DP
 P1_12 = pin.P1_12
-
+# P1_13 = USB ID
+# P1_14 = SYS 3.3V
+# P1_15 = SYS GND
+# P1_16 = SYS GND
+# P1_17 = AIN 1.8V REF-
+# P1_18 = AIN 1.8V REF+
 P1_19 = pin.P1_19
 P1_20 = pin.P1_20
 P1_21 = pin.P1_21
-
+# P1_22 = SYS GND
 P1_23 = pin.P1_23
-
+# P1_22 = SYS VOUT
 P1_25 = pin.P1_25
 P1_26 = pin.P1_26
 P1_27 = pin.P1_27
@@ -50,17 +56,21 @@ P2_8 = pin.P2_8
 P2_9 = pin.P2_9
 P2_10 = pin.P2_10
 P2_11 = pin.P2_11
-
+# P2_12 = SYS  PWR BTN
+# P2_13 = SYS VOUT
+# P2_14 = BAT VIN
+# P2_15 = SYS GND
+# P2_16 = BAT TEMP
 P2_17 = pin.P2_17
 P2_18 = pin.P2_18
 P2_19 = pin.P2_19
 P2_20 = pin.P2_20
-
+# P2_21 = SYS GND
 P2_22 = pin.P2_22
-
+# P2_23 = SYS 3.3V
 P2_24 = pin.P2_24
-
-P2_26 = pin.P2_26
+P2_25 = pin.P2_25
+# P2_26 = SYS NRST
 P2_27 = pin.P2_27
 P2_28 = pin.P2_28
 P2_29 = pin.P2_29
