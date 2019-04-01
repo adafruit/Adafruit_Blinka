@@ -97,6 +97,7 @@ P9_42 = pin.P9_42  # GPIO_7
 # P9_45 = DGND
 # P9_46 = DGND
 
+# common to all beagles
 LED_USR0 = pin.USR0
 LED_USR1 = pin.USR1
 LED_USR2 = pin.USR2
