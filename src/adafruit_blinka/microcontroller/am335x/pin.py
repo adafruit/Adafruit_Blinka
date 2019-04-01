@@ -123,7 +123,7 @@ P2_20 = Pin('P2_20')    # GPIO2_0 - GPIO_64
 P2_22 = Pin('P2_22')    # GPIO1_14 - GPIO_46
 # P2_23 = SYS 3.3V      # VOUT-3.3V
 P2_24 = Pin('P2_24')    # GPIO1_12 - GPIO_44
-P2_25 = Pin('P2_25')    # SPI1_CS0 - GPIO_41
+P2_25 = Pin('P2_25')    # SPI1_D1 - GPIO_41
 # P2_26 = SYS NRST      # RESET#
 P2_27 = Pin('P2_27')    # SPI1_D0 - GPIO_40
 P2_28 = Pin('P2_28')    # GPIO3_20 - GPIO_116
@@ -240,18 +240,28 @@ USR3 = Pin('USR3')      # USR3 - GPIO_56
 
 # all special functions (SPI / I2C) are moved to
 # src/adafruit_blinka/board/beaglebone_black.py
+# → this does not work - as the busio thing wants
+# this lists in the microcontroller file..
 
-# # ordered as spiId, sckId, mosiId, misoId
-# spiPorts = (
-#     (0, SCLK, MOSI, MISO),
-#     (1, SCLK_1, MOSI_1, MISO_1)
-# )
-#
-# # ordered as uartId, txId, rxId
-# uartPorts = (
-#     (),
-# )
-#
-# i2cPorts = (
-#     (2, SCL, SDA),
-# )
+# ordered as spiId, sckId, mosiId, misoId
+spiPorts = (
+    # (0, Pin('SPI0_SCLK'), Pin('SPI0_D1'), Pin('SPI0_D0')),
+    # (1, Pin('SPI1_SCLK'), Pin('SPI1_D1'), Pin('SPI1_D0')),
+)
+
+# ordered as uartId, txId, rxId
+uartPorts = (
+    # (0, Pin('UART0_TXD'), Pin('UART0_RXD')),
+    # (1, Pin('UART1_TXD'), Pin('UART1_RXD')),
+    # (2, Pin('UART2_TXD'), Pin('UART2_RXD')),
+    # (4, Pin('UART4_TXD'), Pin('UART4_RXD')),
+    # (5, Pin('UART5_TXD'), Pin('UART5_RXD')),
+)
+
+# ordered as i2cId, SCL, SDA
+i2cPorts = (
+    # (1, Pin('I2C1_SCL'), Pin('I2C1_SDA')),
+    # (2, Pin('I2C2_SCL'), Pin('I2C2_SDA')),
+    (1, P2_9, P2_11),
+    (2, P1_28, P1_26),
+)
