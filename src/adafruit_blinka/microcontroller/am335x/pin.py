@@ -63,7 +63,7 @@ class Pin:
 # PocketBeagle
 # P1_1 = SYS VIN        # VIN_AC
 P1_2 = Pin('P1_2')      # GPIO2_23 - GPIO_87
-P1_3 = Pin('P1_3')      # USB1_VBUS_OUT
+P1_3 = Pin('P1_3')      # USB1_VBUS_OUT - (silkscreen: USB1 V_EN)
 P1_4 = Pin('P1_4')      # GPIO2_25 - GPIO_89
 # P1_5 = USB VBUS       # USB1_VBUS_IN
 P1_6 = Pin('P1_6')      # SPI0_CS0 - GPIO_5
