@@ -247,6 +247,8 @@ USR3 = Pin('USR3')      # USR3 - GPIO_56
 spiPorts = (
     # (0, Pin('SPI0_SCLK'), Pin('SPI0_D1'), Pin('SPI0_D0')),
     # (1, Pin('SPI1_SCLK'), Pin('SPI1_D1'), Pin('SPI1_D0')),
+    (1, P1_8, P1_12, P1_10),
+    (1, P2_29, P2_25, P2_27),
 )
 
 # ordered as uartId, txId, rxId
