@@ -232,38 +232,114 @@ P9_42 = Pin('P9_42')    # GPIO0_7 - GPIO_7
 # P9_45 = DGND          # DGND - GPIO_0
 # P9_46 = DGND          # DGND - GPIO_0
 
+
+##########################################
 # common to all beagles
 USR0 = Pin('USR0')      # USR0 - GPIO_53
 USR1 = Pin('USR1')      # USR1 - GPIO_54
 USR2 = Pin('USR2')      # USR2 - GPIO_55
 USR3 = Pin('USR3')      # USR3 - GPIO_56
 
-# all special functions (SPI / I2C) are moved to
-# src/adafruit_blinka/board/beaglebone_black.py
-# → this does not work - as the busio thing wants
-# this lists in the microcontroller file..
+
+##########################################
+# specials
+
+# analog input
+AIN0 = Pin('AIN0')
+AIN1 = Pin('AIN1')
+AIN2 = Pin('AIN2')
+AIN3 = Pin('AIN3')
+AIN4 = Pin('AIN4')
+AIN5 = Pin('AIN5')
+AIN6 = Pin('AIN6')
+AIN7 = Pin('AIN7')
+
+# PWM
+EHRPWM0A = Pin('EHRPWM0A')
+EHRPWM0B = Pin('EHRPWM0B')
+EHRPWM1A = Pin('EHRPWM1A')
+EHRPWM1B = Pin('EHRPWM1B')
+EHRPWM2A = Pin('EHRPWM2A')
+EHRPWM2B = Pin('EHRPWM2B')
+ECAPPWM0 = Pin('ECAPPWM0')
+ECAPPWM2 = Pin('ECAPPWM2')
+TIMER4 = Pin('TIMER4')
+TIMER5 = Pin('TIMER5')
+TIMER6 = Pin('TIMER6')
+TIMER7 = Pin('TIMER7')
+
+
+# I2C1
+I2C1_SDA = Pin('I2C1_SDA')
+I2C1_SCL = Pin('I2C1_SCL')
+
+# I2C2
+I2C2_SDA = Pin('I2C2_SDA')
+I2C2_SCL = Pin('I2C2_SCL')
+
+# SPI0
+SPI0_CS0 = Pin('SPI0_CS0')
+SPI0_SCLK = Pin('SPI0_SCLK')
+SPI0_D1 = Pin('SPI0_D1')
+SPI0_D0 = Pin('SPI0_D0')
+
+# SPI1
+SPI1_CS0 = Pin('SPI1_CS0')
+SPI1_CS1 = Pin('SPI1_CS1')
+SPI1_SCLK = Pin('SPI1_SCLK')
+SPI1_D1 = Pin('SPI1_D1')
+SPI1_D0 = Pin('SPI1_D0')
+
+# UART0
+UART0_TXD = Pin('UART0_TXD')
+UART0_RXD = Pin('UART0_RXD')
+
+# UART1
+UART1_TXD = Pin('UART1_TXD')
+UART1_RXD = Pin('UART1_RXD')
+UART1_RTSn = Pin('UART1_RTSn')
+UART1_CTSn = Pin('UART1_CTSn')
+
+# UART2
+UART2_TXD = Pin('UART2_TXD')
+UART2_RXD = Pin('UART2_RXD')
+
+# UART3
+UART3_TXD = Pin('UART3_TXD')
+UART3_RXD = Pin('UART3_RXD')
+UART3_RTSn = Pin('UART3_RTSn')
+UART3_CTSn = Pin('UART3_CTSn')
+
+# UART4
+UART4_TXD = Pin('UART4_TXD')
+UART4_RXD = Pin('UART4_RXD')
+UART4_RTSn = Pin('UART4_RTSn')
+UART4_CTSn = Pin('UART4_CTSn')
+
+# UART5
+UART5_TXD = Pin('UART5_TXD')
+UART5_RXD = Pin('UART5_RXD')
+UART5_RTSn = Pin('UART5_RTSn')
+UART5_CTSn = Pin('UART5_CTSn')
+
 
 # ordered as spiId, sckId, mosiId, misoId
 spiPorts = (
-    # (0, Pin('SPI0_SCLK'), Pin('SPI0_D1'), Pin('SPI0_D0')),
-    # (1, Pin('SPI1_SCLK'), Pin('SPI1_D1'), Pin('SPI1_D0')),
-    (1, P1_8, P1_12, P1_10),
-    (1, P2_29, P2_25, P2_27),
+    (0, SPI0_SCLK, SPI0_D1, SPI0_D0),
+    (1, SPI1_SCLK, SPI1_D1, SPI1_D0),
 )
 
 # ordered as uartId, txId, rxId
 uartPorts = (
-    # (0, Pin('UART0_TXD'), Pin('UART0_RXD')),
-    # (1, Pin('UART1_TXD'), Pin('UART1_RXD')),
-    # (2, Pin('UART2_TXD'), Pin('UART2_RXD')),
-    # (4, Pin('UART4_TXD'), Pin('UART4_RXD')),
-    # (5, Pin('UART5_TXD'), Pin('UART5_RXD')),
+    # (0, UART0_TXD, UART0_RXD),
+    # (1, UART1_TXD, UART1_RXD),
+    # (2, UART2_TXD, UART2_RXD),
+    # (4, UART4_TXD, UART4_RXD),
+    # (5, UART5_TXD, UART5_RXD),
 )
 
 # ordered as i2cId, SCL, SDA
 i2cPorts = (
-    # (1, Pin('I2C1_SCL'), Pin('I2C1_SDA')),
-    # (2, Pin('I2C2_SCL'), Pin('I2C2_SDA')),
-    (1, P2_9, P2_11),
-    (2, P1_28, P1_26),
+    (1, I2C1_SCL, I2C1_SDA),
+    (2, I2C2_SCL, I2C2_SDA),
 )

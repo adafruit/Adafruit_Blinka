@@ -94,77 +94,45 @@ LED_USR3 = pin.USR3
 # https://raw.githubusercontent.com/wiki/beagleboard/pocketbeagle/images/PocketBeagle_pinout.png
 
 # I2C1 pins
-# P2_11 (I2C1_SDA => SDA_1) data signal
-# P2_9 (I2C1_SCL => SCL_1) clock signal
-SDA_1 = pin.P2_11
-SCL_1 = pin.P2_9
-# for Example compatibility
+SDA_1 = pin.I2C1_SDA    # P2_11 data signal
+SCL_1 = pin.I2C1_SCL    # P2_9 clock signal
+# for example compatibility we create a alias
 SDA = SDA_1
 SCL = SCL_1
 
-
 # I2C2 pins
-# P1_26 (I2C2_SDA => SDA_2) data signal
-# P1_28 (I2C2_SCL => SCL_2) clock signal
-SDA_2 = pin.P1_26
-SCL_2 = pin.P1_28
+SDA_2 = pin.I2C2_SDA    # P1_26 data signal
+SCL_2 = pin.I2C2_SCL    # P1_28 clock signal
 
 # SPI0 pins
-# P1_6 (SPI0_CSO => CE0) enables peripheral device
-# P1_12 (SPI0_MOSI => MOSI) outputs data to peripheral device
-# P1_10 (SPIO_MISO => MISO) receives data from peripheral device
-# P1_8 (SPI0_CLK => SCLK) outputs clock signal
-CE0 = pin.P1_6
-MOSI = pin.P1_12
-MISO = pin.P1_10
-SCLK = pin.P1_8
+CE0 = pin.SPI0_CS0      # P1_6 - enables peripheral device
+SCLK = pin.SPI0_SCLK    # P1_12 - outputs data to peripheral device
+MOSI = pin.SPI0_D1      # P1_10 - receives data from peripheral device
+MISO = pin.SPI0_D0      # P1_8 - outputs clock signal
 # CircuitPython naming convention for SPI Clock
 SCK = SCLK
 
 # SPI1 pins
-# P2_31 (SPI1_CS1 => CE1) enables peripheral device
-# P2_25 (SPI1_MOSI => MOSI) outputs data to peripheral device
-# P2_27 (SPI1_MISO => MISO) receives data from peripheral device
-# P2_29 (SPI1_CLK => SCLK) outputs clock signal
-CE1 = pin.P2_31
-MOSI_1 = pin.P2_25
-MISO_1 = pin.P2_27
-SCLK_1 = pin.P2_29
+CE0_1 = pin.SPI1_CS1    # P2_31 - enables peripheral device
+SCLK_1 = pin.SPI1_SCLK  # P2_25 - outputs data to peripheral device
+MOSI_1 = pin.SPI1_D1    # P2_27 - receives data from peripheral device
+MISO_1 = pin.SPI1_D0    # P2_29 - outputs clock signal
 # CircuitPython naming convention for SPI Clock
 SCK_1 = SCLK_1
 
 
 # UART0
-TX_0 = pin.P1_30
-RX_0 = pin.P1_32
-
+TX_0 = pin.UART0_TXD    # P1_30
+RX_0 = pin.UART0_RXD    # P1_32
+# create alias for most of the examples
 TX = TX_0
 RX = RX_0
 
-
 # UART2
 # pins already in use by SPI0
-# TX_2 = pin.P1_8
-# RX_2 = pin.P1_10
+# TX_2 = pin.UART2_TXD    # P1_8
+# RX_2 = pin.UART2_RXD    # P1_10
 
 # UART4
-TX_4 = pin.P2_7
-RX_4 = pin.P2_5
-
-
-# ordered as spiId, sckId, mosiId, misoId
-spiPorts = (
-    (0, SCLK, MOSI, MISO),
-    (1, SCLK_1, MOSI_1, MISO_1),
-)
-
-# ordered as uartId, txId, rxId
-uartPorts = (
-    (0, TX_0, RX_0),
-    (4, TX_4, RX_4),
-)
-
-i2cPorts = (
-    (1, SCL_1, SDA_1),
-    (2, SCL_2, SDA_2),
-)
+TX_4 = pin.UART4_TXD    # P2_7
+RX_4 = pin.UART4_RXD    # P2_5
