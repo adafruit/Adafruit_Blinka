@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 # Example of blinking LED on PocketBeagle
 # https://www.adafruit.com/product/4179
 #

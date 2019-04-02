@@ -93,7 +93,7 @@ class SPI(Lockable):
         if detector.board.any_raspberry_pi:
             from adafruit_blinka.microcontroller.bcm283x.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif board_id == ap_board.BEAGLEBONE_BLACK:
+        elif detector.board.any_beaglebone:
             from adafruit_blinka.microcontroller.am335x.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.ORANGE_PI_PC:
