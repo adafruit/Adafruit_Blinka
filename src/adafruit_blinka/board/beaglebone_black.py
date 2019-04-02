@@ -3,8 +3,8 @@ from adafruit_blinka.microcontroller.am335x import pin
 
 # initial pins, to mimic bonescript demo
 # BeagleBone Black
-# P8_1 = DGND           # DGND - GPIO_0
-# P8_2 = DGND           # DGND - GPIO_0
+# P8_1 = DGND        # DGND
+# P8_2 = DGND        # DGND
 P8_3 = pin.P8_3      # GPIO1_6 - GPIO_38
 P8_4 = pin.P8_4      # GPIO1_7 - GPIO_39
 P8_5 = pin.P8_5      # GPIO1_2 - GPIO_34
@@ -50,16 +50,16 @@ P8_44 = pin.P8_44    # GPIO2_9 - GPIO_73
 P8_45 = pin.P8_45    # GPIO2_6 - GPIO_70
 P8_46 = pin.P8_46    # GPIO2_7 - GPIO_71
 
-# P9_1 = DGND           # DGND - GPIO_0
-# P9_2 = DGND           # DGND - GPIO_0
-# P9_3 = VDD_3V3        # VDD_3V3 - GPIO_0
-# P9_4 = VDD_3V3        # VDD_3V3 - GPIO_0
-# P9_5 = VDD_5V         # VDD_5V - GPIO_0
-# P9_6 = VDD_5V         # VDD_5V - GPIO_0
-# P9_7 = SYS_5V         # SYS_5V - GPIO_0
-# P9_8 = SYS_5V         # SYS_5V - GPIO_0
-# P9_9 = PWR_BUT        # PWR_BUT - GPIO_0
-# P9_10 = SYS_RESETN    # SYS_RESETn - GPIO_0
+# P9_1 = DGND        # DGND
+# P9_2 = DGND        # DGND
+# P9_3 = VDD_3V3     # VDD_3V3
+# P9_4 = VDD_3V3     # VDD_3V3
+# P9_5 = VDD_5V      # VDD_5V
+# P9_6 = VDD_5V      # VDD_5V
+# P9_7 = SYS_5V      # SYS_5V
+# P9_8 = SYS_5V      # SYS_5V
+# P9_9 = PWR_BUT     # PWR_BUT
+# P9_10 = SYS_RESETN # SYS_RESETn
 P9_11 = pin.P9_11    # UART4_RXD - GPIO_30
 P9_12 = pin.P9_12    # GPIO1_28 - GPIO_60
 P9_13 = pin.P9_13    # UART4_TXD - GPIO_31
@@ -81,21 +81,21 @@ P9_28 = pin.P9_28    # SPI1_CS0 - GPIO_113
 P9_29 = pin.P9_29    # SPI1_D0 - GPIO_111
 P9_30 = pin.P9_30    # SPI1_D1 - GPIO_112
 P9_31 = pin.P9_31    # SPI1_SCLK - GPIO_110
-# P9_32 = VDD_ADC       # VDD_ADC - GPIO_0
-# P9_33 = AIN4          # AIN4 - GPIO_0
-# P9_34 = GNDA_ADC      # GNDA_ADC - GPIO_0
-# P9_35 = AIN6          # AIN6 - GPIO_0
-# P9_36 = AIN5          # AIN5 - GPIO_0
-# P9_37 = AIN2          # AIN2 - GPIO_0
-# P9_38 = AIN3          # AIN3 - GPIO_0
-# P9_39 = AIN0          # AIN0 - GPIO_0
-# P9_40 = AIN1          # AIN1 - GPIO_0
+# P9_32 = VDD_ADC    # VDD_ADC
+# P9_33 = AIN4       # AIN4
+# P9_34 = GNDA_ADC   # GNDA_ADC
+# P9_35 = AIN6       # AIN6
+# P9_36 = AIN5       # AIN5
+# P9_37 = AIN2       # AIN2
+# P9_38 = AIN3       # AIN3
+# P9_39 = AIN0       # AIN0
+# P9_40 = AIN1       # AIN1
 P9_41 = pin.P9_41    # CLKOUT2 - GPIO_20
 P9_42 = pin.P9_42    # GPIO0_7 - GPIO_7
-# P9_43 = DGND          # DGND - GPIO_0
-# P9_44 = DGND          # DGND - GPIO_0
-# P9_45 = DGND          # DGND - GPIO_0
-# P9_46 = DGND          # DGND - GPIO_0
+# P9_43 = DGND       # DGND
+# P9_44 = DGND       # DGND
+# P9_45 = DGND       # DGND
+# P9_46 = DGND       # DGND
 
 # common to all beagles
 LED_USR0 = pin.USR0
@@ -120,8 +120,8 @@ LED_USR3 = pin.USR3
 # SCLK_1 = pin.D21
 # SCK_1 = pin.D21
 
-SDA = pin.P9_19
-SCL = pin.P9_20
+SDA = pin.I2C2_SDA  # P9_19
+SCL = pin.I2C2_SCL  # P9_20
 
 # Refer to header default pin modes
 # http://beagleboard.org/static/images/cape-headers.png
@@ -138,10 +138,10 @@ SCL = pin.P9_20
 # config-pin p9.21 spi
 # config-pin p9.22 spi_sclk
 #
-CE0 = pin.P9_17
-MOSI = pin.P9_18
-MISO = pin.P9_21
-SCLK = pin.P9_22
+CE0 = pin.SPI0_CS0      # P9_17
+MOSI = pin.SPI0_D1      # P9_18
+MISO = pin.SPI0_D0      # P9_21
+SCLK = pin.SPI0_SCLK    # P9_22
 # CircuitPython naming convention for SPI Clock
 SCK = SCLK
 
@@ -168,25 +168,9 @@ SCK = SCLK
 # config-pin p9.29 spi1
 # config-pin p9.30 spi1
 # config-pin p9.31 spi_sclk
-CE1 = pin.P9_28
-MOSI_1 = pin.P9_29
-MISO_1 = pin.P9_30
-SCLK_1 = pin.P9_31
+CE1 = pin.SPI1_CS0      # P9_28
+MOSI_1 = pin.SPI1_D0    # P9_29
+MISO_1 = pin.SPI1_D1    # P9_30
+SCLK_1 = pin.SPI1_SCLK  # P9_31
 # CircuitPython naming convention for SPI Clock
 SCK_1 = SCLK_1
-
-
-# ordered as spiId, sckId, mosiId, misoId
-spiPorts = (
-    (0, SCLK, MOSI, MISO),
-    (1, SCLK_1, MOSI_1, MISO_1)
-)
-
-# ordered as uartId, txId, rxId
-uartPorts = (
-    (),
-)
-
-i2cPorts = (
-    (2, SCL, SDA),
-)
