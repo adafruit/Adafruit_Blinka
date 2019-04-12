@@ -1,5 +1,6 @@
 import spidev
 import time
+from adafruit_blinka.agnostic import detector
 
 class SPI:
     MSB = 0
@@ -29,6 +30,16 @@ class SPI:
         self.baudrate = baudrate
         self.mode = mode
         self.bits = bits
+        self.chip = detector.chip
+
+    def set_no_cs(self):
+        # Linux SPI driver for AM33XX chip in BeagleBone and PocketBeagle
+        # does not support setting SPI_NO_CS mode bit (issue #104)
+        if not self.chip.AM33XX:
+            try:
+                self._spi.no_cs = True  # this doesn't work but try anyways
+            except AttributeError:
+                pass
 
     def write(self, buf, start=0, end=None):
         if not buf:
@@ -37,10 +48,7 @@ class SPI:
             end = len(buf)
         try:
             self._spi.open(self._port, 0)
-            try:
-              self._spi.no_cs = True  # this doesn't work but try anyways
-            except AttributeError:
-              pass
+            self.set_no_cs()
             self._spi.max_speed_hz = self.baudrate
             self._spi.mode = self.mode
             self._spi.bits_per_word = self.bits
@@ -57,10 +65,7 @@ class SPI:
             end = len(buf)
         try:
             self._spi.open(self._port, 0)
-            try:
-              self._spi.no_cs = True  # this doesn't work but try anyways
-            except AttributeError:
-              pass
+            self.set_no_cs()
             self._spi.max_speed_hz = self.baudrate
             self._spi.mode = self.mode
             self._spi.bits_per_word = self.bits
@@ -84,10 +89,7 @@ class SPI:
             raise RuntimeError('Buffer slices must be of equal length.')
         try:
             self._spi.open(self._port, 0)
-            try:
-                self._spi.no_cs = True  # this doesn't work but try anyways
-            except AttributeError:
-                pass
+            self.set_no_cs()
             self._spi.max_speed_hz = self.baudrate
             self._spi.mode = self.mode
             self._spi.bits_per_word = self.bits
