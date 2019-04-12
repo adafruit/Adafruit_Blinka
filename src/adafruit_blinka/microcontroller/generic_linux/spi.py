@@ -40,9 +40,6 @@ class SPI:
                 self._spi.no_cs = True  # this doesn't work but try anyways
             except AttributeError:
                 pass
-        else:
-            # TODO: remove this debug output
-            print("Adafruit_Blinka: generic_linux/spi.py: set_no_cs(): detected AM33XX, SKIP setting no_cs")
 
     def write(self, buf, start=0, end=None):
         if not buf:
