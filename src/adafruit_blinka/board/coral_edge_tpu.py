@@ -5,6 +5,9 @@ from adafruit_blinka.microcontroller.nxp_imx8m import pin
 SDA = pin.I2C2_SDA
 SCL = pin.I2C2_SCL
 
+PWM1 = pin.PWM1
+PWM2 = pin.PWM2
+PWM3 = pin.PWM3
 
 GPIO_P13 = pin.GPIO6
 GPIO_P16 = pin.GPIO73
