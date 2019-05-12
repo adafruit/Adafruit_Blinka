@@ -22,6 +22,7 @@ class PWMOut(object):
 
     # Channel paths
     _export_path = "export"
+    _unexport_path = "unexport"
     _pin_path = "pwm{}"
 
     # Pin attribute paths
@@ -78,25 +79,42 @@ class PWMOut(object):
             raise ValueError("PWM channel does not exist, check that the required modules are loaded.")
 
         pin_path = os.path.join(channel_path, self._pin_path.format(self._pwmpin))
-        if not os.path.isdir(pin_path):
-            try:
-                with open(os.path.join(channel_path, self._export_path), "w") as f_export:
-                    f_export.write("%d\n" % self._pwmpin)
-            except IOError as e:
-                raise PWMError(e.errno, "Exporting PWM pin: " + e.strerror)
+        try:
+            with open(os.path.join(channel_path, self._unexport_path), "w") as f_unexport:
+                f_unexport.write("%d\n" % self._pwmpin)
+        except IOError as e:
+            pass # not unusual, it doesnt already exist
+        try:
+            with open(os.path.join(channel_path, self._export_path), "w") as f_export:
+                f_export.write("%d\n" % self._pwmpin)
+        except IOError as e:
+            raise PWMError(e.errno, "Exporting PWM pin: " + e.strerror)
 
-        self._set_enabled(True)
-
+        self._set_enabled(False)
+        
         # Look up the period, for fast duty cycle updates
         self._period = self._get_period()
+
+        self.duty_cycle = 0
 
         # set frequency
         self.frequency = freq
         # set duty
         self.duty_cycle = duty
 
+        self._set_enabled(True)
+
     def close(self):
         """Close the sysfs PWM."""
+        if self._channel is not None:
+            self.duty_cycle = 0
+            try:
+                channel_path = os.path.join(self._sysfs_path, self._channel_path.format(self._channel))
+                with open(os.path.join(channel_path, self._unexport_path), "w") as f_unexport:
+                    f_unexport.write("%d\n" % self._pwmpin)
+            except IOError as e:
+                raise PWMError(e.errno, "Unexporting PWM pin: " + e.strerror)
+
         self._channel = None
         self._pwmpin = None
 
@@ -110,7 +128,7 @@ class PWMOut(object):
         with open(path, 'w') as f_attr:
             #print(value, path)
             f_attr.write(value + "\n")
-
+            
     def _read_pin_attr(self, attr):
         path = os.path.join(
             self._sysfs_path,
@@ -172,16 +190,15 @@ class PWMOut(object):
 
         # convert to 16-bit
         duty_cycle = int(duty_cycle * 65535)
-
         return duty_cycle
 
     def _set_duty_cycle(self, duty_cycle):
-        # convert from 16-bit
-        duty_cycle /= 65535
-
         if not isinstance(duty_cycle, (int, float)):
             raise TypeError("Invalid duty cycle type, should be int or float.")
-        elif not 0.0 <= duty_cycle <= 1.0:
+
+        # convert from 16-bit
+        duty_cycle /= 65535.0
+        if not 0.0 <= duty_cycle <= 1.0:
             raise ValueError("Invalid duty cycle value, should be between 0.0 and 1.0.")
 
         # Convert duty cycle from ratio to seconds
