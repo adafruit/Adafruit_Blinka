@@ -25,6 +25,8 @@ elif detector.chip.T186:
     from adafruit_blinka.microcontroller.tegra.t186.pin import Pin
 elif detector.chip.T194:
     from adafruit_blinka.microcontroller.tegra.t194.pin import Pin
+elif detector.chip.IMX8MX:
+    from adafruit_blinka.microcontroller.nxp_imx8m.pin import Pin
 elif detector.chip.STM32:
     from machine import Pin
 from adafruit_blinka import Enum, ContextManaged

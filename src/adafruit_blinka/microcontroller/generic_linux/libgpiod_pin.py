@@ -18,10 +18,14 @@ class Pin:
     _value = LOW
     _mode = IN
 
-    def __init__(self, pin_number, gpiod_chipname="gpiochip0"):
-        self.id = int(pin_number)
-        # FIXME: Presumably this might vary by system:
-        self._chip = gpiod.Chip(gpiod_chipname, gpiod.Chip.OPEN_BY_NAME)
+    def __init__(self, pin_id):
+        self.id = pin_id
+        if type(pin_id) is tuple:
+            self._num = int(pin_id[1])
+            self._chip = gpiod.Chip(str(pin_id[0]), gpiod.Chip.OPEN_BY_NUMBER)
+        else:
+            self._num = int(pin_id)
+            self._chip = gpiod.Chip("gpiochip0", gpiod.Chip.OPEN_BY_NAME)
         self._line = None
 
     def __repr__(self):
@@ -32,8 +36,8 @@ class Pin:
 
     def init(self, mode=IN, pull=None):
         if not self._line:
-            self._line = self._chip.get_line(int(self.id))
-            #print("init line: ", int(self.id), self._line)
+            self._line = self._chip.get_line(int(self._num))
+            #print("init line: ", self.id, self._line)
 
         if mode != None:
             if mode == self.IN:
