@@ -76,6 +76,9 @@ elif board_id == ap_board.JETSON_XAVIER:
 elif board_id == ap_board.JETSON_NANO:
     from adafruit_blinka.board.jetson_nano import *
 
+elif board_id == ap_board.CORAL_EDGE_TPU_DEV:
+    from adafruit_blinka.board.coral_edge_tpu import *
+
 elif "sphinx" in sys.modules:
     pass
 

@@ -35,7 +35,7 @@ class SPI:
     def set_no_cs(self):
         # Linux SPI driver for AM33XX chip in BeagleBone and PocketBeagle
         # does not support setting SPI_NO_CS mode bit (issue #104)
-        if not self.chip.AM33XX:
+        if not self.chip.AM33XX and not self.chip.IMX8MX:
             try:
                 self._spi.no_cs = True  # this doesn't work but try anyways
             except AttributeError:
