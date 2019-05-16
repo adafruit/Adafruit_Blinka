@@ -4,13 +4,17 @@ PA0 = Pin(0)
 UART2_TX = PA0
 PA1 = Pin(1)
 UART2_RX = PA1
+PA2 = Pin(2)
+PA3 = Pin(3)
 PA6 = Pin(6)
 PA7 = Pin(7)
+PA8 = Pin(8)
+PA9 = Pin(9)
 PA10 = Pin(10)
-PA11 = Pin(8)
-SDA = PA11
-PA12 = Pin(9)
-SCL = PA12
+PA11 = Pin(11)
+TWI0_SCL = PA11
+PA12 = Pin(12)
+TWI0_SDA = PA12
 PA13 = Pin(13)
 UART3_TX = PA13
 PA14 = Pin(14)
@@ -48,7 +52,7 @@ PG12 = Pin(204)
 PG13 = Pin(205)
 
 
-i2cPorts = ( (0, SCL, SDA), )
+i2cPorts = ( (0, TWI0_SCL, TWI0_SDA), )
 # ordered as spiId, sckId, mosiId, misoId
 spiPorts = ( (0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO), )
 # ordered as uartId, txId, rxId
