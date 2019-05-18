@@ -1,11 +1,17 @@
 from adafruit_blinka.microcontroller.sama5 import pin
 
 PD23 = pin.PD23
+AD4 = pin.PD23
 PD21 = pin.PD21
+AD2 = pin.PD21
 PD20 = pin.PD20
+AD1 = pin.PD20
 PD24 = pin.PD24
+AD5 = pin.PD24
 PD22 = pin.PD22
+AD3 = pin.PD22
 PD19 = pin.PD19
+AD0 = pin.PD19
 PA14 = pin.PA14
 SCK = pin.PA14
 SCLK = pin.PA14
@@ -21,9 +27,13 @@ TX = pin.PD3
 PD13 = pin.PD13
 PD31 = pin.PD31
 PB0 = pin.PB0
+PWM1 = pin.PB0
 PB7 = pin.PB7
+PWM3 = pin.PB7
 PB1 = pin.PB1
+PWML1 = pin.PB1
 PB5 = pin.PB5
+PWM2 = pin.PB5
 PB3 = pin.PB3
 PC0 = pin.PC0
 SCL = pin.PC0
