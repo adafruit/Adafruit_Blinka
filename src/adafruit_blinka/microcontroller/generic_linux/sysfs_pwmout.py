@@ -90,8 +90,8 @@ class PWMOut(object):
         except IOError as e:
             raise PWMError(e.errno, "Exporting PWM pin: " + e.strerror)
 
-        self._set_enabled(False)
-        
+        #self._set_enabled(False) # This line causes a write error when trying to enable
+                
         # Look up the period, for fast duty cycle updates
         self._period = self._get_period()
 
