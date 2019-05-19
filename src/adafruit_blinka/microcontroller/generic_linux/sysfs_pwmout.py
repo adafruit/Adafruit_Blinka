@@ -95,7 +95,7 @@ class PWMOut(object):
         # Look up the period, for fast duty cycle updates
         self._period = self._get_period()
 
-        self.duty_cycle = 0
+        #self.duty_cycle = 0  # This line causes a write error when trying to enable
 
         # set frequency
         self.frequency = freq
