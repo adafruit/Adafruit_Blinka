@@ -31,3 +31,7 @@ PG6 = pin.PG6
 UART1_TX = pin.PG6
 PG7 = pin.PG7
 UART1_RX = pin.PG7
+
+SCLK = pin.PA14
+MOSI = pin.PA15
+MISO = pin.PA16
