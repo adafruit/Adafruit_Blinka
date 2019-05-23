@@ -19,8 +19,11 @@ PA13 = Pin(13)
 UART3_TX = PA13
 PA14 = Pin(14)
 UART3_RX = PA14
+SPI1_SCLK = PA14
 PA15 = Pin(15)
+SPI1_MOSI = PA15
 PA16 = Pin(16)
+SPI1_MISO = PA16
 PA17 = Pin(17)
 PA18 = Pin(18)
 PA19 = Pin(19)
@@ -54,6 +57,6 @@ PG13 = Pin(205)
 
 i2cPorts = ( (0, TWI0_SCL, TWI0_SDA), )
 # ordered as spiId, sckId, mosiId, misoId
-spiPorts = ( (0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO), )
+spiPorts = ( (0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO), (1, SPI1_SCLK, SPI1_MOSI, SPI1_MISO), )
 # ordered as uartId, txId, rxId
 uartPorts = ( (3, UART3_TX, UART3_RX), )
