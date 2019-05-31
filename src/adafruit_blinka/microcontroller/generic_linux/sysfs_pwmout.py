@@ -55,16 +55,13 @@ class PWMOut(object):
         self._open(pin, duty_cycle, frequency, variable_frequency)
 
     def __del__(self):
-        self.close()
+        self.deinit()
 
     def __enter__(self):
         return self
 
     def __exit__(self, t, value, traceback):
-        self.close()
-
-    def deinit(self):
-        self.close()
+        self.deinit()
 
     def _open(self, pin, duty=0, freq=500, variable_frequency=False):
         self._channel = None
@@ -107,8 +104,8 @@ class PWMOut(object):
 
         self._set_enabled(True)
 
-    def close(self):
-        """Close the sysfs PWM."""
+    def deinit(self):
+        """Deinit the sysfs PWM."""
         if self._channel is not None:
             self.duty_cycle = 0
             try:
