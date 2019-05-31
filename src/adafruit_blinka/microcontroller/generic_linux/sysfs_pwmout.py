@@ -63,6 +63,9 @@ class PWMOut(object):
     def __exit__(self, t, value, traceback):
         self.close()
 
+    def deinit(self):
+        self.close()
+
     def _open(self, pin, duty=0, freq=500, variable_frequency=False):
         self._channel = None
         for pwmpair in pwmOuts:
@@ -91,7 +94,7 @@ class PWMOut(object):
             raise PWMError(e.errno, "Exporting PWM pin: " + e.strerror)
 
         self._set_enabled(False)
-        
+
         # Look up the period, for fast duty cycle updates
         self._period = self._get_period()
 
@@ -128,7 +131,7 @@ class PWMOut(object):
         with open(path, 'w') as f_attr:
             #print(value, path)
             f_attr.write(value + "\n")
-            
+
     def _read_pin_attr(self, attr):
         path = os.path.join(
             self._sysfs_path,
