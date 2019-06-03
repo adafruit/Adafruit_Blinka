@@ -153,8 +153,9 @@ class PWMOut(object):
     # Mutable properties
 
     def _get_period(self):
+        period_ns = self._read_pin_attr(self._pin_period_path)
         try:
-            period_ns = int(self._read_pin_attr(self._pin_period_path))
+            period_ns = int(period_ns)
         except ValueError:
             raise PWMError(None, "Unknown period value: \"%s\"" % period_ns)
 
@@ -188,8 +189,9 @@ class PWMOut(object):
     """
 
     def _get_duty_cycle(self):
+        duty_cycle_ns = self._read_pin_attr(self._pin_duty_cycle_path)
         try:
-            duty_cycle_ns = int(self._read_pin_attr(self._pin_duty_cycle_path))
+            duty_cycle_ns = int(duty_cycle_ns)
         except ValueError:
             raise PWMError(None, "Unknown duty cycle value: \"%s\"" % duty_cycle_ns)
 
