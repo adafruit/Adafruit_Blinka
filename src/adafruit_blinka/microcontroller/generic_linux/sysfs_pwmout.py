@@ -118,7 +118,15 @@ class PWMOut(object):
         self._channel = None
         self._pwmpin = None
 
+    def _is_deinited(self):
+        if self._pwmpin is None:
+            raise ValueError("Object has been deinitialize and can no longer "
+                             "be used. Create a new object.")
+
     def _write_pin_attr(self, attr, value):
+        # Make sure the pin is active
+        self._is_deinited()
+
         path = os.path.join(
             self._sysfs_path,
             self._channel_path.format(self._channel),
@@ -130,6 +138,9 @@ class PWMOut(object):
             f_attr.write(value + "\n")
 
     def _read_pin_attr(self, attr):
+        # Make sure the pin is active
+        self._is_deinited()
+
         path = os.path.join(
             self._sysfs_path,
             self._channel_path.format(self._channel),
