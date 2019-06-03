@@ -55,13 +55,13 @@ class PWMOut(object):
         self._open(pin, duty_cycle, frequency, variable_frequency)
 
     def __del__(self):
-        self.close()
+        self.deinit()
 
     def __enter__(self):
         return self
 
     def __exit__(self, t, value, traceback):
-        self.close()
+        self.deinit()
 
     def _open(self, pin, duty=0, freq=500, variable_frequency=False):
         self._channel = None
@@ -91,7 +91,7 @@ class PWMOut(object):
             raise PWMError(e.errno, "Exporting PWM pin: " + e.strerror)
 
         #self._set_enabled(False) # This line causes a write error when trying to enable
-                
+
         # Look up the period, for fast duty cycle updates
         self._period = self._get_period()
 
@@ -104,8 +104,8 @@ class PWMOut(object):
 
         self._set_enabled(True)
 
-    def close(self):
-        """Close the sysfs PWM."""
+    def deinit(self):
+        """Deinit the sysfs PWM."""
         if self._channel is not None:
             self.duty_cycle = 0
             try:
@@ -118,7 +118,15 @@ class PWMOut(object):
         self._channel = None
         self._pwmpin = None
 
+    def _is_deinited(self):
+        if self._pwmpin is None:
+            raise ValueError("Object has been deinitialize and can no longer "
+                             "be used. Create a new object.")
+
     def _write_pin_attr(self, attr, value):
+        # Make sure the pin is active
+        self._is_deinited()
+
         path = os.path.join(
             self._sysfs_path,
             self._channel_path.format(self._channel),
@@ -128,8 +136,11 @@ class PWMOut(object):
         with open(path, 'w') as f_attr:
             #print(value, path)
             f_attr.write(value + "\n")
-            
+
     def _read_pin_attr(self, attr):
+        # Make sure the pin is active
+        self._is_deinited()
+
         path = os.path.join(
             self._sysfs_path,
             self._channel_path.format(self._channel),
@@ -142,8 +153,9 @@ class PWMOut(object):
     # Mutable properties
 
     def _get_period(self):
+        period_ns = self._read_pin_attr(self._pin_period_path)
         try:
-            period_ns = int(self._read_pin_attr(self._pin_period_path))
+            period_ns = int(period_ns)
         except ValueError:
             raise PWMError(None, "Unknown period value: \"%s\"" % period_ns)
 
@@ -177,8 +189,9 @@ class PWMOut(object):
     """
 
     def _get_duty_cycle(self):
+        duty_cycle_ns = self._read_pin_attr(self._pin_duty_cycle_path)
         try:
-            duty_cycle_ns = int(self._read_pin_attr(self._pin_duty_cycle_path))
+            duty_cycle_ns = int(duty_cycle_ns)
         except ValueError:
             raise PWMError(None, "Unknown duty cycle value: \"%s\"" % duty_cycle_ns)
 
