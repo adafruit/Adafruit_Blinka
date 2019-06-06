@@ -179,6 +179,8 @@ class PWMOut(object):
         # Update our cached period
         self._period = float(period)
 
+    period = property(_get_period, _set_period)
+
     """Get or set the PWM's output period in seconds.
 
     Raises:
