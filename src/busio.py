@@ -96,7 +96,7 @@ class SPI(Lockable):
         elif detector.board.any_beaglebone:
             from adafruit_blinka.microcontroller.am335x.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif board_id == ap_board.ORANGE_PI_PC:
+        elif board_id == ap_board.ORANGE_PI_PC or board_id == ap_board.ORANGE_PI_R1:
             from adafruit_blinka.microcontroller.allwinner_h3.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.GIANT_BOARD:
@@ -104,6 +104,9 @@ class SPI(Lockable):
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.CORAL_EDGE_TPU_DEV:
             from adafruit_blinka.microcontroller.nxp_imx8m.pin import Pin
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+        elif board_id == ap_board.ODROID_C2:
+            from adafruit_blinka.microcontroller.amlogic.s905.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         else:
             from machine import SPI as _SPI
