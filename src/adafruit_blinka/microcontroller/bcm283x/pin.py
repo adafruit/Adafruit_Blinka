@@ -28,10 +28,10 @@ class Pin:
     def init(self, mode=IN, pull=None):
         if mode != None:
             if mode == self.IN:
-                self._mode = self.IN
+                self._mode = mode
                 GPIO.setup(self.id, GPIO.IN)
             elif mode == self.OUT:
-                self._mode = self.OUT
+                self._mode = mode
                 GPIO.setup(self.id, GPIO.OUT)
             else:
                 raise RuntimeError("Invalid mode for pin: %s" % self.id)
@@ -49,10 +49,10 @@ class Pin:
         if val != None:
             if val == self.LOW:
                 self._value = val
-                GPIO.output(self.id, val)
+                GPIO.output(self.id, GPIO.LOW)
             elif val == self.HIGH:
                 self._value = val
-                GPIO.output(self.id, val)
+                GPIO.output(self.id, GPIO.HIGH)
             else:
                 raise RuntimeError("Invalid value for pin")
         else:
