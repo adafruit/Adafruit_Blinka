@@ -88,7 +88,7 @@ elif board_id == ap_board.CORAL_EDGE_TPU_DEV:
 elif board_id == ap_board.ODROID_C2:
     from adafruit_blinka.board.odroidc2 import *
 
-#adding N2
+#adding N2 for S922X
 elif board_id == ap_board.ODROID_N2:
     from adafruit_blinka.board.odroidn2 import *
 
