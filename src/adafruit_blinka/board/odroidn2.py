@@ -1,4 +1,4 @@
-"""Pin definitions for the Odroid C2."""
+"""Pin definitions for the Odroid N2."""
 
 from adafruit_blinka.microcontroller.amlogic.s922x import pin
 
