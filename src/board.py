@@ -90,7 +90,7 @@ elif board_id == ap_board.ODROID_C2:
 
 elif board_id == ap_board.ODROID_N2:
     from adafruit_blinka.board.odroidn2 import *
-# error above
+# error above still there
 elif board_id == ap_board.DRAGONBOARD_410C:
     from adafruit_blinka.board.dragonboard_410c import *
 
