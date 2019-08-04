@@ -85,8 +85,8 @@ elif board_id == ap_board.JETSON_NANO:
 elif board_id == ap_board.CORAL_EDGE_TPU_DEV:
     from adafruit_blinka.board.coral_edge_tpu import *
 
-elif board_id == ap_board.ODROID_C2:
-    from adafruit_blinka.board.odroidc2 import *
+#elif board_id == ap_board.ODROID_C2:
+    #from adafruit_blinka.board.odroidc2 import *
 
 elif board_id == ap_board.ODROID_N2:
    from adafruit_blinka.board.odroidn2 import *
