@@ -53,11 +53,14 @@ class SPI:
             self._spi.max_speed_hz = self.baudrate
             self._spi.mode = self.mode
             self._spi.bits_per_word = self.bits
-            self._spi.writebytes2(buf[start:end])
-            self._spi.close()
         except FileNotFoundError as not_found:
             print("Could not open SPI device - check if SPI is enabled in kernel!")
             raise
+        try:
+            self._spi.writebytes2(buf[start:end])
+        except AttributeError as error:
+            self._spi.writebytes([x for x in buf[start:end]])
+        self._spi.close()
 
     def readinto(self, buf, start=0, end=None, write_value=0):
         if not buf:
