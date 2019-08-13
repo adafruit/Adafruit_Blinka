@@ -94,6 +94,9 @@ elif board_id == ap_board.ODROID_N2:
 elif board_id == ap_board.DRAGONBOARD_410C:
     from adafruit_blinka.board.dragonboard_410c import *
 
+elif board_id == ap_board.SIFIVE_UNLEASHED:
+    from adafruit_blinka.board.sifive_unleashed import *
+
 elif "sphinx" in sys.modules:
     pass
 
