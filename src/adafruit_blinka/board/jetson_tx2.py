@@ -10,6 +10,7 @@ SCL_1 = pin.SCL_1
 D4 = pin.J04
 D5 = pin.J06
 D6 = pin.AA02
+D7 = pin.N03
 D8 = pin.N06
 D9 = pin.N04
 D10 = pin.N05
