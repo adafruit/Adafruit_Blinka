@@ -1,7 +1,5 @@
 import sys
 import atexit
-sys.path.append("/opt/nvidia/jetson-gpio/lib/python")
-sys.path.append("/opt/nvidia/jetson-gpio/lib/python/Jetson/GPIO")
 import Jetson.GPIO as GPIO
 GPIO.setmode(GPIO.TEGRA_SOC)
 GPIO.setwarnings(False)   # shh!

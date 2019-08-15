@@ -37,6 +37,7 @@ setup(
     install_requires=[
         "Adafruit-PlatformDetect",
         "Adafruit-PureIO",
+        "Jetson.GPIO; platform_machine=='aarch64'",
         "RPi.GPIO; platform_machine=='armv7l' or platform_machine=='armv6l'",
         "rpi_ws281x>=4.0.0; platform_machine=='armv7l' or platform_machine=='armv6l'",
         "spidev; sys_platform=='linux'",
