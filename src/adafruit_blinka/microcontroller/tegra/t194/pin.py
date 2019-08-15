@@ -1,7 +1,5 @@
 import sys
 import atexit
-sys.path.append("/opt/nvidia/jetson-gpio/lib/python")
-sys.path.append("/opt/nvidia/jetson-gpio/lib/python/Jetson/GPIO")
 import Jetson.GPIO as GPIO
 GPIO.setmode(GPIO.TEGRA_SOC)
 GPIO.setwarnings(False)   # shh!
@@ -99,3 +97,6 @@ R00 = Pin('SOC_GPIO44')
 i2cPorts = (
     (8, SCL, SDA), (1, SCL_1, SDA_1),
 )
+
+# ordered as spiId, sckId, mosiId, misoId
+spiPorts = ((0, Z03, Z05, Z04), )

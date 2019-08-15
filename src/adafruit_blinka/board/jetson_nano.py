@@ -29,3 +29,17 @@ D24 = pin.B07
 D25 = pin.B05
 D26 = pin.B04
 D27 = pin.B06
+
+CE1 = D7
+CE0 = D8
+MISO = D9
+MOSI = D10
+SCLK = D11
+SCK = D11
+
+CE1_1 = D23
+CE0_1 = D24
+MISO_1 = D25
+MOSI_1 = D26
+SCLK_1 = D27
+SCK_1 = D27
