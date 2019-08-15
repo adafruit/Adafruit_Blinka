@@ -29,3 +29,10 @@ D24 = pin.Y01
 D25 = pin.P16
 D26 = pin.I04
 D27 = pin.J05
+
+CE1 = D7
+CE0 = D8
+MISO = D9
+MOSI = D10
+SCLK = D11
+SCK = D11

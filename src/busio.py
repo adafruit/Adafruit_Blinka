@@ -111,6 +111,18 @@ class SPI(Lockable):
         elif board_id == ap_board.DRAGONBOARD_410C:
             from adafruit_blinka.microcontroller.snapdragon.apq8016.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+        elif board_id == ap_board.JETSON_NANO:
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.tegra.t210.pin import Pin
+        elif board_id == ap_board.JETSON_TX1:
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.tegra.t210.pin import Pin
+        elif board_id == ap_board.JETSON_TX2:
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.tegra.t186.pin import Pin
+        elif board_id == ap_board.JETSON_XAVIER:
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.tegra.t194.pin import Pin
         else:
             from machine import SPI as _SPI
             from machine import Pin
