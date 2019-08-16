@@ -25,14 +25,13 @@ GPIO9 = Pin(32)
 GPIO15 = Pin(33)
 
 # ordered as spiId, sckId, mosiId, misoId
-SPI_PORTS = ((1, SPI0_SCLK, SPI0_, GPIO13))
+SPI_PORTS = ((1, SPI0_SCLK, SPI0_DOUT, SPI0_DIN))
 
 # ordered as uartId, txId, rxId
 UART_PORTS = (
-    (0, GPIO4, GPIO6),
-    # TODO secondary pins for UART0 configurable from Micropython? How to flag?
+    (0, UART0_TXD, UART0_RXD),
     # (0, GPIO15, GPIO13)
-    (1, GPIO2, None))
+    (1, UART1_TXD, UART1_RXD))
 
 # ordered as spiId, spiSCA, spiSCL 
 I2C_PORTS = (
