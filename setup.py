@@ -17,6 +17,18 @@ here = os.path.abspath(os.path.dirname(__file__))
 with io.open(os.path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = '\n' + f.read()
 
+board_reqs = []
+if os.path.exists('/proc/device-tree/compatible'):
+    with open('/proc/device-tree/compatible', 'rb') as f:
+        compat = f.read()
+    if b'nvidia,tegra' in compat:
+        board_reqs = ['Jetson.GPIO']
+    if b'brcm,bcm2835' in compat or \
+       b'brcm,bcm2836' in compat or \
+       b'brcm,bcm2837' in compat or \
+       b'brcm,bcm2838' in compat:
+        board_reqs = ['RPi.GPIO', 'rpi_ws281x>=4.0.0']
+
 setup(
     name='Adafruit-Blinka',
     use_scm_version=True,
@@ -37,12 +49,9 @@ setup(
     install_requires=[
         "Adafruit-PlatformDetect",
         "Adafruit-PureIO",
-        "Jetson.GPIO; platform_machine=='aarch64'",
-        "RPi.GPIO; platform_machine=='armv7l' or platform_machine=='armv6l'",
-        "rpi_ws281x>=4.0.0; platform_machine=='armv7l' or platform_machine=='armv6l'",
         "spidev; sys_platform=='linux'",
         "sysv_ipc; platform_system != 'Windows'"
-    ],
+    ] + board_reqs,
     license='MIT',
     classifiers=[
         # Trove classifiers
