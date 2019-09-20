@@ -16,6 +16,7 @@ C7 = pin.C7
 SDA = pin.SDA
 SCL = pin.SCL
 
+SCK = pin.SCK
 SCLK = pin.SCLK
 MOSI = pin.MOSI
 MISO = pin.MISO

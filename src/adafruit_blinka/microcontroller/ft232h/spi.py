@@ -8,6 +8,7 @@ class SPI:
     bits = 8
 
     def __init__(self):
+        # change GPIO controller to SPI
         from pyftdi.spi import SpiController
         self._spi = SpiController(cs_count=1)
         self._spi.configure('ftdi:///1')

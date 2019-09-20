@@ -50,6 +50,7 @@ class Pin:
                 current |= 1 << self.id
             else:
                 current &= ~(1 << self.id)
+            # must mask out any input pins
             Pin.ft232h_gpio.write(current & Pin.ft232h_gpio.direction)
         # release the kraken
         else:
