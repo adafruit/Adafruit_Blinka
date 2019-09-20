@@ -30,9 +30,11 @@ elif detector.chip.S905:
 elif detector.chip.S922X:
     from adafruit_blinka.microcontroller.amlogic.s922x.pin import Pin
 elif detector.chip.APQ8016:
-  from adafruit_blinka.microcontroller.snapdragon.apq8016.pin import Pin
+    from adafruit_blinka.microcontroller.snapdragon.apq8016.pin import Pin
 elif detector.chip.IMX8MX:
     from adafruit_blinka.microcontroller.nxp_imx8m.pin import Pin
+elif detector.board.ftdi_ft232h:
+    from adafruit_blinka.microcontroller.ft232h.pin import Pin
 elif detector.chip.STM32:
     from machine import Pin
 from adafruit_blinka import Enum, ContextManaged

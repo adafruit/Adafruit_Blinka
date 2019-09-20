@@ -17,7 +17,11 @@ class I2C(Lockable):
 
     def init(self, scl, sda, frequency):
         self.deinit()
-        if detector.board.any_embedded_linux:
+        if detector.board.ftdi_ft232h:
+            from adafruit_blinka.microcontroller.ft232h.i2c import I2C
+            self._i2c = I2C()
+            return
+        elif detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.i2c import I2C as _I2C
         else:
             from machine import I2C as _I2C
@@ -72,7 +76,13 @@ class I2C(Lockable):
 class SPI(Lockable):
     def __init__(self, clock, MOSI=None, MISO=None):
         self.deinit()
-        if detector.board.any_embedded_linux:
+        if detector.board.ftdi_ft232h:
+            from adafruit_blinka.microcontroller.ft232h.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.ft232h.pin import SCK, MOSI, MISO
+            self._spi = _SPI()
+            self._pins = (SCK, MOSI, MISO)
+            return
+        elif detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         else:
             from machine import SPI as _SPI
@@ -123,6 +133,9 @@ class SPI(Lockable):
         elif board_id == ap_board.JETSON_XAVIER:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.tegra.t194.pin import Pin
+        elif detector.board.ftdi_ft232h:
+            from adafruit_blinka.microcontroller.ft232h.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.ft232h.pin import Pin
         else:
             from machine import SPI as _SPI
             from machine import Pin
