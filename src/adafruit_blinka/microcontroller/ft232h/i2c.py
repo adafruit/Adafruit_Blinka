@@ -9,6 +9,9 @@ class I2C:
         self._i2c.configure('ftdi:///1')
         Pin.ft232h_gpio = self._i2c.get_gpio()
 
+    def scan(self):
+        return [addr for addr in range(0x79) if self._i2c.poll(addr)]
+
     def writeto(self, address, buffer, *, start=0, end=None, stop=True):
         end = end if end else len(buffer)
         port = self._i2c.get_port(address)
