@@ -92,16 +92,19 @@ elif board_id == ap_board.ODROID_C2:
     from adafruit_blinka.board.odroidc2 import *
 
 elif board_id == ap_board.ODROID_N2:
-   from adafruit_blinka.board.odroidn2 import *
+    from adafruit_blinka.board.odroidn2 import *
 
 elif board_id == ap_board.DRAGONBOARD_410C:
     from adafruit_blinka.board.dragonboard_410c import *
+
+elif board_id == ap_board.FTDI_FT232H:
+    from adafruit_blinka.board.ftdi_ft232h import *
 
 elif "sphinx" in sys.modules:
     pass
 
 else:
-    raise NotImplementedError("Board not supported")
+    raise NotImplementedError("Board not supported {}".format(board_id))
 
 def I2C():
     """The singleton I2C interface"""
