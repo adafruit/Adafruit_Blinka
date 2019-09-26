@@ -32,7 +32,13 @@ class SPI:
     def write(self, buf, start=0, end=None):
         end = end if end else len(buf)
         port = self._spi.get_port(self.cs, self.freq, self.mode)
-        port.write(buf[start:end])
+        chunks, rest = divmod(end - start, self._spi.PAYLOAD_MAX_LENGTH)
+        for i in range(chunks):
+            chunk_start = start + i * self._spi.PAYLOAD_MAX_LENGTH
+            chunk_end = chunk_start + self._spi.PAYLOAD_MAX_LENGTH
+            port.write(buf[chunk_start:chunk_end])
+        if rest:
+            port.write(buf[-1*rest:])
 
     def readinto(self, buf, start=0, end=None, write_value=0):
         end = end if end else len(buf)
