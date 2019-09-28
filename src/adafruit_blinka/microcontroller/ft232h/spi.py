@@ -52,6 +52,6 @@ class SPI:
         in_end = in_end if in_end else len(buffer_in)
         port = self._spi.get_port(self.cs, self.freq, self.mode)
         result = port.exchange(buffer_out[out_start:out_end],
-                               in_end-in_start)
+                               in_end-in_start, duplex=True)
         for i, b in enumerate(result):
             buffer_in[in_start+i] = b
