@@ -37,7 +37,7 @@ class SPI:
         # does not support setting SPI_NO_CS mode bit (issue #104)
         if not self.chip.AM33XX and not self.chip.IMX8MX and not self.chip.SAMA5 \
          and not self.chip.APQ8016 and not self.chip.T210 and not self.chip.T186 \
-         and not self.chip.T194:
+         and not self.chip.T194 and not self.chip.SUN8I:
             try:
                 self._spi.no_cs = True  # this doesn't work but try anyways
             except AttributeError:
