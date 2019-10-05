@@ -32,7 +32,7 @@ class I2C(Lockable):
                 break
         else:
             raise NotImplementedError(
-                "No Hardware I2C on (scl,sda)={}\nValid UART ports: {}".format((scl, sda), i2cPorts)
+                "No Hardware I2C on (scl,sda)={}\nValid I2C ports: {}".format((scl, sda), i2cPorts)
             )
 
     def deinit(self):
