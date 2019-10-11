@@ -43,6 +43,10 @@ class SPI:
             except AttributeError:
                 pass
 
+    @property
+    def frequency(self):
+        return self.baudrate
+
     def write(self, buf, start=0, end=None):
         if not buf:
             return
