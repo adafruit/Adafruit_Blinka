@@ -159,6 +159,13 @@ class SPI(Lockable):
         self._spi = None
         self._pinIds = None
 
+    @property
+    def frequency(self):
+        try:
+            return self._spi.frequency
+        except AttributeError:
+            raise NotImplementedError("Frequency attribute not implemented for this platform")
+
     def write(self, buf, start=0, end=None):
         return self._spi.write(buf, start, end)
 
