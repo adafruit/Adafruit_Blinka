@@ -31,7 +31,7 @@ class I2C(Lockable):
                 self._i2c = _I2C(portId, mode=_I2C.MASTER, baudrate=frequency)
                 break
         else:
-            raise NotImplementedError(
+            raise ValueError(
                 "No Hardware I2C on (scl,sda)={}\nValid I2C ports: {}".format((scl, sda), i2cPorts)
             )
 
@@ -95,7 +95,7 @@ class SPI(Lockable):
                 self._pins = (portSck, portMosi, portMiso)
                 break
         else:
-            raise NotImplementedError(
+            raise ValueError(
                 "No Hardware SPI on (SCLK, MOSI, MISO)={}\nValid SPI ports:{}".
                 format((clock, MOSI, MISO), spiPorts))
 
@@ -230,7 +230,7 @@ class UART(Lockable):
                 )
                 break
         else:
-            raise NotImplementedError(
+            raise ValueError(
                 "No Hardware UART on (tx,rx)={}\nValid UART ports: {}".format((tx, rx), uartPorts)
             )
 
