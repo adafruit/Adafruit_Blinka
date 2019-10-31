@@ -7,6 +7,8 @@ See `CircuitPython:busio` in CircuitPython for more details.
 * Author(s): cefn
 """
 
+import threading
+
 from adafruit_blinka import Enum, Lockable, agnostic
 from adafruit_blinka.agnostic import board_id, detector
 import adafruit_platformdetect.board as ap_board
@@ -35,6 +37,8 @@ class I2C(Lockable):
                 "No Hardware I2C on (scl,sda)={}\nValid I2C ports: {}".format((scl, sda), i2cPorts)
             )
 
+        self._lock = threading.RLock()
+
     def deinit(self):
         try:
             del self._i2c
@@ -42,9 +46,11 @@ class I2C(Lockable):
             pass
 
     def __enter__(self):
+        self._lock.acquire()
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
+        self._lock.release()
         self.deinit()
 
     def scan(self):
