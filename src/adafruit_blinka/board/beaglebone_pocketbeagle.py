@@ -40,10 +40,10 @@ P1_29 = pin.P1_29    # GPIO3_21 - GPIO_117
 P1_30 = pin.P1_30    # UART0_TXD - GPIO_43
 P1_31 = pin.P1_31    # GPIO3_18 - GPIO_114
 P1_32 = pin.P1_32    # UART0_RXD - GPIO_42
-P1_33 = pin.P1_33    # GPIO3_15 - GPIO_111
+P1_33 = pin.P1_33    # GPIO3_15 - GPIO_111 - EHRPWM0B (ehrpwm.0:1)
 P1_34 = pin.P1_34    # GPIO0_26 - GPIO_26
 P1_35 = pin.P1_35    # GPIO2_24 - GPIO_88
-P1_36 = pin.P1_36    # EHRPWM0A - GPIO_110
+P1_36 = pin.P1_36    # EHRPWM0A - GPIO_110 - EHRPWM0A (ehrpwm.0:0)
 
 
 P2_1 = pin.P2_1      # EHRPWM1A - GPIO_50
