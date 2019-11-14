@@ -17,7 +17,12 @@ class SPI:
     def init(self, baudrate=100000, polarity=0, phase=0, bits=8,
                   firstbit=MSB, sck=None, mosi=None, miso=None):
         self._port.set_frequency(baudrate)
+        # FTDI device can only support mode 0 and mode 2
+        # due to the limitation of MPSSE engine.
+        # This means CPHA must = 0
         self._port._cpol = polarity
+        if phase != 0:
+            raise ValueError("Only SPI phase 0 is supported by FT232H.")
         self._port._cpha = phase
 
     @property
