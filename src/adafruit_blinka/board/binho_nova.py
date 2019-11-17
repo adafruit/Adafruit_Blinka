@@ -1,3 +1,4 @@
+"""
 from adafruit_blinka.microcontroller.nova import pin
 
 D4 = pin.D4
@@ -20,3 +21,4 @@ SCK = pin.SCK
 SCLK = pin.SCLK
 MOSI = pin.MOSI
 MISO = pin.MISO
+"""
