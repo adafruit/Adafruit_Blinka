@@ -55,10 +55,10 @@ class I2C:
 
         end = end if end else len(buffer)
 
-        result = self._nova.readBytesI2C(0, address, len(buffer(start:end)))
+        result = self._nova.readBytesI2C(0, address, len(buffer[start:end]))
         resp = result.split(" ")
 
-        for i in range(len(buffer(start:end))):
+        for i in range(len(buffer[start:end])):
             buffer[start+i] = resp[2+i]
 
     def writeto_then_readfrom(self, address, buffer_out, buffer_in, *,
@@ -75,8 +75,8 @@ class I2C:
 
         self._nova.endI2C(0, True)
 
-        result = self._nova.readBytesI2C(0, address, len(buffer_in(in_start:in_end)))
+        result = self._nova.readBytesI2C(0, address, len(buffer_in[in_start:in_end]))
         resp = result.split(" ")
 
-        for i in range(len(buffer_in(in_start:in_end))):
+        for i in range(len(buffer_in[in_start:in_end])):
             buffer_in[in_start+i] = resp[2+i]
