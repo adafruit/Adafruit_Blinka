@@ -16,5 +16,5 @@ SCK = pin.SCK
 SCLK = pin.SCLK
 MOSI = pin.MOSI
 MISO = pin.MISO
-SS0  = pin.SS0
-SS1  = pin.SS1
+SS0 = pin.SS0
+SS1 = pin.SS1
