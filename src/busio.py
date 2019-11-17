@@ -21,6 +21,10 @@ class I2C(Lockable):
             from adafruit_blinka.microcontroller.ft232h.i2c import I2C
             self._i2c = I2C()
             return
+        elif detector.board.binho_nova:
+            from adafruit_blinka.microcontroller.nova.i2c import I2C
+            self._i2c = I2C()
+            return
         elif detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.i2c import I2C as _I2C
         else:
@@ -82,6 +86,12 @@ class SPI(Lockable):
             self._spi = _SPI()
             self._pins = (SCK, MOSI, MISO)
             return
+        elif detector.board.binho_nova:
+            from adafruit_blinka.microcontroller.nova.spi import SPI as _SPI
+            #from adafruit_blinka.microcontroller.nova.pin import SCK, MOSI, MISO
+            self._spi = _SPI()
+            #self._pins = (SCK, MOSI, MISO)
+            return
         elif detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         else:
@@ -136,6 +146,9 @@ class SPI(Lockable):
         elif detector.board.ftdi_ft232h:
             from adafruit_blinka.microcontroller.ft232h.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.ft232h.pin import Pin
+        elif detector.board.binho_nova:
+            from adafruit_blinka.microcontroller.nova.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.nova.pin import Pin
         else:
             from machine import SPI as _SPI
             from machine import Pin
