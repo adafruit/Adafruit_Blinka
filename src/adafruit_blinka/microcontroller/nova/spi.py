@@ -1,9 +1,9 @@
-from adafruit_blinka.microcontroller.nova.pin import Pin
+#from adafruit_blinka.microcontroller.nova.pin import Pin
 
 class SPI:
     MSB = 0
 
-    def __init__(self):
+    def __init__(self, clock):
         from binhoHostAdapter import binhoHostAdapter
         from binhoHostAdapter import binhoUtilities
 
@@ -11,13 +11,13 @@ class SPI:
         devices = utilities.listAvailableDevices()
 
         if len(devices) > 0:
-
             self._nova = binhoHostAdapter.binhoHostAdapter(devices[0])
             self._nova.setOperationMode(0, 'SPI')
-            self._nova.setClockSPI(0, 12000000)
+            self._nova.setClockSPI(0, clock)
             self._nova.setModeSPI(0, 0)
             self._nova.setIOpinMode(0, 'DOUT')
             self._nova.setIOpinValue(0, 'HIGH')
+            self._nova.beginSPI(0)
             # Cpol and Cpha set by mode
             # Mode  Cpol Cpha
             #  0     0    0
@@ -30,8 +30,14 @@ class SPI:
 
     def init(self, baudrate=100000, polarity=0, phase=0, bits=8,
                   firstbit=MSB, sck=None, mosi=None, miso=None):
+        print("baudrate: " + baudrate)
+        print("mode: " + (polarity<<1) | (phase))
         self._nova.setClockSPI(0, baudrate)
         self._nova.setModeSPI(0, (polarity<<1) | (phase))
+
+    @staticmethod
+    def getSpiReceivedData(lineOutput):
+        return (lineOutput.split('RXD ')[1])
 
     @property
     def frequency(self):
@@ -51,7 +57,7 @@ class SPI:
         end = end if end else len(buf)
         self._nova.setIOpinValue(0, 'LOW')
         for i in range(start, end):
-            buf[start+i] = int(getSpiReceivedData(self._nova.transferSPI(0, 0x00)), 16)
+            buf[start+i] = int(self.getSpiReceivedData(self._nova.transferSPI(0, write_value)), 16)
         self._nova.setIOpinValue(0, 'HIGH')
 """
     def write_readinto(self, buffer_out, buffer_in,  out_start=0, out_end=None, in_start=0, in_end=None):
