@@ -157,7 +157,7 @@ class SPI(Lockable):
             from adafruit_blinka.microcontroller.ft232h.pin import Pin
         elif detector.board.binho_nova:
             from adafruit_blinka.microcontroller.nova.spi import SPI as _SPI
-            from adafruit_blinka.microcontroller.nova.pin import Pin
+            #from adafruit_blinka.microcontroller.nova.pin import Pin
         else:
             from machine import SPI as _SPI
             from machine import Pin
