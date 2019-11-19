@@ -1,4 +1,4 @@
-from adafruit_blinka.microcontroller.nova.pin import Pin
+#from adafruit_blinka.microcontroller.nova.pin import Pin
 
 class I2C:
 
