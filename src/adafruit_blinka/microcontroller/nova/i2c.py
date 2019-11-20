@@ -21,8 +21,6 @@ class I2C:
         else:
             raise RuntimeError('No Binho host adapter found!')
 
-        # Pin.ft232h_gpio = self._i2c.get_gpio()
-
     def scan(self):
 
         scanResults = []
