@@ -8,3 +8,5 @@ if detector.board.any_giant_board:
     from adafruit_blinka.microcontroller.generic_linux.sysfs_pwmout import PWMOut
 if detector.board.any_beaglebone:
     from adafruit_blinka.microcontroller.am335x.sysfs_pwmout import PWMOut
+if detector.board.binho_nova:
+    from adafruit_blinka.microcontroller.nova.pwmout import PWMOut
