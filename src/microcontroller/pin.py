@@ -34,7 +34,7 @@ elif chip_id == ap_chip.IMX8MX:
     from adafruit_blinka.microcontroller.nxp_imx8m.pin import *
 elif chip_id == ap_chip.FT232H:
     from adafruit_blinka.microcontroller.ft232h.pin import *
-elif chip_id == ap_chip.NOVA:
+elif chip_id == ap_chip.BINHO:
     from adafruit_blinka.microcontroller.nova.pin import *
 else:
     raise NotImplementedError("Microcontroller not supported: ", chip_id)
