@@ -53,3 +53,11 @@ IO1 = Pin(1)
 IO2 = Pin(2)
 IO3 = Pin(3)
 IO4 = Pin(4)
+
+PWM0 = IO0
+PWM1 = IO1
+PWM2 = IO2
+# No PWM support on IO3
+PWM4 = IO4
+
+pwmOuts = ( ((1, 0), PWM0), ((1, 1), PWM1), ((1, 2), PWM2), ((1, 4), PWM4) )
