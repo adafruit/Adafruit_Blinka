@@ -57,7 +57,7 @@ elif detector.board.RASPBERRY_PI_B_REV2:
 
 elif board_id == ap_board.BEAGLEBONE_BLACK:
     from adafruit_blinka.board.beaglebone_black import *
-	
+
 elif board_id == ap_board.BEAGLEBONE_BLACK_INDUSTRIAL:
     from adafruit_blinka.board.beaglebone_black import *
 
@@ -108,6 +108,9 @@ elif board_id == ap_board.FTDI_FT232H:
 
 elif board_id == ap_board.BINHO_NOVA:
     from adafruit_blinka.board.binho_nova import *
+
+elif board_id == ap_board.MICROCHIP_MCP2221:
+    from adafruit_blinka.board.microchip_mcp2221 import *
 
 elif "sphinx" in sys.modules:
     pass
