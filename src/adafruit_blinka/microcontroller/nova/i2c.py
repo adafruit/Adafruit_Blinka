@@ -1,25 +1,12 @@
-#from adafruit_blinka.microcontroller.nova.pin import Pin
-
 class I2C:
 
     def __init__(self):
-        # change GPIO controller to I2C
-        from binhoHostAdapter import binhoHostAdapter
-        from binhoHostAdapter import binhoUtilities
-
-        utilities = binhoUtilities.binhoUtilities()
-        devices = utilities.listAvailableDevices()
-
-        if len(devices) > 0:
-
-            self._nova = binhoHostAdapter.binhoHostAdapter(devices[0])
-            self._nova.setNumericalBase(10)
-            self._nova.setOperationMode(0, "I2C")
-            self._nova.setPullUpStateI2C(0, "EN")
-            self._nova.setClockI2C(0, 400000)
-
-        else:
-            raise RuntimeError('No Binho host adapter found!')
+        from adafruit_blinka.microcontroller.nova import Connection
+        self._nova = Connection.getInstance()
+        self._nova.setNumericalBase(10)
+        self._nova.setOperationMode(0, "I2C")
+        self._nova.setPullUpStateI2C(0, "EN")
+        self._nova.setClockI2C(0, 400000)
 
     def scan(self):
 

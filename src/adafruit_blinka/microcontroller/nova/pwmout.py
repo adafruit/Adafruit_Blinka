@@ -38,20 +38,8 @@ class PWMOut(object):
 
         """
         if PWMOut._nova is None:
-            if Pin._nova is not None:
-                # check if Pin already connected to Binho Nova
-                PWMOut._nova = Pin._nova
-            else:
-                from binhoHostAdapter import binhoHostAdapter
-                from binhoHostAdapter import binhoUtilities
-
-                utilities = binhoUtilities.binhoUtilities()
-                devices = utilities.listAvailableDevices()
-
-                if len(devices) > 0:
-                    PWMOut._nova = binhoHostAdapter.binhoHostAdapter(devices[0])
-                else:
-                    raise RuntimeError('No Binho Host Adapter found!')
+            from adafruit_blinka.microcontroller.nova import Connection
+            PWMOut._nova = Connection.getInstance()
 
         self._pwmpin = None
         self._open(pin, duty_cycle, frequency, variable_frequency)
@@ -80,7 +68,6 @@ class PWMOut(object):
 
         # set frequency
         self.frequency = freq
-        PWMOut._nova.setIOpinPWMFreq(self._pwmpin, self.frequency)
         # set period
         self._period = self._get_period()
 
@@ -95,14 +82,7 @@ class PWMOut(object):
         if self._channel is not None:
             #self.duty_cycle = 0
             self._set_enabled(False) # make to disable before unexport
-            """
-            try:
-                #unexport_path = os.path.join(channel_path, self._unexport_path)
-                with open(os.path.join(channel_path, self._unexport_path), "w") as f_unexport:
-                    f_unexport.write("%d\n" % self._pwmpin)
-            except IOError as e:
-                raise PWMError(e.errno, "Unexporting PWM pin: " + e.strerror)
-                """
+
       except Exception as e:
           # due to a race condition for which I have not yet been
           # able to find the root cause, deinit() often fails
