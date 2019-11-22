@@ -13,14 +13,8 @@ class Pin:
 
     def __init__(self, pin_id=None):
         if not Pin._nova:
-            from binhoHostAdapter import binhoHostAdapter
-            from binhoHostAdapter import binhoUtilities
-
-            utilities = binhoUtilities.binhoUtilities()
-            devices = utilities.listAvailableDevices()
-
-            if len(devices) > 0:
-                Pin._nova = binhoHostAdapter.binhoHostAdapter(devices[0])
+            from adafruit_blinka.microcontroller.nova import Connection
+            Pin._nova = Connection.getInstance()
         # check if pin is valid
         if pin_id > 4:
             raise ValueError("Invalid pin {}.".format(pin_id))
@@ -55,9 +49,9 @@ IO3 = Pin(3)
 IO4 = Pin(4)
 
 PWM0 = IO0
-PWM1 = IO1
+# No PWM support on IO1
 PWM2 = IO2
-# No PWM support on IO3
+PWM3 = IO3
 PWM4 = IO4
 
-pwmOuts = ( ((1, 0), PWM0), ((1, 1), PWM1), ((1, 2), PWM2), ((1, 4), PWM4) )
+pwmOuts = ( ((1, 0), PWM0), ((1, 2), PWM2), ((1, 3), PWM3), ((1, 4), PWM4) )

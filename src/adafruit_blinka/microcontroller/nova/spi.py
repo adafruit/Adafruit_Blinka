@@ -1,32 +1,21 @@
-#from adafruit_blinka.microcontroller.nova.pin import Pin
-
 class SPI:
     PAYLOAD_MAX_LENGTH = 64
 
     def __init__(self, clock):
-        from binhoHostAdapter import binhoHostAdapter
-        from binhoHostAdapter import binhoUtilities
-
-        utilities = binhoUtilities.binhoUtilities()
-        devices = utilities.listAvailableDevices()
-
-        if len(devices) > 0:
-            self._nova = binhoHostAdapter.binhoHostAdapter(devices[0])
-            self._nova.setOperationMode(0, 'SPI')
-            self._nova.setClockSPI(0, clock)
-            self._nova.setModeSPI(0, 0)
-            self._nova.setIOpinMode(0, 'DOUT')
-            self._nova.setIOpinValue(0, 'HIGH')
-            self._nova.beginSPI(0)
-            # Cpol and Cpha set by mode
-            # Mode  Cpol Cpha
-            #  0     0    0
-            #  1     0    1
-            #  2     1    0
-            #  3     1    1
-
-        else:
-            raise RuntimeError('No Binho host adapter found!')
+        from adafruit_blinka.microcontroller.nova import Connection
+        self._nova = Connection.getInstance()
+        self._nova.setOperationMode(0, 'SPI')
+        self._nova.setClockSPI(0, clock)
+        self._nova.setModeSPI(0, 0)
+        self._nova.setIOpinMode(0, 'DOUT')
+        self._nova.setIOpinValue(0, 'HIGH')
+        self._nova.beginSPI(0)
+        # Cpol and Cpha set by mode
+        # Mode  Cpol Cpha
+        #  0     0    0
+        #  1     0    1
+        #  2     1    0
+        #  3     1    1
 
     def init(self, baudrate=100000, polarity=0, phase=0, bits=8,
                   firstbit=MSB, sck=None, mosi=None, miso=None):
