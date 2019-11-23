@@ -217,9 +217,15 @@ class UART(Lockable):
                  flow=None):
         if detector.board.any_embedded_linux:
             raise RuntimeError('busio.UART not supported on this platform. Please use pyserial instead.')
+        elif detector.board.binho_nova:
+            from adafruit_blinka.microcontroller.nova.uart import UART as _UART
         else:
             from machine import UART as _UART
-        from microcontroller.pin import uartPorts
+
+        if detector.board.binho_nova:
+            from adafruit_blinka.microcontroller.nova.pin import uartPorts
+        else:
+            from microcontroller.pin import uartPorts
 
         self.baudrate = baudrate
 
@@ -257,6 +263,8 @@ class UART(Lockable):
             )
 
     def deinit(self):
+        if detector.board.binho_nova:
+            self._uart.deinit()
         self._uart = None
 
     def read(self, nbytes=None):

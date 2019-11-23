@@ -54,4 +54,11 @@ PWM2 = IO2
 PWM3 = IO3
 PWM4 = IO4
 
+# orderd as (channel, pin), id
 pwmOuts = ( ((1, 0), PWM0), ((1, 2), PWM2), ((1, 3), PWM3), ((1, 4), PWM4) )
+
+UART1_TX = IO4
+UART1_RX = IO3
+
+# ordered as uartId, txId, rxId
+uartPorts = ( (0, UART1_TX, UART1_RX), )
