@@ -66,17 +66,10 @@ class Pin:
         GPIO.cleanup()
 
 # Cannot be used as GPIO
-# before #
-#SDA = Pin('GEN1_I2C_SDA')
-#SCL = Pin('GEN1_I2C_SCL')
-#SDA_1 = Pin('GEN2_I2C_SDA')
-#SCL_1 = Pin('GEN2_I2C_SCL')
-
-# after #
-SDA = Pin('GEN2_I2C_SDA')
-SCL = Pin('GEN2_I2C_SCL')
-SDA_1 = Pin('GEN1_I2C_SDA')
-SCL_1 = Pin('GEN1_I2C_SCL')
+SDA = Pin('GEN1_I2C_SDA')
+SCL = Pin('GEN1_I2C_SCL')
+SDA_1 = Pin('GEN2_I2C_SDA')
+SCL_1 = Pin('GEN2_I2C_SCL')
 
 # These pins are native to TX1
 BB03 = Pin('GPIO_X1_AUD')
