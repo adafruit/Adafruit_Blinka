@@ -49,7 +49,7 @@ setup(
     install_requires=[
         "Adafruit-PlatformDetect",
         "Adafruit-PureIO",
-        "spidev; sys_platform=='linux'",
+        "spidev>=3.4; sys_platform=='linux'",
         "sysv_ipc; platform_system != 'Windows'"
     ] + board_reqs,
     license='MIT',
