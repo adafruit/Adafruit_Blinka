@@ -2,10 +2,17 @@
 
 from adafruit_blinka.microcontroller.tegra.t210 import pin
 
-SDA = pin.SDA_1
-SCL = pin.SCL_1
-SDA_1 = pin.SDA
-SCL_1 = pin.SCL
+# before #
+#SDA = pin.SDA_1
+#SCL = pin.SCL_1
+#SDA_1 = pin.SDA
+#SCL_1 = pin.SCL
+
+# after #
+SDA = pin.SDA
+SCL = pin.SCL
+SDA_1 = pin.SDA_1
+SCL_1 = pin.SCL_1
 
 D4 = pin.BB00
 D5 = pin.S05
