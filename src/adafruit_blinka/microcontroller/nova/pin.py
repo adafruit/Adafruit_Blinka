@@ -48,6 +48,15 @@ IO2 = Pin(2)
 IO3 = Pin(3)
 IO4 = Pin(4)
 
+# create None type pins for I2C and SPI since they are expected to be defined
+SCL = IO2
+SDA = IO0
+SCK = SCLK = IO3
+MOSI = IO4
+MISO = IO2
+SS0  = IO0
+SS1  = IO1
+
 PWM0 = IO0
 # No PWM support on IO1
 PWM2 = IO2
