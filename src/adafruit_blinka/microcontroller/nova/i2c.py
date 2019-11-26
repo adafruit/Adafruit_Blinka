@@ -57,7 +57,7 @@ class I2C:
         out_end = out_end if out_end else len(buffer_out)
         in_end = in_end if in_end else len(buffer_in)
 
-        self._nova.startI2C(0, address)
+        self._nova.startI2C(0, address<<1)
 
         for i in range(out_start, out_end): 
             self._nova.writeByteI2C(0, buffer_out[i])
