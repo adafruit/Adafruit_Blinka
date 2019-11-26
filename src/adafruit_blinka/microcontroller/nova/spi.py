@@ -5,6 +5,7 @@ class SPI:
     def __init__(self, clock):
         from adafruit_blinka.microcontroller.nova import Connection
         self._nova = Connection.getInstance()
+        self._nova.setNumericalBase(10)
         self._nova.setOperationMode(0, 'SPI')
         self._nova.setClockSPI(0, clock)
         self._nova.setModeSPI(0, 0)
@@ -53,7 +54,7 @@ class SPI:
     def readinto(self, buf, start=0, end=None, write_value=0):
         end = end if end else len(buf)
         for i in range(start, end):
-            buf[start+i] = int(self.getSpiReceivedData(self._nova.transferSPI(0, write_value)), 16)
+            buf[start+i] = int(self.getSpiReceivedData(self._nova.transferSPI(0, write_value)))
 
     def write_readinto(self, buffer_out, buffer_in,  out_start=0, out_end=None, in_start=0, in_end=None):
         out_end = out_end if out_end else len(buffer_out)
@@ -67,7 +68,7 @@ class SPI:
             buffer_out = tmp
         i = 0
         for data_out in buffer_out:
-            data_in = int(self.getSpiReceivedData(self._nova.transferSPI(0, data_out)), 16)
+            data_in = int(self.getSpiReceivedData(self._nova.transferSPI(0, data_out)))
             if i < readlen:
                 buffer_in[in_start+i] = data_in
             i += 1
