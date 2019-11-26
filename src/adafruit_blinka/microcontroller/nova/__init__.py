@@ -21,4 +21,4 @@ class Connection:
             if len(devices) > 0:
                 Connection.__instance = binhoHostAdapter.binhoHostAdapter(devices[0])
             else:
-                raise RuntimeError('No Binho host adapter found!')
+                raise RuntimeError('No Binho Nova found!')
