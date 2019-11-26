@@ -8,3 +8,13 @@ IO4 = pin.IO4
 
 TX = IO4
 RX = IO3
+
+SDA = pin.SDA
+SCL = pin.SCL
+
+SCK = pin.SCK
+SCLK = pin.SCLK
+MOSI = pin.MOSI
+MISO = pin.MISO
+SS0  = pin.SS0
+SS1  = pin.SS1
