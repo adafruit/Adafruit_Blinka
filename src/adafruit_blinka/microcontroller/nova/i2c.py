@@ -26,7 +26,7 @@ class I2C:
 
         end = end if end else len(buffer)
 
-        self._nova.startI2C(0, address)
+        self._nova.startI2C(0, address<<1)
 
         for i in range(start, end): 
             self._nova.writeByteI2C(0, buffer[i])
@@ -40,11 +40,15 @@ class I2C:
 
         end = end if end else len(buffer)
 
-        result = self._nova.readBytesI2C(0, address, len(buffer[start:end]))
-        resp = result.split(" ")
+        result = self._nova.readBytesI2C(0, address<<1, len(buffer[start:end]))
 
-        for i in range(len(buffer[start:end])):
-            buffer[start+i] = resp[2+i]
+        if result != "-NG":
+            resp = result.split(" ")
+
+            for i in range(len(buffer[start:end])):
+                buffer[start+i] = int(resp[2+i])
+        else:
+            raise RuntimeError("Received error response from Binho Nova, result = " + result)
 
     def writeto_then_readfrom(self, address, buffer_out, buffer_in, *,
                               out_start=0, out_end=None,
@@ -60,8 +64,12 @@ class I2C:
 
         self._nova.endI2C(0, True)
 
-        result = self._nova.readBytesI2C(0, address, len(buffer_in[in_start:in_end]))
-        resp = result.split(" ")
+        result = self._nova.readBytesI2C(0, address<<1, len(buffer_in[in_start:in_end]))
 
-        for i in range(len(buffer_in[in_start:in_end])):
-            buffer_in[in_start+i] = resp[2+i]
+        if result != "-NG":
+            resp = result.split(" ")
+
+            for i in range(len(buffer_in[in_start:in_end])):
+                buffer_in[in_start+i] = int(resp[2+i])
+        else:
+            raise RuntimeError("Received error response from Binho Nova, result = " + result)
