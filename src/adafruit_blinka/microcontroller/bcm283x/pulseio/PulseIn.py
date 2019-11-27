@@ -48,7 +48,7 @@ class PulseIn:
         cmd = [dir_path+"/libgpiod_pulsein",
                "--pulses", str(maxlen),
                "--queue", str(self._mq.key)]
-        if not idle_state:
+        if idle_state:
             cmd.append("-i")
         cmd.append("gpiochip0")
         cmd.append(str(pin))
