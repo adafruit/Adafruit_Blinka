@@ -58,6 +58,9 @@ elif detector.board.RASPBERRY_PI_B_REV2:
 elif board_id == ap_board.BEAGLEBONE_BLACK:
     from adafruit_blinka.board.beaglebone_black import *
 
+elif board_id == ap_board.BEAGLEBONE_GREEN_WIRELESS:
+    from adafruit_blinka.board.beaglebone_green_wireless import *
+
 elif board_id == ap_board.BEAGLEBONE_POCKETBEAGLE:
     from adafruit_blinka.board.beaglebone_pocketbeagle import *
 
