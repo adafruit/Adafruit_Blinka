@@ -2,6 +2,9 @@
 
 from adafruit_blinka.microcontroller.bcm283x import pin
 
+D0 = pin.D0
+D1 = pin.D1
+
 D2 = pin.D2
 SDA = pin.SDA
 D3 = pin.D3
