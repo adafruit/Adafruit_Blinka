@@ -28,12 +28,10 @@ class I2C(Lockable):
         else:
             from machine import I2C as _I2C
         from microcontroller.pin import i2cPorts
-        busnum = None
         for portId, portScl, portSda in i2cPorts:
             try:
                 if scl == portScl and sda == portSda:
                     self._i2c = _I2C(portId, mode=_I2C.MASTER, baudrate=frequency)
-                    busnum = portId
                     break
             except RuntimeError:
                 pass
