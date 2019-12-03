@@ -139,6 +139,5 @@ uartPorts = (
 )
 
 i2cPorts = (
-    (1, SCL, SDA), (0, D1, D0),   # both pi 1 and pi 2 i2c ports!
+    (3, SCL, SDA), (1, SCL, SDA), (0, D1, D0),   # both pi 1 and pi 2 i2c ports!
 )
-
