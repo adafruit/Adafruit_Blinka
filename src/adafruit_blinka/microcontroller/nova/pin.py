@@ -48,7 +48,6 @@ IO2 = Pin(2)
 IO3 = Pin(3)
 IO4 = Pin(4)
 
-# create None type pins for I2C and SPI since they are expected to be defined
 SCL = IO2
 SDA = IO0
 SCK = SCLK = IO3
