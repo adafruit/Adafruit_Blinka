@@ -36,7 +36,7 @@ class Pin:
         if val is None:
             return int(Pin._nova.getIOpinValue(self.id).split('VALUE ')[1])
         # write
-        elif val in (self.LOW, self.HIGH):
+        if val in (self.LOW, self.HIGH):
             Pin._nova.setIOpinValue(self.id, val)
         else:
             raise RuntimeError("Invalid value for pin")
@@ -54,8 +54,8 @@ SDA = IO0
 SCK = SCLK = IO3
 MOSI = IO4
 MISO = IO2
-SS0  = IO0
-SS1  = IO1
+SS0 = IO0
+SS1 = IO1
 
 PWM0 = IO0
 # No PWM support on IO1
@@ -64,10 +64,10 @@ PWM3 = IO3
 PWM4 = IO4
 
 # orderd as (channel, pin), id
-pwmOuts = ( ((1, 0), PWM0), ((1, 2), PWM2), ((1, 3), PWM3), ((1, 4), PWM4) )
+pwmOuts = (((1, 0), PWM0), ((1, 2), PWM2), ((1, 3), PWM3), ((1, 4), PWM4))
 
 UART1_TX = IO4
 UART1_RX = IO3
 
 # ordered as uartId, txId, rxId
-uartPorts = ( (0, UART1_TX, UART1_RX), )
+uartPorts = ((0, UART1_TX, UART1_RX), )

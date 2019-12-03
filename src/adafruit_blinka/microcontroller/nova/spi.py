@@ -21,14 +21,14 @@ class SPI:
         #  3     1    1
 
     def init(self, baudrate=100000, polarity=0, phase=0, bits=8,
-                  firstbit=MSB, sck=None, mosi=None, miso=None):
+             firstbit=MSB, sck=None, mosi=None, miso=None):
         #print("baudrate: " + str(baudrate))
         #print("mode: " + str((polarity<<1) | (phase)))
         self._nova.setClockSPI(0, baudrate)
         self._nova.setModeSPI(0, (polarity<<1) | (phase))
 
     @staticmethod
-    def getSpiReceivedData(lineOutput):
+    def get_received_data(lineOutput):
         return (lineOutput.split('RXD ')[1])
 
     @property
@@ -54,9 +54,9 @@ class SPI:
     def readinto(self, buf, start=0, end=None, write_value=0):
         end = end if end else len(buf)
         for i in range(start, end):
-            buf[start+i] = int(self.getSpiReceivedData(self._nova.transferSPI(0, write_value)))
+            buf[start+i] = int(self.get_received_data(self._nova.transferSPI(0, write_value)))
 
-    def write_readinto(self, buffer_out, buffer_in,  out_start=0, out_end=None, in_start=0, in_end=None):
+    def write_readinto(self, buffer_out, buffer_in, out_start=0, out_end=None, in_start=0, in_end=None):
         out_end = out_end if out_end else len(buffer_out)
         in_end = in_end if in_end else len(buffer_in)
         readlen = in_end-in_start
@@ -68,7 +68,7 @@ class SPI:
             buffer_out = tmp
         i = 0
         for data_out in buffer_out:
-            data_in = int(self.getSpiReceivedData(self._nova.transferSPI(0, data_out)))
+            data_in = int(self.get_received_data(self._nova.transferSPI(0, data_out)))
             if i < readlen:
                 buffer_in[in_start+i] = data_in
             i += 1
