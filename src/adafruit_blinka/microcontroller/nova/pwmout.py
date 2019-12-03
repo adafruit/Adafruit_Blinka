@@ -1,5 +1,3 @@
-import os
-import digitalio
 
 try:
     from microcontroller.pin import pwmOuts
@@ -41,6 +39,7 @@ class PWMOut(object):
             from adafruit_blinka.microcontroller.nova import Connection
             PWMOut._nova = Connection.getInstance()
 
+        PWMOut._nova.setOperationMode(0, 'IO')
         self._pwmpin = None
         self._open(pin, duty_cycle, frequency, variable_frequency)
 
@@ -77,20 +76,20 @@ class PWMOut(object):
         self._set_enabled(True)
 
     def deinit(self):
-      try:
-        """Deinit the Nova PWM."""
-        if self._channel is not None:
-            #self.duty_cycle = 0
-            self._set_enabled(False) # make to disable before unexport
+        try:
+            """Deinit the Nova PWM."""
+            if self._channel is not None:
+                #self.duty_cycle = 0
+                self._set_enabled(False) # make to disable before unexport
 
-      except Exception as e:
-          # due to a race condition for which I have not yet been
-          # able to find the root cause, deinit() often fails
-          # but it does not effect future usage of the pwm pin
-          print("warning: failed to deinitialize pwm pin {0}:{1} due to: {2}\n".format(self._channel, self._pwmpin, type(e).__name__))
-      finally:
-          self._channel = None
-          self._pwmpin = None
+        except Exception as e:
+            # due to a race condition for which I have not yet been
+            # able to find the root cause, deinit() often fails
+            # but it does not effect future usage of the pwm pin
+            print("warning: failed to deinitialize pwm pin {0}:{1} due to: {2}\n".format(self._channel, self._pwmpin, type(e).__name__))
+        finally:
+            self._channel = None
+            self._pwmpin = None
 
     def _is_deinited(self):
         if self._pwmpin is None:
