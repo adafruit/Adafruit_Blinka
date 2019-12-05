@@ -24,6 +24,9 @@ D14 = pin.D14
 TXD = pin.D14
 D15 = pin.D15
 RXD = pin.D15
+# create alias for most of the examples
+TX = pin.D14
+RX = pin.D15
 
 D17 = pin.D17
 D18 = pin.D18
