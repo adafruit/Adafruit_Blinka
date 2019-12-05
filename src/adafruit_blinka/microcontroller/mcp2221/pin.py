@@ -20,12 +20,19 @@ class Pin:
         if self.id is None:
             raise RuntimeError("Can not init a None type pin.")
         if mode in (Pin.IN, Pin.OUT):
+            # All pins can do GPIO
             mcp2221.gp_set_mode(self.id, mcp2221.GP_GPIO)
             mcp2221.gpio_set_direction(self.id, mode)
         elif mode == Pin.ADC:
+            # ADC only available on these pins
+            if self.id not in (1, 2, 3):
+                raise ValueError("Pin does not have ADC capabilities")
             mcp2221.gp_set_mode(self.id, mcp2221.GP_ALT0)
             mcp2221.adc_configure()
         elif mode == Pin.DAC:
+            # DAC only available on these pins
+            if self.id not in (2, 3):
+                raise ValueError("Pin does not have DAC capabilities")
             mcp2221.gp_set_mode(self.id, mcp2221.GP_ALT1)
             mcp2221.dac_configure()
         else:
