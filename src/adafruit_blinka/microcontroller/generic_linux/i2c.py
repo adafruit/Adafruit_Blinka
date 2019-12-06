@@ -58,9 +58,7 @@ class I2C:
             self.readfrom_into(address, buffer_in, start=in_start, end=in_end)
         else:
             # To generate without a stop, do in one block transaction
-            if out_end-out_start != 1:
-                raise NotImplementedError("Currently can only write a single byte in writeto_then_readfrom")
-            readin = self._i2c_bus.read_i2c_block_data(address, buffer_out[out_start:out_end][0], in_end-in_start)
+            readin = self._i2c_bus.read_i2c_block_data(address, buffer_out[out_start:out_end], in_end-in_start)
             for i in range(in_end-in_start):
                 buffer_in[i+in_start] = readin[i]
 
