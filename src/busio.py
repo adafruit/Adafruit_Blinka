@@ -23,15 +23,22 @@ class I2C(Lockable):
             from adafruit_blinka.microcontroller.ft232h.i2c import I2C
             self._i2c = I2C()
             return
+        elif detector.board.binho_nova:
+            from adafruit_blinka.microcontroller.nova.i2c import I2C
+            self._i2c = I2C()
+            return
         elif detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.i2c import I2C as _I2C
         else:
             from machine import I2C as _I2C
         from microcontroller.pin import i2cPorts
         for portId, portScl, portSda in i2cPorts:
-            if scl == portScl and sda == portSda:
-                self._i2c = _I2C(portId, mode=_I2C.MASTER, baudrate=frequency)
-                break
+            try:
+                if scl == portScl and sda == portSda:
+                    self._i2c = _I2C(portId, mode=_I2C.MASTER, baudrate=frequency)
+                    break
+            except RuntimeError:
+                pass
         else:
             raise ValueError(
                 "No Hardware I2C on (scl,sda)={}\nValid I2C ports: {}".format((scl, sda), i2cPorts)
@@ -88,6 +95,12 @@ class SPI(Lockable):
             self._spi = _SPI()
             self._pins = (SCK, MOSI, MISO)
             return
+        elif detector.board.binho_nova:
+            from adafruit_blinka.microcontroller.nova.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.nova.pin import SCK, MOSI, MISO
+            self._spi = _SPI(clock)
+            self._pins = (SCK, MOSI, MISO)
+            return
         elif detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         else:
@@ -142,6 +155,9 @@ class SPI(Lockable):
         elif detector.board.ftdi_ft232h:
             from adafruit_blinka.microcontroller.ft232h.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.ft232h.pin import Pin
+        elif detector.board.binho_nova:
+            from adafruit_blinka.microcontroller.nova.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.nova.pin import Pin
         else:
             from machine import SPI as _SPI
             from machine import Pin
@@ -201,9 +217,15 @@ class UART(Lockable):
                  flow=None):
         if detector.board.any_embedded_linux:
             raise RuntimeError('busio.UART not supported on this platform. Please use pyserial instead.')
+        elif detector.board.binho_nova:
+            from adafruit_blinka.microcontroller.nova.uart import UART as _UART
         else:
             from machine import UART as _UART
-        from microcontroller.pin import uartPorts
+
+        if detector.board.binho_nova:
+            from adafruit_blinka.microcontroller.nova.pin import uartPorts
+        else:
+            from microcontroller.pin import uartPorts
 
         self.baudrate = baudrate
 
@@ -241,6 +263,8 @@ class UART(Lockable):
             )
 
     def deinit(self):
+        if detector.board.binho_nova:
+            self._uart.deinit()
         self._uart = None
 
     def read(self, nbytes=None):

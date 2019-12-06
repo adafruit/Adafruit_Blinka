@@ -2,6 +2,9 @@
 
 from adafruit_blinka.microcontroller.bcm283x import pin
 
+D0 = pin.D0
+D1 = pin.D1
+
 D2 = pin.D2
 SDA = pin.SDA
 D3 = pin.D3
@@ -30,6 +33,9 @@ D14 = pin.D14
 TXD = pin.D14
 D15 = pin.D15
 RXD = pin.D15
+# create alias for most of the examples
+TX = pin.D14
+RX = pin.D15
 
 D16 = pin.D16
 D17 = pin.D17
