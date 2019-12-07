@@ -36,5 +36,7 @@ elif chip_id == ap_chip.FT232H:
     from adafruit_blinka.microcontroller.ft232h.pin import *
 elif chip_id == ap_chip.BINHO:
     from adafruit_blinka.microcontroller.nova.pin import *
+elif chip_id == ap_chip.MCP2221:
+    from adafruit_blinka.microcontroller.mcp2221.pin import *
 else:
     raise NotImplementedError("Microcontroller not supported: ", chip_id)
