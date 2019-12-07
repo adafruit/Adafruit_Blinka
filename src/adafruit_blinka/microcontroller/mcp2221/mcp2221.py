@@ -279,12 +279,12 @@ class MCP2221:
         found = []
         for addr in range(start, end+1):
             # try a write
-            self.i2c_writeto(addr, b'\x00')
+            try:
+                self.i2c_writeto(addr, b'\x00')
+            except RuntimeError: # no reply!
+                continue
             # store if success
-            if self._i2c_status() == 0x00:
-                found.append(addr)
-            # cancel and continue
-            self._i2c_cancel()
+            found.append(addr)
         return found
 
     #----------------------------------------------------------------
