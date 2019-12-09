@@ -50,7 +50,9 @@ setup(
         "Adafruit-PlatformDetect",
         "Adafruit-PureIO",
         "spidev>=3.4; sys_platform=='linux'",
-        "sysv_ipc; platform_system != 'Windows'"
+        "sysv_ipc; platform_system != 'Windows'",
+        "pyftdi>=0.30.0",
+        "hidapi"
     ] + board_reqs,
     license='MIT',
     classifiers=[
