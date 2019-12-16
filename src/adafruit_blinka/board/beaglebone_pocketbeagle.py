@@ -136,3 +136,8 @@ RX = RX_0
 # UART4
 TX_4 = pin.UART4_TXD    # P2_7
 RX_4 = pin.UART4_RXD    # P2_5
+
+PWM1 = P1_36
+PWM2 = P1_33
+PWM3 = P2_1
+PWM4 = P2_3

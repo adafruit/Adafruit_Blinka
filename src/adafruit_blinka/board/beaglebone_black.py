@@ -174,3 +174,8 @@ MISO_1 = pin.SPI1_D1    # P9_30
 SCLK_1 = pin.SPI1_SCLK  # P9_31
 # CircuitPython naming convention for SPI Clock
 SCK_1 = SCLK_1
+
+PWM1 = P9_14
+PWM2 = P9_14
+PWM3 = P8_19
+PWM4 = P8_13

@@ -344,9 +344,4 @@ i2cPorts = (
     (2, I2C2_SCL, I2C2_SDA),
 )
 
-PWM1 = P1_36
-PWM2 = P1_33
-PWM3 = P2_1
-PWM4 = P2_3
-
 pwmOuts = ( ((0, 0), PWM1), ((0, 1), PWM2), ((2, 0), PWM3), ((4, 1), PWM4) )
