@@ -21,7 +21,7 @@ class I2C(Lockable):
         self.deinit()
         if detector.board.ftdi_ft232h:
             from adafruit_blinka.microcontroller.ft232h.i2c import I2C
-            self._i2c = I2C()
+            self._i2c = I2C(frequency=frequency)
             return
         elif detector.board.binho_nova:
             from adafruit_blinka.microcontroller.nova.i2c import I2C
