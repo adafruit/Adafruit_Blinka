@@ -28,8 +28,6 @@ if os.path.exists('/proc/device-tree/compatible'):
        b'brcm,bcm2837' in compat or \
        b'brcm,bcm2838' in compat:
         board_reqs = ['RPi.GPIO', 'rpi_ws281x>=4.0.0']
-elif os.environ.get('GITHUB_TOKEN') is None and os.environ.get('GITHUB_ACTION') is None:
-    board_reqs = ['hidapi']
 
 setup(
     name='Adafruit-Blinka',
