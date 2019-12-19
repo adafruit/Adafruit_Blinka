@@ -14,7 +14,7 @@
   :members:
 
 .. automodule:: analogio
-  ::members
+  :members:
 
 .. automodule:: bitbangio
   :members:
