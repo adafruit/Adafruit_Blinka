@@ -13,9 +13,6 @@
 .. automodule:: adafruit_blinka.microcontroller
   :members:
 
-.. automodule:: analogio
-  :members:
-
 .. automodule:: bitbangio
   :members:
 
