@@ -3,7 +3,7 @@ Adafruit-PureIO
 Jetson.GPIO; platform_machine=='aarch64'
 RPi.GPIO; platform_machine=='armv7l' or platform_machine=='armv6l'
 rpi_ws281x>=4.0.0; platform_machine=='armv7l' or platform_machine=='armv6l'
-spidev>=3.4; sys_platform == 'linux'
+spidev>=3.4; sys_platform == 'linux' and platform_machine!='mips'
 sysv_ipc; sys_platform == 'linux' and platform_machine!='mips'
 pyftdi>=0.30.0
 binho-host-adapter>=0.1.4
