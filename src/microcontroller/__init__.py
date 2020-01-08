@@ -33,7 +33,7 @@ elif chip_id == ap_chip.BCM2XXX:
 elif chip_id == ap_chip.AM33XX:
     from adafruit_blinka.microcontroller.am335x import *
 elif chip_id == ap_chip.SUN8I:
-    from adafruit_blinka.microcontroller.allwinner_h3 import *
+    from adafruit_blinka.microcontroller.allwinner.h3 import *
 elif chip_id == ap_chip.SAMA5:
     from adafruit_blinka.microcontroller.sama5 import *
 elif chip_id == ap_chip.T210:
