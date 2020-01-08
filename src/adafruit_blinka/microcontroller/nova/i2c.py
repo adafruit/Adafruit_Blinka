@@ -1,12 +1,12 @@
 class I2C:
 
-    def __init__(self):
+    def __init__(self, *, frequency=400000):
         from adafruit_blinka.microcontroller.nova import Connection
         self._nova = Connection.getInstance()
         self._nova.setNumericalBase(10)
         self._nova.setOperationMode(0, "I2C")
         self._nova.setPullUpStateI2C(0, "EN")
-        self._nova.setClockI2C(0, 400000)
+        self._nova.setClockI2C(0, frequency)
 
     def scan(self):
 

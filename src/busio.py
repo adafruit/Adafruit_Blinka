@@ -25,6 +25,8 @@ class I2C(Lockable):
             return
         elif detector.board.binho_nova:
             from adafruit_blinka.microcontroller.nova.i2c import I2C
+            self._i2c = I2C(frequency=frequency)
+            return
         elif detector.board.microchip_mcp2221:
             from adafruit_blinka.microcontroller.mcp2221.i2c import I2C
             self._i2c = I2C(frequency=frequency)
