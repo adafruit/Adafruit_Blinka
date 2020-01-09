@@ -32,6 +32,6 @@ class I2C:
         port = self._i2c.get_port(address)
         result = port.exchange(buffer_out[out_start:out_end],
                                in_end-in_start,
-                               relax=True).tobytes()
+                               relax=True)
         for i, b in enumerate(result):
             buffer_in[in_start+i] = b
