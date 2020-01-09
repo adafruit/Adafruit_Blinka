@@ -1,6 +1,6 @@
 """Pin definitions for the Orange Pi PC."""
 
-from adafruit_blinka.microcontroller.allwinner_h3 import pin
+from adafruit_blinka.microcontroller.allwinner.h3 import pin
 
 PA12 = pin.PA12
 SDA = pin.PA12

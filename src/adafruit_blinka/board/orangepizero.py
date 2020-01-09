@@ -2,7 +2,7 @@
 
 # The Orange Pi Zero uses the AllWinner H2 SoC, but pins 
 # are the same as the AllWinner H3 SoC, so we import those
-from adafruit_blinka.microcontroller.allwinner_h3 import pin
+from adafruit_blinka.microcontroller.allwinner.h3 import pin
 
 PA12 = pin.PA12
 SDA = pin.PA12
