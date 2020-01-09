@@ -39,6 +39,6 @@ elif chip_id == ap_chip.BINHO:
 elif chip_id == ap_chip.MCP2221:
     from adafruit_blinka.microcontroller.mcp2221.pin import *
 elif chip_id == ap_chip.A64:
-    from adafruit_blinka.microcontroller.allwinner.pin import *
+    from adafruit_blinka.microcontroller.allwinner.a64.pin import *
 else:
     raise NotImplementedError("Microcontroller not supported: ", chip_id)
