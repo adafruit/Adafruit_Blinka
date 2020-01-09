@@ -1,6 +1,6 @@
 """Pin definitions for the Hifive Unleashed."""
 
-from adafruit_blinka.microcontroller.hifive_unleashed import pin
+from adafruit_blinka.microcontroller.hfu540 import pin
 
 GPIO_A = pin.GPIO0
 GPIO_B = pin.GPIO1

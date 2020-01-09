@@ -1,6 +1,6 @@
 """Hifive Unleashed pin names"""
 
-from microcontroller import Pin
+from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
 UART0_TXD = Pin(5)
 UART0_RXD = Pin(7)
