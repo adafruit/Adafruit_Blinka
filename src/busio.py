@@ -25,6 +25,8 @@ class I2C(Lockable):
             return
         elif detector.board.binho_nova:
             from adafruit_blinka.microcontroller.nova.i2c import I2C
+            self._i2c = I2C(frequency=frequency)
+            return
         elif detector.board.microchip_mcp2221:
             from adafruit_blinka.microcontroller.mcp2221.i2c import I2C
             self._i2c = I2C(frequency=frequency)
@@ -154,6 +156,9 @@ class SPI(Lockable):
         elif board_id == ap_board.JETSON_XAVIER:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.tegra.t194.pin import Pin
+        elif board_id == ap_board.PINE64:
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.allwinner.a64.pin import Pin
         elif detector.board.ftdi_ft232h:
             from adafruit_blinka.microcontroller.ft232h.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.ft232h.pin import Pin
