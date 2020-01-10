@@ -33,6 +33,8 @@ elif detector.chip.APQ8016:
     from adafruit_blinka.microcontroller.snapdragon.apq8016.pin import Pin
 elif detector.chip.IMX8MX:
     from adafruit_blinka.microcontroller.nxp_imx8m.pin import Pin
+elif detector.chip.A64:
+    from adafruit_blinka.microcontroller.allwinner.a64.pin import Pin
 elif detector.board.ftdi_ft232h:
     from adafruit_blinka.microcontroller.ft232h.pin import Pin
 elif detector.board.binho_nova:
@@ -41,8 +43,6 @@ elif detector.chip.STM32:
     from machine import Pin
 elif detector.board.microchip_mcp2221:
     from adafruit_blinka.microcontroller.mcp2221.pin import Pin
-elif detector.board.pine64 or detector.board.pinebook or detector.board.pinephone:
-    from adafruit_blinka.microcontroller.allwinner.a64.pin import Pin
 from adafruit_blinka import Enum, ContextManaged
 
 class DriveMode(Enum):
