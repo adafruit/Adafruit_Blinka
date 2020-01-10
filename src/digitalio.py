@@ -35,6 +35,8 @@ elif detector.chip.IMX8MX:
     from adafruit_blinka.microcontroller.nxp_imx8m.pin import Pin
 elif detector.chip.HFU540:
     from adafruit_blinka.microcontroller.hfu540.pin import Pin
+elif detector.chip.A64:
+    from adafruit_blinka.microcontroller.allwinner.a64.pin import Pin
 elif detector.board.ftdi_ft232h:
     from adafruit_blinka.microcontroller.ft232h.pin import Pin
 elif detector.board.binho_nova:

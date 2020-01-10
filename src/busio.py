@@ -159,12 +159,18 @@ class SPI(Lockable):
         elif detector.board.SIFIVE_UNLEASHED:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.hfu540.pin import Pin
+        elif board_id == ap_board.PINE64:
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.allwinner.a64.pin import Pin
         elif detector.board.ftdi_ft232h:
             from adafruit_blinka.microcontroller.ft232h.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.ft232h.pin import Pin
         elif detector.board.binho_nova:
             from adafruit_blinka.microcontroller.nova.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.nova.pin import Pin
+        elif board_id == ap_board.PINE64 or board_id == ap_board.PINEBOOK or board_id == ap_board.PINEPHONE:
+            from adafruit_blinka.microcontroller.allwinner.a64.pin import Pin
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         else:
             from machine import SPI as _SPI
             from machine import Pin
