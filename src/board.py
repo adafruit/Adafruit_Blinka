@@ -112,6 +112,9 @@ elif board_id == ap_board.BINHO_NOVA:
 elif board_id == ap_board.MICROCHIP_MCP2221:
     from adafruit_blinka.board.microchip_mcp2221 import *
 
+elif board_id == ap_board.PINE64:
+    from adafruit_blinka.board.pine64 import *
+
 elif "sphinx" in sys.modules:
     pass
 
