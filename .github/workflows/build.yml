@@ -1,0 +1,50 @@
+name: Build CI
+
+on: [pull_request, push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: echo "$GITHUB_CONTEXT"
+    - name: Translate Repo Name For Build Tools filename_prefix
+      id: repo-name
+      run: |
+        echo ::set-output name=repo-name::$(
+        echo ${{ github.repository }} |
+        awk -F '\/' '{ print tolower($2) }' |
+        tr '_' '-'
+        )
+    - name: Set up Python 3.6
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.6
+    - name: Versions
+      run: |
+        python3 --version
+    - name: Checkout Current Repo
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - name: Checkout tools repo
+      uses: actions/checkout@v2
+      with:
+        repository: adafruit/actions-ci-circuitpython-libs
+        path: actions-ci
+    - name: Install deps
+      run: |
+        source actions-ci/install.sh
+    - name: Library version
+      run: git describe --dirty --always --tags
+    - name: PyLint
+      run: |
+        pylint $( find . -path './adafruit*.py' )
+        ([[ ! -d "examples" ]] || pylint --disable=missing-docstring,invalid-name,bad-whitespace $( find . -path "./examples/*.py" ))
+    - name: Build assets
+      run: circuitpython-build-bundles --filename_prefix ${{ steps.repo-name.outputs.repo-name }} --library_location .
+    - name: Build docs
+      working-directory: docs
+      run: sphinx-build -E -W -b html . _build/html
