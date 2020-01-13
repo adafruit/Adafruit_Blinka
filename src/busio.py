@@ -156,9 +156,6 @@ class SPI(Lockable):
         elif board_id == ap_board.JETSON_XAVIER:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.tegra.t194.pin import Pin
-        elif board_id == ap_board.PINE64:
-            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-            from adafruit_blinka.microcontroller.allwinner.a64.pin import Pin
         elif detector.board.ftdi_ft232h:
             from adafruit_blinka.microcontroller.ft232h.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.ft232h.pin import Pin
@@ -167,6 +164,9 @@ class SPI(Lockable):
             from adafruit_blinka.microcontroller.nova.pin import Pin
         elif board_id == ap_board.PINE64 or board_id == ap_board.PINEBOOK or board_id == ap_board.PINEPHONE:
             from adafruit_blinka.microcontroller.allwinner.a64.pin import Pin
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+        elif board_id == ap_board.ONION_OMEGA:
+            from adafruit_blinka.microcontroller.atheros.ar9331.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         else:
             from machine import SPI as _SPI
