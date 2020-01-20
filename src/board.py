@@ -76,6 +76,18 @@ elif board_id == ap_board.ORANGE_PI_R1:
 elif board_id == ap_board.ORANGE_PI_ZERO:
     from adafruit_blinka.board.orangepizero import *
 
+elif board_id == ap_board.ORANGE_PI_ONE:
+    from adafruit_blinka.board.orangepipc import *
+
+elif board_id == ap_board.ORANGE_PI_PC_PLUS:
+    from adafruit_blinka.board.orangepipc import *
+
+elif board_id == ap_board.ORANGE_PI_LITE:
+    from adafruit_blinka.board.orangepipc import *
+
+elif board_id == ap_board.ORANGE_PI_PLUS_2E:
+    from adafruit_blinka.board.orangepipc import *
+
 elif board_id == ap_board.GIANT_BOARD:
     from adafruit_blinka.board.giantboard import *
 
