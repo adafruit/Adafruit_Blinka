@@ -30,7 +30,7 @@ See `CircuitPython:board` in CircuitPython for more details.
 import sys
 
 from adafruit_blinka.agnostic import board_id, detector
-import adafruit_platformdetect.board as ap_board
+import adafruit_platformdetect.constants.boards as ap_board
 
 # pylint: disable=wildcard-import,unused-wildcard-import,ungrouped-imports
 

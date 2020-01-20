@@ -11,7 +11,7 @@ import threading
 
 from adafruit_blinka import Enum, Lockable, agnostic
 from adafruit_blinka.agnostic import board_id, detector
-import adafruit_platformdetect.board as ap_board
+import adafruit_platformdetect.constants.boards as ap_board
 
 class I2C(Lockable):
     def __init__(self, scl, sda, frequency=400000):

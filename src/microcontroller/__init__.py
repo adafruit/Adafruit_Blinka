@@ -1,6 +1,6 @@
 """Microcontroller pins"""
 
-from adafruit_platformdetect import chip as ap_chip
+from adafruit_platformdetect.constants import chips as ap_chip
 from adafruit_blinka import Enum
 from adafruit_blinka.agnostic import board_id, chip_id
 
