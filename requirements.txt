@@ -1,4 +1,4 @@
-Adafruit-PlatformDetect
+Adafruit-PlatformDetect==1.4.5
 Adafruit-PureIO
 Jetson.GPIO; platform_machine=='aarch64'
 RPi.GPIO; platform_machine=='armv7l' or platform_machine=='armv6l'
