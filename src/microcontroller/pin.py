@@ -1,6 +1,6 @@
 """Pins named after their chip name."""
 
-import adafruit_platformdetect.chip.contants.chips as ap_chip
+from adafruit_platformdetect.constants import chips as ap_chip
 from adafruit_blinka.agnostic import chip_id
 
 # We intentionally are patching into this namespace so skip the wildcard check.
