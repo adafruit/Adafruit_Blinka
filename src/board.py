@@ -30,7 +30,7 @@ See `CircuitPython:board` in CircuitPython for more details.
 import sys
 
 from adafruit_blinka.agnostic import board_id, detector
-import adafruit_platformdetect.board as ap_board
+import adafruit_platformdetect.constants.boards as ap_board
 
 # pylint: disable=wildcard-import,unused-wildcard-import,ungrouped-imports
 
@@ -44,61 +44,73 @@ elif board_id == ap_board.PYBOARD:
     from adafruit_blinka.board.pyboard import *
 
 elif detector.board.any_raspberry_pi_40_pin:
-    from adafruit_blinka.board.raspi_40pin import *
+    from adafruit_blinka.board.raspberrypi.raspi_40pin import *
 
 elif detector.board.any_raspberry_pi_cm:
-    from adafruit_blinka.board.raspi_cm import *
+    from adafruit_blinka.board.raspberrypi.raspi_cm import *
 
 elif detector.board.RASPBERRY_PI_A or detector.board.RASPBERRY_PI_B_REV1:
-    from adafruit_blinka.board.raspi_1b_rev1 import *
+    from adafruit_blinka.board.raspberrypi.raspi_1b_rev1 import *
 
 elif detector.board.RASPBERRY_PI_B_REV2:
-    from adafruit_blinka.board.raspi_1b_rev2 import *
+    from adafruit_blinka.board.raspberrypi.raspi_1b_rev2 import *
 
 elif board_id == ap_board.BEAGLEBONE_BLACK:
-    from adafruit_blinka.board.beaglebone_black import *
+    from adafruit_blinka.board.beagleboard.beaglebone_black import *
 
 elif board_id == ap_board.BEAGLEBONE_BLACK_INDUSTRIAL:
-    from adafruit_blinka.board.beaglebone_black import *
+    from adafruit_blinka.board.beagleboard.beaglebone_black import *
 
 elif board_id == ap_board.BEAGLEBONE_GREEN_WIRELESS:
-    from adafruit_blinka.board.beaglebone_black import *
+    from adafruit_blinka.board.beagleboard.beaglebone_black import *
 
 elif board_id == ap_board.BEAGLEBONE_POCKETBEAGLE:
-    from adafruit_blinka.board.beaglebone_pocketbeagle import *
+    from adafruit_blinka.board.beagleboard.beaglebone_pocketbeagle import *
 
 elif board_id == ap_board.ORANGE_PI_PC:
-    from adafruit_blinka.board.orangepipc import *
+    from adafruit_blinka.board.orangepi.orangepipc import *
 
 elif board_id == ap_board.ORANGE_PI_R1:
-    from adafruit_blinka.board.orangepir1 import *
+    from adafruit_blinka.board.orangepi.orangepir1 import *
 
 elif board_id == ap_board.ORANGE_PI_ZERO:
-    from adafruit_blinka.board.orangepizero import *
+    from adafruit_blinka.board.orangepi.orangepizero import *
+
+elif board_id == ap_board.ORANGE_PI_ONE:
+    from adafruit_blinka.board.orangepi.orangepipc import *
+
+elif board_id == ap_board.ORANGE_PI_PC_PLUS:
+    from adafruit_blinka.board.orangepi.orangepipc import *
+
+elif board_id == ap_board.ORANGE_PI_LITE:
+    from adafruit_blinka.board.orangepi.orangepipc import *
+
+elif board_id == ap_board.ORANGE_PI_PLUS_2E:
+    from adafruit_blinka.board.orangepi.orangepipc import *
 
 elif board_id == ap_board.GIANT_BOARD:
     from adafruit_blinka.board.giantboard import *
 
 elif board_id == ap_board.JETSON_TX1:
-    from adafruit_blinka.board.jetson_tx1 import *
+    from adafruit_blinka.board.nvidia.jetson_tx1 import *
 
 elif board_id == ap_board.JETSON_TX2:
-    from adafruit_blinka.board.jetson_tx2 import *
+    from adafruit_blinka.board.nvidia.jetson_tx2 import *
 
 elif board_id == ap_board.JETSON_XAVIER:
-    from adafruit_blinka.board.jetson_xavier import *
+    from adafruit_blinka.board.nvidia.jetson_xavier import *
 
 elif board_id == ap_board.JETSON_NANO:
-    from adafruit_blinka.board.jetson_nano import *
+    from adafruit_blinka.board.nvidia.jetson_nano import *
 
 elif board_id == ap_board.CORAL_EDGE_TPU_DEV:
     from adafruit_blinka.board.coral_edge_tpu import *
 
 elif board_id == ap_board.ODROID_C2:
-    from adafruit_blinka.board.odroidc2 import *
+    from adafruit_blinka.board.hardkernel.odroidc2 import *
 
 elif board_id == ap_board.ODROID_N2:
-    from adafruit_blinka.board.odroidn2 import *
+    from adafruit_blinka.board.hardkernel.odroidn2 import *
 
 elif board_id == ap_board.DRAGONBOARD_410C:
     from adafruit_blinka.board.dragonboard_410c import *

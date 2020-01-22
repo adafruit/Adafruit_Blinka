@@ -14,7 +14,7 @@ class Pin:
         if not Pin.ft232h_gpio:
             from pyftdi.i2c import I2cController
             i2c = I2cController()
-            i2c.configure("ftdi:///1")
+            i2c.configure("ftdi://ftdi:ft232h/1")
             Pin.ft232h_gpio = i2c.get_gpio()
         # check if pin is valid
         if pin_id:

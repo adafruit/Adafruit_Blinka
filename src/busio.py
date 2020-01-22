@@ -11,7 +11,7 @@ import threading
 
 from adafruit_blinka import Enum, Lockable, agnostic
 from adafruit_blinka.agnostic import board_id, detector
-import adafruit_platformdetect.board as ap_board
+import adafruit_platformdetect.constants.boards as ap_board
 
 class I2C(Lockable):
     def __init__(self, scl, sda, frequency=400000):
@@ -159,9 +159,6 @@ class SPI(Lockable):
         elif detector.board.SIFIVE_UNLEASHED:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.hfu540.pin import Pin
-        elif board_id == ap_board.PINE64:
-            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-            from adafruit_blinka.microcontroller.allwinner.a64.pin import Pin
         elif detector.board.ftdi_ft232h:
             from adafruit_blinka.microcontroller.ft232h.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.ft232h.pin import Pin
@@ -171,6 +168,7 @@ class SPI(Lockable):
         elif board_id == ap_board.PINE64 or board_id == ap_board.PINEBOOK or board_id == ap_board.PINEPHONE:
             from adafruit_blinka.microcontroller.allwinner.a64.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+
         else:
             from machine import SPI as _SPI
             from machine import Pin

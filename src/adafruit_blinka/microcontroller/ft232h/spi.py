@@ -6,7 +6,7 @@ class SPI:
     def __init__(self):
         from pyftdi.spi import SpiController
         self._spi = SpiController(cs_count=1)
-        self._spi.configure('ftdi:///1')
+        self._spi.configure('ftdi://ftdi:ft232h/1')
         self._port = self._spi.get_port(0)
         self._port.set_frequency(100000)
         self._port._cpol = 0
