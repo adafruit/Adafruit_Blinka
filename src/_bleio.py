@@ -26,6 +26,9 @@ class Descriptor:
 class CharacteristicBuffer:
     pass
 
+class PacketBuffer:
+    pass
+
 class Characteristic:
     BROADCAST = 0
     READ = 0
