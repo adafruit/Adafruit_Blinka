@@ -1,6 +1,6 @@
 """Microcontroller pins"""
 
-from adafruit_platformdetect import chip as ap_chip
+from adafruit_platformdetect.constants import chips as ap_chip
 from adafruit_blinka import Enum
 from adafruit_blinka.agnostic import board_id, chip_id
 
@@ -33,7 +33,7 @@ elif chip_id == ap_chip.BCM2XXX:
 elif chip_id == ap_chip.AM33XX:
     from adafruit_blinka.microcontroller.am335x import *
 elif chip_id == ap_chip.SUN8I:
-    from adafruit_blinka.microcontroller.allwinner_h3 import *
+    from adafruit_blinka.microcontroller.allwinner.h3 import *
 elif chip_id == ap_chip.SAMA5:
     from adafruit_blinka.microcontroller.sama5 import *
 elif chip_id == ap_chip.T210:
@@ -48,9 +48,15 @@ elif chip_id == ap_chip.S922X:
     from adafruit_blinka.microcontroller.amlogic.s922x.pin import *
 elif chip_id == ap_chip.APQ8016:
     from adafruit_blinka.microcontroller.snapdragon.apq8016.pin import *
+elif chip_id == ap_chip.A64:
+    from adafruit_blinka.microcontroller.allwinner.a64.pin import *
 elif chip_id == ap_chip.IMX8MX:
     from adafruit_blinka.microcontroller.nxp_imx8m import *
+elif chip_id == ap_chip.HFU540:
+    from adafruit_blinka.microcontroller.hfu540.pin import *
 elif chip_id == ap_chip.BINHO:
     from adafruit_blinka.microcontroller.nova import *
+elif chip_id == ap_chip.MIPS24KC:
+    from adafruit_blinka.microcontroller.atheros.ar9331.pin import *
 else:
     raise NotImplementedError("Microcontroller not supported:", chip_id)

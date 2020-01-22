@@ -18,6 +18,7 @@ on hosts running micropython. Working code exists to emulate the CircuitPython p
 
 * **board** - breakout-specific pin identities
 * **microcontroller** - chip-specific pin identities
+* **analogio** - analog input/output pins, using pin identities from board+microcontroller packages
 * **digitalio** - digital input/output pins, using pin identities from board+microcontroller packages
 * **bitbangio** - software-driven interfaces for I2C, SPI
 * **busio** - hardware-driven interfaces for I2C, SPI, UART

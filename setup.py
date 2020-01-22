@@ -44,13 +44,14 @@ setup(
     packages=find_packages("src"),
     # py_modules lists top-level single file packages to include.
     # find_packages only finds packages in directories with __init__.py files.
-    py_modules=['bitbangio', 'board', 'busio', 'digitalio', 'micropython', 'pulseio', 'neopixel_write'],
+    py_modules=['_bleio', 'analogio', 'bitbangio', 'board', 'busio', 'digitalio', 'micropython', 'pulseio', 'neopixel_write'],
     package_data={'adafruit_blinka.microcontroller.bcm283x.pulseio': ['libgpiod_pulsein']},
     install_requires=[
         "Adafruit-PlatformDetect",
         "Adafruit-PureIO",
-        "spidev>=3.4; sys_platform=='linux'",
-        "sysv_ipc; platform_system != 'Windows'"
+        "spidev>=3.4; sys_platform=='linux' and platform_machine!='mips'",
+        "sysv_ipc; platform_system != 'Windows' and platform_machine != 'mips'",
+        "pyftdi>=0.40.0"
     ] + board_reqs,
     license='MIT',
     classifiers=[

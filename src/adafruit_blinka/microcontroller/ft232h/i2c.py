@@ -2,11 +2,11 @@ from adafruit_blinka.microcontroller.ft232h.pin import Pin
 
 class I2C:
 
-    def __init__(self):
+    def __init__(self, *, frequency=400000):
         # change GPIO controller to I2C
         from pyftdi.i2c import I2cController
         self._i2c = I2cController()
-        self._i2c.configure('ftdi:///1')
+        self._i2c.configure('ftdi://ftdi:ft232h/1', frequency=frequency)
         Pin.ft232h_gpio = self._i2c.get_gpio()
 
     def scan(self):
@@ -32,6 +32,6 @@ class I2C:
         port = self._i2c.get_port(address)
         result = port.exchange(buffer_out[out_start:out_end],
                                in_end-in_start,
-                               relax=True).tobytes()
+                               relax=True)
         for i, b in enumerate(result):
             buffer_in[in_start+i] = b
