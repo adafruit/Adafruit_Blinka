@@ -52,6 +52,8 @@ elif chip_id == ap_chip.A64:
     from adafruit_blinka.microcontroller.allwinner.a64.pin import *
 elif chip_id == ap_chip.IMX8MX:
     from adafruit_blinka.microcontroller.nxp_imx8m import *
+elif chip_id == ap_chip.HFU540:
+    from adafruit_blinka.microcontroller.hfu540.pin import *
 elif chip_id == ap_chip.BINHO:
     from adafruit_blinka.microcontroller.nova import *
 elif chip_id == ap_chip.MIPS24KC:
