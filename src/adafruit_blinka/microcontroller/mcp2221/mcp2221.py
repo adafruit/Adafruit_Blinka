@@ -1,5 +1,9 @@
+import os
 import time
 import hid
+
+# Small values seem to help on some Windows setups
+MCP2221_HID_DELAY = float(os.environ.get('BLINKA_MCP2221_HID_DELAY', 0))
 
 # from the C driver
 # http://ww1.microchip.com/downloads/en/DeviceDoc/mcp2221_0_1.tar.gz
@@ -51,6 +55,7 @@ class MCP2221:
         # remaing bytes = 64 byte report data
         # https://github.com/libusb/hidapi/blob/083223e77952e1ef57e6b77796536a3359c1b2a3/hidapi/hidapi.h#L185
         self._hid.write(b'\0' + report + b'\0'*(64-len(report)))
+        time.sleep(MCP2221_HID_DELAY)
         if response:
             # return is 64 byte response report
             return self._hid.read(64)
