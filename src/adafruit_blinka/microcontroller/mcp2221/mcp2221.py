@@ -4,6 +4,8 @@ import hid
 
 # Small values seem to help on some Windows setups
 MCP2221_HID_DELAY = float(os.environ.get('BLINKA_MCP2221_HID_DELAY', 0))
+# Windows also seems to want some time after a reset
+MCP2221_RESET_DELAY = float(os.environ.get('BLINKA_MCP2221_RESET_DELAY', 0.1))
 
 # from the C driver
 # http://ww1.microchip.com/downloads/en/DeviceDoc/mcp2221_0_1.tar.gz
@@ -48,7 +50,6 @@ class MCP2221:
         self._hid = hid.device()
         self._hid.open(MCP2221.VID, MCP2221.PID)
         self._reset()
-        time.sleep(0.25)
 
     def _hid_xfer(self, report, response=True):
         # first byte is report ID, which =0 for MCP2221
@@ -105,6 +106,7 @@ class MCP2221:
 
     def _reset(self):
         self._hid_xfer(b'\x70\xAB\xCD\xEF', response=False)
+        time.sleep(MCP2221_RESET_DELAY)
         start = time.monotonic()
         while time.monotonic() - start < 5:
             try:
