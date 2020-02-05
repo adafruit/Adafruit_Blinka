@@ -12,6 +12,7 @@ import threading
 from adafruit_blinka import Enum, Lockable, agnostic
 from adafruit_blinka.agnostic import board_id, detector
 import adafruit_platformdetect.constants.boards as ap_board
+import adafruit_platformdetect.constants.chips as ap_chip
 
 class I2C(Lockable):
     def __init__(self, scl, sda, frequency=400000):
@@ -129,7 +130,7 @@ class SPI(Lockable):
         elif detector.board.any_beaglebone:
             from adafruit_blinka.microcontroller.am335x.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif detector.board.any_orange_pi:
+        elif detector.board.any_orange_pi and detector.chip.id == ap_chip.SUN8I:
             from adafruit_blinka.microcontroller.allwinner.h3.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.GIANT_BOARD:
