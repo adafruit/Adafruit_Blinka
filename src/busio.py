@@ -129,7 +129,7 @@ class SPI(Lockable):
         elif detector.board.any_beaglebone:
             from adafruit_blinka.microcontroller.am335x.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif board_id == ap_board.ORANGE_PI_PC or board_id == ap_board.ORANGE_PI_R1 or board_id == ap_board.ORANGE_PI_ZERO:
+        elif detector.board.any_orange_pi:
             from adafruit_blinka.microcontroller.allwinner.h3.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.GIANT_BOARD:
