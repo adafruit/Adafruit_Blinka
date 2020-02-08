@@ -2,10 +2,10 @@ import os
 import time
 import hid
 
-# Small values seem to help on some Windows setups
+# Here if you need it
 MCP2221_HID_DELAY = float(os.environ.get('BLINKA_MCP2221_HID_DELAY', 0))
-# Windows also seems to want some time after a reset
-MCP2221_RESET_DELAY = float(os.environ.get('BLINKA_MCP2221_RESET_DELAY', 0.1))
+# Use to set delay between reset and device reopen
+MCP2221_RESET_DELAY = float(os.environ.get('BLINKA_MCP2221_RESET_DELAY', 0.5))
 
 # from the C driver
 # http://ww1.microchip.com/downloads/en/DeviceDoc/mcp2221_0_1.tar.gz
