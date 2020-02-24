@@ -10,7 +10,7 @@ SCL_1 = pin.SCL_1
 D4 = pin.J04
 D5 = pin.J06
 D6 = pin.AA02
-D7 = pin.N03
+D7 = None
 D8 = pin.N06
 D9 = pin.N04
 D10 = pin.N05
@@ -30,7 +30,7 @@ D25 = pin.P16
 D26 = pin.I04
 D27 = pin.J05
 
-CE1 = D7
+CE1 = None
 CE0 = D8
 MISO = D9
 MOSI = D10
