@@ -116,6 +116,9 @@ elif board_id == ap_board.CORAL_EDGE_TPU_DEV:
 elif board_id == ap_board.ODROID_C2:
     from adafruit_blinka.board.hardkernel.odroidc2 import *
 
+elif board_id == ap_board.ODROID_C4:
+    from adafruit_blinka.board.hardkernel.odroidc4 import *
+
 elif board_id == ap_board.ODROID_N2:
     from adafruit_blinka.board.hardkernel.odroidn2 import *
 
