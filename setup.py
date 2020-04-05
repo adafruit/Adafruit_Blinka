@@ -49,7 +49,6 @@ setup(
     install_requires=[
         "Adafruit-PlatformDetect>=2.5.0",
         "Adafruit-PureIO>=1.1.0",
-        "spidev>=3.4; sys_platform=='linux' and platform_machine!='mips'",
         "sysv_ipc; platform_system != 'Windows' and platform_machine != 'mips'",
         "pyftdi>=0.40.0"
     ] + board_reqs,
