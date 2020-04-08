@@ -1,6 +1,6 @@
 """Pin definitions for the Orange Pi PC."""
 
-from adafruit_blinka.microcontroller.allwinner_h3 import pin
+from adafruit_blinka.microcontroller.allwinner.h3 import pin
 
 PA12 = pin.PA12
 SDA = pin.PA12
@@ -12,10 +12,12 @@ PA0 = pin.PA0
 PA3 = pin.PA3
 PC0 = pin.PC0
 MOSI = pin.PC0
+MOSI1 = pin.SPI1_MOSI
 PC1 = pin.PC1
 MISO = pin.PC1
 PC2 = pin.PC2
 SCK = pin.PC2
+SCK1 = pin.SPI1_SCLK
 SCLK = pin.PC2
 PA19 = pin.PA19
 PA7 = pin.PA7

@@ -47,11 +47,10 @@ setup(
     py_modules=['analogio', 'bitbangio', 'board', 'busio', 'digitalio', 'micropython', 'pulseio', 'neopixel_write'],
     package_data={'adafruit_blinka.microcontroller.bcm283x.pulseio': ['libgpiod_pulsein']},
     install_requires=[
-        "Adafruit-PlatformDetect",
-        "Adafruit-PureIO",
-        "spidev>=3.4; sys_platform=='linux' and platform_machine!='mips'",
+        "Adafruit-PlatformDetect>=2.5.0",
+        "Adafruit-PureIO>=1.1.0",
         "sysv_ipc; platform_system != 'Windows' and platform_machine != 'mips'",
-        "pyftdi>=0.30.0"
+        "pyftdi>=0.40.0"
     ] + board_reqs,
     license='MIT',
     classifiers=[
@@ -60,7 +59,7 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: Implementation :: MicroPython',
     ],
 )

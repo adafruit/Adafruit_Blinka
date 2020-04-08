@@ -16,7 +16,7 @@ if detector.chip.BCM2XXX:
 elif detector.chip.AM33XX:
     from adafruit_blinka.microcontroller.am335x.pin import Pin
 elif detector.chip.SUN8I:
-    from adafruit_blinka.microcontroller.allwinner_h3.pin import Pin
+    from adafruit_blinka.microcontroller.allwinner.h3.pin import Pin
 elif detector.chip.SAMA5:
     from adafruit_blinka.microcontroller.sama5.pin import Pin
 elif detector.chip.T210:
@@ -27,12 +27,18 @@ elif detector.chip.T194:
     from adafruit_blinka.microcontroller.tegra.t194.pin import Pin
 elif detector.chip.S905:
     from adafruit_blinka.microcontroller.amlogic.s905.pin import Pin
+elif detector.chip.S905X3:
+    from adafruit_blinka.microcontroller.amlogic.s905x3.pin import Pin
 elif detector.chip.S922X:
     from adafruit_blinka.microcontroller.amlogic.s922x.pin import Pin
 elif detector.chip.APQ8016:
     from adafruit_blinka.microcontroller.snapdragon.apq8016.pin import Pin
 elif detector.chip.IMX8MX:
     from adafruit_blinka.microcontroller.nxp_imx8m.pin import Pin
+elif detector.chip.HFU540:
+    from adafruit_blinka.microcontroller.hfu540.pin import Pin
+elif detector.chip.A64:
+    from adafruit_blinka.microcontroller.allwinner.a64.pin import Pin
 elif detector.board.ftdi_ft232h:
     from adafruit_blinka.microcontroller.ft232h.pin import Pin
 elif detector.board.binho_nova:

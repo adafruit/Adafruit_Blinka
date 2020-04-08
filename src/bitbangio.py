@@ -8,7 +8,7 @@ See `CircuitPython:bitbangio` in CircuitPython for more details.
 """
 
 from adafruit_blinka import Lockable, agnostic
-import adafruit_platformdetect.board as ap_board
+import adafruit_platformdetect.constants.boards as ap_board
 
 
 class I2C(Lockable):

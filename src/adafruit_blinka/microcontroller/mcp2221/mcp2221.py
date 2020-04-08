@@ -1,5 +1,11 @@
+import os
 import time
 import hid
+
+# Here if you need it
+MCP2221_HID_DELAY = float(os.environ.get('BLINKA_MCP2221_HID_DELAY', 0))
+# Use to set delay between reset and device reopen
+MCP2221_RESET_DELAY = float(os.environ.get('BLINKA_MCP2221_RESET_DELAY', 0.5))
 
 # from the C driver
 # http://ww1.microchip.com/downloads/en/DeviceDoc/mcp2221_0_1.tar.gz
@@ -44,13 +50,13 @@ class MCP2221:
         self._hid = hid.device()
         self._hid.open(MCP2221.VID, MCP2221.PID)
         self._reset()
-        time.sleep(0.25)
 
     def _hid_xfer(self, report, response=True):
         # first byte is report ID, which =0 for MCP2221
         # remaing bytes = 64 byte report data
         # https://github.com/libusb/hidapi/blob/083223e77952e1ef57e6b77796536a3359c1b2a3/hidapi/hidapi.h#L185
         self._hid.write(b'\0' + report + b'\0'*(64-len(report)))
+        time.sleep(MCP2221_HID_DELAY)
         if response:
             # return is 64 byte response report
             return self._hid.read(64)
@@ -100,6 +106,7 @@ class MCP2221:
 
     def _reset(self):
         self._hid_xfer(b'\x70\xAB\xCD\xEF', response=False)
+        time.sleep(MCP2221_RESET_DELAY)
         start = time.monotonic()
         while time.monotonic() - start < 5:
             try:
