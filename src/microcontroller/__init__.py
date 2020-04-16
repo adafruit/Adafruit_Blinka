@@ -62,5 +62,7 @@ elif chip_id == ap_chip.BINHO:
     from adafruit_blinka.microcontroller.nova import *
 elif chip_id == ap_chip.MIPS24KC:
     from adafruit_blinka.microcontroller.atheros.ar9331.pin import *
+elif chip_id == ap_chip.MIPS24KEC:
+    from adafruit_blinka.microcontroller.mips24kec.pin import *
 else:
     raise NotImplementedError("Microcontroller not supported:", chip_id)

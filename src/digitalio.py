@@ -41,6 +41,8 @@ elif detector.chip.A64:
     from adafruit_blinka.microcontroller.allwinner.a64.pin import Pin
 elif detector.chip.A33:
     from adafruit_blinka.microcontroller.allwinner.a33.pin import Pin
+elif detector.chip.MIPS24KEC:
+    from adafruit_blinka.microcontroller.mips24kec.pin import Pin
 elif detector.board.ftdi_ft232h:
     from adafruit_blinka.microcontroller.ft232h.pin import Pin
 elif detector.board.binho_nova:
@@ -119,7 +121,7 @@ class DigitalInOut(ContextManaged):
 
     @property
     def value(self):
-        return self._pin.value() is 1
+        return self._pin.value() == 1
 
     @value.setter
     def value(self, val):
