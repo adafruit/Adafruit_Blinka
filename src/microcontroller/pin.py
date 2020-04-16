@@ -44,6 +44,8 @@ elif chip_id == ap_chip.MCP2221:
     from adafruit_blinka.microcontroller.mcp2221.pin import *
 elif chip_id == ap_chip.A64:
     from adafruit_blinka.microcontroller.allwinner.a64.pin import *
+elif chip_id == ap_chip.A33:
+    from adafruit_blinka.microcontroller.allwinner.a33.pin import *
 elif chip_id == ap_chip.MIPS24KC:
     from adafruit_blinka.microcontroller.atheros.ar9331.pin import *
 else:

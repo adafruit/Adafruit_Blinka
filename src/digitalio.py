@@ -39,6 +39,8 @@ elif detector.chip.HFU540:
     from adafruit_blinka.microcontroller.hfu540.pin import Pin
 elif detector.chip.A64:
     from adafruit_blinka.microcontroller.allwinner.a64.pin import Pin
+elif detector.chip.A33:
+    from adafruit_blinka.microcontroller.allwinner.a33.pin import Pin
 elif detector.board.ftdi_ft232h:
     from adafruit_blinka.microcontroller.ft232h.pin import Pin
 elif detector.board.binho_nova:
