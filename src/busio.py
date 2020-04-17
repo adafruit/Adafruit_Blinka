@@ -180,7 +180,7 @@ class SPI(Lockable):
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.ONION_OMEGA2:
             from adafruit_blinka.microcontroller.mips24kec.pin import Pin
-            from adafruit_blinka.microcontroller.mips24kec.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         else:
             from machine import SPI as _SPI
             from machine import Pin
