@@ -143,6 +143,9 @@ elif board_id == ap_board.PINE64:
 elif board_id == ap_board.CLOCKWORK_CPI3:
     from adafruit_blinka.board.clockworkcpi3 import *
 
+elif board_id == ap_board.ONION_OMEGA2:
+    from adafruit_blinka.board.onion.omega2 import *
+
 elif "sphinx" in sys.modules:
     pass
 

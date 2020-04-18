@@ -69,7 +69,7 @@ class I2C(Lockable):
         return self._i2c.scan()
 
     def readfrom_into(self, address, buffer, *, start=0, end=None):
-        if start is not 0 or end is not None:
+        if start != 0 or end is not None:
             if end is None:
                 end = len(buffer)
             buffer = memoryview(buffer)[start:end]
@@ -79,7 +79,7 @@ class I2C(Lockable):
     def writeto(self, address, buffer, *, start=0, end=None, stop=True):
         if isinstance(buffer, str):
             buffer = bytes([ord(x) for x in buffer])
-        if start is not 0 or end is not None:
+        if start != 0 or end is not None:
             if end is None:
                 return self._i2c.writeto(address, memoryview(buffer)[start:], stop=stop)
             else:
@@ -177,6 +177,9 @@ class SPI(Lockable):
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.CLOCKWORK_CPI3:
             from adafruit_blinka.microcontroller.allwinner.a33.pin import Pin
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+        elif board_id == ap_board.ONION_OMEGA2:
+            from adafruit_blinka.microcontroller.mips24kec.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         else:
             from machine import SPI as _SPI
