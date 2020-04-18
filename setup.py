@@ -48,7 +48,7 @@ setup(
     package_data={'adafruit_blinka.microcontroller.bcm283x.pulseio': ['libgpiod_pulsein']},
     install_requires=[
         "Adafruit-PlatformDetect>=2.6.0",
-        "Adafruit-PureIO>=1.1.0",
+        "Adafruit-PureIO>=1.1.4",
         "sysv_ipc; platform_system != 'Windows' and platform_machine != 'mips'",
         "pyftdi>=0.40.0"
     ] + board_reqs,
