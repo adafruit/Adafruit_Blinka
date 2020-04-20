@@ -1,5 +1,7 @@
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 import gpiod
+import re
+import os
 
 # Ref:
 # Linux kernel 4.9.y (hardkernel)
@@ -90,11 +92,6 @@ GPIOX_17 = GPIO493 = Pin((periphs, 82 + periphs_offset))
 GPIOX_18 = GPIO494 = Pin((periphs, 83 + periphs_offset))
 GPIOX_19 = GPIO495 = Pin((periphs, 84 + periphs_offset))
 
-I2C1_SDA = GPIOX_17
-I2C1_SCL = GPIOX_18
-I2C2_SDA = GPIOA_14
-I2C2_SCL = GPIOA_15
-
 UART1_TX = GPIOX_12
 UART1_RX = GPIOX_13
 
@@ -103,7 +100,36 @@ SPI0_MISO = GPIOX_9
 SPI0_MOSI = GPIOX_8
 SPI0_CS0 = GPIOX_10
 
-i2cPorts = ((1, I2C1_SCL, I2C1_SDA), (2, I2C2_SCL, I2C2_SDA), )
+if os.path.exists("/sys/bus/platform/devices/ffd00000.bus"):
+    i2c_path = "/sys/bus/platform/devices/ffd00000.bus/ffd1d000.i2c/uevent"
+else:
+    i2c_path = "/sys/bus/platform/devices/ffd00000.cbus/ffd1d000.i2c/uevent"
+
+with open(i2c_path, 'r') as fd:
+    pattern = r"^OF_ALIAS_0=i2c([0-9])$"
+    uevent = fd.read().split('\n')
+    for line in uevent:
+        match = re.search(pattern, line)
+        if match:
+            bus_number = int(match.group(1))
+
+if bus_number == 0:
+    I2C0_SDA = GPIOX_17
+    I2C0_SCL = GPIOX_18
+    I2C1_SDA = GPIOA_14
+    I2C1_SCL = GPIOA_15
+
+    # ordered as i2cId, sclId, sdaId
+    i2cPorts = ((0, I2C0_SCL, I2C0_SDA), (1, I2C1_SCL, I2C1_SDA), )
+
+elif bus_number == 2:
+    I2C2_SDA = GPIOX_17
+    I2C2_SCL = GPIOX_18
+    I2C3_SDA = GPIOA_14
+    I2C3_SCL = GPIOA_15
+
+    i2cPorts = ((2, I2C2_SCL, I2C2_SDA), (3, I2C3_SCL, I2C3_SDA), )
+
 # ordered as spiId, sckId, mosiId, misoId
 spiPorts = ((0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO), )
 # ordered as uartId, txId, rxId
