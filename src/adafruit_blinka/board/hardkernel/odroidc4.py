@@ -2,13 +2,22 @@
 
 from adafruit_blinka.microcontroller.amlogic.s905x3 import pin
 
-SDA1 = pin.I2C1_SDA
-SCL1 = pin.I2C1_SCL
-SDA2 = pin.I2C2_SDA
-SCL2 = pin.I2C2_SCL
+if pin.i2cPorts[0][0] == 0:
+    SDA0 = pin.I2C0_SDA
+    SCL0 = pin.I2C0_SCL
+    SDA1 = pin.I2C1_SDA
+    SCL1 = pin.I2C1_SCL
 
-SDA = SDA1
-SCL = SCL1
+    SDA = SDA0
+    SCL = SCL0
+elif pin.i2cPorts[0][0] == 2:
+    SDA2 = pin.I2C2_SDA
+    SCL2 = pin.I2C2_SCL
+    SDA3 = pin.I2C3_SDA
+    SCL3 = pin.I2C3_SCL
+
+    SDA = SDA2
+    SCL = SCL2
 
 SCLK = pin.SPI0_SCLK
 MOSI = pin.SPI0_MOSI
