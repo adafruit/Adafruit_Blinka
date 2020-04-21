@@ -1,4 +1,5 @@
 import time
+import sys
 import board
 import busio
 
@@ -10,7 +11,7 @@ print("I2C devices found: ", [hex(i) for i in i2c.scan()])
 
 if not 0x18 in i2c.scan():
     print("Didn't find MCP9808")
-    exit()
+    sys.exit()
 
 
 def temp_c(data):

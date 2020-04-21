@@ -9,5 +9,5 @@ spi.configure(baudrate=16000000)
 spi.unlock()
 
 while True:
-    spi.write(bytes([x for x in range(64)]))
+    spi.write(bytes(range(64)))
     time.sleep(0.1)
