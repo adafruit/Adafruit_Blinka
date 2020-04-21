@@ -1,3 +1,4 @@
+"""Allwinner A64 pin names"""
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
 PB0 = Pin((1, 32))
@@ -72,10 +73,7 @@ PL9 = Pin((0, 9))
 PL10 = Pin((0, 10))
 
 # ordered as i2cId, sclId, sdaId
-i2cPorts = (
-    (1, TWI1_SCL, TWI1_SDA),
-    (2, TWI2_SCL, TWI2_SDA)
-)
+i2cPorts = ((1, TWI1_SCL, TWI1_SDA), (2, TWI2_SCL, TWI2_SDA))
 
 # ordered as spiId, sckId, mosiId, misoId
 spiPorts = (

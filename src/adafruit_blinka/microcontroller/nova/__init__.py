@@ -1,5 +1,11 @@
+"""Generic Connection class for Binho Nova to keep track of connection"""
+
+
 class Connection:
+    """Connection class"""
+
     __instance = None
+
     @staticmethod
     def getInstance():
         """ Static access method. """
@@ -12,8 +18,11 @@ class Connection:
         if Connection.__instance is not None:
             raise Exception("This class is a singleton!")
 
+        # pylint: disable=import-outside-toplevel
         from binhoHostAdapter import binhoHostAdapter
         from binhoHostAdapter import binhoUtilities
+
+        # pylint: enable=import-outside-toplevel
 
         utilities = binhoUtilities.binhoUtilities()
         devices = utilities.listAvailableDevices()
@@ -21,4 +30,4 @@ class Connection:
         if len(devices) > 0:
             Connection.__instance = binhoHostAdapter.binhoHostAdapter(devices[0])
         else:
-            raise RuntimeError('No Binho Nova found!')
+            raise RuntimeError("No Binho Nova found!")

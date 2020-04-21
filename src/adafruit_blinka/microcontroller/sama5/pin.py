@@ -1,3 +1,4 @@
+"""Atmel SAMA5 pin names"""
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
 PD23 = Pin(119)
@@ -39,10 +40,14 @@ TWI0_SCL = PC0
 PB31 = Pin(63)
 TWI0_SDA = PB31
 
-i2cPorts = ( (0, TWI0_SCL, TWI0_SDA), )
+i2cPorts = ((0, TWI0_SCL, TWI0_SDA),)
 # ordered as spiId, sckId, mosiId, misoId
-spiPorts = ( (0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO), )
+spiPorts = ((0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO),)
 # ordered as uartId, txId, rxId
-uartPorts = ( (1, UART1_TX, UART1_RX), )
+uartPorts = ((1, UART1_TX, UART1_RX),)
 # SysFS pwm outputs, pwm channel and pin in first tuple
-pwmOuts = ( ((0, 1), PWM1), ((0, 2), PWM2), ((0, 3), PWM3), )
+pwmOuts = (
+    ((0, 1), PWM1),
+    ((0, 2), PWM2),
+    ((0, 3), PWM3),
+)

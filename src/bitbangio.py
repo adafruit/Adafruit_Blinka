@@ -21,8 +21,11 @@ class I2C(Lockable):
     def init(self, scl, sda, frequency):
         from machine import Pin
         from machine import I2C as _I2C
+
         self.deinit()
-        id = -1  # force bitbanging implementation - in future introspect platform if SDA/SCL matches hardware I2C
+        id = (
+            -1
+        )  # force bitbanging implementation - in future introspect platform if SDA/SCL matches hardware I2C
         self._i2c = _I2C(id, Pin(scl.id), Pin(sda.id), freq=frequency)
 
     def deinit(self):
@@ -61,11 +64,13 @@ class I2C(Lockable):
 class SPI(Lockable):
     def __init__(self, clock, MOSI=None, MISO=None):
         from machine import SPI
+
         self._spi = SPI(-1)
         self._pins = (clock, MOSI, MISO)
 
     def configure(self, baudrate=100000, polarity=0, phase=0, bits=8):
-        from machine import SPI,Pin
+        from machine import SPI, Pin
+
         if self._locked:
             # TODO verify if _spi obj 'caches' sck, mosi, miso to avoid storing in _attributeIds (duplicated in busio)
             # i.e. #init ignores MOSI=None rather than unsetting
@@ -77,7 +82,8 @@ class SPI(Lockable):
                 firstbit=SPI.MSB,
                 sck=Pin(self._pins[0].id),
                 mosi=Pin(self._pins[1].id),
-                miso=Pin(self._pins[2].id))
+                miso=Pin(self._pins[2].id),
+            )
         else:
             raise RuntimeError("First call try_lock()")
 

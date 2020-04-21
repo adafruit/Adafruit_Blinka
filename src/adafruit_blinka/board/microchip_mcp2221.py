@@ -1,3 +1,4 @@
+"""Pin definitions for the MicroChip MCP2221"""
 from adafruit_blinka.microcontroller.mcp2221 import pin
 
 G0 = pin.G0

@@ -14,6 +14,7 @@ from adafruit_blinka.agnostic import board_id, detector
 import adafruit_platformdetect.constants.boards as ap_board
 import adafruit_platformdetect.constants.chips as ap_chip
 
+
 class I2C(Lockable):
     def __init__(self, scl, sda, frequency=400000):
         self.init(scl, sda, frequency)
@@ -22,14 +23,17 @@ class I2C(Lockable):
         self.deinit()
         if detector.board.ftdi_ft232h:
             from adafruit_blinka.microcontroller.ft232h.i2c import I2C
+
             self._i2c = I2C(frequency=frequency)
             return
         elif detector.board.binho_nova:
             from adafruit_blinka.microcontroller.nova.i2c import I2C
+
             self._i2c = I2C(frequency=frequency)
             return
         elif detector.board.microchip_mcp2221:
             from adafruit_blinka.microcontroller.mcp2221.i2c import I2C
+
             self._i2c = I2C(frequency=frequency)
             return
         elif detector.board.any_embedded_linux:
@@ -37,6 +41,7 @@ class I2C(Lockable):
         else:
             from machine import I2C as _I2C
         from microcontroller.pin import i2cPorts
+
         for portId, portScl, portSda in i2cPorts:
             try:
                 if scl == portScl and sda == portSda:
@@ -46,7 +51,9 @@ class I2C(Lockable):
                 pass
         else:
             raise ValueError(
-                "No Hardware I2C on (scl,sda)={}\nValid I2C ports: {}".format((scl, sda), i2cPorts)
+                "No Hardware I2C on (scl,sda)={}\nValid I2C ports: {}".format(
+                    (scl, sda), i2cPorts
+                )
             )
 
         self._lock = threading.RLock()
@@ -83,13 +90,34 @@ class I2C(Lockable):
             if end is None:
                 return self._i2c.writeto(address, memoryview(buffer)[start:], stop=stop)
             else:
-                return self._i2c.writeto(address, memoryview(buffer)[start:end], stop=stop)
+                return self._i2c.writeto(
+                    address, memoryview(buffer)[start:end], stop=stop
+                )
         return self._i2c.writeto(address, buffer, stop=stop)
 
-    def writeto_then_readfrom(self, address, buffer_out, buffer_in, *, out_start=0, out_end=None, in_start=0, in_end=None, stop=False):
-        return self._i2c.writeto_then_readfrom(address, buffer_out, buffer_in,
-                                               out_start=out_start, out_end=out_end,
-                                               in_start=in_start, in_end=in_end, stop=stop)
+    def writeto_then_readfrom(
+        self,
+        address,
+        buffer_out,
+        buffer_in,
+        *,
+        out_start=0,
+        out_end=None,
+        in_start=0,
+        in_end=None,
+        stop=False
+    ):
+        return self._i2c.writeto_then_readfrom(
+            address,
+            buffer_out,
+            buffer_in,
+            out_start=out_start,
+            out_end=out_end,
+            in_start=in_start,
+            in_end=in_end,
+            stop=stop,
+        )
+
 
 class SPI(Lockable):
     def __init__(self, clock, MOSI=None, MISO=None):
@@ -97,12 +125,14 @@ class SPI(Lockable):
         if detector.board.ftdi_ft232h:
             from adafruit_blinka.microcontroller.ft232h.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.ft232h.pin import SCK, MOSI, MISO
+
             self._spi = _SPI()
             self._pins = (SCK, MOSI, MISO)
             return
         elif detector.board.binho_nova:
             from adafruit_blinka.microcontroller.nova.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.nova.pin import SCK, MOSI, MISO
+
             self._spi = _SPI(clock)
             self._pins = (SCK, MOSI, MISO)
             return
@@ -111,17 +141,22 @@ class SPI(Lockable):
         else:
             from machine import SPI as _SPI
         from microcontroller.pin import spiPorts
+
         for portId, portSck, portMosi, portMiso in spiPorts:
-            if ((clock == portSck) and                   # Clock is required!
-                (MOSI == portMosi or MOSI == None) and   # But can do with just output
-                (MISO == portMiso or MISO == None)):      # Or just input
+            if (
+                (clock == portSck)
+                and (MOSI == portMosi or MOSI == None)  # Clock is required!
+                and (MISO == portMiso or MISO == None)  # But can do with just output
+            ):  # Or just input
                 self._spi = _SPI(portId)
                 self._pins = (portSck, portMosi, portMiso)
                 break
         else:
             raise ValueError(
-                "No Hardware SPI on (SCLK, MOSI, MISO)={}\nValid SPI ports:{}".
-                format((clock, MOSI, MISO), spiPorts))
+                "No Hardware SPI on (SCLK, MOSI, MISO)={}\nValid SPI ports:{}".format(
+                    (clock, MOSI, MISO), spiPorts
+                )
+            )
 
     def configure(self, baudrate=100000, polarity=0, phase=0, bits=8):
         if detector.board.any_raspberry_pi or detector.board.any_raspberry_pi_40_pin:
@@ -172,7 +207,11 @@ class SPI(Lockable):
         elif detector.board.binho_nova:
             from adafruit_blinka.microcontroller.nova.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.nova.pin import Pin
-        elif board_id == ap_board.PINE64 or board_id == ap_board.PINEBOOK or board_id == ap_board.PINEPHONE:
+        elif (
+            board_id == ap_board.PINE64
+            or board_id == ap_board.PINEBOOK
+            or board_id == ap_board.PINEPHONE
+        ):
             from adafruit_blinka.microcontroller.allwinner.a64.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.CLOCKWORK_CPI3:
@@ -195,7 +234,7 @@ class SPI(Lockable):
                 firstbit=_SPI.MSB,
                 sck=Pin(self._pins[0].id),
                 mosi=Pin(self._pins[1].id),
-                miso=Pin(self._pins[2].id)
+                miso=Pin(self._pins[2].id),
             )
         else:
             raise RuntimeError("First call try_lock()")
@@ -209,7 +248,9 @@ class SPI(Lockable):
         try:
             return self._spi.frequency
         except AttributeError:
-            raise NotImplementedError("Frequency attribute not implemented for this platform")
+            raise NotImplementedError(
+                "Frequency attribute not implemented for this platform"
+            )
 
     def write(self, buf, start=0, end=None):
         return self._spi.write(buf, start, end)
@@ -217,8 +258,12 @@ class SPI(Lockable):
     def readinto(self, buf, start=0, end=None, write_value=0):
         return self._spi.readinto(buf, start, end, write_value=write_value)
 
-    def write_readinto(self, buffer_out, buffer_in,  out_start=0, out_end=None, in_start=0, in_end=None):
-        return self._spi.write_readinto(buffer_out, buffer_in, out_start, out_end, in_start, in_end)
+    def write_readinto(
+        self, buffer_out, buffer_in, out_start=0, out_end=None, in_start=0, in_end=None
+    ):
+        return self._spi.write_readinto(
+            buffer_out, buffer_in, out_start, out_end, in_start, in_end
+        )
 
 
 class UART(Lockable):
@@ -228,18 +273,22 @@ class UART(Lockable):
     Parity.ODD = Parity()
     Parity.EVEN = Parity()
 
-    def __init__(self,
-                 tx,
-                 rx,
-                 baudrate=9600,
-                 bits=8,
-                 parity=None,
-                 stop=1,
-                 timeout=1000,
-                 receiver_buffer_size=64,
-                 flow=None):
+    def __init__(
+        self,
+        tx,
+        rx,
+        baudrate=9600,
+        bits=8,
+        parity=None,
+        stop=1,
+        timeout=1000,
+        receiver_buffer_size=64,
+        flow=None,
+    ):
         if detector.board.any_embedded_linux:
-            raise RuntimeError('busio.UART not supported on this platform. Please use pyserial instead.')
+            raise RuntimeError(
+                "busio.UART not supported on this platform. Please use pyserial instead."
+            )
         elif detector.board.binho_nova:
             from adafruit_blinka.microcontroller.nova.uart import UART as _UART
         else:
@@ -254,8 +303,8 @@ class UART(Lockable):
 
         if flow is not None:  # default 0
             raise NotImplementedError(
-                "Parameter '{}' unsupported on {}".format(
-                    "flow", agnostic.board_id))
+                "Parameter '{}' unsupported on {}".format("flow", agnostic.board_id)
+            )
 
         # translate parity flag for Micropython
         if parity is UART.Parity.ODD:
@@ -277,12 +326,14 @@ class UART(Lockable):
                     parity=parity,
                     stop=stop,
                     timeout=timeout,
-                    read_buf_len=receiver_buffer_size
+                    read_buf_len=receiver_buffer_size,
                 )
                 break
         else:
             raise ValueError(
-                "No Hardware UART on (tx,rx)={}\nValid UART ports: {}".format((tx, rx), uartPorts)
+                "No Hardware UART on (tx,rx)={}\nValid UART ports: {}".format(
+                    (tx, rx), uartPorts
+                )
             )
 
     def deinit(self):

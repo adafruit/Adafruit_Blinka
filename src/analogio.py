@@ -16,8 +16,8 @@ else:
 
 from adafruit_blinka import ContextManaged
 
-class AnalogIn(ContextManaged):
 
+class AnalogIn(ContextManaged):
     def __init__(self, pin):
         self._pin = Pin(pin.id)
         self._pin.init(mode=Pin.ADC)
@@ -33,6 +33,7 @@ class AnalogIn(ContextManaged):
 
     def deinit(self):
         del self._pin
+
 
 class AnalogOut(ContextManaged):
     def __init__(self, pin):

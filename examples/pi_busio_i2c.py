@@ -12,12 +12,14 @@ if not 0x18 in i2c.scan():
     print("Didn't find MCP9808")
     exit()
 
+
 def temp_c(data):
     value = data[0] << 8 | data[1]
     temp = (value & 0xFFF) / 16.0
     if value & 0x1000:
         temp -= 256.0
     return temp
+
 
 while True:
     i2c.writeto(0x18, bytes([0x05]), stop=False)

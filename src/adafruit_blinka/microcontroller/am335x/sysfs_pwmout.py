@@ -1,21 +1,29 @@
-# Much code from https://github.com/vsergeev/python-periphery/blob/master/periphery/pwm.py
-# Copyright (c) 2015-2016 vsergeev / Ivan (Vanya) A. Sergeev
-# License: MIT
+"""
+Much code from https://github.com/vsergeev/python-periphery/blob/master/periphery/pwm.py
+Copyright (c) 2015-2016 vsergeev / Ivan (Vanya) A. Sergeev
+License: MIT
+"""
 
 import os
-import digitalio
 
 try:
     from microcontroller.pin import pwmOuts
 except ImportError:
     raise RuntimeError("No PWM outputs defined for this board")
 
+# pylint: disable=unnecessary-pass
 class PWMError(IOError):
     """Base class for PWM errors."""
+
     pass
 
 
-class PWMOut(object):
+# pylint: enable=unnecessary-pass
+
+
+class PWMOut:
+    """Pulse Width Modulation Output Class"""
+
     # Sysfs paths
     _sysfs_path = "/sys/class/pwm/"
     _channel_path = "pwmchip{}"
@@ -52,6 +60,8 @@ class PWMOut(object):
         """
 
         self._pwmpin = None
+        self._channel = None
+        self._period = 0
         self._open(pin, duty_cycle, frequency, variable_frequency)
 
     def __del__(self):
@@ -74,14 +84,22 @@ class PWMOut(object):
         if self._channel is None:
             raise RuntimeError("No PWM channel found for this Pin")
 
-        channel_path = os.path.join(self._sysfs_path, self._channel_path.format(self._channel))
+        channel_path = os.path.join(
+            self._sysfs_path, self._channel_path.format(self._channel)
+        )
         if not os.path.isdir(channel_path):
-            raise ValueError("PWM channel does not exist, check that the required modules are loaded.")
+            raise ValueError(
+                "PWM channel does not exist, check that the required modules are loaded."
+            )
 
-        pin_path = os.path.join(channel_path, self._pin_path.format(self._channel,self._pwmpin))
+        pin_path = os.path.join(
+            channel_path, self._pin_path.format(self._channel, self._pwmpin)
+        )
         if not os.path.isdir(pin_path):
             try:
-                with open(os.path.join(channel_path, self._export_path), "w") as f_export:
+                with open(
+                    os.path.join(channel_path, self._export_path), "w"
+                ) as f_export:
                     f_export.write("%d\n" % self._pwmpin)
             except IOError as e:
                 raise PWMError(e.errno, "Exporting PWM pin: " + e.strerror)
@@ -97,33 +115,47 @@ class PWMOut(object):
         self._set_enabled(True)
 
     def deinit(self):
-      try:
         """Deinit the sysfs PWM."""
-        channel_path = os.path.join(self._sysfs_path, self._channel_path.format(self._channel))
-        pin_path = os.path.join(channel_path, self._pin_path.format(self._channel,self._pwmpin))
- 
-        if self._channel is not None:
-            #self.duty_cycle = 0
-            self._set_enabled(False) # make to disable before unexport
-            try:
-                #unexport_path = os.path.join(channel_path, self._unexport_path)
-                with open(os.path.join(channel_path, self._unexport_path), "w") as f_unexport:
-                    f_unexport.write("%d\n" % self._pwmpin)
-            except IOError as e:
-                raise PWMError(e.errno, "Unexporting PWM pin: " + e.strerror)
-      except Exception as e:
-          # due to a race condition for which I have not yet been
-          # able to find the root cause, deinit() often fails
-          # but it does not effect future usage of the pwm pin
-          print("warning: failed to deinitialize pwm pin {0}:{1} due to: {2}\n".format(self._channel, self._pwmpin, type(e).__name__))
-      finally:
-          self._channel = None
-          self._pwmpin = None
+        # pylint: disable=broad-except
+        try:
+            channel_path = os.path.join(
+                self._sysfs_path, self._channel_path.format(self._channel)
+            )
+            pin_path = os.path.join(
+                channel_path, self._pin_path.format(self._channel, self._pwmpin)
+            )
+
+            if self._channel is not None:
+                # self.duty_cycle = 0
+                self._set_enabled(False)  # make to disable before unexport
+                try:
+                    # unexport_path = os.path.join(channel_path, self._unexport_path)
+                    with open(
+                        os.path.join(channel_path, self._unexport_path), "w"
+                    ) as f_unexport:
+                        f_unexport.write("%d\n" % self._pwmpin)
+                except IOError as e:
+                    raise PWMError(e.errno, "Unexporting PWM pin: " + e.strerror)
+        except Exception as e:
+            # due to a race condition for which I have not yet been
+            # able to find the root cause, deinit() often fails
+            # but it does not effect future usage of the pwm pin
+            print(
+                "warning: failed to deinitialize pwm pin {0}:{1} due to: {2}\n".format(
+                    self._channel, self._pwmpin, type(e).__name__
+                )
+            )
+        finally:
+            self._channel = None
+            self._pwmpin = None
+        # pylint: enable=broad-except
 
     def _is_deinited(self):
         if self._pwmpin is None:
-            raise ValueError("Object has been deinitialize and can no longer "
-                             "be used. Create a new object.")
+            raise ValueError(
+                "Object has been deinitialize and can no longer "
+                "be used. Create a new object."
+            )
 
     def _write_pin_attr(self, attr, value):
         # Make sure the pin is active
@@ -132,10 +164,11 @@ class PWMOut(object):
         path = os.path.join(
             self._sysfs_path,
             self._channel_path.format(self._channel),
-            self._pin_path.format(self._channel,self._pwmpin),
-            attr)
+            self._pin_path.format(self._channel, self._pwmpin),
+            attr,
+        )
 
-        with open(path, 'w') as f_attr:
+        with open(path, "w") as f_attr:
             f_attr.write(value + "\n")
 
     def _read_pin_attr(self, attr):
@@ -145,10 +178,11 @@ class PWMOut(object):
         path = os.path.join(
             self._sysfs_path,
             self._channel_path.format(self._channel),
-            self._pin_path.format(self._channel,self._pwmpin),
-            attr)
+            self._pin_path.format(self._channel, self._pwmpin),
+            attr,
+        )
 
-        with open(path, 'r') as f_attr:
+        with open(path, "r") as f_attr:
             return f_attr.read().strip()
 
     # Mutable properties
@@ -158,7 +192,7 @@ class PWMOut(object):
         try:
             period_ns = int(period_ns)
         except ValueError:
-            raise PWMError(None, "Unknown period value: \"%s\"" % period_ns)
+            raise PWMError(None, 'Unknown period value: "%s"' % period_ns)
 
         # Convert period from nanoseconds to seconds
         period = period_ns / 1e9
@@ -196,7 +230,7 @@ class PWMOut(object):
         try:
             duty_cycle_ns = int(duty_cycle_ns)
         except ValueError:
-            raise PWMError(None, "Unknown duty cycle value: \"%s\"" % duty_cycle_ns)
+            raise PWMError(None, 'Unknown duty cycle value: "%s"' % duty_cycle_ns)
 
         # Convert duty cycle from nanoseconds to seconds
         duty_cycle = duty_cycle_ns / 1e9
@@ -260,28 +294,31 @@ class PWMOut(object):
 
         if enabled == "1":
             return True
-        elif enabled == "0":
+        if enabled == "0":
             return False
 
-        raise PWMError(None, "Unknown enabled value: \"%s\"" % enabled)
+        raise PWMError(None, 'Unknown enabled value: "%s"' % enabled)
 
     def _set_enabled(self, value):
+        """Get or set the PWM's output enabled state.
+
+        Raises:
+            PWMError: if an I/O or OS error occurs.
+            TypeError: if value type is not bool.
+
+        :type: bool
+        """
         if not isinstance(value, bool):
             raise TypeError("Invalid enabled type, should be string.")
 
         self._write_pin_attr(self._pin_enable_path, "1" if value else "0")
 
-    """Get or set the PWM's output enabled state.
-
-    Raises:
-        PWMError: if an I/O or OS error occurs.
-        TypeError: if value type is not bool.
-
-    :type: bool
-    """
-
     # String representation
 
     def __str__(self):
-        return "PWM%d, pin %s (freq=%f Hz, duty_cycle=%f%%)" % \
-            (self._channel, self._pin, self.frequency, self.duty_cycle * 100,)
+        return "PWM%d, pin %s (freq=%f Hz, duty_cycle=%f%%)" % (
+            self._channel,
+            self._pin,
+            self.frequency,
+            self.duty_cycle * 100,
+        )

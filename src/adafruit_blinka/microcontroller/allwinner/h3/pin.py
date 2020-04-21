@@ -1,3 +1,4 @@
+"""Allwinner H3 pin names"""
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
 PA0 = Pin(0)
@@ -55,15 +56,11 @@ PG12 = Pin(204)
 PG13 = Pin(205)
 
 
-i2cPorts = (
-    (0, TWI0_SCL, TWI0_SDA),
-)
+i2cPorts = ((0, TWI0_SCL, TWI0_SDA),)
 # ordered as spiId, sckId, mosiId, misoId
 spiPorts = (
     (0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO),
     (1, SPI1_SCLK, SPI1_MOSI, SPI1_MISO),
 )
 # ordered as uartId, txId, rxId
-uartPorts = (
-    (3, UART3_TX, UART3_RX),
-)
+uartPorts = ((3, UART3_TX, UART3_RX),)

@@ -1,3 +1,4 @@
+"""SnapDragon APQ8016 pin names"""
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
 GPIO_0 = Pin((0, 0))
@@ -145,8 +146,14 @@ SPI0_MISO = GPIO_17
 SPI0_MOSI = GPIO_16
 SPI0_CS = GPIO_18
 
-i2cPorts = ( (0, I2C0_SCL, I2C0_SDA), (1, I2C1_SCL, I2C1_SDA), )
+i2cPorts = (
+    (0, I2C0_SCL, I2C0_SDA),
+    (1, I2C1_SCL, I2C1_SDA),
+)
 # ordered as spiId, sckId, mosiId, misoId
-spiPorts = ( (0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO), )
+spiPorts = ((0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO),)
 # ordered as uartId, txId, rxId
-uartPorts = ( (0, UART0_TX, UART0_RX), (1, UART1_TX, UART1_RX), )
+uartPorts = (
+    (0, UART0_TX, UART0_RX),
+    (1, UART1_TX, UART1_RX),
+)

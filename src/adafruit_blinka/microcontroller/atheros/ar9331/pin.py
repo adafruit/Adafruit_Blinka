@@ -1,3 +1,4 @@
+"""Atheros AR9331 pin names"""
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
 GPIO_0 = Pin((0, 0))
@@ -39,17 +40,10 @@ GPIO_27 = Pin((0, 27))
 GPIO_28 = Pin((0, 28))
 
 # ordered as i2cId, sclId, sdaId
-i2cPorts = (
-    (0, TWI0_SCL, TWI0_SDA)
-)
+i2cPorts = (0, TWI0_SCL, TWI0_SDA)
 
 # ordered as spiId, sckId, mosiId, misoId
-spiPorts = (
-    (1, SPI_CLK, SPI_MOSI, SPI_MISO),
-)
+spiPorts = ((1, SPI_CLK, SPI_MOSI, SPI_MISO),)
 
 # ordered as uartId, txId, rxId
-uartPorts = (
-    (0, UART0_TX, UART0_RX)
-)
-
+uartPorts = (0, UART0_TX, UART0_RX)

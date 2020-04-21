@@ -15,9 +15,9 @@ D8 = pin.GPIO8
 D9 = pin.GPIO9
 
 D11 = pin.GPIO11
-D15 = pin.GPIO15    #RGB LED Blue
-D16 = pin.GPIO16    #RGB LED Green
-D17 = pin.GPIO17    #RGB LED Red
+D15 = pin.GPIO15  # RGB LED Blue
+D16 = pin.GPIO16  # RGB LED Green
+D17 = pin.GPIO17  # RGB LED Red
 D18 = pin.GPIO18
 D19 = pin.GPIO19
 

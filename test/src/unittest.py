@@ -1,13 +1,16 @@
 """Based on https://raw.githubusercontent.com/micropython/micropython-lib/cfa1b9cce0c93a3115bbff3886c9bbcddd9e8047/unittest/unittest.py """
 import sys
+
+
 class SkipTest(Exception):
     pass
+
 
 raiseException = False
 raiseBaseException = True
 
-class AssertRaisesContext:
 
+class AssertRaisesContext:
     def __init__(self, exc):
         self.expected = exc
 
@@ -23,21 +26,20 @@ class AssertRaisesContext:
 
 
 class TestCase:
-
-    def fail(self, msg=''):
+    def fail(self, msg=""):
         assert False, msg
 
-    def assertEqual(self, x, y, msg=''):
+    def assertEqual(self, x, y, msg=""):
         if not msg:
             msg = "%r vs (expected) %r" % (x, y)
         assert x == y, msg
 
-    def assertNotEqual(self, x, y, msg=''):
+    def assertNotEqual(self, x, y, msg=""):
         if not msg:
             msg = "%r not expected to be equal %r" % (x, y)
         assert x != y, msg
 
-    def assertAlmostEqual(self, x, y, places=None, msg='', delta=None):
+    def assertAlmostEqual(self, x, y, places=None, msg="", delta=None):
         if x == y:
             return
         if delta is not None and places is not None:
@@ -47,18 +49,18 @@ class TestCase:
             if abs(x - y) <= delta:
                 return
             if not msg:
-                msg = '%r != %r within %r delta' % (x, y, delta)
+                msg = "%r != %r within %r delta" % (x, y, delta)
         else:
             if places is None:
                 places = 7
-            if round(abs(y-x), places) == 0:
+            if round(abs(y - x), places) == 0:
                 return
             if not msg:
-                msg = '%r != %r within %r places' % (x, y, places)
+                msg = "%r != %r within %r places" % (x, y, places)
 
         assert False, msg
 
-    def assertNotAlmostEqual(self, x, y, places=None, msg='', delta=None):
+    def assertNotAlmostEqual(self, x, y, places=None, msg="", delta=None):
         if delta is not None and places is not None:
             raise TypeError("specify delta or places not both")
 
@@ -66,53 +68,53 @@ class TestCase:
             if not (x == y) and abs(x - y) > delta:
                 return
             if not msg:
-                msg = '%r == %r within %r delta' % (x, y, delta)
+                msg = "%r == %r within %r delta" % (x, y, delta)
         else:
             if places is None:
                 places = 7
-            if not (x == y) and round(abs(y-x), places) != 0:
+            if not (x == y) and round(abs(y - x), places) != 0:
                 return
             if not msg:
-                msg = '%r == %r within %r places' % (x, y, places)
+                msg = "%r == %r within %r places" % (x, y, places)
 
         assert False, msg
 
-    def assertIs(self, x, y, msg=''):
+    def assertIs(self, x, y, msg=""):
         if not msg:
             msg = "%r is not %r" % (x, y)
         assert x is y, msg
 
-    def assertIsNot(self, x, y, msg=''):
+    def assertIsNot(self, x, y, msg=""):
         if not msg:
             msg = "%r is %r" % (x, y)
         assert x is not y, msg
 
-    def assertIsNone(self, x, msg=''):
+    def assertIsNone(self, x, msg=""):
         if not msg:
             msg = "%r is not None" % x
         assert x is None, msg
 
-    def assertIsNotNone(self, x, msg=''):
+    def assertIsNotNone(self, x, msg=""):
         if not msg:
             msg = "%r is None" % x
         assert x is not None, msg
 
-    def assertTrue(self, x, msg=''):
+    def assertTrue(self, x, msg=""):
         if not msg:
             msg = "Expected %r to be True" % x
         assert x, msg
 
-    def assertFalse(self, x, msg=''):
+    def assertFalse(self, x, msg=""):
         if not msg:
             msg = "Expected %r to be False" % x
         assert not x, msg
 
-    def assertIn(self, x, y, msg=''):
+    def assertIn(self, x, y, msg=""):
         if not msg:
             msg = "Expected %r to be in %r" % (x, y)
         assert x in y, msg
 
-    def assertIsInstance(self, x, y, msg=''):
+    def assertIsInstance(self, x, y, msg=""):
         assert isinstance(x, y), msg
 
     def assertRaises(self, exc, func=None, *args, **kwargs):
@@ -128,19 +130,22 @@ class TestCase:
             raise
 
 
-
 def skip(msg):
     def _decor(fun):
         # We just replace original fun with _inner
         def _inner(self):
             raise SkipTest(msg)
+
         return _inner
+
     return _decor
+
 
 def skipIf(cond, msg):
     if not cond:
         return lambda x: x
     return skip(msg)
+
 
 def skipUnless(cond, msg):
     if cond:
@@ -151,8 +156,10 @@ def skipUnless(cond, msg):
 class TestSuite:
     def __init__(self):
         self.tests = []
+
     def addTest(self, cls):
         self.tests.append(cls)
+
 
 class TestRunner:
     def run(self, suite):
@@ -171,6 +178,7 @@ class TestRunner:
 
         return res
 
+
 class TestResult:
     def __init__(self):
         self.errorsNum = 0
@@ -180,6 +188,7 @@ class TestResult:
 
     def wasSuccessful(self):
         return self.errorsNum == 0 and self.failuresNum == 0
+
 
 # TODO: Uncompliant
 def run_class(c, test_result):
@@ -198,7 +207,7 @@ def run_class(c, test_result):
             except SkipTest as e:
                 print(" skipped:", e.args[0])
                 test_result.skippedNum += 1
-            except Exception as e: # user exception
+            except Exception as e:  # user exception
                 print(" FAIL")
                 if raiseException:
                     raise
@@ -206,7 +215,7 @@ def run_class(c, test_result):
                     print(e)
                     test_result.failuresNum += 1
                     continue
-            except BaseException as e: # system exception
+            except BaseException as e:  # system exception
                 print(" FAIL")
                 if raiseBaseException:
                     raise
@@ -222,10 +231,14 @@ def main(module="__main__"):
     def test_cases(m):
         for tn in dir(m):
             c = getattr(m, tn)
-            if isinstance(c, object) and isinstance(c, type) and issubclass(c, TestCase):
+            if (
+                isinstance(c, object)
+                and isinstance(c, type)
+                and issubclass(c, TestCase)
+            ):
                 yield c
 
-    m = __import__(module) # changed to permit non-top-level testing modules
+    m = __import__(module)  # changed to permit non-top-level testing modules
     suite = TestSuite()
     for c in test_cases(m):
         suite.addTest(c)
