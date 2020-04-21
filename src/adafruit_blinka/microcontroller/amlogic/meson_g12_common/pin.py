@@ -1,5 +1,6 @@
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 import gpiod
+import re
 
 # G12A, G12B, and SM1
 # Ref:
@@ -7,6 +8,7 @@ import gpiod
 #     linux/include/dt-bindings/gpio/meson-g12a-gpio.h
 # Linux kernel 5.4.y (mainline)
 #     linux/include/dt-bindings/gpio/meson-g12a-gpio.h
+#     linux/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
 
 chip0 = gpiod.Chip("0")
 chip1 = gpiod.Chip("1")
@@ -87,3 +89,48 @@ GPIOX_16 = GPIO492 = Pin((periphs, 81 + periphs_offset))
 GPIOX_17 = GPIO493 = Pin((periphs, 82 + periphs_offset))
 GPIOX_18 = GPIO494 = Pin((periphs, 83 + periphs_offset))
 GPIOX_19 = GPIO495 = Pin((periphs, 84 + periphs_offset))
+
+SPI0_SCLK = GPIOX_11
+SPI0_MISO = GPIOX_9
+SPI0_MOSI = GPIOX_8
+SPI0_CS0 = GPIOX_10
+
+# ordered as spiId, sckId, mosiId, misoId
+spiPorts = ((0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO), )
+
+UART1_TX = GPIOX_12
+UART1_RX = GPIOX_13
+
+# ordered as uartId, txId, rxId
+uartPorts = ((1, UART1_TX, UART1_RX), )
+
+
+def get_dts_alias(device: str) -> str:
+    uevent_path = "/sys/bus/platform/devices/" + device + "/uevent"
+    with open(uevent_path, 'r') as fd:
+        pattern = r"^OF_ALIAS_0=(.*)$"
+        uevent = fd.read().split('\n')
+        for line in uevent:
+            match = re.search(pattern, line)
+            if match:
+                return match.group(1).upper()
+
+        return None
+
+
+# ordered as i2cId, sclId, sdaId
+i2cPorts = []
+
+alias = get_dts_alias("ffd1d000.i2c")
+if alias is not None:
+    globals()[alias + "_SCL"] = GPIOX_18
+    globals()[alias + "_SDA"] = GPIOX_17
+    i2cPorts.append((int(alias[3]), GPIOX_18, GPIOX_17))
+
+alias = get_dts_alias("ffd1c000.i2c")
+if alias is not None:
+    globals()[alias + "_SCL"] = GPIOA_15
+    globals()[alias + "_SDA"] = GPIOA_14
+    i2cPorts.append((int(alias[3]), GPIOA_15, GPIOA_14))
+
+i2cPorts = tuple(i2cPorts)
