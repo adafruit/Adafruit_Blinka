@@ -1,15 +1,16 @@
+"""MIPS 24kec pin names"""
 from adafruit_blinka.microcontroller.generic_linux.periphery_pin import Pin
 
 GPIO0 = Pin(0)
 GPIO1 = Pin(1)
 GPIO2 = Pin(2)
 GPIO3 = Pin(3)
-GPIO4 = Pin(4)  #I2C SDA
-GPIO5 = Pin(5)  #I2C SCL
-GPIO6 = Pin(6)  #SPI CS
-GPIO7 = Pin(7)  #SPI SCLK
-GPIO8 = Pin(8)  #SPI MOSI
-GPIO9 = Pin(9)  #SPI MISO
+GPIO4 = Pin(4)  # I2C SDA
+GPIO5 = Pin(5)  # I2C SCL
+GPIO6 = Pin(6)  # SPI CS
+GPIO7 = Pin(7)  # SPI SCLK
+GPIO8 = Pin(8)  # SPI MOSI
+GPIO9 = Pin(9)  # SPI MISO
 GPIO10 = Pin(10)
 
 GPIO11 = Pin(11)
@@ -53,14 +54,10 @@ I2C0_SDA = GPIO4
 I2C0_SCL = GPIO5
 
 # ordered as i2cId, sclId, sdaId
-i2cPorts = (
-    (0, I2C0_SCL, I2C0_SDA),
-)
+i2cPorts = ((0, I2C0_SCL, I2C0_SDA),)
 
 # ordered as spiId, sckId, mosiId, misoId
-spiPorts = (
-    ((0, 1), SPI0_SCLK, SPI0_MOSI, SPI0_MISO),
-)
+spiPorts = (((0, 1), SPI0_SCLK, SPI0_MOSI, SPI0_MISO),)
 
 # ordered as uartId, txId, rxId
 uartPorts = (

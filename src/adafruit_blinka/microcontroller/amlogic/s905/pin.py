@@ -1,3 +1,4 @@
+"""AmLogic s905 pin names"""
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
 GPIO122 = Pin((0, 0))
@@ -76,8 +77,14 @@ SPI0_SCLK = GPIO230
 SPI0_MISO = GPIO232
 SPI0_MOSI = GPIO235
 
-i2cPorts = ( (0, I2C0_SCL, I2C0_SDA), (1, I2C1_SCL, I2C1_SDA), )
+i2cPorts = (
+    (0, I2C0_SCL, I2C0_SDA),
+    (1, I2C1_SCL, I2C1_SDA),
+)
 # ordered as spiId, sckId, mosiId, misoId
-spiPorts = ( (0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO), )
+spiPorts = ((0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO),)
 # ordered as uartId, txId, rxId
-uartPorts = ( (1, UART1_TX, UART1_RX), (2, UART2_TX, UART2_RX), )
+uartPorts = (
+    (1, UART1_TX, UART1_RX),
+    (2, UART2_TX, UART2_RX),
+)

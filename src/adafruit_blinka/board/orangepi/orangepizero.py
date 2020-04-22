@@ -1,6 +1,6 @@
 """Pin definitions for the Orange Pi Zero."""
 
-# The Orange Pi Zero uses the AllWinner H2 SoC, but pins 
+# The Orange Pi Zero uses the AllWinner H2 SoC, but pins
 # are the same as the AllWinner H3 SoC, so we import those
 from adafruit_blinka.microcontroller.allwinner.h3 import pin
 

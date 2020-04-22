@@ -1,0 +1,33 @@
+name: Release Actions
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  upload-pypi:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Check For setup.py
+      id: need-pypi
+      run: |
+        echo ::set-output name=setup-py::$( find . -wholename './setup.py' )
+    - name: Set up Python
+      if: contains(steps.need-pypi.outputs.setup-py, 'setup.py')
+      uses: actions/setup-python@v1
+      with:
+        python-version: '3.x'
+    - name: Install dependencies
+      if: contains(steps.need-pypi.outputs.setup-py, 'setup.py')
+      run: |
+        python -m pip install --upgrade pip
+        pip install setuptools wheel twine
+    - name: Build and publish
+      if: contains(steps.need-pypi.outputs.setup-py, 'setup.py')
+      env:
+        TWINE_USERNAME: ${{ secrets.pypi_username }}
+        TWINE_PASSWORD: ${{ secrets.pypi_password }}
+      run: |
+        python setup.py sdist
+        twine upload dist/*

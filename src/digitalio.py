@@ -53,6 +53,7 @@ elif detector.board.microchip_mcp2221:
     from adafruit_blinka.microcontroller.mcp2221.pin import Pin
 from adafruit_blinka import Enum, ContextManaged
 
+
 class DriveMode(Enum):
     PUSH_PULL = None
     OPEN_DRAIN = None
@@ -74,13 +75,13 @@ Direction.OUTPUT = Direction()
 class Pull(Enum):
     UP = None
     DOWN = None
-    #NONE=None
+    # NONE=None
 
 
 Pull.UP = Pull()
 Pull.DOWN = Pull()
 
-#Pull.NONE = Pull()
+# Pull.NONE = Pull()
 
 
 class DigitalInOut(ContextManaged):
@@ -147,8 +148,9 @@ class DigitalInOut(ContextManaged):
                 if hasattr(Pin, "PULL_DOWN"):
                     self._pin.init(mode=Pin.IN, pull=Pin.PULL_DOWN)
                 else:
-                    raise NotImplementedError("{} unsupported on {}".format(
-                        Pull.DOWN, board_id))
+                    raise NotImplementedError(
+                        "{} unsupported on {}".format(Pull.DOWN, board_id)
+                    )
             elif pul is None:
                 self._pin.init(mode=Pin.IN, pull=None)
             else:
