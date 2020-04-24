@@ -137,6 +137,34 @@ D43 = Pin(43)
 D44 = Pin(44)
 D45 = Pin(45)
 
+# Let's use fake pin numbers in 5xx range to explicitly reference I2C bus devices (/dev/i2c-n) that
+# may or may not be backed by specific physical pins (like virtual i2c buses from i2c-mux)
+# eg: to reference i2c bus 5 (/dev/i2c-5), use SCL5 and SDA5
+SDA0 = Pin(500)
+SDA1 = Pin(501)
+SDA2 = Pin(502)
+SDA3 = Pin(503)
+SDA4 = Pin(504)
+SDA5 = Pin(505)
+SDA6 = Pin(506)
+SDA7 = Pin(507)
+SDA8 = Pin(508)
+SDA9 = Pin(509)
+SDA10 = Pin(510)
+SDA11 = Pin(511)
+SCL0 = Pin(550)
+SCL1 = Pin(551)
+SCL2 = Pin(552)
+SCL3 = Pin(553)
+SCL4 = Pin(554)
+SCL5 = Pin(555)
+SCL6 = Pin(556)
+SCL7 = Pin(557)
+SCL8 = Pin(558)
+SCL9 = Pin(559)
+SCL10 = Pin(560)
+SCL11 = Pin(561)
+
 # ordered as spiId, sckId, mosiId, misoId
 spiPorts = (
     (0, SCLK, MOSI, MISO),
@@ -148,7 +176,18 @@ spiPorts = (
 uartPorts = ((1, TXD, RXD),)
 
 i2cPorts = (
-    (3, SCL, SDA),
+    (11, SCL11, SDA11),
+    (10, SCL10, SDA10),
+    (9, SCL9, SDA9),
+    (8, SCL8, SDA8),
+    (7, SCL7, SDA7),
+    (6, SCL6, SDA6),
+    (5, SCL5, SDA5),
+    (4, SCL4, SDA4),
+    (3, SCL3, SDA3),
+    (2, SCL2, SDA2),
+    (1, SCL1, SDA1),
+    (0, SCL0, SDA0),
     (1, SCL, SDA),
     (0, D1, D0),  # both pi 1 and pi 2 i2c ports!
 )
