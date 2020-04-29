@@ -13,6 +13,10 @@ Introduction
     :target: https://travis-ci.com/adafruit/Adafruit_Blinka
     :alt: Build Status
 
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :target: https://github.com/psf/black
+    :alt: Code Style: Black
+
 This repository contains a selection of packages mirroring the CircuitPython API
 on hosts running micropython. Working code exists to emulate the CircuitPython packages;
 
