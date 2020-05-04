@@ -21,7 +21,7 @@ jobs:
       run: |
         python3 --version
     - name: Checkout Current Repo
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
       with:
         submodules: true
     - name: Checkout tools repo
