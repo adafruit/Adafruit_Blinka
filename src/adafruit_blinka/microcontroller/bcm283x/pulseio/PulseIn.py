@@ -85,7 +85,9 @@ class PulseIn:
             except sysv_ipc.BusyError:
                 time.sleep(0.001)  # wait a bit then retry!
         # uh-oh timed out
-        raise RuntimeError("Timed out waiting for PulseIn message")
+        raise RuntimeError(
+            "Timed out waiting for PulseIn message. Make sure libgpiod is installed."
+        )
 
     # pylint: enable=redefined-builtin
 
