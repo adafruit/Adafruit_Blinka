@@ -36,6 +36,11 @@ class I2C(Lockable):
 
             self._i2c = I2C(frequency=frequency)
             return
+        elif detector.board.greatfet_one:
+            from adafruit_blinka.microcontroller.nxp_lpc4330.i2c import I2C
+
+            self._i2c = I2C(frequency=frequency)
+            return
         elif detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.i2c import I2C as _I2C
         else:
@@ -136,6 +141,13 @@ class SPI(Lockable):
             self._spi = _SPI(clock)
             self._pins = (SCK, MOSI, MISO)
             return
+        elif detector.board.greatfet_one:
+            from adafruit_blinka.microcontroller.nxp_lpc4330.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.nxp_lpc4330.pin import SCK, MOSI, MISO
+
+            self._spi = _SPI()
+            self._pins = (SCK, MOSI, MISO)
+            return
         elif detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         else:
@@ -210,6 +222,9 @@ class SPI(Lockable):
         elif detector.board.binho_nova:
             from adafruit_blinka.microcontroller.nova.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.nova.pin import Pin
+        elif detector.board.greatfet_one:
+            from adafruit_blinka.microcontroller.nxp_lpc4330.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.nxp_lpc4330.pin import Pin
         elif (
             board_id == ap_board.PINE64
             or board_id == ap_board.PINEBOOK
@@ -294,6 +309,8 @@ class UART(Lockable):
             )
         elif detector.board.binho_nova:
             from adafruit_blinka.microcontroller.nova.uart import UART as _UART
+        elif detector.board.greatfet_one:
+            from adafruit_blinka.microcontroller.nxp_lpc4330.uart import UART as _UART
         else:
             from machine import UART as _UART
 

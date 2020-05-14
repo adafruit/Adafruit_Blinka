@@ -49,6 +49,8 @@ elif detector.board.ftdi_ft232h:
     from adafruit_blinka.microcontroller.ft232h.pin import Pin
 elif detector.board.binho_nova:
     from adafruit_blinka.microcontroller.nova.pin import Pin
+elif detector.board.greatfet_one:
+    from adafruit_blinka.microcontroller.nxp_lpc4330.pin import Pin
 elif detector.chip.STM32:
     from machine import Pin
 elif detector.board.microchip_mcp2221:
