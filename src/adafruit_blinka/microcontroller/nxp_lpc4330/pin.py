@@ -5,7 +5,10 @@ try:
 
     gf = GreatFET()
 except:
-    raise RuntimeError("Unable to create GreatFET object. Make sure library is installed and the device is connected.")
+    raise RuntimeError(
+        "Unable to create GreatFET object. Make sure library is installed and the device is connected."
+    )
+
 
 class Pin:
     """A basic Pin class for the NXP LPC4330 that acts as a wrapper for the GreatFET api."""
@@ -83,6 +86,7 @@ class Pin:
             "No action for mode {} with value {}".format(self._mode, val)
         )
 
+
 # create pin instances for each pin
 # J1 Header Pins
 J1_P3 = Pin("J1_P3")
@@ -122,15 +126,14 @@ J1_P39 = Pin("J1_P39")  # MOSI
 J1_P40 = Pin("J1_P40")  # MISO
 
 
-
 # J2 Header Pins
 J2_P3 = Pin("J2_P3")
 J2_P4 = Pin("J2_P4")
-J2_P5 = Pin("J2_P5")    # ADC, ADC, DAC
+J2_P5 = Pin("J2_P5")  # ADC, ADC, DAC
 J2_P6 = Pin("J2_P6")
 J2_P7 = Pin("J2_P7")
 J2_P8 = Pin("J2_P8")
-J2_P9 = Pin("J2_P9")    # ADC, GPIO
+J2_P9 = Pin("J2_P9")  # ADC, GPIO
 J2_P10 = Pin("J2_P10")
 J2_P13 = Pin("J2_P13")
 J2_P14 = Pin("J2_P14")
@@ -158,8 +161,8 @@ J2_P38 = Pin("J2_P38")
 # Bonus Row Pins
 J7_P2 = Pin("J7_P2")
 J7_P3 = Pin("J7_P3")
-J7_P4 = Pin("J7_P4")    # ADC, ADC
-J7_P5 = Pin("J7_P5")    # ADC, ADC
+J7_P4 = Pin("J7_P4")  # ADC, ADC
+J7_P5 = Pin("J7_P5")  # ADC, ADC
 J7_P6 = Pin("J7_P6")
 J7_P7 = Pin("J7_P7")
 J7_P8 = Pin("J7_P8")

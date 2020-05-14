@@ -14,6 +14,7 @@ from microcontroller.pin import Pin
 # pylint: disable=unnecessary-pass
 class PWMError(IOError):
     """Base class for PWM errors."""
+
     pass
 
 
@@ -125,7 +126,6 @@ class PWMOut:
 
     period = property(_get_period, _set_period)
 
-
     def _get_duty_cycle(self):
         """Get or set the PWM's output duty cycle as a ratio from 0.0 to 1.0.
 
@@ -146,12 +146,14 @@ class PWMOut:
         if isinstance(duty_cycle, int):
             duty_cycle /= 65535.0
         if not 0.0 <= duty_cycle <= 1.0:
-           raise ValueError("Invalid duty cycle value, should be between 0.0 and 1.0.")
-       
+            raise ValueError("Invalid duty cycle value, should be between 0.0 and 1.0.")
+
         # Generate a pattern for 1024 samples of the duty cycle
         pattern = [(1 << self._channel)] * round(PWMOut.MAX_CYCLE_LEVEL * duty_cycle)
-        pattern += [(0 << self._channel)] * round(PWMOut.MAX_CYCLE_LEVEL * (1.0 - duty_cycle))
-        
+        pattern += [(0 << self._channel)] * round(
+            PWMOut.MAX_CYCLE_LEVEL * (1.0 - duty_cycle)
+        )
+
         self._pattern = pattern
         self._duty_cycle = duty_cycle
         if self._enable:

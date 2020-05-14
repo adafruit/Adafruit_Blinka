@@ -2,13 +2,14 @@
 from greatfet import GreatFET
 from greatfet.interfaces.uart import UART as _UART
 
+
 class UART:
     """Custom UART Class for NXP LPC4330"""
 
-    PARITY_NONE          = 0
-    PARITY_ODD           = 1
-    PARITY_EVEN          = 2
-    PARITY_STUCK_AT_ONE  = 3
+    PARITY_NONE = 0
+    PARITY_ODD = 1
+    PARITY_EVEN = 2
+    PARITY_STUCK_AT_ONE = 3
     PARITY_STUCK_AT_ZERO = 4
 
     # pylint: disable=too-many-arguments
@@ -24,8 +25,15 @@ class UART:
         flow=None,
     ):
         self._gf = GreatFET()
-        self._uart = _UART(self._gf, baud=baudrate, data_bits=bits, stop_bits=stop, parity=parity, uart_number=portid)
-        
+        self._uart = _UART(
+            self._gf,
+            baud=baudrate,
+            data_bits=bits,
+            stop_bits=stop,
+            parity=parity,
+            uart_number=portid,
+        )
+
         if flow is not None:  # default None
             raise NotImplementedError(
                 "Parameter '{}' unsupported on GreatFET One".format("flow")

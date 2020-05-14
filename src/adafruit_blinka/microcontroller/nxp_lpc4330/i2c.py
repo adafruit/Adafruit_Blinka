@@ -17,7 +17,7 @@ class I2C:
         """Write data from the buffer to an address"""
         if end is None:
             end = len(buffer)
-        self._gf.i2c.write(address, buffer[start: end])
+        self._gf.i2c.write(address, buffer[start:end])
 
     def readfrom_into(self, address, buffer, *, start=0, end=None, stop=True):
         """Read data from an address and into the buffer"""
@@ -26,6 +26,7 @@ class I2C:
         readin = self._gf.i2c.read(address, end - start)
         for i in range(end - start):
             buffer[i + start] = readin[i]
+
     # pylint: enable=unused-argument
 
     def writeto_then_readfrom(

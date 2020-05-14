@@ -1,6 +1,7 @@
 """SPI Class for NXP LPC4330"""
 from greatfet import GreatFET
 
+
 class SPI:
     """Custom I2C Class for NXP LPC4330"""
 
@@ -25,8 +26,8 @@ class SPI:
             34000000: (2, 2),
             51000000: (2, 1),
             102000000: (2, 0),
-       }
-        
+        }
+
     # pylint: disable=too-many-arguments
     def init(
         self,
@@ -44,7 +45,7 @@ class SPI:
         polarity = int(polarity)
         phase = int(phase)
         self._mode = (polarity << 1) | phase
-        
+
         # Using API due to possible interface change
         self._spi = self._gf.apis.spi
         # Check baudrate against presets and adjust to the closest one
@@ -57,6 +58,7 @@ class SPI:
 
         # Set the polarity and phase (the "SPI mode").
         self._spi.set_clock_polarity_and_phase(self._mode)
+
     # pylint: enable=too-many-arguments
 
     def _find_closest_preset(self, target_frequency):
@@ -67,7 +69,9 @@ class SPI:
         closest_preset = None
         for frequency in self._presets:
             preset = self._presets[frequency]
-            if self._frequency is None or abs(frequency - target_frequency) < abs(self._frequency - target_frequency):
+            if self._frequency is None or abs(frequency - target_frequency) < abs(
+                self._frequency - target_frequency
+            ):
                 self._frequency = frequency
                 closest_preset = preset
 
@@ -126,8 +130,8 @@ class SPI:
         # Transmit our data in chunks of the buffer size.
         while data_to_transmit:
             # Extract a single data chunk from the transmit buffer.
-            chunk = data_to_transmit[0:self.buffer_size]
-            del data_to_transmit[0:self.buffer_size]
+            chunk = data_to_transmit[0 : self.buffer_size]
+            del data_to_transmit[0 : self.buffer_size]
 
             # Finally, exchange the data.
             response = self._spi.clock_data(len(chunk), bytes(chunk))
