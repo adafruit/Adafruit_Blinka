@@ -55,13 +55,9 @@ class SPI:
 
     # pylint: enable=too-many-arguments,unused-argument
 
-    # pylint: disable=unnecessary-pass
     def set_no_cs(self):
-        """Setting so that SPI doesn't automatically set the CS pin"""
-        # No kernel seems to support this, so we're just going to pass
-        pass
-
-    # pylint: enable=unnecessary-pass
+        """Tell SPI not to automatically mess with out CS pin"""
+        self._spi.no_cs = True
 
     @property
     def frequency(self):
@@ -94,7 +90,7 @@ class SPI:
             end = len(buf)
         try:
             # self._spi.open(self._port, 0)
-            # self.set_no_cs()
+            self.set_no_cs()
             self._spi.max_speed_hz = self.baudrate
             self._spi.mode = self.mode
             self._spi.bits_per_word = self.bits
@@ -123,7 +119,7 @@ class SPI:
             raise RuntimeError("Buffer slices must be of equal length.")
         try:
             # self._spi.open(self._port, 0)
-            # self.set_no_cs()
+            self.set_no_cs()
             self._spi.max_speed_hz = self.baudrate
             self._spi.mode = self.mode
             self._spi.bits_per_word = self.bits
