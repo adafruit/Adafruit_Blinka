@@ -12,3 +12,5 @@ if detector.board.any_rock_pi_board:
     from adafruit_blinka.microcontroller.generic_linux.sysfs_pwmout import PWMOut
 if detector.board.binho_nova:
     from adafruit_blinka.microcontroller.nova.pwmout import PWMOut
+if detector.board.greatfet_one:
+    from adafruit_blinka.microcontroller.nxp_lpc4330.pwmout import PWMOut
