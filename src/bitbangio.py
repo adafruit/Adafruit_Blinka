@@ -16,6 +16,11 @@ class I2C(Lockable):
         # TODO: This one is a bit questionable:
         if agnostic.board_id == ap_board.PYBOARD:
             raise NotImplementedError("No software I2C on {}".format(agnostic.board_id))
+        elif agnostic.detector.board.any_embedded_linux:
+            # TODO: Attempt to load this library automatically
+            raise NotImplementedError(
+                "For bitbangio on Linux, please use Adafruit_CircuitPython_BitbangIO"
+            )
         self.init(scl, sda, frequency)
 
     def init(self, scl, sda, frequency):
@@ -63,6 +68,11 @@ class I2C(Lockable):
 # TODO untested, as actually busio.SPI was on tasklist https://github.com/adafruit/Adafruit_Micropython_Blinka/issues/2 :(
 class SPI(Lockable):
     def __init__(self, clock, MOSI=None, MISO=None):
+        if agnostic.detector.board.any_embedded_linux:
+            # TODO: Attempt to load this library automatically
+            raise NotImplementedError(
+                "For bitbangio on Linux, please use Adafruit_CircuitPython_BitbangIO"
+            )
         from machine import SPI
 
         self._spi = SPI(-1)
