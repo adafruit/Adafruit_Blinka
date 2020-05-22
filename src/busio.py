@@ -192,6 +192,9 @@ class SPI(Lockable):
         elif board_id == ap_board.ODROID_C4:
             from adafruit_blinka.microcontroller.amlogic.s905x3.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+        elif board_id == ap_board.ODROID_XU4:
+            from adafruit_blinka.microcontroller.samsung.exynos5422.pin import Pin
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.DRAGONBOARD_410C:
             from adafruit_blinka.microcontroller.snapdragon.apq8016.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
