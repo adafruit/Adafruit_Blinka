@@ -2,10 +2,10 @@
 
 from adafruit_blinka.microcontroller.generic_linux.sysfs_pin import Pin
 
-#SPI_MISO = Pin(1)
-#SPI_CS = Pin(2)
-#SPI_MOSI = Pin(3)
-#SPI_SCLK = Pin(4)
+# SPI_MISO = Pin(1)
+# SPI_CS = Pin(2)
+# SPI_MOSI = Pin(3)
+# SPI_SCLK = Pin(4)
 SCL2 = Pin(7)
 SCL = Pin(8)
 SDA2 = Pin(9)
@@ -38,11 +38,17 @@ UART2_CTS = Pin(39)
 UART1_CTS = Pin(40)
 
 # ordered as i2cid, scl, sda
-i2cPorts = ((0, SCL, SDA), (1, SCL2, SDA2),)
+i2cPorts = (
+    (0, SCL, SDA),
+    (1, SCL2, SDA2),
+)
 
 # ordered as spiId, sckId, mosiId, misoId
-#spiPorts = ((0, SPI_SCLK, SPI_MOSI, SPI_MISO),)
-#spiPorts = ()
+# spiPorts = ((0, SPI_SCLK, SPI_MOSI, SPI_MISO),)
+# spiPorts = ()
 
 # ordered as uartId, txId, rxId
-uartPorts = ((0, UART1_TX, UART1_RX), (1, UART2_TX, UART2_RX),)
+uartPorts = (
+    (0, UART1_TX, UART1_RX),
+    (1, UART2_TX, UART2_RX),
+)

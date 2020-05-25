@@ -167,17 +167,20 @@ elif "sphinx" in sys.modules:
 else:
     raise NotImplementedError("Board not supported {}".format(board_id))
 
+
 def I2C():
     """The singleton I2C interface"""
     import busio
 
     return busio.I2C(SCL, SDA)
 
+
 def I2C2():
     """The singleton I2C2 interface"""
     import busio
 
     return busio.I2C(SCL2, SDA2)
+
 
 def SPI():
     """The singleton SPI interface"""

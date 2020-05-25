@@ -3,13 +3,13 @@
 from adafruit_blinka.microcontroller.generic_linux.sysfs_pin import Pin
 
 GPIO_112 = Pin(1)
-#SPI_MISO = GPIO_112
+# SPI_MISO = GPIO_112
 GPIO_20 = Pin(2)
-#SPI_CS = GPIO_20
+# SPI_CS = GPIO_20
 GPIO_16 = Pin(3)
-#SPI_MOSI = GPIO_16
+# SPI_MOSI = GPIO_16
 GPIO_17 = Pin(4)
-#SPI_SCLK = GPIO_17
+# SPI_SCLK = GPIO_17
 GPIO_42 = Pin(7)
 GPIO_21 = Pin(8)
 GPIO_19 = Pin(9)
@@ -49,7 +49,10 @@ SCL2 = GPIO_42
 SDA2 = GPIO_19
 
 # ordered as i2cid, scl, sda
-i2cPorts = ((0, SCL, SDA), (1, SCL2, SDA2),)
+i2cPorts = (
+    (0, SCL, SDA),
+    (1, SCL2, SDA2),
+)
 
 # Fan
 FAN_OUT = GPIO_9
@@ -76,8 +79,8 @@ KSO12 = GPIO_127
 KSO13 = GPIO_134
 
 # ordered as spiId, sckId, mosiId, misoId
-#spiPorts = ((0, SPI_SCLK, SPI_MOSI, SPI_MISO),)
-#spiPorts = ()
+# spiPorts = ((0, SPI_SCLK, SPI_MOSI, SPI_MISO),)
+# spiPorts = ()
 
 # UARTs
 UART1_RX = GPIO_140
@@ -91,4 +94,7 @@ UART2_CTS = GPIO_205
 UART2_RTS = GPIO_143
 
 # ordered as uartId, txId, rxId
-uartPorts = ((0, UART1_TX, UART1_RX), (1, UART2_TX, UART2_RX),)
+uartPorts = (
+    (0, UART1_TX, UART1_RX),
+    (1, UART2_TX, UART2_RX),
+)

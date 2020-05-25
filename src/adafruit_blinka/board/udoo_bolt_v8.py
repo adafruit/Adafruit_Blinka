@@ -15,10 +15,10 @@ TX2 = pin.GPIO_141
 CTS2 = pin.GPIO_205
 RTS2 = pin.GPIO_143
 
-#MISO = pin.GPIO_112
-#CS = pin.GPIO_20
-#MOSI = pin.GPIO_16
-#SCLK = pin.GPIO_17
+# MISO = pin.GPIO_112
+# CS = pin.GPIO_20
+# MOSI = pin.GPIO_16
+# SCLK = pin.GPIO_17
 
 SCL = pin.GPIO_21
 SDA = pin.GPIO_1
