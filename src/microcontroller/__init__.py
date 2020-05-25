@@ -74,7 +74,9 @@ elif chip_id == ap_chip.LPC4330:
     from adafruit_blinka.microcontroller.nxp_lpc4330 import *
 elif chip_id == ap_chip.MIPS24KC:
     from adafruit_blinka.microcontroller.atheros.ar9331.pin import *
-elif chip_id == ap_chip.MIPS24KEC:
-    from adafruit_blinka.microcontroller.mips24kec.pin import *
+elif chip_id == ap_chip.RYZEN_V1202B:
+    from adafruit_blinka.microcontroller.ryzen_v1202b.pin import *
+elif chip_id == ap_chip.RYZEN_V1605B:
+    from adafruit_blinka.microcontroller.ryzen_v1605b.pin import *
 else:
     raise NotImplementedError("Microcontroller not supported:", chip_id)

@@ -155,12 +155,17 @@ elif board_id == ap_board.ONION_OMEGA2:
 elif board_id == ap_board.ROCK_PI_S:
     from adafruit_blinka.board.radxa.rockpis import *
 
+elif board_id == ap_board.UDOO_BOLT_V3:
+    from adafruit_blinka.board.udoo_bolt_v3 import *
+
+elif board_id == ap_board.UDOO_BOLT_V8:
+    from adafruit_blinka.board.udoo_bolt_v8 import *
+
 elif "sphinx" in sys.modules:
     pass
 
 else:
     raise NotImplementedError("Board not supported {}".format(board_id))
-
 
 def I2C():
     """The singleton I2C interface"""
@@ -168,6 +173,11 @@ def I2C():
 
     return busio.I2C(SCL, SDA)
 
+def I2C2():
+    """The singleton I2C2 interface"""
+    import busio
+
+    return busio.I2C(SCL2, SDA2)
 
 def SPI():
     """The singleton SPI interface"""

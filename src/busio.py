@@ -43,6 +43,8 @@ class I2C(Lockable):
             return
         elif detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.i2c import I2C as _I2C
+        elif detector.board.any_udoo_board:
+            from adafruit_blinka.microcontroller.udoo_bolt.i2c import I2C as _I2C
         else:
             from machine import I2C as _I2C
         from microcontroller.pin import i2cPorts
@@ -237,6 +239,12 @@ class SPI(Lockable):
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.ONION_OMEGA2:
             from adafruit_blinka.microcontroller.mips24kec.pin import Pin
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+        elif board_id == ap_board.UDOO_BOLT_V3:
+            from adafruit_blinka.microcontroller.ryzen_v1202b.pin import Pin
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+        elif board_id == ap_board.UDOO_BOLT_V8:
+            from adafruit_blinka.microcontroller.ryzen_v1605b.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         else:
             from machine import SPI as _SPI

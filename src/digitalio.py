@@ -8,6 +8,7 @@ See `CircuitPython:digitalio` in CircuitPython for more details.
 """
 
 from adafruit_blinka.agnostic import board_id, detector
+from adafruit_blinka.microcontroller.generic_linux.sysfs_pin import Pin
 
 # pylint: disable=ungrouped-imports,wrong-import-position
 
@@ -55,6 +56,11 @@ elif detector.chip.STM32:
     from machine import Pin
 elif detector.board.microchip_mcp2221:
     from adafruit_blinka.microcontroller.mcp2221.pin import Pin
+elif detector.board.udoo_bolt_v3:
+    from adafruit_blinka.microcontroller.generic_linux.sysfs_pin import Pin
+elif detector.board.udoo_bolt_v8:
+    from adafruit_blinka.microcontroller.generic_linux.sysfs_pin import Pin
+
 from adafruit_blinka import Enum, ContextManaged
 
 
@@ -92,6 +98,7 @@ class DigitalInOut(ContextManaged):
     _pin = None
 
     def __init__(self, pin):
+        print("DEBUG: pin.id = {0}".format(pin.id))
         self._pin = Pin(pin.id)
         self.direction = Direction.INPUT
 
