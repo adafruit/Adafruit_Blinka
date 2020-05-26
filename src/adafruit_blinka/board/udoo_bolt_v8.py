@@ -10,7 +10,7 @@ TX = pin.GPIO_142
 CTS = pin.GPIO_32
 RTS = pin.GPIO_54
 
-RX2 = pin.GPIO_132
+RX2 = pin.GPIO_139
 TX2 = pin.GPIO_141
 CTS2 = pin.GPIO_205
 RTS2 = pin.GPIO_143
