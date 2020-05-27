@@ -76,8 +76,6 @@ class MCP2221:
     # ----------------------------------------------------------------
     def gp_get_mode(self, pin):
         """Get Current Pin Mode"""
-        val = self._hid_xfer(b"\x61")[22 + pin]
-        print("0b{:08b}".format(val))
         return self._hid_xfer(b"\x61")[22 + pin] & 0x07
 
     def gp_set_mode(self, pin, mode):
