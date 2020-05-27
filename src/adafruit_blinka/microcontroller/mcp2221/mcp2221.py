@@ -54,6 +54,10 @@ class MCP2221:
         self._hid = hid.device()
         self._hid.open(MCP2221.VID, MCP2221.PID)
         self._reset()
+        self._gp_config = [0x07] * 4  # "don't care" initial value
+        for pin in range(4):
+            self.gp_set_mode(pin, self.GP_GPIO)  # set to GPIO mode
+            self.gpio_set_direction(pin, 1)  # set to INPUT
 
     def _hid_xfer(self, report, response=True):
         """Perform HID Transfer"""
@@ -76,21 +80,21 @@ class MCP2221:
 
     def gp_set_mode(self, pin, mode):
         """Set Current Pin Mode"""
-        # get current settings
-        current = self._hid_xfer(b"\x61")
+        # already set to that mode?
+        mode &= 0x07
+        if mode == (self._gp_config[pin] & 0x07):
+            return
+        # update GP mode for pin
+        self._gp_config[pin] = mode
         # empty report, this is safe since 0's = no change
         report = bytearray(b"\x60" + b"\x00" * 63)
         # set the alter GP flag byte
         report[7] = 0xFF
-        # each pin can be set individually
-        # but all 4 get set at once, so we need to
-        # transpose current settings
-        report[8] = current[22]  # GP0
-        report[9] = current[23]  # GP1
-        report[10] = current[24]  # GP2
-        report[11] = current[25]  # GP3
-        # then change only the one
-        report[8 + pin] = mode & 0x07
+        # add GP setttings
+        report[8] = self._gp_config[0]
+        report[9] = self._gp_config[1]
+        report[10] = self._gp_config[2]
+        report[11] = self._gp_config[3]
         # and make it so
         self._hid_xfer(report)
 
@@ -132,6 +136,12 @@ class MCP2221:
     # ----------------------------------------------------------------
     def gpio_set_direction(self, pin, mode):
         """Set Current GPIO Pin Direction"""
+        if mode:
+            # set bit 3 for INPUT
+            self._gp_config[pin] |= 1 << 3
+        else:
+            # clear bit 3 for OUTPUT
+            self._gp_config[pin] &= ~(1 << 3)
         report = bytearray(b"\x50" + b"\x00" * 63)  # empty set GPIO report
         offset = 4 * (pin + 1)
         report[offset] = 0x01  # set pin direction
@@ -140,6 +150,12 @@ class MCP2221:
 
     def gpio_set_pin(self, pin, value):
         """Set Current GPIO Pin Value"""
+        if value:
+            # set bit 4
+            self._gp_config[pin] |= 1 << 4
+        else:
+            # clear bit 4
+            self._gp_config[pin] &= ~(1 << 4)
         report = bytearray(b"\x50" + b"\x00" * 63)  # empty set GPIO report
         offset = 2 + 4 * pin
         report[offset] = 0x01  # set pin value
