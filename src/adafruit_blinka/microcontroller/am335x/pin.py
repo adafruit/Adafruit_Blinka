@@ -330,8 +330,8 @@ UART5_CTSn = Pin("UART5_CTSn")
 
 # ordered as spiId, sckId, mosiId, misoId
 spiPorts = (
-    (1, SPI0_SCLK, SPI0_D1, SPI0_D0),
-    (2, SPI1_SCLK, SPI1_D1, SPI1_D0),
+    (0, SPI0_SCLK, SPI0_D1, SPI0_D0),
+    (1, SPI1_SCLK, SPI1_D1, SPI1_D0),
 )
 
 # ordered as uartId, txId, rxId
