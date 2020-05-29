@@ -8,7 +8,7 @@ class UART:
 
     ESCAPE_SEQUENCE = "+++UART0"
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,unused-argument
     def __init__(
         self,
         portid,
@@ -42,7 +42,7 @@ class UART:
         self._nova.setEscapeSequenceUART(self._id, UART.ESCAPE_SEQUENCE)
         self._nova.beginBridgeUART(self._id)
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments,unused-argument
 
     def deinit(self):
         """Deinitialize"""

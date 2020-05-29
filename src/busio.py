@@ -14,34 +14,43 @@ from adafruit_blinka.agnostic import board_id, detector
 import adafruit_platformdetect.constants.boards as ap_board
 import adafruit_platformdetect.constants.chips as ap_chip
 
+# pylint: disable=import-outside-toplevel,too-many-branches,too-many-statements
+# pylint: disable=too-many-arguments,too-many-function-args
+
 
 class I2C(Lockable):
+    """
+    Busio I2C Class for CircuitPython Compatibility. Used
+    for both MicroPython and Linux.
+    """
+
     def __init__(self, scl, sda, frequency=400000):
         self.init(scl, sda, frequency)
 
     def init(self, scl, sda, frequency):
+        """Initialization"""
         self.deinit()
         if detector.board.ftdi_ft232h:
-            from adafruit_blinka.microcontroller.ft232h.i2c import I2C
+            from adafruit_blinka.microcontroller.ft232h.i2c import I2C as _I2C
 
-            self._i2c = I2C(frequency=frequency)
+            self._i2c = _I2C(frequency=frequency)
             return
-        elif detector.board.binho_nova:
-            from adafruit_blinka.microcontroller.nova.i2c import I2C
+        if detector.board.binho_nova:
+            from adafruit_blinka.microcontroller.nova.i2c import I2C as _I2C
 
-            self._i2c = I2C(frequency=frequency)
+            self._i2c = _I2C(frequency=frequency)
             return
-        elif detector.board.microchip_mcp2221:
-            from adafruit_blinka.microcontroller.mcp2221.i2c import I2C
+        if detector.board.microchip_mcp2221:
+            from adafruit_blinka.microcontroller.mcp2221.i2c import I2C as _I2C
 
-            self._i2c = I2C(frequency=frequency)
+            self._i2c = _I2C(frequency=frequency)
             return
-        elif detector.board.greatfet_one:
-            from adafruit_blinka.microcontroller.nxp_lpc4330.i2c import I2C
+        if detector.board.greatfet_one:
+            from adafruit_blinka.microcontroller.nxp_lpc4330.i2c import I2C as _I2C
 
-            self._i2c = I2C(frequency=frequency)
+            self._i2c = _I2C(frequency=frequency)
             return
-        elif detector.board.any_embedded_linux:
+        if detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.i2c import I2C as _I2C
         else:
             from machine import I2C as _I2C
@@ -64,6 +73,7 @@ class I2C(Lockable):
         self._lock = threading.RLock()
 
     def deinit(self):
+        """Deinitialization"""
         try:
             del self._i2c
         except AttributeError:
@@ -78,9 +88,11 @@ class I2C(Lockable):
         self.deinit()
 
     def scan(self):
+        """Scan for attached devices"""
         return self._i2c.scan()
 
     def readfrom_into(self, address, buffer, *, start=0, end=None):
+        """Read from a device at specified address into a buffer"""
         if start != 0 or end is not None:
             if end is None:
                 end = len(buffer)
@@ -89,15 +101,13 @@ class I2C(Lockable):
         return self._i2c.readfrom_into(address, buffer, stop=stop)
 
     def writeto(self, address, buffer, *, start=0, end=None, stop=True):
+        """Write to a device at specified address from a buffer"""
         if isinstance(buffer, str):
             buffer = bytes([ord(x) for x in buffer])
         if start != 0 or end is not None:
             if end is None:
                 return self._i2c.writeto(address, memoryview(buffer)[start:], stop=stop)
-            else:
-                return self._i2c.writeto(
-                    address, memoryview(buffer)[start:end], stop=stop
-                )
+            return self._i2c.writeto(address, memoryview(buffer)[start:end], stop=stop)
         return self._i2c.writeto(address, buffer, stop=stop)
 
     def writeto_then_readfrom(
@@ -112,6 +122,9 @@ class I2C(Lockable):
         in_end=None,
         stop=False
     ):
+        """"Write to a device at specified address from a buffer then read
+        from a device at specified address into a buffer
+        """
         return self._i2c.writeto_then_readfrom(
             address,
             buffer_out,
@@ -125,6 +138,11 @@ class I2C(Lockable):
 
 
 class SPI(Lockable):
+    """
+    Busio SPI Class for CircuitPython Compatibility. Used
+    for both MicroPython and Linux.
+    """
+
     def __init__(self, clock, MOSI=None, MISO=None):
         self.deinit()
         if detector.board.ftdi_ft232h:
@@ -134,21 +152,21 @@ class SPI(Lockable):
             self._spi = _SPI()
             self._pins = (SCK, MOSI, MISO)
             return
-        elif detector.board.binho_nova:
+        if detector.board.binho_nova:
             from adafruit_blinka.microcontroller.nova.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.nova.pin import SCK, MOSI, MISO
 
             self._spi = _SPI(clock)
             self._pins = (SCK, MOSI, MISO)
             return
-        elif detector.board.greatfet_one:
+        if detector.board.greatfet_one:
             from adafruit_blinka.microcontroller.nxp_lpc4330.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.nxp_lpc4330.pin import SCK, MOSI, MISO
 
             self._spi = _SPI()
             self._pins = (SCK, MOSI, MISO)
             return
-        elif detector.board.any_embedded_linux:
+        if detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         else:
             from machine import SPI as _SPI
@@ -157,8 +175,8 @@ class SPI(Lockable):
         for portId, portSck, portMosi, portMiso in spiPorts:
             if (
                 (clock == portSck)
-                and (MOSI == portMosi or MOSI == None)  # Clock is required!
-                and (MISO == portMiso or MISO == None)  # But can do with just output
+                and MOSI in (portMosi, None)  # Clock is required!
+                and MISO in (portMiso, None)  # But can do with just output
             ):  # Or just input
                 self._spi = _SPI(portId)
                 self._pins = (portSck, portMosi, portMiso)
@@ -171,6 +189,7 @@ class SPI(Lockable):
             )
 
     def configure(self, baudrate=100000, polarity=0, phase=0, bits=8):
+        """Update the configuration"""
         if detector.board.any_raspberry_pi or detector.board.any_raspberry_pi_40_pin:
             from adafruit_blinka.microcontroller.bcm283x.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
@@ -228,11 +247,7 @@ class SPI(Lockable):
         elif detector.board.greatfet_one:
             from adafruit_blinka.microcontroller.nxp_lpc4330.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.nxp_lpc4330.pin import Pin
-        elif (
-            board_id == ap_board.PINE64
-            or board_id == ap_board.PINEBOOK
-            or board_id == ap_board.PINEPHONE
-        ):
+        elif board_id in (ap_board.PINE64, ap_board.PINEBOOK, ap_board.PINEPHONE):
             from adafruit_blinka.microcontroller.allwinner.a64.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.CLOCKWORK_CPI3:
@@ -261,11 +276,13 @@ class SPI(Lockable):
             raise RuntimeError("First call try_lock()")
 
     def deinit(self):
+        """Deinitialization"""
         self._spi = None
         self._pinIds = None
 
     @property
     def frequency(self):
+        """Return the baud rate if implemented"""
         try:
             return self._spi.frequency
         except AttributeError:
@@ -274,22 +291,32 @@ class SPI(Lockable):
             )
 
     def write(self, buf, start=0, end=None):
+        """Write to the SPI device"""
         return self._spi.write(buf, start, end)
 
     def readinto(self, buf, start=0, end=None, write_value=0):
+        """Read from the SPI device into a buffer"""
         return self._spi.readinto(buf, start, end, write_value=write_value)
 
     def write_readinto(
         self, buffer_out, buffer_in, out_start=0, out_end=None, in_start=0, in_end=None
     ):
+        """Write to the SPI device and read from the SPI device into a buffer"""
         return self._spi.write_readinto(
             buffer_out, buffer_in, out_start, out_end, in_start, in_end
         )
 
 
 class UART(Lockable):
+    """
+    Busio UART Class for CircuitPython Compatibility. Used
+    for MicroPython and a few other non-Linux boards.
+    """
+
     class Parity(Enum):
-        pass
+        """Parity Enumeration"""
+
+        pass  # pylint: disable=unnecessary-pass
 
     Parity.ODD = Parity()
     Parity.EVEN = Parity()
@@ -310,7 +337,7 @@ class UART(Lockable):
             raise RuntimeError(
                 "busio.UART not supported on this platform. Please use pyserial instead."
             )
-        elif detector.board.binho_nova:
+        if detector.board.binho_nova:
             from adafruit_blinka.microcontroller.nova.uart import UART as _UART
         elif detector.board.greatfet_one:
             from adafruit_blinka.microcontroller.nxp_lpc4330.uart import UART as _UART
@@ -360,18 +387,23 @@ class UART(Lockable):
             )
 
     def deinit(self):
+        """Deinitialization"""
         if detector.board.binho_nova:
             self._uart.deinit()
         self._uart = None
 
     def read(self, nbytes=None):
+        """Read from the UART"""
         return self._uart.read(nbytes)
 
     def readinto(self, buf, nbytes=None):
+        """Read from the UART into a buffer"""
         return self._uart.readinto(buf, nbytes)
 
     def readline(self):
+        """Read a line of characters up to a newline charater from the UART"""
         return self._uart.readline()
 
     def write(self, buf):
+        """Write to the UART from a buffer"""
         return self._uart.write(buf)

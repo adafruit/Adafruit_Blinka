@@ -5,9 +5,9 @@ See `CircuitPython:analogio` in CircuitPython for more details.
 * Author(s): Carter Nelson, Melissa LeBlanc-Williams
 """
 
-from adafruit_blinka.agnostic import board_id, detector
+from adafruit_blinka.agnostic import detector
 
-# pylint: disable=ungrouped-imports,wrong-import-position
+# pylint: disable=ungrouped-imports,wrong-import-position,unused-import
 
 if detector.board.microchip_mcp2221:
     from adafruit_blinka.microcontroller.mcp2221.analogio import AnalogIn

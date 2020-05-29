@@ -22,7 +22,7 @@ class SPI:
         # Change GPIO controller to SPI
         Pin.ft232h_gpio = self._spi.get_gpio()
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,unused-argument
     def init(
         self,
         baudrate=100000,

@@ -12,7 +12,7 @@ class UART:
     PARITY_STUCK_AT_ONE = 3
     PARITY_STUCK_AT_ZERO = 4
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,unused-argument
     def __init__(
         self,
         portid,
@@ -39,7 +39,7 @@ class UART:
                 "Parameter '{}' unsupported on GreatFET One".format("flow")
             )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments,unused-argument
 
     def deinit(self):
         """Deinitialize"""

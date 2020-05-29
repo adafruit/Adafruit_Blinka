@@ -85,6 +85,9 @@ class PWMOut:
         if self._channel is None:
             raise RuntimeError("No PWM channel found for this Pin")
 
+        if variable_frequency:
+            print("Variable Frequency is not supported, continuing without it...")
+
         channel_path = os.path.join(
             self._sysfs_path, self._channel_path.format(self._channel)
         )
@@ -93,7 +96,6 @@ class PWMOut:
                 "PWM channel does not exist, check that the required modules are loaded."
             )
 
-        pin_path = os.path.join(channel_path, self._pin_path.format(self._pwmpin))
         try:
             with open(
                 os.path.join(channel_path, self._unexport_path), "w"

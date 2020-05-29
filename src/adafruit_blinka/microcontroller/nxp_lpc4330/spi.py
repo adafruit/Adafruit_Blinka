@@ -11,6 +11,8 @@ class SPI:
         self._gf = GreatFET()
         self._frequency = None
         self.buffer_size = 255
+        self._mode = 0
+        self._spi = None
         self._presets = {
             204000: (100, 9),
             408000: (100, 4),
@@ -28,7 +30,7 @@ class SPI:
             102000000: (2, 0),
         }
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,unused-argument
     def init(
         self,
         baudrate=100000,
@@ -108,8 +110,6 @@ class SPI:
         in_end = in_end if in_end else len(buffer_in)
 
         result = self._transmit(buffer_out[out_start:out_end], in_end - in_start)
-        for i, b in enumerate(result):
-            buf[start + i] = b
         for i, b in enumerate(result):
             buffer_in[in_start + i] = b
 
