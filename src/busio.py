@@ -9,10 +9,10 @@ See `CircuitPython:busio` in CircuitPython for more details.
 
 import threading
 
-from adafruit_blinka import Enum, Lockable, agnostic
-from adafruit_blinka.agnostic import board_id, detector
 import adafruit_platformdetect.constants.boards as ap_board
 import adafruit_platformdetect.constants.chips as ap_chip
+from adafruit_blinka import Enum, Lockable, agnostic
+from adafruit_blinka.agnostic import board_id, detector
 
 # pylint: disable=import-outside-toplevel,too-many-branches,too-many-statements
 # pylint: disable=too-many-arguments,too-many-function-args
