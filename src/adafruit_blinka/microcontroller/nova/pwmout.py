@@ -78,6 +78,9 @@ class PWMOut:
         if self._channel is None:
             raise RuntimeError("No PWM channel found for this Pin")
 
+        if variable_frequency:
+            print("Variable Frequency is not supported, continuing without it...")
+
         PWMOut._nova.setIOpinMode(self._pwmpin, Pin.PWM)
 
         # set frequency

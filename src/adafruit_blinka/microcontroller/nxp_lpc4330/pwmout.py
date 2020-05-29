@@ -1,15 +1,11 @@
 """PWMOut Class for NXP LPC4330"""
 
 from greatfet import GreatFET
-from greatfet.interfaces.pattern_generator import PatternGenerator
 
 try:
     from microcontroller.pin import pwmOuts
 except ImportError:
     raise RuntimeError("No PWM outputs defined for this board")
-
-from microcontroller.pin import Pin
-
 
 # pylint: disable=unnecessary-pass
 class PWMError(IOError):
@@ -46,11 +42,13 @@ class PWMOut:
         self._gf = GreatFET()
 
         if variable_frequency:
-            raise NotImplemented("Variable Frequency is not currently supported.")
+            raise NotImplementedError("Variable Frequency is not currently supported.")
 
         self._pattern = None
         self._channel = None
         self._enable = False
+        self._frequency = 500
+        self._duty_cycle = 0
         self._open(pin, duty_cycle, frequency)
 
     def __enter__(self):
@@ -162,7 +160,7 @@ class PWMOut:
     duty_cycle = property(_get_duty_cycle, _set_duty_cycle)
 
     def _get_frequency(self):
-        return int(PWMOut._nova.getIOpinPWMFreq(self._pwmpin).split("PWMFREQ ")[1])
+        return self._frequency
 
     def _set_frequency(self, frequency):
         """Get or set the PWM's output frequency in Hertz.
@@ -178,6 +176,7 @@ class PWMOut:
 
         # We are sending 1024 samples per second already
         self._gf.pattern_generator.set_sample_rate(frequency * len(self._pattern))
+        self._frequency = frequency
 
     frequency = property(_get_frequency, _set_frequency)
 

@@ -43,7 +43,7 @@ jobs:
         black --check --target-version=py35 .
     - name: PyLint
       run: |
-        pylint src/**/*.py
+        pylint $( find src -name '*.py' )
         ([[ ! -d "examples" ]] || pylint --disable=missing-docstring,invalid-name,bad-whitespace $( find . -path "./examples/*.py" ))
     - name: Build docs
       working-directory: docs

@@ -41,6 +41,7 @@ class I2C:
         else:
             self._nova.endI2C(0, True)
 
+    # pylint: disable=unused-argument
     def readfrom_into(self, address, buffer, *, start=0, end=None, stop=True):
         """Read data from an address and into the buffer"""
         end = end if end else len(buffer)
@@ -57,7 +58,6 @@ class I2C:
                 "Received error response from Binho Nova, result = " + result
             )
 
-    # pylint: disable=unused-argument
     def writeto_then_readfrom(
         self,
         address,

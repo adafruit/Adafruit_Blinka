@@ -29,10 +29,11 @@ See `CircuitPython:board` in CircuitPython for more details.
 """
 import sys
 
-from adafruit_blinka.agnostic import board_id, detector
 import adafruit_platformdetect.constants.boards as ap_board
+from adafruit_blinka.agnostic import board_id, detector
 
 # pylint: disable=wildcard-import,unused-wildcard-import,ungrouped-imports
+# pylint: disable=import-outside-toplevel
 
 if board_id == ap_board.FEATHER_HUZZAH:
     from adafruit_blinka.board.feather_huzzah import *

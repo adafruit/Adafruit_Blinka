@@ -1,4 +1,13 @@
+"""
+`pulseio` - Pulse Width Modulation Input and Output control
+=================================================
+See `CircuitPython:pulseio` in CircuitPython for more details.
+* Author(s): Melissa LeBlanc-Williams
+"""
+
 from adafruit_blinka.agnostic import detector
+
+# pylint: disable=unused-import
 
 if detector.board.any_raspberry_pi:
     from adafruit_blinka.microcontroller.bcm283x.pulseio.PulseIn import PulseIn

@@ -11,6 +11,7 @@ class I2C:
     _mode = None
     _i2c_bus = None
 
+    # pylint: disable=unused-argument
     def __init__(self, bus_num, mode=MASTER, baudrate=None):
         if mode != self.MASTER:
             raise NotImplementedError("Only I2C Master supported!")
@@ -25,6 +26,8 @@ class I2C:
             raise RuntimeError(
                 "I2C Bus #%d not found, check if enabled in config!" % bus_num
             )
+
+    # pylint: enable=unused-argument
 
     def scan(self):
         """Try to read a byte from each address, if you get an OSError

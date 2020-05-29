@@ -5,6 +5,7 @@ from greatfet import GreatFET
 class I2C:
     """Custom I2C Class for NXP LPC4330"""
 
+    # pylint: disable=unused-argument
     def __init__(self, *, frequency=100000):
         self._gf = GreatFET()
 
@@ -12,7 +13,6 @@ class I2C:
         """Perform an I2C Device Scan"""
         return [index for index, dev in enumerate(self._gf.i2c.scan()) if dev[0]]
 
-    # pylint: disable=unused-argument
     def writeto(self, address, buffer, *, start=0, end=None, stop=True):
         """Write data from the buffer to an address"""
         if end is None:

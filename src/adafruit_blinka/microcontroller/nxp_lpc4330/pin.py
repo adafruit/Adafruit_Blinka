@@ -6,12 +6,15 @@ try:
     gf = GreatFET()
 except:
     raise RuntimeError(
-        "Unable to create GreatFET object. Make sure library is installed and the device is connected."
+        "Unable to create GreatFET object. Make sure library is "
+        "installed and the device is connected."
     )
 
 
 class Pin:
-    """A basic Pin class for the NXP LPC4330 that acts as a wrapper for the GreatFET api."""
+    """A basic Pin class for the NXP LPC4330 that
+    acts as a wrapper for the GreatFET api.
+    """
 
     # pin modes
     OUT = gf.gpio.DIRECTION_OUT
@@ -32,6 +35,8 @@ class Pin:
         """Initialize the Pin"""
         if self.id is None:
             raise RuntimeError("Can not init a None type pin.")
+        if pull is not None:
+            raise NotImplementedError("Internal pullups and pulldowns not supported")
         if mode in (Pin.IN, Pin.OUT):
             if self.id not in gf.GPIO_MAPPINGS:
                 raise ValueError("Pin does not have GPIO capabilities")
@@ -41,12 +46,10 @@ class Pin:
             # ADC only available on these pins
             if self.id not in gf.ADC_MAPPINGS:
                 raise ValueError("Pin does not have ADC capabilities")
-            gf.ADC_MAPPINGS[self.id]
-            # TODO: figure out a way to pass the ADC number without breaking the interface
             self._pin = ADC(gf, self.id)
         elif mode == Pin.DAC:
             # DAC only available on these pins
-            if self.id not in ("J2_P5"):
+            if self.id != "J2_P5":
                 raise ValueError("Pin does not have DAC capabilities")
             self._pin = gf.apis.dac
             self._pin.initialize()

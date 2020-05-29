@@ -22,6 +22,8 @@ class Pin:
         """Initialize the Pin"""
         if self.id is None:
             raise RuntimeError("Can not init a None type pin.")
+        if pull is not None:
+            raise NotImplementedError("Internal pullups and pulldowns not supported")
         if mode in (Pin.IN, Pin.OUT):
             # All pins can do GPIO
             mcp2221.gp_set_mode(self.id, mcp2221.GP_GPIO)

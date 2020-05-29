@@ -268,7 +268,7 @@ class MCP2221:
 
         # and now the read part
         while (end - start) > 0:
-            for retry in range(MCP2221_RETRY_MAX):
+            for _ in range(MCP2221_RETRY_MAX):
                 # the actual read
                 resp = self._hid_xfer(b"\x40")
                 # check for success
