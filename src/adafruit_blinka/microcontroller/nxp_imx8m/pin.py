@@ -31,7 +31,7 @@ i2cPorts = (
     (2, I2C3_SCL, I2C3_SDA),
 )
 # ordered as spiId, sckId, mosiId, misoId
-spiPorts = ((32766, ECSPI1_SCLK, ECSPI1_MOSI, ECSPI1_MISO),)
+spiPorts = ((0, ECSPI1_SCLK, ECSPI1_MOSI, ECSPI1_MISO),)
 # SysFS pwm outputs, pwm channel and pin in first tuple
 pwmOuts = (
     ((0, 0), PWM1),
