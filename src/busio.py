@@ -31,7 +31,7 @@ class I2C(Lockable):
         """Initialization"""
         self.deinit()
         if detector.board.ftdi_ft232h:
-            from adafruit_blinka.microcontroller.ft232h.i2c import I2C as _I2C
+            from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.i2c import I2C as _I2C
 
             self._i2c = _I2C(frequency=frequency)
             return
@@ -52,6 +52,8 @@ class I2C(Lockable):
             return
         if detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.i2c import I2C as _I2C
+        elif detector.board.ftdi_ft2232h:
+            from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.i2c import I2C as _I2C
         else:
             from machine import I2C as _I2C
         from microcontroller.pin import i2cPorts
@@ -146,8 +148,8 @@ class SPI(Lockable):
     def __init__(self, clock, MOSI=None, MISO=None):
         self.deinit()
         if detector.board.ftdi_ft232h:
-            from adafruit_blinka.microcontroller.ft232h.spi import SPI as _SPI
-            from adafruit_blinka.microcontroller.ft232h.pin import SCK, MOSI, MISO
+            from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.ftdi_mpsse.ft232h.pin import SCK, MOSI, MISO
 
             self._spi = _SPI()
             self._pins = (SCK, MOSI, MISO)
@@ -168,6 +170,8 @@ class SPI(Lockable):
             return
         if detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+        elif detector.board.ftdi_ft2232h:
+            from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.spi import SPI as _SPI
         else:
             from machine import SPI as _SPI
         from microcontroller.pin import spiPorts
@@ -239,8 +243,11 @@ class SPI(Lockable):
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.hfu540.pin import Pin
         elif detector.board.ftdi_ft232h:
-            from adafruit_blinka.microcontroller.ft232h.spi import SPI as _SPI
-            from adafruit_blinka.microcontroller.ft232h.pin import Pin
+            from adafruit_blinka.microcontroller.ftdi_mpsse.ft232h.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.ftdi_mpsse.ft232h.pin import Pin
+        elif detector.board.ftdi_ft2232h:
+            from adafruit_blinka.microcontroller.ftdi_mpsse.ft2232h.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.ftdi_mpsse.ft2232h.pin import Pin
         elif detector.board.binho_nova:
             from adafruit_blinka.microcontroller.nova.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.nova.pin import Pin

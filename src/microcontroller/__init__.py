@@ -78,5 +78,9 @@ elif chip_id == ap_chip.MIPS24KC:
     from adafruit_blinka.microcontroller.atheros.ar9331.pin import *
 elif chip_id == ap_chip.MIPS24KEC:
     from adafruit_blinka.microcontroller.mips24kec.pin import *
+elif chip_id == ap_chip.FT232H:
+    from adafruit_blinka.microcontroller.ftdi_mpsse.ft232h.pin import *
+elif chip_id == ap_chip.FT2232H:
+    from adafruit_blinka.microcontroller.ftdi_mpsse.ft2232h.pin import *
 else:
     raise NotImplementedError("Microcontroller not supported:", chip_id)

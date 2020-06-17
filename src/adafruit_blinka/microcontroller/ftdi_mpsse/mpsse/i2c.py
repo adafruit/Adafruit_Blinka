@@ -1,11 +1,19 @@
-"""I2C Class for FT232H"""
-from adafruit_blinka.microcontroller.ft232h.pin import Pin
-
+"""I2C Class for FTDI MPSSE"""
+from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.pin import Pin
 
 class I2C:
-    """Custom I2C Class for FT232H"""
+    """Custom I2C Class for FTDI MPSSE"""
 
-    def __init__(self, *, frequency=400000):
+    MASTER = 0
+    SLAVE = 1
+    _mode = None
+
+    # pylint: disable=unused-argument
+    def __init__(self, id=None, mode=MASTER, baudrate=None, frequency=400000):
+        if mode != self.MASTER:
+            raise NotImplementedError("Only I2C Master supported!")
+        _mode = self.MASTER
+
         # change GPIO controller to I2C
         # pylint: disable=import-outside-toplevel
         from pyftdi.i2c import I2cController
@@ -13,8 +21,11 @@ class I2C:
         # pylint: enable=import-outside-toplevel
 
         self._i2c = I2cController()
-        self._i2c.configure("ftdi://ftdi:ft232h/1", frequency=frequency)
-        Pin.ft232h_gpio = self._i2c.get_gpio()
+        if id is None:
+            self._i2c.configure("ftdi://ftdi:ft232h/1", frequency=frequency)
+        else:
+            self._i2c.configure("ftdi://ftdi:ft2232h/{}".format(id+1), frequency=frequency)
+        Pin.mpsse_gpio = self._i2c.get_gpio()
 
     def scan(self):
         """Perform an I2C Device Scan"""
