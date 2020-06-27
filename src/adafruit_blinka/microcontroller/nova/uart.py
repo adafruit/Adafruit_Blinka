@@ -43,6 +43,10 @@ class UART:
         self._nova.beginBridgeUART(self._id)
 
     # pylint: enable=too-many-arguments,unused-argument
+    def __del__(self):
+        """Close Nova on delete"""
+        self.deinit()
+        self._nova.close()
 
     def deinit(self):
         """Deinitialize"""

@@ -60,6 +60,7 @@ class PWMOut:
 
     def __del__(self):
         self.deinit()
+        PWMOut._nova.close()
 
     def __enter__(self):
         return self

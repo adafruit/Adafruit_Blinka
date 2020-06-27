@@ -23,9 +23,7 @@ class Connection:
         from binhoHostAdapter import binhoUtilities
 
         # pylint: enable=import-outside-toplevel
-
-        utilities = binhoUtilities.binhoUtilities()
-        devices = utilities.listAvailableDevices()
+        devices = binhoUtilities.listAvailableDevices()
 
         if len(devices) > 0:
             Connection.__instance = binhoHostAdapter.binhoHostAdapter(devices[0])
