@@ -139,7 +139,7 @@ class SPI:
                     self.get_received_data(self._nova.transferSPI(0, write_value))
                 )
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,too-many-locals,too-many-branches
     def write_readinto(
         self, buffer_out, buffer_in, out_start=0, out_end=None, in_start=0, in_end=None
     ):
@@ -212,4 +212,4 @@ class SPI:
                     buffer_in[in_start + i] = data_in
                 i += 1
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments,too-many-locals,too-many-branches

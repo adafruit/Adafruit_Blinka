@@ -87,6 +87,7 @@ class I2C:
                 "Received error response from Binho Nova, result = " + result
             )
 
+    # pylint: disable=too-many-locals,too-many-branches
     def writeto_then_readfrom(
         self,
         address,
@@ -175,4 +176,4 @@ class I2C:
                 )
 
 
-# pylint: enable=unused-argument
+# pylint: enable=unused-argument,too-many-locals,too-many-branches
