@@ -37,15 +37,15 @@ class SPI:
 
     # pylint: disable=too-many-arguments,unused-argument
     def init(
-            self,
-            baudrate=1000000,
-            polarity=0,
-            phase=0,
-            bits=8,
-            firstbit=MSB,
-            sck=None,
-            mosi=None,
-            miso=None,
+        self,
+        baudrate=1000000,
+        polarity=0,
+        phase=0,
+        bits=8,
+        firstbit=MSB,
+        sck=None,
+        mosi=None,
+        miso=None,
     ):
         """Initialize the Port"""
         self._nova.setClockSPI(0, baudrate)
@@ -75,11 +75,9 @@ class SPI:
             chunk_start = start + i * payloadMaxLength
             chunk_end = chunk_start + payloadMaxLength
             if int(self._novaCMDVer) >= 1:
-                self._nova.writeToReadFromSPI(0,
-                                              True,
-                                              False,
-                                              chunk_end - chunk_start,
-                                              buf[chunk_start:chunk_end])
+                self._nova.writeToReadFromSPI(
+                    0, True, False, chunk_end - chunk_start, buf[chunk_start:chunk_end]
+                )
             else:
                 self._nova.clearBuffer(0)
                 self._nova.writeToBuffer(0, 0, buf[chunk_start:chunk_end])
@@ -101,43 +99,49 @@ class SPI:
             for i in range(chunks):
                 chunk_start = start + i * self.WHR_PAYLOAD_MAX_LENGTH
                 chunk_end = chunk_start + self.WHR_PAYLOAD_MAX_LENGTH
-                result = self._nova.writeToReadFromSPI(0,
-                                                       False,
-                                                       True,
-                                                       chunk_end - chunk_start,
-                                                       write_value)
+                result = self._nova.writeToReadFromSPI(
+                    0, False, True, chunk_end - chunk_start, write_value
+                )
                 if result != "-NG":
                     resp = result.split(" ")
                     resp = resp[2]
                     # loop over half of resp len as we're reading 2 chars at a time to form a byte
-                    loops = int(len(resp)/2)
+                    loops = int(len(resp) / 2)
                     for j in range(loops):
-                        buf[(i*self.WHR_PAYLOAD_MAX_LENGTH)+start+j] = \
-                                                        int(resp[j*2]+resp[j*2+1], 16)
+                        buf[(i * self.WHR_PAYLOAD_MAX_LENGTH) + start + j] = int(
+                            resp[j * 2] + resp[j * 2 + 1], 16
+                        )
                 else:
-                    raise RuntimeError("Received error response from Binho Nova, result = " + \
-                                       result)
+                    raise RuntimeError(
+                        "Received error response from Binho Nova, result = " + result
+                    )
             if rest:
-                result = self._nova.writeToReadFromSPI(0, False, True, rest, write_value)
+                result = self._nova.writeToReadFromSPI(
+                    0, False, True, rest, write_value
+                )
                 if result != "-NG":
                     resp = result.split(" ")
                     resp = resp[2]
 
                     # loop over half of resp len as we're reading 2 chars at a time to form a byte
-                    loops = int(len(resp)/2)
+                    loops = int(len(resp) / 2)
                     for j in range(loops):
-                        buf[(i*self.WHR_PAYLOAD_MAX_LENGTH)+start+j] = \
-                                                         int(resp[j*2]+resp[j*2+1], 16)
+                        buf[(i * self.WHR_PAYLOAD_MAX_LENGTH) + start + j] = int(
+                            resp[j * 2] + resp[j * 2 + 1], 16
+                        )
                 else:
-                    raise RuntimeError("Received error response from Binho Nova, result = " + \
-                                       result)
+                    raise RuntimeError(
+                        "Received error response from Binho Nova, result = " + result
+                    )
         else:
             for i in range(start, end):
-                buf[start+i] = int(self.get_received_data(self._nova.transferSPI(0, write_value)))
+                buf[start + i] = int(
+                    self.get_received_data(self._nova.transferSPI(0, write_value))
+                )
 
     # pylint: disable=too-many-arguments
     def write_readinto(
-            self, buffer_out, buffer_in, out_start=0, out_end=None, in_start=0, in_end=None
+        self, buffer_out, buffer_in, out_start=0, out_end=None, in_start=0, in_end=None
     ):
         """Perform a half-duplex write from buffer_out and then
         read data into buffer_in
@@ -158,43 +162,54 @@ class SPI:
             for i in range(chunks):
                 chunk_start = out_start + i * self.WHR_PAYLOAD_MAX_LENGTH
                 chunk_end = chunk_start + self.WHR_PAYLOAD_MAX_LENGTH
-                result = self._nova.writeToReadFromSPI(0,
-                                                       True,
-                                                       True,
-                                                       chunk_end-chunk_start,
-                                                       buffer_out[chunk_start:chunk_end])
+                result = self._nova.writeToReadFromSPI(
+                    0,
+                    True,
+                    True,
+                    chunk_end - chunk_start,
+                    buffer_out[chunk_start:chunk_end],
+                )
 
                 if result != "-NG":
                     resp = result.split(" ")
                     resp = resp[2]
 
                     # loop over half of resp len as we're reading 2 chars at a time to form a byte
-                    loops = int(len(resp)/2)
+                    loops = int(len(resp) / 2)
                     for j in range(loops):
-                        buffer_in[(i*self.WHR_PAYLOAD_MAX_LENGTH)+in_start+j] = \
-                                                                 int(resp[j*2]+resp[j*2+1], 16)
+                        buffer_in[
+                            (i * self.WHR_PAYLOAD_MAX_LENGTH) + in_start + j
+                        ] = int(resp[j * 2] + resp[j * 2 + 1], 16)
                 else:
-                    raise RuntimeError("Received error response from Binho Nova, result = " + \
-                                       result)
+                    raise RuntimeError(
+                        "Received error response from Binho Nova, result = " + result
+                    )
             if rest:
-                result = self._nova.writeToReadFromSPI(0, True, True, rest, buffer_out[-1*rest:])
+                result = self._nova.writeToReadFromSPI(
+                    0, True, True, rest, buffer_out[-1 * rest :]
+                )
                 if result != "-NG":
                     resp = result.split(" ")
                     resp = resp[2]
 
                     # loop over half of resp len as we're reading 2 chars at a time to form a byte
-                    loops = int(len(resp)/2)
+                    loops = int(len(resp) / 2)
                     for j in range(loops):
-                        buffer_in[(i*self.WHR_PAYLOAD_MAX_LENGTH)+in_start+j] = \
-                                                                 int(resp[j*2]+resp[j*2+1], 16)
+                        buffer_in[
+                            (i * self.WHR_PAYLOAD_MAX_LENGTH) + in_start + j
+                        ] = int(resp[j * 2] + resp[j * 2 + 1], 16)
                 else:
-                    raise RuntimeError("Received error response from Binho Nova, result = " + \
-                                       result)
+                    raise RuntimeError(
+                        "Received error response from Binho Nova, result = " + result
+                    )
             print(buffer_in)
         else:
             for data_out in buffer_out:
-                data_in = int(self.get_received_data(self._nova.transferSPI(0, data_out)))
+                data_in = int(
+                    self.get_received_data(self._nova.transferSPI(0, data_out))
+                )
                 if i < readlen:
-                    buffer_in[in_start+i] = data_in
+                    buffer_in[in_start + i] = data_in
                 i += 1
+
     # pylint: enable=too-many-arguments

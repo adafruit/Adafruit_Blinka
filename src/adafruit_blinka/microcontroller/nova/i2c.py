@@ -5,6 +5,7 @@ from adafruit_blinka.microcontroller.nova import Connection
 
 class I2C:
     """Custom I2C Class for Binho Nova"""
+
     WHR_PAYLOAD_MAX_LENGTH = 1024
 
     def __init__(self, *, frequency=400000):
@@ -47,21 +48,20 @@ class I2C:
             for i in range(chunks):
                 chunk_start = start + i * self.WHR_PAYLOAD_MAX_LENGTH
                 chunk_end = chunk_start + self.WHR_PAYLOAD_MAX_LENGTH
-                self._nova.writeToReadFromI2C(0,
-                                              address<<1,
-                                              stop,
-                                              readBytes,
-                                              chunk_end-chunk_start,
-                                              buffer[chunk_start:chunk_end])
+                self._nova.writeToReadFromI2C(
+                    0,
+                    address << 1,
+                    stop,
+                    readBytes,
+                    chunk_end - chunk_start,
+                    buffer[chunk_start:chunk_end],
+                )
             if rest:
-                self._nova.writeToReadFromI2C(0,
-                                              address<<1,
-                                              stop,
-                                              readBytes,
-                                              rest,
-                                              buffer[-1*rest:])
+                self._nova.writeToReadFromI2C(
+                    0, address << 1, stop, readBytes, rest, buffer[-1 * rest :]
+                )
         else:
-            self._nova.startI2C(0, address<<1)
+            self._nova.startI2C(0, address << 1)
 
             for i in range(start, end):
                 self._nova.writeByteI2C(0, buffer[i])
@@ -88,16 +88,16 @@ class I2C:
             )
 
     def writeto_then_readfrom(
-            self,
-            address,
-            buffer_out,
-            buffer_in,
-            *,
-            out_start=0,
-            out_end=None,
-            in_start=0,
-            in_end=None,
-            stop=False
+        self,
+        address,
+        buffer_out,
+        buffer_in,
+        *,
+        out_start=0,
+        out_end=None,
+        in_start=0,
+        in_end=None,
+        stop=False
     ):
         """Write data from buffer_out to an address and then
         read data from an address and into buffer_in
@@ -124,18 +124,15 @@ class I2C:
                     numOutBytes = totalOut
 
                 # setup the buffer out chunk offset
-                buffer = '0'
+                buffer = "0"
                 if numOutBytes > 0:
                     chunk_start = out_start + i * self.WHR_PAYLOAD_MAX_LENGTH
                     chunk_end = chunk_start + numOutBytes
                     buffer = buffer_out[chunk_start:chunk_end]
 
-                result = self._nova.writeToReadFromI2C(0,
-                                                       address<<1,
-                                                       stop,
-                                                       numInBytes,
-                                                       numOutBytes,
-                                                       buffer)
+                result = self._nova.writeToReadFromI2C(
+                    0, address << 1, stop, numInBytes, numOutBytes, buffer
+                )
                 totalIn -= numInBytes
                 totalOut -= numOutBytes
 
@@ -145,13 +142,15 @@ class I2C:
                         resp = resp[2]
 
                         for j in range(numInBytes):
-                            buffer_in[in_start+i*self.WHR_PAYLOAD_MAX_LENGTH+j] = \
-                                                                     int(resp[j*2]+resp[j*2+1], 16)
+                            buffer_in[
+                                in_start + i * self.WHR_PAYLOAD_MAX_LENGTH + j
+                            ] = int(resp[j * 2] + resp[j * 2 + 1], 16)
                 else:
-                    raise RuntimeError("Received error response from Binho Nova, result = " + \
-                                       result)
+                    raise RuntimeError(
+                        "Received error response from Binho Nova, result = " + result
+                    )
         else:
-            self._nova.startI2C(0, address<<1)
+            self._nova.startI2C(0, address << 1)
 
             for i in range(out_start, out_end):
                 self._nova.writeByteI2C(0, buffer_out[i])
@@ -161,15 +160,19 @@ class I2C:
             else:
                 self._nova.endI2C(0, True)
 
-            result = self._nova.readBytesI2C(0, address<<1, len(buffer_in[in_start:in_end]))
+            result = self._nova.readBytesI2C(
+                0, address << 1, len(buffer_in[in_start:in_end])
+            )
 
             if result != "-NG":
                 resp = result.split(" ")
 
                 for i in range(len(buffer_in[in_start:in_end])):
-                    buffer_in[in_start+i] = int(resp[2+i])
+                    buffer_in[in_start + i] = int(resp[2 + i])
             else:
                 raise RuntimeError(
                     "Received error response from Binho Nova, result = " + result
                 )
+
+
 # pylint: enable=unused-argument
