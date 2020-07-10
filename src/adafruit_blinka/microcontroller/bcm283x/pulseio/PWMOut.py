@@ -98,13 +98,14 @@ class PWMOut:
         if not isinstance(duty_cycle, (int, float)):
             raise TypeError("Invalid duty cycle type, should be int or float.")
 
+        if not 0 <= duty_cycle <= 65535:
+            raise ValueError("Invalid duty cycle value, should be between 0 and 65535")
+
         # convert from 16-bit
         duty_cycle /= 65535.0
-        if not 0.0 <= duty_cycle <= 1.0:
-            raise ValueError("Invalid duty cycle value, should be between 0.0 and 1.0.")
 
-        self._pwmpin.ChangeDutyCycle(round(duty_cycle * 100))
         self._duty_cycle = duty_cycle
+        self._pwmpin.ChangeDutyCycle(round(self._duty_cycle * 100))
 
     @property
     def frequency(self):
@@ -145,7 +146,7 @@ class PWMOut:
             raise TypeError("Invalid enabled type, should be string.")
 
         if value:
-            self._pwmpin.start(self.duty_cycle)
+            self._pwmpin.start(round(self._duty_cycle * 100))
         else:
             self._pwmpin.stop()
 
@@ -156,5 +157,5 @@ class PWMOut:
         return "pin %s (freq=%f Hz, duty_cycle=%f%%)" % (
             self._pin,
             self.frequency,
-            self.duty_cycle * 100,
+            self.duty_cycle,
         )
