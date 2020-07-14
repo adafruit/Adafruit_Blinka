@@ -143,7 +143,7 @@ class SPI(Lockable):
     for both MicroPython and Linux.
     """
 
-    def __init__(self, clock, chip_select=0, MOSI=None, MISO=None):
+    def __init__(self, clock, chip_select=None, MOSI=None, MISO=None):
         self.deinit()
         if detector.board.ftdi_ft232h:
             from adafruit_blinka.microcontroller.ft232h.spi import SPI as _SPI
@@ -178,7 +178,10 @@ class SPI(Lockable):
                 and MOSI in (portMosi, None)  # Clock is required!
                 and MISO in (portMiso, None)  # But can do with just output
             ):  # Or just input
-                self._spi = _SPI((portId, chip_select))
+                if chip_select is not None and not isinstance(portId, tuple):
+                    self._spi = _SPI((portId, chip_select))
+                else:
+                    self._spi = _SPI(portId)
                 self._pins = (portSck, portMosi, portMiso)
                 break
         else:
