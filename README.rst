@@ -43,7 +43,7 @@ Installing from PyPI
 =====================
 
 On supported GNU/Linux systems like the Raspberry Pi, you can install the driver locally `from
-PyPI <https://pypi.org/project/adafruit-blinka-displayio/>`_. To install for current user:
+PyPI <https://pypi.org/project/Adafruit-Blinka/>`_. To install for current user:
 
 .. code-block:: shell
 
