@@ -7,7 +7,10 @@ See `CircuitPython:busio` in CircuitPython for more details.
 * Author(s): cefn
 """
 
-import threading
+try:
+    import threading
+except ImportError:
+    threading = None
 
 import adafruit_platformdetect.constants.boards as ap_board
 import adafruit_platformdetect.constants.chips as ap_chip
@@ -69,8 +72,8 @@ class I2C(Lockable):
                     (scl, sda), i2cPorts
                 )
             )
-
-        self._lock = threading.RLock()
+        if threading is not None:
+            self._lock = threading.RLock()
 
     def deinit(self):
         """Deinitialization"""
@@ -80,11 +83,13 @@ class I2C(Lockable):
             pass
 
     def __enter__(self):
-        self._lock.acquire()
+        if threading is not None:
+            self._lock.acquire()
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        self._lock.release()
+        if threading is not None:
+            self._lock.release()
         self.deinit()
 
     def scan(self):
