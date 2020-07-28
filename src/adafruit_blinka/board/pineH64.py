@@ -1,5 +1,5 @@
 """Pin definitions for the PineH64."""
- 
+
 from adafruit_blinka.microcontroller.allwinner.h6 import pin
 
 D2 = pin.PD26
@@ -27,16 +27,15 @@ D24 = pin.PD17
 D25 = pin.PD18
 D26 = pin.PD23
 D27 = pin.PD14
- 
+
 SDA = D2
 SCL = D3
- 
+
 SCLK = D11
 MOSI = D10
 MISO = D9
 CS = D8
 SCK = SCLK
- 
+
 UART_TX = D14
 UART_RX = D15
- 
