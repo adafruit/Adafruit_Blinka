@@ -58,7 +58,7 @@ elif detector.chip.STM32:
 elif detector.board.microchip_mcp2221:
     from adafruit_blinka.microcontroller.mcp2221.pin import Pin
 elif detector.chip.PENTIUM_N3710:
-    from adafruit_blinka.microcontroller.pentium.n3710.pin import Pin  
+    from adafruit_blinka.microcontroller.pentium.n3710.pin import Pin
 
 from adafruit_blinka import Enum, ContextManaged
 

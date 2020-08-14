@@ -1,15 +1,17 @@
 """Pin definitions for Udoo x86 Ultra
-(should work for Ultra and Ultra II)"""
+(should work for Ultra and Ultra II)
 
-from adafruit_blinka.microcontroller.pentium.n3710 import pin
-
-""" There are 2 naming systems.  A Digital Pin system which includes
+There are 2 naming systems.  A Digital Pin system which includes
 the arduino chip (Leonardo or 101).  The Braswell #s start at 16 and
-is documented in the diagram in https://www.udoo.org/docs-x86II/Introduction/Introduction.html
-The other is based on the hardware manual https://udoo.org/download/files/UDOO_X86/Doc/UDOO_X86II_MANUAL.pdf
+is documented in the diagram and text for linux version later than 4.15 in:
+https://www.udoo.org/docs-x86II/Introduction/Introduction.html
+The other is based on the hardware manual:
+https://udoo.org/download/files/UDOO_X86/Doc/UDOO_X86II_MANUAL.pdf
 
 This will use the D system based on the diagram in the user guide
 """
+
+from adafruit_blinka.microcontroller.pentium.n3710 import pin
 
 # Connector CN15
 D16 = pin.UART1_RTS
@@ -35,19 +37,19 @@ D34 = pin.I2C0_SCL
 D35 = pin.I2C0_SDA
 
 D36 = pin.GPIO_492
-D27 = pin.GPIO_490
+D37 = pin.GPIO_490
 
-D38 = pin.I2C5_SCL
-D39 = pin.I2C5_SDA
+D38 = pin.I2C1_SCL
+D39 = pin.I2C1_SDA
 
 # Connector CN12 SDIO SD/MMC interfaces
-D40 = GPIO_358
-D41 = GPIO_243
-D42 = GPIO_249
-D43 = GPIO_246
-D44 = GPIO_253
-D45 = GPIO_250
-D46 = GPIO_247
+D40 = pin.GPIO_358
+D41 = pin.GPIO_243
+D42 = pin.GPIO_249
+D43 = pin.GPIO_246
+D44 = pin.GPIO_253
+D45 = pin.GPIO_250
+D46 = pin.GPIO_247
 
 # aliases
 UART1_RX = D19
@@ -56,9 +58,8 @@ UART1_TX = D18
 UART2_RX = D23
 UART2_TX = D22
 
-I2C0_SCL = D34 # labeled on diagram as I2C1
-I2C0_SDA = D35 # actually port 0
+I2C0_SCL = D34 # labeled on diagram as I2C1, hardware manual port 0
+I2C0_SDA = D35 # i2cdetect-l lists it as i2c-0
 
-I2C1_SCL = D38 # Labeled on diagram as I2C2 hardware manual port 5
-I2C1_SCL = D39 # i2c detect lists it as i2c1
-
+I2C1_SCL = D38 # Labeled on diagram as I2C2, hardware manual port 5
+I2C1_SCL = D39 # i2cdetect lists it as i2c-1
