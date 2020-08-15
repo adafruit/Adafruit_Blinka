@@ -1,4 +1,7 @@
-"""Pentium N3710 (Braswell core SOC) pin names"""
+"""Pentium N3710 (Braswell core SOC) pin names
+   i2c and GPIO can be accessed through Blinka.
+   For i2c use IC20_SCL, IC20-SDA and IC21-SCL, IC21-SDA in the i2c(<sdl, sda>) calls.
+   For UART use pyserial"""
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
 # gpiochip3
@@ -45,7 +48,7 @@ SATA_GP2 = TS_RST = GPIO_492
 
 
 # not general gpio on chip 0
-# uarts
+# use pyserial not blinka.  These are only included for completeness
 
 UART1_RXD = Pin((0, 16))
 UART1_TXD = Pin((0, 20))
@@ -65,12 +68,13 @@ GPIO_434 = UART1_TXD
 GPIO_435 = UART2_TXD
 GPIO_436 = UART2_CTS
 
-# i2c
-I2C0_SDA = Pin((0, 61))
+# i2c use these addresses when accessing i2c from Blinka.  You can also access
+# the i2c useing smbus
+I2C0_SDA = Pin((0, 61)) # IC21 on diagram, port 0 in hardware manual
 I2C0_SCL = Pin((0, 65))
 
-I2C1_SDA = TS_I2C_SDA = Pin((0, 45))  # listed as port 5 on hardware manual
-I2C1_SCL = TS_I2C_SCL = Pin((0, 48))  # i2c2 on diagram
+I2C1_SDA = TS_I2C_SDA = Pin((0, 45))  # I2C2 on diagram, port 5 in hardware manual
+I2C1_SCL = TS_I2C_SCL = Pin((0, 48))
 
 
 GPIO_469 = I2C1_SDA  # I2C2 on diagram
@@ -78,7 +82,6 @@ GPIO_472 = I2C1_SCL
 GPIO_475 = I2C0_SDA  # I2C1 on diagram
 GPIO_479 = I2C0_SCL
 
-i2cPorts = ((0, I2C0_SCL, I2C0_SDA), (1, I2C1_SCL, I2C1_SDA))
-
-# ordered as uartId, txId, rxId
-uartPorts = ((1, UART1_TXD, UART1_RXD), (2, UART2_TXD, UART2_RXD))
+# ordered as i2cId, sclId, sdaId
+i2cPorts = ((0, I2C0_SCL, I2C0_SDA),
+            (1, I2C1_SCL, I2C1_SDA))

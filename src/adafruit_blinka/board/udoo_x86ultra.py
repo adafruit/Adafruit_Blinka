@@ -9,6 +9,11 @@ The other is based on the hardware manual:
 https://udoo.org/download/files/UDOO_X86/Doc/UDOO_X86II_MANUAL.pdf
 
 This will use the D system based on the diagram in the user guide
+
+i2c use i2c(board.I2C0_SCL, board_I2C0_SDA) or i2c(board.I2C1_SCL, board_I2C1_SDA)
+for the i2c(board.SCL, board.SCL) in the examples
+
+UART use pyserial not busio
 """
 
 from adafruit_blinka.microcontroller.pentium.n3710 import pin
