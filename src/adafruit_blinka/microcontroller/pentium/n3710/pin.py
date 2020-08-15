@@ -70,7 +70,7 @@ GPIO_436 = UART2_CTS
 
 # i2c use these addresses when accessing i2c from Blinka.  You can also access
 # the i2c useing smbus
-I2C0_SDA = Pin((0, 61)) # IC21 on diagram, port 0 in hardware manual
+I2C0_SDA = Pin((0, 61))  # IC21 on diagram, port 0 in hardware manual
 I2C0_SCL = Pin((0, 65))
 
 I2C1_SDA = TS_I2C_SDA = Pin((0, 45))  # I2C2 on diagram, port 5 in hardware manual
@@ -83,5 +83,4 @@ GPIO_475 = I2C0_SDA  # I2C1 on diagram
 GPIO_479 = I2C0_SCL
 
 # ordered as i2cId, sclId, sdaId
-i2cPorts = ((0, I2C0_SCL, I2C0_SDA),
-            (1, I2C1_SCL, I2C1_SDA))
+i2cPorts = ((0, I2C0_SCL, I2C0_SDA), (1, I2C1_SCL, I2C1_SDA))

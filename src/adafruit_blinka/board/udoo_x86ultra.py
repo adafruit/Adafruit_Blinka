@@ -63,8 +63,8 @@ UART1_TX = D18
 UART2_RX = D23
 UART2_TX = D22
 
-I2C0_SCL = D34 # labeled on diagram as I2C1, hardware manual port 0
-I2C0_SDA = D35 # i2cdetect-l lists it as i2c-0
+I2C0_SCL = D34  # labeled on diagram as I2C1, hardware manual port 0
+I2C0_SDA = D35  # i2cdetect-l lists it as i2c-0
 
-I2C1_SCL = D38 # Labeled on diagram as I2C2, hardware manual port 5
-I2C1_SCL = D39 # i2cdetect lists it as i2c-1
+I2C1_SCL = D38  # Labeled on diagram as I2C2, hardware manual port 5
+I2C1_SCL = D39  # i2cdetect lists it as i2c-1
