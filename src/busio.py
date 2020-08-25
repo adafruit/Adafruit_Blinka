@@ -293,7 +293,7 @@ class SPI(Lockable):
         except AttributeError:
             raise NotImplementedError(
                 "Frequency attribute not implemented for this platform"
-            )
+            ) from AttributeError
 
     def write(self, buf, start=0, end=None):
         """Write to the SPI device"""
@@ -412,3 +412,36 @@ class UART(Lockable):
     def write(self, buf):
         """Write to the UART from a buffer"""
         return self._uart.write(buf)
+
+
+class OneWire:
+    """
+    Stub class for OneWire, which is currently not implemented
+    """
+
+    def __init__(self, pin):
+        raise NotImplementedError("OneWire has not been implemented")
+
+    def deinit(self):
+        """
+        Deinitialize the OneWire bus and release any hardware resources for reuse.
+        """
+        raise NotImplementedError("OneWire has not been implemented")
+
+    def reset(self):
+        """
+        Reset the OneWire bus and read presence
+        """
+        raise NotImplementedError("OneWire has not been implemented")
+
+    def read_bit(self):
+        """
+        Read in a bit
+        """
+        raise NotImplementedError("OneWire has not been implemented")
+
+    def write_bit(self, value):
+        """
+        Write out a bit based on value.
+        """
+        raise NotImplementedError("OneWire has not been implemented")

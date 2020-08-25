@@ -9,7 +9,7 @@ import os
 try:
     from microcontroller.pin import pwmOuts
 except ImportError:
-    raise RuntimeError("No PWM outputs defined for this board")
+    raise RuntimeError("No PWM outputs defined for this board") from ImportError
 
 
 # pylint: disable=unnecessary-pass
@@ -107,7 +107,7 @@ class PWMOut:
             with open(os.path.join(channel_path, self._export_path), "w") as f_export:
                 f_export.write("%d\n" % self._pwmpin)
         except IOError as e:
-            raise PWMError(e.errno, "Exporting PWM pin: " + e.strerror)
+            raise PWMError(e.errno, "Exporting PWM pin: " + e.strerror) from IOError
 
         # self._set_enabled(False) # This line causes a write error when trying to enable
 
@@ -136,7 +136,9 @@ class PWMOut:
                 ) as f_unexport:
                     f_unexport.write("%d\n" % self._pwmpin)
             except IOError as e:
-                raise PWMError(e.errno, "Unexporting PWM pin: " + e.strerror)
+                raise PWMError(
+                    e.errno, "Unexporting PWM pin: " + e.strerror
+                ) from IOError
 
         self._channel = None
         self._pwmpin = None
@@ -184,7 +186,9 @@ class PWMOut:
         try:
             period_ns = int(period_ns)
         except ValueError:
-            raise PWMError(None, 'Unknown period value: "%s"' % period_ns)
+            raise PWMError(
+                None, 'Unknown period value: "%s"' % period_ns
+            ) from ValueError
 
         # Convert period from nanoseconds to seconds
         period = period_ns / 1e9
@@ -222,7 +226,9 @@ class PWMOut:
         try:
             duty_cycle_ns = int(duty_cycle_ns)
         except ValueError:
-            raise PWMError(None, 'Unknown duty cycle value: "%s"' % duty_cycle_ns)
+            raise PWMError(
+                None, 'Unknown duty cycle value: "%s"' % duty_cycle_ns
+            ) from ValueError
 
         # Convert duty cycle from nanoseconds to seconds
         duty_cycle = duty_cycle_ns / 1e9

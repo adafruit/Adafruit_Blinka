@@ -12,7 +12,6 @@ MCP2221_RESET_DELAY = float(os.environ.get("BLINKA_MCP2221_RESET_DELAY", 0.5))
 # from the C driver
 # http://ww1.microchip.com/downloads/en/DeviceDoc/mcp2221_0_1.tar.gz
 # others (???) determined during driver developement
-# pylint: disable=bad-whitespace
 RESP_ERR_NOERR = 0x00
 RESP_ADDR_NACK = 0x25
 RESP_READ_ERR = 0x7F
@@ -35,7 +34,6 @@ RESP_I2C_WRITINGNOSTOP = 0x45  # ???
 MCP2221_RETRY_MAX = 50
 MCP2221_MAX_I2C_DATA_LEN = 60
 MASK_ADDR_NACK = 0x40
-# pylint: enable=bad-whitespace
 
 
 class MCP2221:

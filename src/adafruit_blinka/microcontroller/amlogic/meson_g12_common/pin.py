@@ -9,8 +9,8 @@ Linux kernel 5.4.y (mainline)
 """
 
 import re
-from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 import gpiod
+from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
 chip0 = gpiod.Chip("0")
 chip1 = gpiod.Chip("1")
