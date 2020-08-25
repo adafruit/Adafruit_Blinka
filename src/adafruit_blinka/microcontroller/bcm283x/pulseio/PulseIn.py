@@ -45,7 +45,9 @@ class PulseIn:
                 print("Message Queue Key: ", self._mq.key)
             queues.append(self._mq)
         except sysv_ipc.ExistentialError:
-            raise RuntimeError("Message queue creation failed")
+            raise RuntimeError(
+                "Message queue creation failed"
+            ) from sysv_ipc.ExistentialError
 
         dir_path = os.path.dirname(os.path.realpath(__file__))
         cmd = [

@@ -4,11 +4,11 @@ try:
     from greatfet.interfaces.adc import ADC
 
     gf = GreatFET()
-except:
+except ModuleNotFoundError:
     raise RuntimeError(
         "Unable to create GreatFET object. Make sure library is "
         "installed and the device is connected."
-    )
+    ) from ModuleNotFoundError
 
 
 class Pin:

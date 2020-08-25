@@ -293,7 +293,7 @@ class SPI(Lockable):
         except AttributeError:
             raise NotImplementedError(
                 "Frequency attribute not implemented for this platform"
-            )
+            ) from AttributeError
 
     def write(self, buf, start=0, end=None):
         """Write to the SPI device"""

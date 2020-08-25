@@ -13,7 +13,7 @@ from adafruit_blinka import ContextManaged
 try:
     from microcontroller.pin import analogIns
 except ImportError:
-    raise RuntimeError("No Analog Inputs defined for this board")
+    raise RuntimeError("No Analog Inputs defined for this board") from ImportError
 
 
 class AnalogIn(ContextManaged):

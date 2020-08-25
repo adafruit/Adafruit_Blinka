@@ -25,7 +25,7 @@ class I2C:
         except FileNotFoundError:
             raise RuntimeError(
                 "I2C Bus #%d not found, check if enabled in config!" % bus_num
-            )
+            ) from RuntimeError
 
     # pylint: enable=unused-argument
 
