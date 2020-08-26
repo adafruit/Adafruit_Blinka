@@ -50,10 +50,10 @@ elif detector.board.any_raspberry_pi_40_pin:
 elif detector.board.any_raspberry_pi_cm:
     from adafruit_blinka.board.raspberrypi.raspi_cm import *
 
-elif detector.board.RASPBERRY_PI_A or detector.board.RASPBERRY_PI_B_REV1:
+elif detector.board.RASPBERRY_PI_B_REV1:
     from adafruit_blinka.board.raspberrypi.raspi_1b_rev1 import *
 
-elif detector.board.RASPBERRY_PI_B_REV2:
+elif detector.board.RASPBERRY_PI_A or detector.board.RASPBERRY_PI_B_REV2:
     from adafruit_blinka.board.raspberrypi.raspi_1b_rev2 import *
 
 elif board_id == ap_board.BEAGLEBONE_BLACK:
