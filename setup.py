@@ -29,7 +29,7 @@ if os.path.exists("/proc/device-tree/compatible"):
         or b"brcm,bcm2837" in compat
         or b"brcm,bcm2838" in compat
     ):
-        board_reqs = ["RPi.GPIO", "rpi_ws281x>=4.0.0"]
+        board_reqs = ["RPi.GPIO", "rpi_ws281x>=4.0.0", "sysv_ipc"]
 
 setup(
     name="Adafruit-Blinka",
@@ -62,7 +62,6 @@ setup(
     install_requires=[
         "Adafruit-PlatformDetect>=2.11.1",
         "Adafruit-PureIO>=1.1.5",
-        "sysv_ipc; platform_system != 'Windows' and platform_machine != 'mips'",
         "pyftdi>=0.40.0",
     ]
     + board_reqs,
