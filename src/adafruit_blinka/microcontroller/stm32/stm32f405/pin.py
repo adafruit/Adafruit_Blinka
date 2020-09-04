@@ -1,4 +1,4 @@
-"""STM32 pins"""
+"""STM32F405 pins"""
 
 from microcontroller import Pin
 

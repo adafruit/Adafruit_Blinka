@@ -8,8 +8,8 @@ from adafruit_blinka.agnostic import chip_id
 
 if chip_id == ap_chip.ESP8266:
     from adafruit_blinka.microcontroller.esp8266.pin import *
-elif chip_id == ap_chip.STM32:
-    from adafruit_blinka.microcontroller.stm32.pin import *
+elif chip_id == ap_chip.STM32F405:
+    from adafruit_blinka.microcontroller.stm32.stm32f405.pin import *
 elif chip_id == ap_chip.BCM2XXX:
     from adafruit_blinka.microcontroller.bcm283x.pin import *
 elif chip_id == ap_chip.AM33XX:

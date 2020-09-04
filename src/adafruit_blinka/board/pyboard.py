@@ -1,6 +1,6 @@
 """PyBoard pin names"""
 
-from adafruit_blinka.microcontroller.stm32 import pin
+from adafruit_blinka.microcontroller.stm32.stm32f405 import pin
 
 X1 = pin.A0
 X2 = pin.A1
