@@ -145,9 +145,7 @@ PZ6 = Pin((9, 6))
 PZ7 = Pin((9, 7))
 
 # ordered as uartId, txId, rxId
-UART_PORTS = (
-    (3, PB10, PB12),
-)
+UART_PORTS = ((3, PB10, PB12),)
 
 # ordered as i2cId, sclId, sdaId
 I2C_PORTS = (
