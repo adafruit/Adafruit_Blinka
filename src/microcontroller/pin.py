@@ -58,5 +58,7 @@ elif chip_id == ap_chip.MIPS24KEC:
     from adafruit_blinka.microcontroller.mips24kec.pin import *
 elif chip_id == ap_chip.PENTIUM_N3710:
     from adafruit_blinka.microcontroller.pentium.n3710.pin import *
+elif chip_id == ap_chip.STM32MP157:
+    from adafruit_blinka.microcontroller.stm32.stm32mp157.pin import *
 else:
     raise NotImplementedError("Microcontroller not supported: ", chip_id)
