@@ -3,8 +3,8 @@ import unittest
 
 class TestEnum(unittest.TestCase):
     """
-        Verifies the repl() and str() behaviour of an example Enum
-        Enums represent configuration values such as digitalio.Direction, digitalio.Pull etc.
+    Verifies the repl() and str() behaviour of an example Enum
+    Enums represent configuration values such as digitalio.Direction, digitalio.Pull etc.
     """
 
     def setUp(self):
@@ -24,7 +24,13 @@ class TestEnum(unittest.TestCase):
     def test_iteritems(self):
         """A subtype of Enum can list all attributes of its own type"""
         items = list(self.Cls.iteritems())
-        self.assertEqual(items, [("one", self.Cls.one), ("two", self.Cls.two),])
+        self.assertEqual(
+            items,
+            [
+                ("one", self.Cls.one),
+                ("two", self.Cls.two),
+            ],
+        )
 
     def test_repr(self):
         """A repr() call on an Enum gives its fully-qualified name"""

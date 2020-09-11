@@ -127,7 +127,7 @@ class I2C(Lockable):
         in_end=None,
         stop=False
     ):
-        """"Write to a device at specified address from a buffer then read
+        """ "Write to a device at specified address from a buffer then read
         from a device at specified address into a buffer
         """
         return self._i2c.writeto_then_readfrom(
