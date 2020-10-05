@@ -111,6 +111,9 @@ Y02 = Pin("SPI3_MOSI")
 T07 = Pin("DAP5_DIN")
 T06 = Pin("DAP5_DOUT")
 
+# Clara AGX Xavier only
+P04 = Pin("SOC_GPIO04")
+
 # Shared
 N01 = Pin("SOC_GPIO54")
 R00 = Pin("SOC_GPIO44")
