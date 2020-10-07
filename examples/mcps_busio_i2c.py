@@ -14,7 +14,7 @@ class MCP2221(_MCP2221):
     def __init__(self, address):
         self._hid = hid.device()
         self._hid.open_path(address)
-        print("Connected to "+str(address))
+        print("Connected to " + str(address))
         self._gp_config = [0x07] * 4  # "don't care" initial value
         for pin in range(4):
             self.gp_set_mode(pin, self.GP_GPIO)  # set to GPIO mode
@@ -42,7 +42,7 @@ for addr in addresses:
         i2c_device = I2C(MCP2221I2C(MCP2221(addr)))
         i2c_devices.append(i2c_device)
     except OSError:
-        print("Device path: "+ str(addr)+ " is used")
+        print("Device path: " + str(addr) + " is used")
 
 
 while True:
@@ -50,8 +50,8 @@ while True:
         addrbuf = bytearray(2)
         addrbuf[0] = ADDRID1 >> 8
         addrbuf[1] = ADDRID1 & 0xFF
-        inbuf  = bytearray(6)
+        inbuf = bytearray(6)
         i2c.writeto_then_readfrom(MLXADDR, addrbuf, inbuf)
-        print("Device "+str(i2c_devices.index(i2c))+": ")
+        print("Device " + str(i2c_devices.index(i2c)) + ": ")
         print(inbuf)
         time.sleep(0.5)
