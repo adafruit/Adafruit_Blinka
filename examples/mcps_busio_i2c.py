@@ -10,7 +10,7 @@ MLXADDR = 0x33
 ADDRID1 = 0x2407
 
 
-class MCP2221(_MCP2221):
+class MCP2221(_MCP2221):  # pylint: disable=too-few-public-methods
     def __init__(self, address):
         self._hid = hid.device()
         self._hid.open_path(address)
@@ -21,13 +21,13 @@ class MCP2221(_MCP2221):
             self.gpio_set_direction(pin, 1)  # set to INPUT
 
 
-class MCP2221I2C(_MCP2221I2C):
+class MCP2221I2C(_MCP2221I2C):  # pylint: disable=too-few-public-methods
     def __init__(self, mcp2221, *, frequency=100000):
         self._mcp2221 = mcp2221
         self._mcp2221.i2c_configure(frequency)
 
 
-class I2C(busio.I2C):
+class I2C(busio.I2C):  # pylint: disable=too-few-public-methods
     def __init__(self, mcp2221_i2c):
         self._i2c = mcp2221_i2c
 
