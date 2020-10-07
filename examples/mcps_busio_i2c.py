@@ -1,6 +1,6 @@
 import time
-import busio
 import hid
+import busio
 
 from adafruit_blinka.microcontroller.mcp2221.mcp2221 import mcp2221 as _mcp2221
 from adafruit_blinka.microcontroller.mcp2221.mcp2221 import MCP2221 as _MCP2221
