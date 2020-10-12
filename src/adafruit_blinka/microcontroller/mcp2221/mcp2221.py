@@ -6,7 +6,7 @@ import hid
 
 # Here if you need it
 MCP2221_HID_DELAY = float(os.environ.get("BLINKA_MCP2221_HID_DELAY", 0))
-# Use to set delay between reset and device reopen
+# Use to set delay between reset and device reopen. if negative, don't reset at all
 MCP2221_RESET_DELAY = float(os.environ.get("BLINKA_MCP2221_RESET_DELAY", 0.5))
 
 # from the C driver
@@ -51,7 +51,8 @@ class MCP2221:
     def __init__(self):
         self._hid = hid.device()
         self._hid.open(MCP2221.VID, MCP2221.PID)
-        self._reset()
+        if MCP2221_RESET_DELAY >= 0:
+            self._reset()
         self._gp_config = [0x07] * 4  # "don't care" initial value
         for pin in range(4):
             self.gp_set_mode(pin, self.GP_GPIO)  # set to GPIO mode
