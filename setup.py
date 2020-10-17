@@ -61,7 +61,7 @@ setup(
     },
     install_requires=[
         "Adafruit-PlatformDetect>=2.18.1",
-        "Adafruit-PureIO>=1.1.6",
+        "Adafruit-PureIO>=1.1.7",
         "pyftdi>=0.40.0",
     ]
     + board_reqs,
