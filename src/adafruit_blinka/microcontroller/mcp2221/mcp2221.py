@@ -285,6 +285,8 @@ class MCP2221:
                     continue
                 if resp[2] in (RESP_READ_COMPL, RESP_READ_PARTIAL):
                     break
+            else:
+                raise RuntimeError("I2C read error: max retries reached.")
 
             # move data into buffer
             chunk = min(end - start, 60)
