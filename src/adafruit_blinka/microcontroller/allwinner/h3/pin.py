@@ -55,6 +55,8 @@ PG11 = Pin(203)
 PG12 = Pin(204)
 PG13 = Pin(205)
 
+PL2 = Pin((1, 2))
+PL4 = Pin((1, 4))
 
 i2cPorts = ((0, TWI0_SCL, TWI0_SDA),)
 # ordered as spiId, sckId, mosiId, misoId
