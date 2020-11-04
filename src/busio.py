@@ -27,10 +27,10 @@ class I2C(Lockable):
     for both MicroPython and Linux.
     """
 
-    def __init__(self, scl, sda, frequency=400000):
-        self.init(scl, sda, frequency)
+    def __init__(self, scl, sda, frequency=400000, i2c_addr=None):
+        self.init(scl, sda, frequency, i2c_addr)
 
-    def init(self, scl, sda, frequency):
+    def init(self, scl, sda, frequency, i2c_addr):
         """Initialization"""
         self.deinit()
         if detector.board.ftdi_ft232h:
@@ -55,6 +55,12 @@ class I2C(Lockable):
             return
         if detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.i2c import I2C as _I2C
+
+        if detector.board.id == 'GENERIC_LINUX_PC':
+            from adafruit_blinka.microcontroller.generic_linux.i2c import I2C as _I2C
+
+            self._i2c = _I2C(i2c_addr, mode=_I2C.MASTER, baudrate=frequency)
+            return
         else:
             from machine import I2C as _I2C
         from microcontroller.pin import i2cPorts
