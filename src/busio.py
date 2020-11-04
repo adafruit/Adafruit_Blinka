@@ -33,6 +33,11 @@ class I2C(Lockable):
     def init(self, scl, sda, frequency, i2c_addr):
         """Initialization"""
         self.deinit()
+        if i2c_addr:
+            from adafruit_blinka.microcontroller.generic_linux.i2c import I2C as _I2C
+
+            self._i2c = _I2C(i2c_addr, mode=_I2C.MASTER, baudrate=frequency)
+            return
         if detector.board.ftdi_ft232h:
             from adafruit_blinka.microcontroller.ft232h.i2c import I2C as _I2C
 
@@ -56,11 +61,6 @@ class I2C(Lockable):
         if detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.i2c import I2C as _I2C
 
-        if detector.board.id == 'GENERIC_LINUX_PC':
-            from adafruit_blinka.microcontroller.generic_linux.i2c import I2C as _I2C
-
-            self._i2c = _I2C(i2c_addr, mode=_I2C.MASTER, baudrate=frequency)
-            return
         else:
             from machine import I2C as _I2C
         from microcontroller.pin import i2cPorts
