@@ -65,8 +65,8 @@ class Pin:
                             pass
                         else:
                             raise NotImplementedError(
-                                "Internal pulldowns not supported in libgpiod, "
-                                "use physical resistor instead!"
+                                "Internal pulldowns not supported in libgpiod,"
+                                " use physical resistor instead!"
                             )
 
                     if SUPPRESS_WARNINGS:
@@ -79,7 +79,9 @@ class Pin:
                 self._mode = self.IN
                 self._line.release()
                 self._line.request(
-                    consumer=self._CONSUMER, type=gpiod.LINE_REQ_DIR_IN, flags=flags
+                    consumer=self._CONSUMER,
+                    type=gpiod.LINE_REQ_DIR_IN,
+                    flags=flags
                 )
 
             elif mode == self.OUT:
@@ -87,7 +89,10 @@ class Pin:
                     raise RuntimeError("Cannot set pull resistor on output")
                 self._mode = self.OUT
                 self._line.release()
-                self._line.request(consumer=self._CONSUMER, type=gpiod.LINE_REQ_DIR_OUT)
+                self._line.request(
+                    consumer=self._CONSUMER,
+                    type=gpiod.LINE_REQ_DIR_OUT
+                )
 
             else:
                 raise RuntimeError("Invalid mode for pin: %s" % self.id)
