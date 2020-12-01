@@ -72,16 +72,12 @@ class Pin:
                     if SUPPRESS_WARNINGS:
                         pass
                     else:
-                        raise RuntimeError(
-                            "Invalid pull for pin: %s" % self.id
-                        )
+                        raise RuntimeError("Invalid pull for pin: %s" % self.id)
 
                 self._mode = self.IN
                 self._line.release()
                 self._line.request(
-                    consumer=self._CONSUMER,
-                    type=gpiod.LINE_REQ_DIR_IN,
-                    flags=flags
+                    consumer=self._CONSUMER, type=gpiod.LINE_REQ_DIR_IN, flags=flags
                 )
 
             elif mode == self.OUT:
@@ -89,10 +85,7 @@ class Pin:
                     raise RuntimeError("Cannot set pull resistor on output")
                 self._mode = self.OUT
                 self._line.release()
-                self._line.request(
-                    consumer=self._CONSUMER,
-                    type=gpiod.LINE_REQ_DIR_OUT
-                )
+                self._line.request(consumer=self._CONSUMER, type=gpiod.LINE_REQ_DIR_OUT)
 
             else:
                 raise RuntimeError("Invalid mode for pin: %s" % self.id)
