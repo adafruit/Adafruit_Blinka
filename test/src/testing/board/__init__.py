@@ -10,7 +10,7 @@ if agnostic.board == "feather_m0_express":
     led_inverted = False
 elif agnostic.board == "feather_huzzah":
     default_pin = board.GPIO4
-    led_pin = board.GPIO0 # red led
+    led_pin = board.GPIO0  # red led
     led_hardwired = True
     led_inverted = True
 elif agnostic.board == "pyboard":

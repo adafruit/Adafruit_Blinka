@@ -1,3 +1,4 @@
+"""Pin definitions for the Giant Board"""
 from adafruit_blinka.microcontroller.sama5 import pin
 
 PD23 = pin.PD23

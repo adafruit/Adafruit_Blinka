@@ -2,51 +2,20 @@
 `analogio` - Analog input and output control
 =================================================
 See `CircuitPython:analogio` in CircuitPython for more details.
-* Author(s): Carter Nelson
+* Author(s): Carter Nelson, Melissa LeBlanc-Williams
 """
 
-from adafruit_blinka.agnostic import board_id, detector
+from adafruit_blinka.agnostic import detector
 
-# pylint: disable=ungrouped-imports,wrong-import-position
+# pylint: disable=ungrouped-imports,wrong-import-position,unused-import
 
 if detector.board.microchip_mcp2221:
-    from adafruit_blinka.microcontroller.mcp2221.pin import Pin
+    from adafruit_blinka.microcontroller.mcp2221.analogio import AnalogIn
+    from adafruit_blinka.microcontroller.mcp2221.analogio import AnalogOut
+elif detector.board.greatfet_one:
+    from adafruit_blinka.microcontroller.nxp_lpc4330.analogio import AnalogIn
+    from adafruit_blinka.microcontroller.nxp_lpc4330.analogio import AnalogOut
+elif detector.chip.RK3308:
+    from adafruit_blinka.microcontroller.generic_linux.sysfs_analogin import AnalogIn
 else:
     raise NotImplementedError("analogio not supported for this board.")
-
-from adafruit_blinka import ContextManaged
-
-class AnalogIn(ContextManaged):
-
-    def __init__(self, pin):
-        self._pin = Pin(pin.id)
-        self._pin.init(mode=Pin.ADC)
-
-    @property
-    def value(self):
-        return self._pin.value()
-
-    @value.setter
-    def value(self, value):
-        # emulate what CircuitPython does
-        raise AttributeError("'AnalogIn' object has no attribute 'value'")
-
-    def deinit(self):
-        del self._pin
-
-class AnalogOut(ContextManaged):
-    def __init__(self, pin):
-        self._pin = Pin(pin.id)
-        self._pin.init(mode=Pin.DAC)
-
-    @property
-    def value(self):
-        # emulate what CircuitPython does
-        raise AttributeError("unreadable attribute")
-
-    @value.setter
-    def value(self, value):
-        self._pin.value(value)
-
-    def deinit(self):
-        del self._pin

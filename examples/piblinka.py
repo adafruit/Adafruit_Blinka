@@ -1,16 +1,18 @@
 import sys
 import time
-from adafruit_blinka.agnostic import board as agnostic_board
+import adafruit_blinka.agnostic as agnostic
 import board
 import digitalio
 
-#from Adafruit_GPIO import Platform
-#print("Platform = ", Platform.platform_detect(), Platform.pi_version())
+# from Adafruit_GPIO import Platform
+# print("Platform = ", Platform.platform_detect(), Platform.pi_version())
 
 print("hello blinka!")
 
-print("Found system type: %s (sys.plaform %s implementation %s) " %
-      (agnostic_board, sys.platform, sys.implementation.name))
+print(
+    "Found system type: %s (sys.platform %s implementation %s) "
+    % (agnostic.board_id, sys.platform, sys.implementation.name)
+)
 
 print("board contents: ", dir(board))
 

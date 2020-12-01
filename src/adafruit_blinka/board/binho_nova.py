@@ -1,3 +1,4 @@
+"""Pin definitions for the Binho Nova"""
 from adafruit_blinka.microcontroller.nova import pin
 
 IO0 = pin.IO0

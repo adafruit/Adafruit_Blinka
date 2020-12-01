@@ -1,19 +1,23 @@
 # mitigate heap fragmentation issues by pre-loading major libraries
 import gc
+
 gc.collect()
 import unittest
+
 gc.collect()
+
 
 def yes_no(q, default=True):
     a = input(q + " (Y/n)?" if default else " (y/N)?")
-    a=a.lower()
-    if a == '':
+    a = a.lower()
+    if a == "":
         return default
     elif a == "n":
         a = False
     elif a == "y":
         a = True
     return a
+
 
 def multi_choice(q, choices, defaultPos=None):
     if defaultPos is not None:
@@ -23,9 +27,9 @@ def multi_choice(q, choices, defaultPos=None):
     for pos, choice in enumerate(choices):
         print("{}) {}".format(pos, choice))
     a = input()
-    a=a.lower()
+    a = a.lower()
     try:
-        if a == '':
+        if a == "":
             a = defaultPos
         else:
             a = int(a)
@@ -34,11 +38,13 @@ def multi_choice(q, choices, defaultPos=None):
         print(e)
         return None
 
+
 def await_true(name, fun, interval=0, patience=60):
     from adafruit_blinka.agnostic.time import sleep, monotonic
+
     print("Waiting {} sec until {} (CTRL+C give up)".format(patience, name))
 
-    deadline =  monotonic() + patience
+    deadline = monotonic() + patience
     try:
         while deadline - monotonic() > 0:
             if fun():
@@ -52,6 +58,7 @@ def await_true(name, fun, interval=0, patience=60):
 
 def test_module(module, runner=None):
     import unittest
+
     if runner is None:
         runner = unittest.TestRunner()
     suite = unittest.TestSuite()
@@ -64,10 +71,11 @@ def test_module(module, runner=None):
             pass
     return runner.run(suite)
 
+
 def test_module_name(absolute, runner=None):
     try:
         print("Suite begin: {}".format(absolute))
-        module=__import__(absolute)
+        module = __import__(absolute)
         relatives = absolute.split(".")
         if len(relatives) > 1:
             for relative in relatives[1:]:
@@ -75,6 +83,7 @@ def test_module_name(absolute, runner=None):
         return test_module(module, runner)
     finally:
         print("Suite end: {}".format(absolute))
+
 
 def test_interactive(*module_names):
     for module_name in module_names:
@@ -97,8 +106,13 @@ def main():
     """
     moduleNames = ["testing.implementation.universal.bitbangio"]
 
-    unittest.raiseException = True # terminates with stack information on userspace Exception
-    unittest.raiseBaseException = True # terminates with stack information on system Exception
+    unittest.raiseException = (
+        True  # terminates with stack information on userspace Exception
+    )
+    unittest.raiseBaseException = (
+        True  # terminates with stack information on system Exception
+    )
     test_interactive(*moduleNames)
+
 
 gc.collect()

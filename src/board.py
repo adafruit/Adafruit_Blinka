@@ -29,10 +29,11 @@ See `CircuitPython:board` in CircuitPython for more details.
 """
 import sys
 
-from adafruit_blinka.agnostic import board_id, detector
 import adafruit_platformdetect.constants.boards as ap_board
+from adafruit_blinka.agnostic import board_id, detector
 
 # pylint: disable=wildcard-import,unused-wildcard-import,ungrouped-imports
+# pylint: disable=import-outside-toplevel
 
 if board_id == ap_board.FEATHER_HUZZAH:
     from adafruit_blinka.board.feather_huzzah import *
@@ -49,10 +50,10 @@ elif detector.board.any_raspberry_pi_40_pin:
 elif detector.board.any_raspberry_pi_cm:
     from adafruit_blinka.board.raspberrypi.raspi_cm import *
 
-elif detector.board.RASPBERRY_PI_A or detector.board.RASPBERRY_PI_B_REV1:
+elif detector.board.RASPBERRY_PI_B_REV1:
     from adafruit_blinka.board.raspberrypi.raspi_1b_rev1 import *
 
-elif detector.board.RASPBERRY_PI_B_REV2:
+elif detector.board.RASPBERRY_PI_A or detector.board.RASPBERRY_PI_B_REV2:
     from adafruit_blinka.board.raspberrypi.raspi_1b_rev2 import *
 
 elif board_id == ap_board.BEAGLEBONE_BLACK:
@@ -92,6 +93,12 @@ elif board_id == ap_board.ORANGE_PI_LITE:
 elif board_id == ap_board.ORANGE_PI_PLUS_2E:
     from adafruit_blinka.board.orangepi.orangepipc import *
 
+elif board_id == ap_board.ORANGE_PI_2:
+    from adafruit_blinka.board.orangepi.orangepipc import *
+
+elif board_id == ap_board.BANANA_PI_M2_ZERO:
+    from adafruit_blinka.board.bananapi.bpim2zero import *
+
 elif board_id == ap_board.GIANT_BOARD:
     from adafruit_blinka.board.giantboard import *
 
@@ -110,6 +117,9 @@ elif board_id == ap_board.JETSON_NANO:
 elif board_id == ap_board.JETSON_NX:
     from adafruit_blinka.board.nvidia.jetson_nx import *
 
+elif board_id == ap_board.CLARA_AGX_XAVIER:
+    from adafruit_blinka.board.nvidia.clara_agx_xavier import *
+
 elif board_id == ap_board.CORAL_EDGE_TPU_DEV:
     from adafruit_blinka.board.coral_edge_tpu import *
 
@@ -121,6 +131,9 @@ elif board_id == ap_board.ODROID_C4:
 
 elif board_id == ap_board.ODROID_N2:
     from adafruit_blinka.board.hardkernel.odroidn2 import *
+
+elif board_id == ap_board.ODROID_XU4:
+    from adafruit_blinka.board.hardkernel.odroidxu4 import *
 
 elif board_id == ap_board.DRAGONBOARD_410C:
     from adafruit_blinka.board.dragonboard_410c import *
@@ -134,11 +147,35 @@ elif board_id == ap_board.BINHO_NOVA:
 elif board_id == ap_board.MICROCHIP_MCP2221:
     from adafruit_blinka.board.microchip_mcp2221 import *
 
+elif board_id == ap_board.GREATFET_ONE:
+    from adafruit_blinka.board.greatfet_one import *
+
 elif board_id == ap_board.SIFIVE_UNLEASHED:
     from adafruit_blinka.board.hifive_unleashed import *
 
 elif board_id == ap_board.PINE64:
     from adafruit_blinka.board.pine64 import *
+
+elif board_id == ap_board.PINEH64:
+    from adafruit_blinka.board.pineH64 import *
+
+elif board_id == ap_board.SOPINE:
+    from adafruit_blinka.board.soPine import *
+
+elif board_id == ap_board.CLOCKWORK_CPI3:
+    from adafruit_blinka.board.clockworkcpi3 import *
+
+elif board_id == ap_board.ONION_OMEGA2:
+    from adafruit_blinka.board.onion.omega2 import *
+
+elif board_id == ap_board.ROCK_PI_S:
+    from adafruit_blinka.board.radxa.rockpis import *
+
+elif board_id == ap_board.UDOO_X86:
+    from adafruit_blinka.board.udoo_x86ultra import *
+
+elif board_id == ap_board.STM32MP157C_DK2:
+    from adafruit_blinka.board.stm32.stm32mp157c_dk2 import *
 
 elif "sphinx" in sys.modules:
     pass
@@ -146,12 +183,16 @@ elif "sphinx" in sys.modules:
 else:
     raise NotImplementedError("Board not supported {}".format(board_id))
 
+
 def I2C():
     """The singleton I2C interface"""
     import busio
+
     return busio.I2C(SCL, SDA)
+
 
 def SPI():
     """The singleton SPI interface"""
     import busio
+
     return busio.SPI(SCLK, MOSI, MISO)

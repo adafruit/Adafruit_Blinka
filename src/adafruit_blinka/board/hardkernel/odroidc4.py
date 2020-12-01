@@ -2,13 +2,12 @@
 
 from adafruit_blinka.microcontroller.amlogic.s905x3 import pin
 
-SDA1 = pin.I2C1_SDA
-SCL1 = pin.I2C1_SCL
-SDA2 = pin.I2C2_SDA
-SCL2 = pin.I2C2_SCL
+for it in pin.i2cPorts:
+    globals()["SCL" + str(it[0])] = it[1]
+    globals()["SDA" + str(it[0])] = it[2]
 
-SDA = SDA1
-SCL = SCL1
+SCL = pin.i2cPorts[0][1]
+SDA = pin.i2cPorts[0][2]
 
 SCLK = pin.SPI0_SCLK
 MOSI = pin.SPI0_MOSI

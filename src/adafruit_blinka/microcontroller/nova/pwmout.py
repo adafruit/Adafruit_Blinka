@@ -1,17 +1,26 @@
+"""PWMOut Class for Binho Nova"""
 
 try:
     from microcontroller.pin import pwmOuts
 except ImportError:
-    raise RuntimeError("No PWM outputs defined for this board")
+    raise RuntimeError("No PWM outputs defined for this board") from ImportError
 
 from microcontroller.pin import Pin
 
+
+# pylint: disable=unnecessary-pass
 class PWMError(IOError):
     """Base class for PWM errors."""
+
     pass
 
 
-class PWMOut(object):
+# pylint: enable=unnecessary-pass
+
+
+class PWMOut:
+    """Pulse Width Modulation Output Class"""
+
     # Nova instance
     _nova = None
     MAX_CYCLE_LEVEL = 1024
@@ -36,15 +45,22 @@ class PWMOut(object):
 
         """
         if PWMOut._nova is None:
+            # pylint: disable=import-outside-toplevel
             from adafruit_blinka.microcontroller.nova import Connection
+
+            # pylint: enable=import-outside-toplevel
+
             PWMOut._nova = Connection.getInstance()
 
-        PWMOut._nova.setOperationMode(0, 'IO')
+        PWMOut._nova.setOperationMode(0, "IO")
         self._pwmpin = None
+        self._channel = None
+        self._enable = False
         self._open(pin, duty_cycle, frequency, variable_frequency)
 
     def __del__(self):
         self.deinit()
+        PWMOut._nova.close()
 
     def __enter__(self):
         return self
@@ -63,6 +79,9 @@ class PWMOut(object):
         if self._channel is None:
             raise RuntimeError("No PWM channel found for this Pin")
 
+        if variable_frequency:
+            print("Variable Frequency is not supported, continuing without it...")
+
         PWMOut._nova.setIOpinMode(self._pwmpin, Pin.PWM)
 
         # set frequency
@@ -76,25 +95,33 @@ class PWMOut(object):
         self._set_enabled(True)
 
     def deinit(self):
+        """Deinit the Nova PWM."""
+        # pylint: disable=broad-except
         try:
-            """Deinit the Nova PWM."""
             if self._channel is not None:
-                #self.duty_cycle = 0
-                self._set_enabled(False) # make to disable before unexport
+                # self.duty_cycle = 0
+                self._set_enabled(False)  # make to disable before unexport
 
         except Exception as e:
             # due to a race condition for which I have not yet been
             # able to find the root cause, deinit() often fails
             # but it does not effect future usage of the pwm pin
-            print("warning: failed to deinitialize pwm pin {0}:{1} due to: {2}\n".format(self._channel, self._pwmpin, type(e).__name__))
+            print(
+                "warning: failed to deinitialize pwm pin {0}:{1} due to: {2}\n".format(
+                    self._channel, self._pwmpin, type(e).__name__
+                )
+            )
         finally:
             self._channel = None
             self._pwmpin = None
+        # pylint: enable=broad-except
 
     def _is_deinited(self):
         if self._pwmpin is None:
-            raise ValueError("Object has been deinitialize and can no longer "
-                             "be used. Create a new object.")
+            raise ValueError(
+                "Object has been deinitialize and can no longer "
+                "be used. Create a new object."
+            )
 
     # Mutable properties
 
@@ -141,7 +168,9 @@ class PWMOut(object):
         duty_cycle = duty_cycle * PWMOut.MAX_CYCLE_LEVEL
 
         # Set duty cycle
+        # pylint: disable=protected-access
         Pin._nova.setIOpinValue(self._pwmpin, duty_cycle)
+        # pylint: enable=protected-access
 
     duty_cycle = property(_get_duty_cycle, _set_duty_cycle)
     """Get or set the PWM's output duty cycle as a ratio from 0.0 to 1.0.
@@ -155,7 +184,7 @@ class PWMOut(object):
     """
 
     def _get_frequency(self):
-        return int(PWMOut._nova.getIOpinPWMFreq(self._pwmpin).split('PWMFREQ ')[1])
+        return int(PWMOut._nova.getIOpinPWMFreq(self._pwmpin).split("PWMFREQ ")[1])
 
     def _set_frequency(self, frequency):
         if not isinstance(frequency, (int, float)):
@@ -178,28 +207,32 @@ class PWMOut(object):
 
         if enabled == "1":
             return True
-        elif enabled == "0":
+        if enabled == "0":
             return False
 
-        raise PWMError(None, "Unknown enabled value: \"%s\"" % enabled)
+        raise PWMError(None, 'Unknown enabled value: "%s"' % enabled)
 
     def _set_enabled(self, value):
+        """Get or set the PWM's output enabled state.
+
+        Raises:
+            PWMError: if an I/O or OS error occurs.
+            TypeError: if value type is not bool.
+
+        :type: bool
+        """
         if not isinstance(value, bool):
             raise TypeError("Invalid enabled type, should be string.")
         self._enable = value
         if not self._enable:
             self._set_duty_cycle(0.0)
-    """Get or set the PWM's output enabled state.
-
-    Raises:
-        PWMError: if an I/O or OS error occurs.
-        TypeError: if value type is not bool.
-
-    :type: bool
-    """
 
     # String representation
 
     def __str__(self):
-        return "PWM%d, pin %s (freq=%f Hz, duty_cycle=%f%%)" % \
-            (self._pin, self._pin, self.frequency, self.duty_cycle * 100,)
+        return "PWM%d, pin %s (freq=%f Hz, duty_cycle=%f%%)" % (
+            self._pin,
+            self._pin,
+            self.frequency,
+            self.duty_cycle * 100,
+        )

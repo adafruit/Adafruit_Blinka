@@ -8,8 +8,8 @@ from adafruit_blinka.agnostic import chip_id
 
 if chip_id == ap_chip.ESP8266:
     from adafruit_blinka.microcontroller.esp8266.pin import *
-elif chip_id == ap_chip.STM32:
-    from adafruit_blinka.microcontroller.stm32.pin import *
+elif chip_id == ap_chip.STM32F405:
+    from adafruit_blinka.microcontroller.stm32.stm32f405.pin import *
 elif chip_id == ap_chip.BCM2XXX:
     from adafruit_blinka.microcontroller.bcm283x.pin import *
 elif chip_id == ap_chip.AM33XX:
@@ -30,6 +30,8 @@ elif chip_id == ap_chip.S905X3:
     from adafruit_blinka.microcontroller.amlogic.s905x3.pin import *
 elif chip_id == ap_chip.S922X:
     from adafruit_blinka.microcontroller.amlogic.s922x.pin import *
+elif chip_id == ap_chip.EXYNOS5422:
+    from adafruit_blinka.microcontroller.samsung.exynos5422.pin import *
 elif chip_id == ap_chip.APQ8016:
     from adafruit_blinka.microcontroller.snapdragon.apq8016.pin import *
 elif chip_id == ap_chip.IMX8MX:
@@ -40,11 +42,23 @@ elif chip_id == ap_chip.FT232H:
     from adafruit_blinka.microcontroller.ft232h.pin import *
 elif chip_id == ap_chip.BINHO:
     from adafruit_blinka.microcontroller.nova.pin import *
+elif chip_id == ap_chip.LPC4330:
+    from adafruit_blinka.microcontroller.nxp_lpc4330.pin import *
 elif chip_id == ap_chip.MCP2221:
     from adafruit_blinka.microcontroller.mcp2221.pin import *
 elif chip_id == ap_chip.A64:
     from adafruit_blinka.microcontroller.allwinner.a64.pin import *
+elif chip_id == ap_chip.A33:
+    from adafruit_blinka.microcontroller.allwinner.a33.pin import *
+elif chip_id == ap_chip.RK3308:
+    from adafruit_blinka.microcontroller.rockchip.rk3308.pin import *
 elif chip_id == ap_chip.MIPS24KC:
     from adafruit_blinka.microcontroller.atheros.ar9331.pin import *
+elif chip_id == ap_chip.MIPS24KEC:
+    from adafruit_blinka.microcontroller.mips24kec.pin import *
+elif chip_id == ap_chip.PENTIUM_N3710:
+    from adafruit_blinka.microcontroller.pentium.n3710.pin import *
+elif chip_id == ap_chip.STM32MP157:
+    from adafruit_blinka.microcontroller.stm32.stm32mp157.pin import *
 else:
     raise NotImplementedError("Microcontroller not supported: ", chip_id)

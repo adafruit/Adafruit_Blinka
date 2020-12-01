@@ -5,10 +5,11 @@
 * Author(s): cefn
 """
 
-class Enum():
+
+class Enum:
     """
-        Object supporting CircuitPython-style of static symbols
-        as seen with Direction.OUTPUT, Pull.UP
+    Object supporting CircuitPython-style of static symbols
+    as seen with Direction.OUTPUT, Pull.UP
     """
 
     def __repr__(self):
@@ -26,8 +27,8 @@ class Enum():
     @classmethod
     def iteritems(cls):
         """
-            Inspects attributes of the class for instances of the class
-            and returns as key,value pairs mirroring dict#iteritems
+        Inspects attributes of the class for instances of the class
+        and returns as key,value pairs mirroring dict#iteritems
         """
         for key in dir(cls):
             val = getattr(cls, key)
@@ -37,6 +38,7 @@ class Enum():
 
 class ContextManaged:
     """An object that automatically deinitializes hardware with a context manager."""
+
     def __enter__(self):
         return self
 
@@ -47,11 +49,13 @@ class ContextManaged:
     def deinit(self):
         """Free any hardware used by the object."""
         return
+
     # pylint: enable=no-self-use
 
 
 class Lockable(ContextManaged):
     """An object that must be locked to prevent collisions on a microcontroller resource."""
+
     _locked = False
 
     def try_lock(self):
@@ -68,8 +72,13 @@ class Lockable(ContextManaged):
         else:
             raise ValueError("Not locked")
 
+
 def patch_system():
     """Patch modules that may be different due to the platform."""
+    # pylint: disable=import-outside-toplevel
     import sys
     from adafruit_blinka.agnostic import time
-    sys.modules['time'] = time
+
+    # pylint: enable=import-outside-toplevel
+
+    sys.modules["time"] = time
