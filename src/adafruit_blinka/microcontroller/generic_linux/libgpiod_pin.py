@@ -1,4 +1,6 @@
 """A Pin class for use with libgpiod."""
+from adafruit_blinka.constants import SUPPRESS_WARNINGS
+
 try:
     import gpiod
 except ImportError:
@@ -51,16 +53,28 @@ class Pin:
                 flags = 0
                 if pull is not None:
                     if pull == self.PULL_UP:
-                        raise NotImplementedError(
-                            "Internal pullups not supported in libgpiod, "
-                            "use physical resistor instead!"
-                        )
+                        if SUPPRESS_WARNINGS:
+                            pass
+                        else:
+                            raise NotImplementedError(
+                                "Internal pullups not supported in libgpiod, "
+                                "use physical resistor instead!"
+                            )
                     if pull == self.PULL_DOWN:
-                        raise NotImplementedError(
-                            "Internal pulldowns not supported in libgpiod, "
-                            "use physical resistor instead!"
+                        if SUPPRESS_WARNINGS:
+                            pass
+                        else:
+                            raise NotImplementedError(
+                                "Internal pulldowns not supported in libgpiod, "
+                                "use physical resistor instead!"
+                            )
+
+                    if SUPPRESS_WARNINGS:
+                        pass
+                    else:
+                        raise RuntimeError(
+                            "Invalid pull for pin: %s" % self.id
                         )
-                    raise RuntimeError("Invalid pull for pin: %s" % self.id)
 
                 self._mode = self.IN
                 self._line.release()
