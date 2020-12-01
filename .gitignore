@@ -9,3 +9,5 @@ bundles
 .eggs
 dist
 **/*.egg-info
+venv/
+env/
