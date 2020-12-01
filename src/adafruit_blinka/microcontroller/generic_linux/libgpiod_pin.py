@@ -42,6 +42,45 @@ class Pin:
     def __eq__(self, other):
         return self.id == other
 
+    def __check_pull_mode(self, pull):
+        """Check if pin is setup or not with pull resistors
+
+        This is done since there is no current better implementation for this :(
+
+        Args:
+            pull: Mode of pulling the pin
+
+        Returns:
+            None
+
+        Raises:
+            NotImplementedError: When pull equals PULL_UP or PULL_DOWN
+            RuntimeError: When pull is not PULL_UP or PULL_DOWN
+        """
+        if pull == self.PULL_UP:
+
+            if SUPPRESS_WARNINGS:
+                pass
+            else:
+                raise NotImplementedError(
+                    "Internal pullups not supported in libgpiod, "
+                    "use physical resistor instead!"
+                )
+        if pull == self.PULL_DOWN:
+
+            if SUPPRESS_WARNINGS:
+                pass
+            else:
+                raise NotImplementedError(
+                    "Internal pulldowns not supported in libgpiod,"
+                    " use physical resistor instead!"
+                )
+
+        if SUPPRESS_WARNINGS:
+            pass
+        else:
+            raise RuntimeError("Invalid pull for pin: %s" % self.id)
+
     def init(self, mode=IN, pull=None):
         """Initialize the Pin"""
         if not self._line:
@@ -52,27 +91,7 @@ class Pin:
             if mode == self.IN:
                 flags = 0
                 if pull is not None:
-                    if pull == self.PULL_UP:
-                        if SUPPRESS_WARNINGS:
-                            pass
-                        else:
-                            raise NotImplementedError(
-                                "Internal pullups not supported in libgpiod, "
-                                "use physical resistor instead!"
-                            )
-                    if pull == self.PULL_DOWN:
-                        if SUPPRESS_WARNINGS:
-                            pass
-                        else:
-                            raise NotImplementedError(
-                                "Internal pulldowns not supported in libgpiod,"
-                                " use physical resistor instead!"
-                            )
-
-                    if SUPPRESS_WARNINGS:
-                        pass
-                    else:
-                        raise RuntimeError("Invalid pull for pin: %s" % self.id)
+                    self.__check_pull_mode(pull)
 
                 self._mode = self.IN
                 self._line.release()
