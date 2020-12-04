@@ -32,16 +32,6 @@ class PWMOut:
     # Delay between check for scucessful PWM export on open (100ms)
     PWM_STAT_DELAY = 0.1
 
-    # Number of retries to check for successful PWM export on open
-    PWM_STAT_RETRIES = 10
-    # Delay between check for scucessful PWM export on open (100ms)
-    PWM_STAT_DELAY = 0.1
-
-    # Number of retries to check for successful PWM export on open
-    PWM_STAT_RETRIES = 10
-    # Delay between check for scucessful PWM export on open (100ms)
-    PWM_STAT_DELAY = 0.1
-
     # Sysfs paths
     _sysfs_path = "/sys/class/pwm/"
     _channel_path = "pwmchip{}"
