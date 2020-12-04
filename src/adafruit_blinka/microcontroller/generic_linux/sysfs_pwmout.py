@@ -31,6 +31,11 @@ class PWMOut:
     # Delay between check for scucessful PWM export on open (100ms)
     PWM_STAT_DELAY = 0.1
 
+    # Number of retries to check for successful PWM export on open
+    PWM_STAT_RETRIES = 10
+    # Delay between check for scucessful PWM export on open (100ms)
+    PWM_STAT_DELAY = 0.1
+
     # Sysfs paths
     _sysfs_path = "/sys/class/pwm/"
     _channel_path = "pwmchip{}"
@@ -121,13 +126,16 @@ class PWMOut:
         for i in range(PWMOut.PWM_STAT_RETRIES):
             try:
                 with open(
-                    os.path.join(channel_path, self._pin_path.format(self._pwmpin), "period"), 'w'
+                    os.path.join(
+                        channel_path, self._pin_path.format(self._pwmpin), "period"
+                    ),
+                    "w",
                 ):
-                    print('#### okay ####')
                     break
             except IOError as e:
-                if e.errno != EACCES or (e.errno == EACCES and i == PWMOut.PWM_STAT_RETRIES - 1):
-                    print('#### catch ####')
+                if e.errno != EACCES or (
+                    e.errno == EACCES and i == PWMOut.PWM_STAT_RETRIES - 1
+                ):
                     raise PWMError(e.errno, "Opening PWM period: " + e.strerror)
             sleep(PWMOut.PWM_STAT_DELAY)
 
