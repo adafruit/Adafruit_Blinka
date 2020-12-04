@@ -26,6 +26,12 @@ class PWMError(IOError):
 
 class PWMOut:
     """Pulse Width Modulation Output Class"""
+
+    # Number of retries to check for successful PWM export on open
+    PWM_STAT_RETRIES = 10
+    # Delay between check for scucessful PWM export on open (100ms)
+    PWM_STAT_DELAY = 0.1
+
     # Number of retries to check for successful PWM export on open
     PWM_STAT_RETRIES = 10
     # Delay between check for scucessful PWM export on open (100ms)
