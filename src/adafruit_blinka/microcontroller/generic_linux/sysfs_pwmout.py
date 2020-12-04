@@ -132,7 +132,7 @@ class PWMOut:
                 if e.errno != EACCES or (
                     e.errno == EACCES and i == PWMOut.PWM_STAT_RETRIES - 1
                 ):
-                    raise PWMError(e.errno, "Opening PWM period: " + e.strerror)
+                    raise PWMError(e.errno, "Opening PWM period: " + e.strerror) from e
             sleep(PWMOut.PWM_STAT_DELAY)
 
         # self._set_enabled(False) # This line causes a write error when trying to enable
