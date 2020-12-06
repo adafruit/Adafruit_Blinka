@@ -7,8 +7,9 @@ Not supported by all boards.
 * Author(s): Melissa LeBlanc-Williams
 """
 
-from adafruit_blinka.agnostic import detector
 import sys
+
+from adafruit_blinka.agnostic import detector
 
 # pylint: disable=unused-import
 
