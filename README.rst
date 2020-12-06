@@ -97,7 +97,7 @@ install dependencies (feel free to reuse the virtual environment from above):
 
     python3 -m venv .env
     source .env/bin/activate
-    pip install Sphinx sphinx-rtd-theme
+    pip install Sphinx sphinx-rtd-theme Adafruit-PlatformDetect
 
 Now, once you have the virtual environment activated:
 
