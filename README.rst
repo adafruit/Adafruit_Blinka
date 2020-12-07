@@ -26,8 +26,10 @@ on hosts running micropython. Working code exists to emulate the CircuitPython p
 * **digitalio** - digital input/output pins, using pin identities from board+microcontroller packages
 * **bitbangio** - software-driven interfaces for I2C, SPI
 * **busio** - hardware-driven interfaces for I2C, SPI, UART
-* **time** * - substitute functions monkey-patched to time module
+* **pulseio** - contains classes that provide access to basic pulse IO (PWM)
 
+For details, see the `Blinka API reference
+<https://circuitpython.readthedocs.io/projects/blinka/en/latest/index.html>`_.
 
 Dependencies
 =============
@@ -97,7 +99,7 @@ install dependencies (feel free to reuse the virtual environment from above):
 
     python3 -m venv .env
     source .env/bin/activate
-    pip install Sphinx sphinx-rtd-theme
+    pip install Sphinx sphinx-rtd-theme Adafruit-PlatformDetect
 
 Now, once you have the virtual environment activated:
 
