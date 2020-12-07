@@ -121,7 +121,10 @@ elif board_id == ap_board.CLARA_AGX_XAVIER:
     from adafruit_blinka.board.nvidia.clara_agx_xavier import *
 
 elif board_id == ap_board.CORAL_EDGE_TPU_DEV:
-    from adafruit_blinka.board.coral_edge_tpu import *
+    from adafruit_blinka.board.coral_dev_board import *
+
+elif board_id == ap_board.CORAL_EDGE_TPU_DEV_MINI:
+    from adafruit_blinka.board.coral_dev_board_mini import *
 
 elif board_id == ap_board.ODROID_C2:
     from adafruit_blinka.board.hardkernel.odroidc2 import *
