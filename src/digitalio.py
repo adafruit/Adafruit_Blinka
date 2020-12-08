@@ -1,6 +1,6 @@
 """
-`digitalio` - Digital input and output control
-=================================================
+`digitalio` - Digital input and output control (GPIO)
+=====================================================
 
 See `CircuitPython:digitalio` in CircuitPython for more details.
 
