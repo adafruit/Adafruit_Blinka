@@ -1,8 +1,9 @@
 """
 `neopixel_write` - NeoPixel precision timed writing support
-=================================================
+===========================================================
 
 See `CircuitPython:neopixel_write` in CircuitPython for more details.
+Currently supported on Raspberry Pi only.
 
 * Author(s): ladyada
 """

@@ -210,6 +210,9 @@ class SPI(Lockable):
         elif board_id == ap_board.CORAL_EDGE_TPU_DEV:
             from adafruit_blinka.microcontroller.nxp_imx8m.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+        elif board_id == ap_board.CORAL_EDGE_TPU_DEV_MINI:
+            from adafruit_blinka.microcontroller.mt8167.pin import Pin
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.ODROID_C2:
             from adafruit_blinka.microcontroller.amlogic.s905.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI

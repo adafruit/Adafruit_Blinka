@@ -1,9 +1,13 @@
 """
 `analogio` - Analog input and output control
-=================================================
+============================================
 See `CircuitPython:analogio` in CircuitPython for more details.
+Not supported by all boards.
+
 * Author(s): Carter Nelson, Melissa LeBlanc-Williams
 """
+
+import sys
 
 from adafruit_blinka.agnostic import detector
 
@@ -17,5 +21,7 @@ elif detector.board.greatfet_one:
     from adafruit_blinka.microcontroller.nxp_lpc4330.analogio import AnalogOut
 elif detector.chip.RK3308:
     from adafruit_blinka.microcontroller.generic_linux.sysfs_analogin import AnalogIn
+elif "sphinx" in sys.modules:
+    pass
 else:
     raise NotImplementedError("analogio not supported for this board.")

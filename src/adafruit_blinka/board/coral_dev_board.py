@@ -1,4 +1,4 @@
-"""Pin definitions for the Coral Edge TPU Dev board."""
+"""Pin definitions for the Coral Dev Board."""
 
 from adafruit_blinka.microcontroller.nxp_imx8m import pin
 
