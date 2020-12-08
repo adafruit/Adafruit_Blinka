@@ -32,9 +32,9 @@ GPIO38 = Pin(38)  # MRG_DI    (pin 38)
 GPIO39 = Pin(39)  # MRG_DO    (pin 40)
 
 # Aliases
-PWM0 = GPIO25  # EINT12  (pin 32)
-PWM1 = GPIO11  # EINT25  (pin 33)
-PWM2 = GPIO12  # EINT11  (pin 15)
+PWM_A = GPIO25  # EINT12  (pin 32)
+PWM_B = GPIO11  # EINT25  (pin 33)
+PWM_C = GPIO12  # EINT11  (pin 15)
 
 I2C1_SDA = GPIO52  # SDA1  (pin 3)
 I2C1_SCL = GPIO53  # SCL1  (pin 5)
@@ -49,9 +49,9 @@ SPI_CSB = GPIO5  # EINT5  (pin 24)
 
 # SysFS pwm outputs, pwm channel and pin in first tuple
 pwmOuts = (
-    ((0, 0), PWM0),
-    ((0, 1), PWM1),
-    ((0, 2), PWM2),
+    ((0, 0), PWM_A),
+    ((0, 1), PWM_B),
+    ((0, 2), PWM_C),
 )
 
 # ordered as i2cId, sclId, sdaId
