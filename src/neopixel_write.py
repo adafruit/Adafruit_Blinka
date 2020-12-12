@@ -23,3 +23,8 @@ else:
 def neopixel_write(gpio, buf):
     """Write buf out on the given DigitalInOut."""
     return _neopixel.neopixel_write(gpio, buf)
+
+
+def neopixel_cleanup():
+    """Cleanup and destroy the neopixel resources"""
+    return _neopixel.neopixel_cleanup()
