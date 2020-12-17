@@ -16,18 +16,24 @@ LED_STRIP = None  # We manage the color order within the neopixel library
 # a 'static' object that we will use to manage our PWM DMA channel
 # we only support one LED strip per raspi
 _led_strip = None
+_buf_len = None
 
 
 def neopixel_write(gpio, buf):
     """NeoPixel Writing Function"""
     global _led_strip  # we'll have one strip we init if its not at first
+    global _buf_len # we save the length of the buf, and if it changes we will cleanup and re-initalize.
 
-    if _led_strip is None:
+    if _led_strip is None or _buf_len != len(buf):
+        # This is safe to call since it doesn't do anything if _led_strip is None
+        neopixel_cleanup()
+
         # Create a ws2811_t structure from the LED configuration.
         # Note that this structure will be created on the heap so you
         # need to be careful that you delete its memory by calling
         # delete_ws2811_t when it's not needed.
         _led_strip = ws.new_ws2811_t()
+        _buf_len = len(buf)
 
         # Initialize all channels to off
         for channum in range(2):
