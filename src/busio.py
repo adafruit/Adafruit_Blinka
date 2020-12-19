@@ -210,6 +210,9 @@ class SPI(Lockable):
         elif board_id == ap_board.CORAL_EDGE_TPU_DEV:
             from adafruit_blinka.microcontroller.nxp_imx8m.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+        elif board_id == ap_board.CORAL_EDGE_TPU_DEV_MINI:
+            from adafruit_blinka.microcontroller.mt8167.pin import Pin
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.ODROID_C2:
             from adafruit_blinka.microcontroller.amlogic.s905.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
@@ -252,7 +255,12 @@ class SPI(Lockable):
         elif detector.board.greatfet_one:
             from adafruit_blinka.microcontroller.nxp_lpc4330.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.nxp_lpc4330.pin import Pin
-        elif board_id in (ap_board.PINE64, ap_board.PINEBOOK, ap_board.PINEPHONE):
+        elif board_id in (
+            ap_board.PINE64,
+            ap_board.PINEBOOK,
+            ap_board.PINEPHONE,
+            ap_board.SOPINE,
+        ):
             from adafruit_blinka.microcontroller.allwinner.a64.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.CLOCKWORK_CPI3:

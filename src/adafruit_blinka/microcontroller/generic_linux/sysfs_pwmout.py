@@ -5,6 +5,8 @@ License: MIT
 """
 
 import os
+from time import sleep
+from errno import EACCES
 
 try:
     from microcontroller.pin import pwmOuts
@@ -24,6 +26,11 @@ class PWMError(IOError):
 
 class PWMOut:
     """Pulse Width Modulation Output Class"""
+
+    # Number of retries to check for successful PWM export on open
+    PWM_STAT_RETRIES = 10
+    # Delay between check for scucessful PWM export on open (100ms)
+    PWM_STAT_DELAY = 0.1
 
     # Sysfs paths
     _sysfs_path = "/sys/class/pwm/"
@@ -108,6 +115,25 @@ class PWMOut:
                 f_export.write("%d\n" % self._pwmpin)
         except IOError as e:
             raise PWMError(e.errno, "Exporting PWM pin: " + e.strerror) from IOError
+
+        # Loop until 'period' is writable, because application of udev rules
+        # after the above pin export is asynchronous.
+        # Without this loop, the following properties may not be writable yet.
+        for i in range(PWMOut.PWM_STAT_RETRIES):
+            try:
+                with open(
+                    os.path.join(
+                        channel_path, self._pin_path.format(self._pwmpin), "period"
+                    ),
+                    "w",
+                ):
+                    break
+            except IOError as e:
+                if e.errno != EACCES or (
+                    e.errno == EACCES and i == PWMOut.PWM_STAT_RETRIES - 1
+                ):
+                    raise PWMError(e.errno, "Opening PWM period: " + e.strerror) from e
+            sleep(PWMOut.PWM_STAT_DELAY)
 
         # self._set_enabled(False) # This line causes a write error when trying to enable
 

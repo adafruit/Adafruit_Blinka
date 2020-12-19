@@ -1,6 +1,6 @@
 """
-`digitalio` - Digital input and output control
-=================================================
+`digitalio` - Digital input and output control (GPIO)
+=====================================================
 
 See `CircuitPython:digitalio` in CircuitPython for more details.
 
@@ -61,6 +61,8 @@ elif detector.chip.PENTIUM_N3710:
     from adafruit_blinka.microcontroller.pentium.n3710.pin import Pin
 elif detector.chip.STM32MP157:
     from adafruit_blinka.microcontroller.stm32.stm32mp157.pin import Pin
+elif detector.chip.MT8167:
+    from adafruit_blinka.microcontroller.mt8167.pin import Pin
 
 from adafruit_blinka import Enum, ContextManaged
 

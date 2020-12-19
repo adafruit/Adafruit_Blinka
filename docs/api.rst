@@ -24,3 +24,14 @@
 
 .. automodule:: digitalio
   :members:
+
+.. automodule:: analogio
+  :members:
+
+.. automodule:: pulseio
+  :members:
+
+.. automodule:: neopixel_write
+  :members:
+
+
