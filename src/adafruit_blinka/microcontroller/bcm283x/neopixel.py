@@ -22,7 +22,7 @@ _buf = None
 def neopixel_write(gpio, buf):
     """NeoPixel Writing Function"""
     global _led_strip  # we'll have one strip we init if its not at first
-    global _buf  # we save a reference to the buf, and if it changes we will cleanup and re-initalize.
+    global _buf  # we save a reference to the buf, and if it changes we will cleanup and re-init.
 
     if _led_strip is None or buf is not _buf:
         # This is safe to call since it doesn't do anything if _led_strip is None
