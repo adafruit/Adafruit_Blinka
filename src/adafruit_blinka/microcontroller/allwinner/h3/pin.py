@@ -57,6 +57,7 @@ PG13 = Pin(205)
 
 PL2 = Pin((1, 2))
 PL4 = Pin((1, 4))
+PL11 = Pin((1, 11))
 
 i2cPorts = ((0, TWI0_SCL, TWI0_SDA),)
 # ordered as spiId, sckId, mosiId, misoId
@@ -65,4 +66,7 @@ spiPorts = (
     (1, SPI1_SCLK, SPI1_MOSI, SPI1_MISO),
 )
 # ordered as uartId, txId, rxId
-uartPorts = ((3, UART3_TX, UART3_RX),)
+uartPorts = (
+    (1,UART1_TX,  UART1_RX),
+    (3, UART3_TX, UART3_RX), 
+)
