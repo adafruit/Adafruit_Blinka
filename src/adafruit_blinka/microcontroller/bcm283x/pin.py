@@ -148,7 +148,7 @@ spiPorts = (
 uartPorts = ((1, TXD, RXD),)
 
 i2cPorts = (
-    (3, SCL, SDA),
+    # (3, SCL, SDA),  issue: this bus get selected if another I2C bus is enabled
     (1, SCL, SDA),
     (0, D1, D0),  # both pi 1 and pi 2 i2c ports!
 )
