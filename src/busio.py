@@ -27,7 +27,7 @@ class I2C(Lockable):
     for both MicroPython and Linux.
     """
 
-    def __init__(self, scl, sda, frequency=400000):
+    def __init__(self, scl, sda, frequency=100000):
         self.init(scl, sda, frequency)
 
     def init(self, scl, sda, frequency):
