@@ -66,6 +66,8 @@ elif chip_id == ap_chip.A33:
     from adafruit_blinka.microcontroller.allwinner.a33.pin import *
 elif chip_id == ap_chip.RK3308:
     from adafruit_blinka.microcontroller.rockchip.rk3308.pin import *
+elif chip_id == ap_chip.H5:
+    from adafruit_blinka.microcontroller.allwinner.h5.pin import *
 elif chip_id == ap_chip.IMX8MX:
     from adafruit_blinka.microcontroller.nxp_imx8m import *
 elif chip_id == ap_chip.HFU540:
