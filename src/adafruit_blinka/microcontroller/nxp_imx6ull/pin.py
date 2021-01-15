@@ -40,13 +40,13 @@ GPIO124 = Pin((3, 28))  # GPIO4_IO28
 
 GPIO129 = Pin((4, 1))  # GPIO5_IO1
 
-i2cPorts = ( 
+i2cPorts = (
     (1, I2C2_SCL, I2C2_SDA),
     (2, I2C3_SCL, I2C3_SDA),
 )
 
 # ordered as spiId, sckId, mosiId, misoId
-spiPorts = ( (2, ECSPI3_SCLK, ECSPI3_MOSI, ECSPI3_MISO), )
+spiPorts = ((2, ECSPI3_SCLK, ECSPI3_MOSI, ECSPI3_MISO),)
 
 # UART3_TXD/RXD on /dev/ttymxc2
 uartPorts = ((2, UART3_TXD, UART3_RXD),)
