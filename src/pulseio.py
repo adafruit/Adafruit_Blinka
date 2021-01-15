@@ -28,6 +28,8 @@ elif detector.board.binho_nova:
     from adafruit_blinka.microcontroller.nova.pwmout import PWMOut
 elif detector.board.greatfet_one:
     from adafruit_blinka.microcontroller.nxp_lpc4330.pwmout import PWMOut
+elif detector.board.any_lubancat:
+    from adafruit_blinka.microcontroller.generic_linux.sysfs_pwmout import PWMOut
 elif "sphinx" in sys.modules:
     pass
 else:
