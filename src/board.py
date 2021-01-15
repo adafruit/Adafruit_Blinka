@@ -183,6 +183,9 @@ elif board_id == ap_board.UDOO_X86:
 elif board_id == ap_board.STM32MP157C_DK2:
     from adafruit_blinka.board.stm32.stm32mp157c_dk2 import *
 
+elif board_id == ap_board.LUBANCAT_IMX6ULL:
+    from adafruit_blinka.board.lubancat.lubancat_imx6ull import *
+
 elif "sphinx" in sys.modules:
     pass
 
