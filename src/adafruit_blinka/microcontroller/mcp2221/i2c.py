@@ -7,7 +7,7 @@ class I2C:
 
     def __init__(self, *, frequency=100000):
         self._mcp2221 = mcp2221
-        self._mcp2221.i2c_configure(frequency)
+        self._mcp2221._i2c_configure(frequency)
 
     def scan(self):
         """Perform an I2C Device Scan"""
