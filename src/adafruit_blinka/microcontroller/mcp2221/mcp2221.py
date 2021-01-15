@@ -296,7 +296,7 @@ class MCP2221:
 
     # pylint: enable=too-many-arguments
 
-    def i2c_configure(self, baudrate=100000):
+    def _i2c_configure(self, baudrate=100000):
         """Configure I2C"""
         self._hid_xfer(
             bytes(
