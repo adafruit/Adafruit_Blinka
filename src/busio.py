@@ -269,6 +269,9 @@ class SPI(Lockable):
         elif board_id == ap_board.ONION_OMEGA2:
             from adafruit_blinka.microcontroller.mips24kec.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+        elif detector.board.any_lubancat and detector.chip.id == ap_chip.IMX6ULL:
+            from adafruit_blinka.microcontroller.nxp_imx6ull.pin import Pin
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         else:
             from machine import SPI as _SPI
             from machine import Pin
