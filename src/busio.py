@@ -207,6 +207,9 @@ class SPI(Lockable):
         elif detector.board.any_orange_pi and detector.chip.id == ap_chip.SUN8I:
             from adafruit_blinka.microcontroller.allwinner.h3.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+        elif detector.board.any_nanopi and detector.chip.id == ap_chip.SUN8I:
+            from adafruit_blinka.microcontroller.allwinner.h3.pin import Pin
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.GIANT_BOARD:
             from adafruit_blinka.microcontroller.sama5.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
