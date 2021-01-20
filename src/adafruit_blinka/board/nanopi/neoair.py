@@ -1,6 +1,6 @@
 """Pin definitions for the NanoPi NEO Air."""
-# Enable UART1 and SPI by adding the following lines to /boot/armbianEnv.txt
-#    overlays=usbhost2 usbhost3 spi-spidev uart1
+# Enable I2C0, UART1, and SPI by adding the following lines to /boot/armbianEnv.txt
+#    overlays=usbhost2 usbhost3 spi-spidev uart1 i2c0
 #    param_spidev_spi_bus=0
 
 from adafruit_blinka.microcontroller.allwinner.h3 import pin
