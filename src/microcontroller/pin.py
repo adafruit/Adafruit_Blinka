@@ -12,6 +12,8 @@ elif chip_id == ap_chip.STM32F405:
     from adafruit_blinka.microcontroller.stm32.stm32f405.pin import *
 elif chip_id == ap_chip.BCM2XXX:
     from adafruit_blinka.microcontroller.bcm283x.pin import *
+elif chip_id == ap_chip.DRA74X:
+    from adafruit_blinka.microcontroller.dra74x.pin import *
 elif chip_id == ap_chip.AM33XX:
     from adafruit_blinka.microcontroller.am335x.pin import *
 elif chip_id == ap_chip.SUN8I:
