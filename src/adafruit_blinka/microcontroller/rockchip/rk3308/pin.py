@@ -163,7 +163,7 @@ PWM3 = GPIO0_C0
 
 # ordered as i2cId, SCL, SDA
 i2cPorts = (
-    (0, I2C1_SCL, I2C1_SDA),
+    (0, I2C0_SCL, I2C0_SDA),
     (1, I2C1_SCL, I2C1_SDA),
     (2, I2C2_SCL, I2C2_SDA),
     (3, I2C3_SCL, I2C3_SDA),
