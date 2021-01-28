@@ -93,7 +93,7 @@ class SPI:
     def readinto(self, buf, start=0, end=None, write_value=0):
         """Read data from SPI and into the buffer"""
         end = end if end else len(buf)
-        result = self._transmit([write_value] * (end-start), end - start)
+        result = self._transmit([write_value] * (end - start), end - start)
         for i, b in enumerate(result):
             buf[start + i] = b
 
