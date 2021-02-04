@@ -54,6 +54,7 @@ setup(
         "digitalio",
         "micropython",
         "pulseio",
+        "pwmio",
         "neopixel_write",
     ],
     package_data={
