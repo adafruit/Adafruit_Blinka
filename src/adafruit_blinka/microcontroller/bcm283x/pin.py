@@ -147,8 +147,10 @@ spiPorts = (
 # ordered as uartId, txId, rxId
 uartPorts = ((1, TXD, RXD),)
 
+# These are the known hardware I2C ports / pins.
+# For software I2C ports created with the i2c-gpio overlay, see:
+#     https://github.com/adafruit/Adafruit_Python_Extended_Bus
 i2cPorts = (
-    (3, SCL, SDA),
     (1, SCL, SDA),
     (0, D1, D0),  # both pi 1 and pi 2 i2c ports!
 )
