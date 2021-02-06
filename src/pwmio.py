@@ -1,7 +1,7 @@
 """
-`pulseio` - Pulse Width Modulation input and output control
+`pwmio` - Support for PWM based protocols
 ===========================================================
-See `CircuitPython:pulseio` in CircuitPython for more details.
+See `CircuitPython:pwmio` in CircuitPython for more details.
 Not supported by all boards.
 
 * Author(s): Melissa LeBlanc-Williams
@@ -14,7 +14,6 @@ from adafruit_blinka.agnostic import detector
 # pylint: disable=unused-import
 
 if detector.board.any_raspberry_pi:
-    from adafruit_blinka.microcontroller.bcm283x.pulseio.PulseIn import PulseIn
     from adafruit_blinka.microcontroller.bcm283x.pulseio.PWMOut import PWMOut
 elif detector.board.any_coral_board:
     from adafruit_blinka.microcontroller.generic_linux.sysfs_pwmout import PWMOut
@@ -33,4 +32,4 @@ elif detector.board.any_lubancat:
 elif "sphinx" in sys.modules:
     pass
 else:
-    raise NotImplementedError("pulseio not supported for this board.")
+    raise NotImplementedError("pwmio not supported for this board.")

@@ -1,8 +1,8 @@
-Adafruit-PlatformDetect>=2.18.1
+Adafruit-PlatformDetect>=3.0.0
 Adafruit-PureIO>=1.1.7
 Jetson.GPIO; platform_machine=='aarch64'
 RPi.GPIO; platform_machine=='armv7l' or platform_machine=='armv6l'
 rpi_ws281x>=4.0.0; platform_machine=='armv7l' or platform_machine=='armv6l'
-sysv_ipc; sys_platform == 'linux' and platform_machine!='mips'
+sysv_ipc>=1.1.0; sys_platform == 'linux' and platform_machine!='mips'
 pyftdi>=0.40.0
 binho-host-adapter>=0.1.6

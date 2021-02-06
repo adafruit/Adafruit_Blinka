@@ -67,10 +67,15 @@ elif board_id == ap_board.BEAGLEBONE_BLACK_INDUSTRIAL:
 
 elif board_id == ap_board.BEAGLEBONE_GREEN_WIRELESS:
     from adafruit_blinka.board.beagleboard.beaglebone_black import *
+
 elif board_id == ap_board.BEAGLEBONE_BLACK_WIRELESS:
     from adafruit_blinka.board.beagleboard.beaglebone_black import *
+
 elif board_id == ap_board.BEAGLEBONE_POCKETBEAGLE:
     from adafruit_blinka.board.beagleboard.beaglebone_pocketbeagle import *
+
+elif board_id == ap_board.BEAGLEBONE_AI:
+    from adafruit_blinka.board.beagleboard.beaglebone_ai import *
 
 elif board_id == ap_board.ORANGE_PI_PC:
     from adafruit_blinka.board.orangepi.orangepipc import *
@@ -185,6 +190,15 @@ elif board_id == ap_board.UDOO_X86:
 
 elif board_id == ap_board.STM32MP157C_DK2:
     from adafruit_blinka.board.stm32.stm32mp157c_dk2 import *
+
+elif board_id == ap_board.LUBANCAT_IMX6ULL:
+    from adafruit_blinka.board.lubancat.lubancat_imx6ull import *
+
+elif board_id == ap_board.NANOPI_NEO_AIR:
+    from adafruit_blinka.board.nanopi.neoair import *
+
+elif board_id == ap_board.NANOPI_DUO2:
+    from adafruit_blinka.board.nanopi.duo2 import *
 
 elif "sphinx" in sys.modules:
     pass

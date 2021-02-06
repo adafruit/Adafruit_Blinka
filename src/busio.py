@@ -27,7 +27,7 @@ class I2C(Lockable):
     for both MicroPython and Linux.
     """
 
-    def __init__(self, scl, sda, frequency=400000):
+    def __init__(self, scl, sda, frequency=100000):
         self.init(scl, sda, frequency)
 
     def init(self, scl, sda, frequency):
@@ -198,10 +198,16 @@ class SPI(Lockable):
         if detector.board.any_raspberry_pi or detector.board.any_raspberry_pi_40_pin:
             from adafruit_blinka.microcontroller.bcm283x.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+        elif detector.board.BEAGLEBONE_AI:
+            from adafruit_blinka.microcontroller.dra74x.pin import Pin
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif detector.board.any_beaglebone:
             from adafruit_blinka.microcontroller.am335x.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif detector.board.any_orange_pi and detector.chip.id == ap_chip.SUN8I:
+            from adafruit_blinka.microcontroller.allwinner.h3.pin import Pin
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+        elif detector.board.any_nanopi and detector.chip.id == ap_chip.SUN8I:
             from adafruit_blinka.microcontroller.allwinner.h3.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.GIANT_BOARD:
@@ -268,6 +274,9 @@ class SPI(Lockable):
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.ONION_OMEGA2:
             from adafruit_blinka.microcontroller.mips24kec.pin import Pin
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+        elif detector.board.any_lubancat and detector.chip.id == ap_chip.IMX6ULL:
+            from adafruit_blinka.microcontroller.nxp_imx6ull.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         else:
             from machine import SPI as _SPI
