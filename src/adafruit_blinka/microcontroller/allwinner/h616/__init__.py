@@ -1,1 +1,1 @@
-"""Definition for the AllWinner H6 chip"""
+"""Definition for the AllWinner H616 chip"""
