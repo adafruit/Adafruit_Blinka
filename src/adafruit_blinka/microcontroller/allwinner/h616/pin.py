@@ -42,8 +42,8 @@ SPI1_CS1 = PH9
 i2cPorts = ((3, TWI3_SCL, TWI3_SDA),)
 # ordered as spiId, sckId, mosiId, misoId
 spiPorts = (
-    (0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO),
-    (1, SPI1_SCLK, SPI1_MOSI, SPI1_MISO),
+    (0, SPI0_CLK, SPI0_MOSI, SPI0_MISO),
+    (1, SPI1_CLK, SPI1_MOSI, SPI1_MISO),
 )
 # ordered as uartId, txId, rxId
 uartPorts = (
