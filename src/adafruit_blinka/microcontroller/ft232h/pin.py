@@ -8,7 +8,8 @@ class Pin:
     OUT = 1
     LOW = 0
     HIGH = 1
-
+    
+    i2c = None
     ft232h_gpio = None
 
     def __init__(self, pin_id=None):
@@ -20,9 +21,9 @@ class Pin:
 
             # pylint: enable=import-outside-toplevel
 
-            i2c = I2cController()
-            i2c.configure("ftdi://ftdi:ft232h/1")
-            Pin.ft232h_gpio = i2c.get_gpio()
+            Pin.i2c = I2cController()
+            Pin.i2c.configure("ftdi://ftdi:ft232h/1")
+            Pin.ft232h_gpio = Pin.i2c.get_gpio()
         # check if pin is valid
         if pin_id:
             if Pin.ft232h_gpio.all_pins & 1 << pin_id == 0:
