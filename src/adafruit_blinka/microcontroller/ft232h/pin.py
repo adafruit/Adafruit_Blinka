@@ -39,8 +39,7 @@ class Pin:
             raise RuntimeError("Can not init a None type pin.")
         # FT232H does't have configurable internal pulls?
         if pull:
-            raise NotImplementedError(
-                "Internal pull up/down not currently supported.")
+            raise NotImplementedError("Internal pull up/down not currently supported.")
         pin_mask = Pin.ft232h_gpio.pins | 1 << self.id
         current = Pin.ft232h_gpio.direction
         if mode == self.OUT:
