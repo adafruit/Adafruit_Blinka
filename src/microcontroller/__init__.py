@@ -13,7 +13,7 @@ class Pin(Enum):
         self._id = pin_id
 
     def __repr__(self):
-        # pylint: disable=import-outside-toplevel
+        # pylint: disable=import-outside-toplevel, cyclic-import
         import board
 
         for key in dir(board):
@@ -21,7 +21,7 @@ class Pin(Enum):
                 return "board.{}".format(key)
         import microcontroller.pin as pin
 
-        # pylint: enable=import-outside-toplevel
+        # pylint: enable=import-outside-toplevel, cyclic-import
 
         for key in dir(pin):
             if getattr(pin, key) is self:
