@@ -1,8 +1,15 @@
 """Microcontroller pins"""
 
+import time
+
 from adafruit_platformdetect.constants import chips as ap_chip
 from adafruit_blinka import Enum
 from adafruit_blinka.agnostic import board_id, chip_id
+
+
+def delay_us(delay):
+    """Sleep for delay usecs."""
+    time.sleep(delay / 1e6)
 
 
 class Pin(Enum):
