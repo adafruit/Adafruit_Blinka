@@ -1,3 +1,9 @@
+"""
+Much code from https://github.com/vsergeev/python-periphery/blob/master/periphery/pwm.py
+Copyright (c) 2015-2016 vsergeev / Ivan (Vanya) A. Sergeev
+License: MIT
+"""
+
 import os
 from time import sleep
 from errno import EACCES
@@ -7,11 +13,15 @@ try:
 except ImportError:
     raise RuntimeError("No PWM outputs defined for this board.") from ImportError
 
+# pylint: disable=unnecessary-pass
+
 
 class PWMError(IOError):
     """Base class for PWM errors."""
 
     pass
+
+# pylint: enable=unnecessary-pass
 
 
 class PWMOut:
@@ -82,6 +92,9 @@ class PWMOut:
         self._channel_path = os.path.join(
             self._chip_path, self._channel_path.format(self._channel)
         )
+
+        if variable_frequency:
+            print("Variable Frequency is not supported, continuing without it...")
 
         if not os.path.isdir(self._chip_path):
             raise LookupError("Opening PWM: PWM chip {} not found.".format(self._chip))
@@ -163,11 +176,11 @@ class PWMOut:
     # Methods
 
     def enable(self):
-        """Enable the PWM outout."""
+        """Enable the PWM output."""
         self.enabled = True
 
     def disable(self):
-        """Diable the PWM output."""
+        """Disable the PWM output."""
         self.enabled = False
 
     # Mutable properties
