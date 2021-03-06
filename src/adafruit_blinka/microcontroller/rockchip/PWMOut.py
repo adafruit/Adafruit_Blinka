@@ -178,8 +178,8 @@ class PWMOut:
         return self.period_us / 1000
 
     def _set_period_ms(self, period_ms):
-        if not isinstance(period_ms, int):
-            raise TypeError("Invalid period type, should be int.")
+        if not isinstance(period_ms, (int, float)):
+            raise TypeError("Invalid period type, should be int or float.")
         self.period_us = int(period_ms * 1000)
 
     period_ms = property(_get_period_ms, _set_period_ms)
@@ -189,7 +189,7 @@ class PWMOut:
         PWMError: if an I/O or OS error occurs.
         TypeError: if value type is not int.
         
-    :type: int
+    :type: int, float
     """
 
     def _get_period_us(self):
