@@ -76,8 +76,12 @@ class PWMOut:
 
         self._pwm = pwm
 
-        self._chip_path = os.path.join(self._sysfs_path, self._chip_path.format(self._chip))
-        self._channel_path = os.path.join(self._chip_path, self._channel_path.format(self._channel))
+        self._chip_path = os.path.join(
+            self._sysfs_path, self._chip_path.format(self._chip)
+        )
+        self._channel_path = os.path.join(
+            self._chip_path, self._channel_path.format(self._channel)
+        )
 
         if not os.path.isdir(self._chip_path):
             raise LookupError("Opening PWM: PWM chip {} not found.".format(self._chip))
@@ -100,18 +104,29 @@ class PWMOut:
                 sleep(PWMOut.PWM_STAT_DELAY)
 
             if not exported:
-                raise TimeoutError("Exporting PWM: waiting for \"{:s}\" timed out.".format(self._channel_path))
+                raise TimeoutError(
+                    'Exporting PWM: waiting for "{:s}" timed out.'.format(
+                        self._channel_path
+                    )
+                )
 
             # Loop until 'period' is writable, This could take some time after
             # export as application of the udev rules after export is asynchronous.
             # Without this loop, the following properties may not be writable yet.
             for i in range(PWMOut.PWM_STAT_RETRIES):
                 try:
-                    with open(os.path.join(self._channel_path, "period"), "w",):
+                    with open(
+                        os.path.join(self._channel_path, "period"),
+                        "w",
+                    ):
                         break
                 except IOError as e:
-                    if e.errno != EACCES or (e.errno == EACCES and i == PWMOut.PWM_STAT_RETRIES - 1):
-                        raise PWMError(e.errno, "Opening PWM period: " + e.strerror) from IOError
+                    if e.errno != EACCES or (
+                        e.errno == EACCES and i == PWMOut.PWM_STAT_RETRIES - 1
+                    ):
+                        raise PWMError(
+                            e.errno, "Opening PWM period: " + e.strerror
+                        ) from IOError
 
                 sleep(PWMOut.PWM_STAT_DELAY)
 
@@ -126,7 +141,9 @@ class PWMOut:
         if self._channel is not None:
             # Unexporting the PWM channel
             try:
-                unexport_fd = os.open(os.path.join(self._chip_path, self._unexport), os.O_WRONLY)
+                unexport_fd = os.open(
+                    os.path.join(self._chip_path, self._unexport), os.O_WRONLY
+                )
                 os.write(unexport_fd, "{:d}\n".format(self._channel).encode())
                 os.close(unexport_fd)
             except OSError as e:
@@ -136,11 +153,11 @@ class PWMOut:
         self._channel = None
 
     def _write_channel_attr(self, attr, value):
-        with open(os.path.join(self._channel_path, attr), 'w') as f_attr:
+        with open(os.path.join(self._channel_path, attr), "w") as f_attr:
             f_attr.write(value + "\n")
 
     def _read_channel_attr(self, attr):
-        with open(os.path.join(self._channel_path, attr), 'r') as f_attr:
+        with open(os.path.join(self._channel_path, attr), "r") as f_attr:
             return f_attr.read().strip()
 
     # Methods
@@ -216,7 +233,9 @@ class PWMOut:
         try:
             period_ns = int(period_ns)
         except ValueError:
-            raise PWMError(None, "Unknown period value: \"%s\"." % period_ns) from ValueError
+            raise PWMError(
+                None, 'Unknown period value: "%s".' % period_ns
+            ) from ValueError
 
         self._period_ns = period_ns
 
@@ -247,7 +266,9 @@ class PWMOut:
         try:
             duty_cycle_ns = int(duty_cycle_ns_str)
         except ValueError:
-            raise PWMError(None, "Unknown duty cycle value: \"{:s}\"".format(duty_cycle_ns_str))
+            raise PWMError(
+                None, 'Unknown duty cycle value: "{:s}"'.format(duty_cycle_ns_str)
+            )
 
         return duty_cycle_ns
 
@@ -312,7 +333,7 @@ class PWMOut:
         if not isinstance(polarity, str):
             raise TypeError("Invalid polarity type, should be str.")
         elif polarity.lower() not in ["normal", "inversed"]:
-            raise ValueError("Invalid polarity, can be: \"normal\" or \"inversed\".")
+            raise ValueError('Invalid polarity, can be: "normal" or "inversed".')
 
         self._write_channel_attr("polarity", polarity.lower())
 
@@ -333,7 +354,7 @@ class PWMOut:
         elif enabled == "0":
             return False
 
-        raise PWMError(None, "Unknown enabled value: \"{:s}\"".format(enabled))
+        raise PWMError(None, 'Unknown enabled value: "{:s}"'.format(enabled))
 
     def _set_enabled(self, value):
         if not isinstance(value, bool):
@@ -352,5 +373,11 @@ class PWMOut:
     # String representation
 
     def __str__(self):
-        return "PWM {:d}, chip {:d} (period={:f} sec, duty_cycle={:f}%, polarity={:s}, enabled={:s})" \
-            .format(self._channel, self._chip, self.period, self.duty_cycle * 100, self.polarity, str(self.enabled))
+        return "PWM {:d}, chip {:d} (period={:f} sec, duty_cycle={:f}%, polarity={:s}, enabled={:s})".format(
+            self._channel,
+            self._chip,
+            self.period,
+            self.duty_cycle * 100,
+            self.polarity,
+            str(self.enabled),
+        )
