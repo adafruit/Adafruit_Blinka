@@ -21,6 +21,8 @@ elif detector.board.greatfet_one:
     from adafruit_blinka.microcontroller.nxp_lpc4330.analogio import AnalogOut
 elif detector.chip.RK3308:
     from adafruit_blinka.microcontroller.generic_linux.sysfs_analogin import AnalogIn
+elif detector.chip.RK3399:
+    from adafruit_blinka.microcontroller.generic_linux.sysfs_analogin import AnalogIn
 elif detector.chip.IMX6ULL:
     from adafruit_blinka.microcontroller.generic_linux.sysfs_analogin import AnalogIn
 elif "sphinx" in sys.modules:

@@ -254,6 +254,9 @@ class SPI(Lockable):
         elif detector.board.ROCK_PI_S:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.rockchip.rk3308.pin import Pin
+        elif detector.board.ROCK_PI_4:
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.rockchip.rk3399.pin import Pin
         elif detector.board.SIFIVE_UNLEASHED:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.hfu540.pin import Pin
