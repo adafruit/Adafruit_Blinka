@@ -13,6 +13,7 @@ try:
 except ImportError:
     raise RuntimeError("No PWM outputs defined for this board.") from ImportError
 
+
 # pylint: disable=unnecessary-pass
 
 
@@ -34,19 +35,8 @@ class PWMOut:
     PWM_STAT_DELAY = 0.1
 
     # Sysfs paths
-    _sysfs_path = "/sys/class/pwm"
     _chip_path = "pwmchip{}"
     _channel_path = "pwm{}"
-
-    # Sysfs commands
-    _export = "export"
-    _unexport = "unexport"
-
-    # Pin commands
-    _pin_period = "period"
-    _pin_duty_cycle = "duty_cycle"
-    _pin_polarity = "polarity"
-    _pin_enable = "enable"
 
     def __init__(self, pwm, *, frequency=500, duty_cycle=0, variable_frequency=False):
         """Instantiate a PWM object and open the sysfs PWM corresponding to the
@@ -85,10 +75,8 @@ class PWMOut:
                 self._chip = pwmout[0][0]
                 self._channel = pwmout[0][1]
 
-        self._pwm = pwm
-
         self._chip_path = os.path.join(
-            self._sysfs_path, self._chip_path.format(self._chip)
+            "/sys/class/pwm", self._chip_path.format(self._chip)
         )
         self._channel_path = os.path.join(
             self._chip_path, self._channel_path.format(self._channel)
@@ -103,10 +91,12 @@ class PWMOut:
         if not os.path.isdir(self._channel_path):
             # Exporting the PWM.
             try:
-                with open(os.path.join(self._chip_path, self._export), "w") as f_export:
+                with open(os.path.join(self._chip_path, "export"), "w") as f_export:
                     f_export.write("{:d}\n".format(self._channel))
             except IOError as e:
-                raise PWMError(e.errno, "Exporting PWM channel: " + e.strerror)
+                raise PWMError(
+                    e.errno, "Exporting PWM channel: " + e.strerror
+                ) from IOError
 
             # Loop until PWM is exported
             exported = False
@@ -156,12 +146,12 @@ class PWMOut:
             # Unexporting the PWM channel
             try:
                 unexport_fd = os.open(
-                    os.path.join(self._chip_path, self._unexport), os.O_WRONLY
+                    os.path.join(self._chip_path, "unexport"), os.O_WRONLY
                 )
                 os.write(unexport_fd, "{:d}\n".format(self._channel).encode())
                 os.close(unexport_fd)
             except OSError as e:
-                raise PWMError(e.errno, "Unexporting PWM: " + e.strerror)
+                raise PWMError(e.errno, "Unexporting PWM: " + e.strerror) from OSError
 
         self._chip = None
         self._channel = None
@@ -243,7 +233,7 @@ class PWMOut:
     """
 
     def _get_period_ns(self):
-        period_ns = self._read_channel_attr(self._pin_period)
+        period_ns = self._read_channel_attr("period")
         try:
             period_ns = int(period_ns)
         except ValueError:
@@ -282,7 +272,7 @@ class PWMOut:
         except ValueError:
             raise PWMError(
                 None, 'Unknown duty cycle value: "{:s}"'.format(duty_cycle_ns_str)
-            )
+            ) from ValueError
 
         return duty_cycle_ns
 
@@ -308,7 +298,8 @@ class PWMOut:
     def _set_duty_cycle(self, duty_cycle):
         if not isinstance(duty_cycle, (int, float)):
             raise TypeError("Invalid duty cycle type, should be int or float.")
-        elif not 0.0 <= duty_cycle <= 1.0:
+
+        if not 0.0 <= duty_cycle <= 1.0:
             raise ValueError("Invalid duty cycle value, should be between 0.0 and 1.0.")
 
         # Convert duty cycle from ratio to nanoseconds
@@ -346,7 +337,8 @@ class PWMOut:
     def _set_polarity(self, polarity):
         if not isinstance(polarity, str):
             raise TypeError("Invalid polarity type, should be str.")
-        elif polarity.lower() not in ["normal", "inversed"]:
+
+        if polarity.lower() not in ["normal", "inversed"]:
             raise ValueError('Invalid polarity, can be: "normal" or "inversed".')
 
         self._write_channel_attr("polarity", polarity.lower())
@@ -365,7 +357,7 @@ class PWMOut:
 
         if enabled == "1":
             return True
-        elif enabled == "0":
+        if enabled == "0":
             return False
 
         raise PWMError(None, 'Unknown enabled value: "{:s}"'.format(enabled))
@@ -387,11 +379,14 @@ class PWMOut:
     # String representation
 
     def __str__(self):
-        return "PWM {:d}, chip {:d} (period={:f} sec, duty_cycle={:f}%, polarity={:s}, enabled={:s})".format(
-            self._channel,
-            self._chip,
-            self.period,
-            self.duty_cycle * 100,
-            self.polarity,
-            str(self.enabled),
+        return (
+            "PWM {:d}, chip {:d} (period={:f} sec, duty_cycle={:f}%,"
+            " polarity={:s}, enabled={:s})".format(
+                self._channel,
+                self._chip,
+                self.period,
+                self.duty_cycle * 100,
+                self.polarity,
+                str(self.enabled),
+            )
         )
