@@ -21,6 +21,7 @@ class PWMError(IOError):
 
     pass
 
+
 # pylint: enable=unnecessary-pass
 
 
@@ -196,11 +197,11 @@ class PWMOut:
 
     period = property(_get_period, _set_period)
     """Get or set the PWM's output period in seconds.
-    
+
     Raises:
         PWMError: if an I/O or OS error occurs.
         TypeError: if value type is not int.
-        
+
     :type: int, float
     """
 
@@ -214,11 +215,11 @@ class PWMOut:
 
     period_ms = property(_get_period_ms, _set_period_ms)
     """Get or set the PWM's output period in milliseconds.
-    
+
     Raises:
         PWMError: if an I/O or OS error occurs.
         TypeError: if value type is not int.
-        
+
     :type: int, float
     """
 
@@ -233,11 +234,11 @@ class PWMOut:
 
     period_us = property(_get_period_us, _set_period_us)
     """Get or set the PWM's output period in microseconds.
-    
+
     Raises:
         PWMError: if an I/O or OS error occurs.
         TypeError: if value type is not int.
-        
+
     :type: int
     """
 
@@ -265,11 +266,11 @@ class PWMOut:
 
     period_ns = property(_get_period_ns, _set_period_ns)
     """Get or set the PWM's output period in nanoseconds.
-    
+
     Raises:
         PWMError: if an I/O or OS error occurs.
         TypeError: if value type is not int.
-        
+
     :type: int
     """
 
@@ -293,11 +294,11 @@ class PWMOut:
 
     duty_cycle_ns = property(_get_duty_cycle_ns, _set_duty_cycle_ns)
     """Get or set the PWM's output duty cycle in nanoseconds.
-    
+
     Raises:
         PWMError: if an I/O or OS error occurs.
         TypeError: if value type is not int.
-        
+
     :type: int
     """
 
