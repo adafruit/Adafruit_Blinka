@@ -2,6 +2,7 @@
 
 from adafruit_blinka.microcontroller.ft232h.url import get_ftdi_url
 
+
 class Pin:
     """A basic Pin class for use with FT232H."""
 

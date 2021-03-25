@@ -2,6 +2,7 @@
 from adafruit_blinka.microcontroller.ft232h.pin import Pin
 from adafruit_blinka.microcontroller.ft232h.url import get_ftdi_url
 
+
 class I2C:
     """Custom I2C Class for FT232H"""
 
