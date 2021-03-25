@@ -13,5 +13,5 @@ def get_ftdi_url():
 
     if url.startswith("ftdi:"):
         return url
-    else:
-        return "ftdi://ftdi:ft232h/1"
+
+    return "ftdi://ftdi:ft232h/1"
