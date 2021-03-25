@@ -1,6 +1,6 @@
 """I2C Class for FT232H"""
 from adafruit_blinka.microcontroller.ft232h.pin import Pin
-
+from adafruit_blinka.microcontroller.ft232h.url import get_ftdi_url
 
 class I2C:
     """Custom I2C Class for FT232H"""
@@ -13,7 +13,7 @@ class I2C:
         # pylint: enable=import-outside-toplevel
 
         self._i2c = I2cController()
-        self._i2c.configure("ftdi://ftdi:ft232h/1", frequency=frequency)
+        self._i2c.configure(get_ftdi_url(), frequency=frequency)
         Pin.ft232h_gpio = self._i2c.get_gpio()
 
     def scan(self):

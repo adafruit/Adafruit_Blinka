@@ -1,5 +1,6 @@
 """FT232H pin names"""
 
+from adafruit_blinka.microcontroller.ft232h.url import get_ftdi_url
 
 class Pin:
     """A basic Pin class for use with FT232H."""
@@ -24,7 +25,7 @@ class Pin:
             # pylint: enable=import-outside-toplevel
 
             i2c = I2cController()
-            i2c.configure("ftdi://ftdi:ft232h/1")
+            i2c.configure(get_ftdi_url())
             Pin.ft232h_gpio = i2c.get_gpio()
         # check if pin is valid
         if pin_id:
