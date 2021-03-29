@@ -1,6 +1,7 @@
 """I2C Class for FTDI MPSSE"""
 from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.pin import Pin
 
+
 class I2C:
     """Custom I2C Class for FTDI MPSSE"""
 
@@ -9,7 +10,7 @@ class I2C:
     _mode = None
 
     # pylint: disable=unused-argument
-    def __init__(self, id=None, mode=MASTER, baudrate=None, frequency=400000):
+    def __init__(self, i2c_id=None, mode=MASTER, baudrate=None, frequency=400000):
         if mode != self.MASTER:
             raise NotImplementedError("Only I2C Master supported!")
         _mode = self.MASTER
@@ -21,10 +22,12 @@ class I2C:
         # pylint: enable=import-outside-toplevel
 
         self._i2c = I2cController()
-        if id is None:
+        if i2c_id is None:
             self._i2c.configure("ftdi://ftdi:ft232h/1", frequency=frequency)
         else:
-            self._i2c.configure("ftdi://ftdi:ft2232h/{}".format(id+1), frequency=frequency)
+            self._i2c.configure(
+                "ftdi://ftdi:ft2232h/{}".format(i2c_id + 1), frequency=frequency
+            )
         Pin.mpsse_gpio = self._i2c.get_gpio()
 
     def scan(self):
@@ -56,7 +59,7 @@ class I2C:
         out_end=None,
         in_start=0,
         in_end=None,
-        stop=False
+        stop=False,
     ):
         """Write data from buffer_out to an address and then
         read data from an address and into buffer_in

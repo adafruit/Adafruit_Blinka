@@ -7,17 +7,17 @@ class SPI:
 
     MSB = 0
 
-    def __init__(self, id=None):
+    def __init__(self, spi_id=None):
         # pylint: disable=import-outside-toplevel
         from pyftdi.spi import SpiController
 
         # pylint: enable=import-outside-toplevel
 
         self._spi = SpiController(cs_count=1)
-        if id is None:
-            self._spi.configure("ftdi://ftdi:ft232h/1", frequency=frequency)
-        else
-            self._spi.configure("ftdi://ftdi:ft2232h/{}".format(id+1), frequency=frequency)
+        if spi_id is None:
+            self._spi.configure("ftdi://ftdi:ft232h/1")
+        else:
+            self._spi.configure("ftdi://ftdi:ft2232h/{}".format(spi_id + 1))
         self._port = self._spi.get_port(0)
         self._port.set_frequency(100000)
         self._port._cpol = 0

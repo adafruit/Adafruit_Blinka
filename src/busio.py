@@ -127,7 +127,7 @@ class I2C(Lockable):
         out_end=None,
         in_start=0,
         in_end=None,
-        stop=False
+        stop=False,
     ):
         """ "Write to a device at specified address from a buffer then read
         from a device at specified address into a buffer
@@ -154,7 +154,11 @@ class SPI(Lockable):
         self.deinit()
         if detector.board.ftdi_ft232h:
             from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.spi import SPI as _SPI
-            from adafruit_blinka.microcontroller.ftdi_mpsse.ft232h.pin import SCK, MOSI, MISO
+            from adafruit_blinka.microcontroller.ftdi_mpsse.ft232h.pin import (
+                SCK,
+                MOSI,
+                MISO,
+            )
 
             self._spi = _SPI()
             self._pins = (SCK, MOSI, MISO)
@@ -265,10 +269,14 @@ class SPI(Lockable):
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.hfu540.pin import Pin
         elif detector.board.ftdi_ft232h:
-            from adafruit_blinka.microcontroller.ftdi_mpsse.ft232h.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.spi import (
+                SPI as _SPI,
+            )
             from adafruit_blinka.microcontroller.ftdi_mpsse.ft232h.pin import Pin
         elif detector.board.ftdi_ft2232h:
-            from adafruit_blinka.microcontroller.ftdi_mpsse.ft2232h.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.spi import (
+                SPI as _SPI,
+            )
             from adafruit_blinka.microcontroller.ftdi_mpsse.ft2232h.pin import Pin
         elif detector.board.binho_nova:
             from adafruit_blinka.microcontroller.nova.spi import SPI as _SPI
