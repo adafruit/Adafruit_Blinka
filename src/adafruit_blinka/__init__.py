@@ -8,8 +8,8 @@
 
 class Enum:
     """
-        Object supporting CircuitPython-style of static symbols
-        as seen with Direction.OUTPUT, Pull.UP
+    Object supporting CircuitPython-style of static symbols
+    as seen with Direction.OUTPUT, Pull.UP
     """
 
     def __repr__(self):
@@ -27,8 +27,8 @@ class Enum:
     @classmethod
     def iteritems(cls):
         """
-            Inspects attributes of the class for instances of the class
-            and returns as key,value pairs mirroring dict#iteritems
+        Inspects attributes of the class for instances of the class
+        and returns as key,value pairs mirroring dict#iteritems
         """
         for key in dir(cls):
             val = getattr(cls, key)

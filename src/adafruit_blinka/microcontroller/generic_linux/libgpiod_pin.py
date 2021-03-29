@@ -5,7 +5,7 @@ except ImportError:
     raise ImportError(
         "libgpiod Python bindings not found, please install and try again! See "
         "https://github.com/adafruit/Raspberry-Pi-Installer-Scripts/blob/master/libgpiod.sh"
-    )
+    ) from ImportError
 
 
 class Pin:

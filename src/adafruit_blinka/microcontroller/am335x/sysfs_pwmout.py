@@ -9,7 +9,7 @@ import os
 try:
     from microcontroller.pin import pwmOuts
 except ImportError:
-    raise RuntimeError("No PWM outputs defined for this board")
+    raise RuntimeError("No PWM outputs defined for this board") from ImportError
 
 # pylint: disable=unnecessary-pass
 class PWMError(IOError):
@@ -105,7 +105,7 @@ class PWMOut:
                 ) as f_export:
                     f_export.write("%d\n" % self._pwmpin)
             except IOError as e:
-                raise PWMError(e.errno, "Exporting PWM pin: " + e.strerror)
+                raise PWMError(e.errno, "Exporting PWM pin: " + e.strerror) from IOError
 
         # Look up the period, for fast duty cycle updates
         self._period = self._get_period()
@@ -135,7 +135,9 @@ class PWMOut:
                     ) as f_unexport:
                         f_unexport.write("%d\n" % self._pwmpin)
                 except IOError as e:
-                    raise PWMError(e.errno, "Unexporting PWM pin: " + e.strerror)
+                    raise PWMError(
+                        e.errno, "Unexporting PWM pin: " + e.strerror
+                    ) from IOError
         except Exception as e:
             # due to a race condition for which I have not yet been
             # able to find the root cause, deinit() often fails
@@ -192,7 +194,9 @@ class PWMOut:
         try:
             period_ns = int(period_ns)
         except ValueError:
-            raise PWMError(None, 'Unknown period value: "%s"' % period_ns)
+            raise PWMError(
+                None, 'Unknown period value: "%s"' % period_ns
+            ) from ValueError
 
         # Convert period from nanoseconds to seconds
         period = period_ns / 1e9
@@ -230,7 +234,9 @@ class PWMOut:
         try:
             duty_cycle_ns = int(duty_cycle_ns)
         except ValueError:
-            raise PWMError(None, 'Unknown duty cycle value: "%s"' % duty_cycle_ns)
+            raise PWMError(
+                None, 'Unknown duty cycle value: "%s"' % duty_cycle_ns
+            ) from ValueError
 
         # Convert duty cycle from nanoseconds to seconds
         duty_cycle = duty_cycle_ns / 1e9

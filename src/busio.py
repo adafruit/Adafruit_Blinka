@@ -7,7 +7,10 @@ See `CircuitPython:busio` in CircuitPython for more details.
 * Author(s): cefn
 """
 
-import threading
+try:
+    import threading
+except ImportError:
+    threading = None
 
 import adafruit_platformdetect.constants.boards as ap_board
 import adafruit_platformdetect.constants.chips as ap_chip
@@ -24,7 +27,7 @@ class I2C(Lockable):
     for both MicroPython and Linux.
     """
 
-    def __init__(self, scl, sda, frequency=400000):
+    def __init__(self, scl, sda, frequency=100000):
         self.init(scl, sda, frequency)
 
     def init(self, scl, sda, frequency):
@@ -71,8 +74,8 @@ class I2C(Lockable):
                     (scl, sda), i2cPorts
                 )
             )
-
-        self._lock = threading.RLock()
+        if threading is not None:
+            self._lock = threading.RLock()
 
     def deinit(self):
         """Deinitialization"""
@@ -82,11 +85,13 @@ class I2C(Lockable):
             pass
 
     def __enter__(self):
-        self._lock.acquire()
+        if threading is not None:
+            self._lock.acquire()
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        self._lock.release()
+        if threading is not None:
+            self._lock.release()
         self.deinit()
 
     def scan(self):
@@ -124,7 +129,7 @@ class I2C(Lockable):
         in_end=None,
         stop=False
     ):
-        """"Write to a device at specified address from a buffer then read
+        """ "Write to a device at specified address from a buffer then read
         from a device at specified address into a buffer
         """
         return self._i2c.writeto_then_readfrom(
@@ -197,10 +202,21 @@ class SPI(Lockable):
         if detector.board.any_raspberry_pi or detector.board.any_raspberry_pi_40_pin:
             from adafruit_blinka.microcontroller.bcm283x.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+        elif detector.board.BEAGLEBONE_AI:
+            from adafruit_blinka.microcontroller.dra74x.pin import Pin
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif detector.board.any_beaglebone:
             from adafruit_blinka.microcontroller.am335x.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif detector.board.any_orange_pi and detector.chip.id == ap_chip.SUN8I:
+        elif detector.board.any_orange_pi:
+            if detector.chip.id == ap_chip.SUN8I:
+                from adafruit_blinka.microcontroller.allwinner.h3.pin import Pin
+            elif detector.chip.id == ap_chip.H5:
+                from adafruit_blinka.microcontroller.allwinner.h5.pin import Pin
+            elif detector.chip.id == ap_chip.H616:
+                from adafruit_blinka.microcontroller.allwinner.h616.pin import Pin
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+        elif detector.board.any_nanopi and detector.chip.id == ap_chip.SUN8I:
             from adafruit_blinka.microcontroller.allwinner.h3.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.GIANT_BOARD:
@@ -208,6 +224,9 @@ class SPI(Lockable):
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.CORAL_EDGE_TPU_DEV:
             from adafruit_blinka.microcontroller.nxp_imx8m.pin import Pin
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+        elif board_id == ap_board.CORAL_EDGE_TPU_DEV_MINI:
+            from adafruit_blinka.microcontroller.mt8167.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.ODROID_C2:
             from adafruit_blinka.microcontroller.amlogic.s905.pin import Pin
@@ -239,6 +258,9 @@ class SPI(Lockable):
         elif detector.board.ROCK_PI_S:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.rockchip.rk3308.pin import Pin
+        elif detector.board.ROCK_PI_4:
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.rockchip.rk3399.pin import Pin
         elif detector.board.SIFIVE_UNLEASHED:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.hfu540.pin import Pin
@@ -254,7 +276,12 @@ class SPI(Lockable):
         elif detector.board.greatfet_one:
             from adafruit_blinka.microcontroller.nxp_lpc4330.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.nxp_lpc4330.pin import Pin
-        elif board_id in (ap_board.PINE64, ap_board.PINEBOOK, ap_board.PINEPHONE):
+        elif board_id in (
+            ap_board.PINE64,
+            ap_board.PINEBOOK,
+            ap_board.PINEPHONE,
+            ap_board.SOPINE,
+        ):
             from adafruit_blinka.microcontroller.allwinner.a64.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.CLOCKWORK_CPI3:
@@ -262,6 +289,9 @@ class SPI(Lockable):
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.ONION_OMEGA2:
             from adafruit_blinka.microcontroller.mips24kec.pin import Pin
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+        elif detector.board.any_lubancat and detector.chip.id == ap_chip.IMX6ULL:
+            from adafruit_blinka.microcontroller.nxp_imx6ull.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         else:
             from machine import SPI as _SPI
@@ -295,7 +325,7 @@ class SPI(Lockable):
         except AttributeError:
             raise NotImplementedError(
                 "Frequency attribute not implemented for this platform"
-            )
+            ) from AttributeError
 
     def write(self, buf, start=0, end=None):
         """Write to the SPI device"""
@@ -414,3 +444,36 @@ class UART(Lockable):
     def write(self, buf):
         """Write to the UART from a buffer"""
         return self._uart.write(buf)
+
+
+class OneWire:
+    """
+    Stub class for OneWire, which is currently not implemented
+    """
+
+    def __init__(self, pin):
+        raise NotImplementedError("OneWire has not been implemented")
+
+    def deinit(self):
+        """
+        Deinitialize the OneWire bus and release any hardware resources for reuse.
+        """
+        raise NotImplementedError("OneWire has not been implemented")
+
+    def reset(self):
+        """
+        Reset the OneWire bus and read presence
+        """
+        raise NotImplementedError("OneWire has not been implemented")
+
+    def read_bit(self):
+        """
+        Read in a bit
+        """
+        raise NotImplementedError("OneWire has not been implemented")
+
+    def write_bit(self, value):
+        """
+        Write out a bit based on value.
+        """
+        raise NotImplementedError("OneWire has not been implemented")

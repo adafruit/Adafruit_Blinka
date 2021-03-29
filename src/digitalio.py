@@ -1,6 +1,6 @@
 """
-`digitalio` - Digital input and output control
-=================================================
+`digitalio` - Digital input and output control (GPIO)
+=====================================================
 
 See `CircuitPython:digitalio` in CircuitPython for more details.
 
@@ -15,6 +15,8 @@ if detector.chip.BCM2XXX:
     from adafruit_blinka.microcontroller.bcm283x.pin import Pin
 elif detector.chip.AM33XX:
     from adafruit_blinka.microcontroller.am335x.pin import Pin
+elif detector.chip.DRA74X:
+    from adafruit_blinka.microcontroller.dra74x.pin import Pin
 elif detector.chip.SUN8I:
     from adafruit_blinka.microcontroller.allwinner.h3.pin import Pin
 elif detector.chip.SAMA5:
@@ -37,6 +39,8 @@ elif detector.chip.APQ8016:
     from adafruit_blinka.microcontroller.snapdragon.apq8016.pin import Pin
 elif detector.chip.IMX8MX:
     from adafruit_blinka.microcontroller.nxp_imx8m.pin import Pin
+elif detector.chip.IMX6ULL:
+    from adafruit_blinka.microcontroller.nxp_imx6ull.pin import Pin
 elif detector.chip.HFU540:
     from adafruit_blinka.microcontroller.hfu540.pin import Pin
 elif detector.chip.A64:
@@ -47,6 +51,8 @@ elif detector.chip.MIPS24KEC:
     from adafruit_blinka.microcontroller.mips24kec.pin import Pin
 elif detector.chip.RK3308:
     from adafruit_blinka.microcontroller.rockchip.rk3308.pin import Pin
+elif detector.chip.RK3399:
+    from adafruit_blinka.microcontroller.rockchip.rk3399.pin import Pin
 elif detector.board.ftdi_ft232h:
     from adafruit_blinka.microcontroller.ftdi_mpsse.ft232h.pin import Pin
 elif detector.board.ftdi_ft2232h:
@@ -55,10 +61,21 @@ elif detector.board.binho_nova:
     from adafruit_blinka.microcontroller.nova.pin import Pin
 elif detector.board.greatfet_one:
     from adafruit_blinka.microcontroller.nxp_lpc4330.pin import Pin
-elif detector.chip.STM32:
+elif detector.chip.STM32F405:
     from machine import Pin
 elif detector.board.microchip_mcp2221:
     from adafruit_blinka.microcontroller.mcp2221.pin import Pin
+elif detector.chip.PENTIUM_N3710:
+    from adafruit_blinka.microcontroller.pentium.n3710.pin import Pin
+elif detector.chip.STM32MP157:
+    from adafruit_blinka.microcontroller.stm32.stm32mp157.pin import Pin
+elif detector.chip.MT8167:
+    from adafruit_blinka.microcontroller.mt8167.pin import Pin
+elif detector.chip.H5:
+    from adafruit_blinka.microcontroller.allwinner.h5.pin import Pin
+elif detector.chip.H616:
+    from adafruit_blinka.microcontroller.allwinner.h616.pin import Pin
+
 from adafruit_blinka import Enum, ContextManaged
 
 

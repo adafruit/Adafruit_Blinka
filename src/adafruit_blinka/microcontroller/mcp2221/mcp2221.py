@@ -6,13 +6,12 @@ import hid
 
 # Here if you need it
 MCP2221_HID_DELAY = float(os.environ.get("BLINKA_MCP2221_HID_DELAY", 0))
-# Use to set delay between reset and device reopen
+# Use to set delay between reset and device reopen. if negative, don't reset at all
 MCP2221_RESET_DELAY = float(os.environ.get("BLINKA_MCP2221_RESET_DELAY", 0.5))
 
 # from the C driver
 # http://ww1.microchip.com/downloads/en/DeviceDoc/mcp2221_0_1.tar.gz
 # others (???) determined during driver developement
-# pylint: disable=bad-whitespace
 RESP_ERR_NOERR = 0x00
 RESP_ADDR_NACK = 0x25
 RESP_READ_ERR = 0x7F
@@ -35,7 +34,6 @@ RESP_I2C_WRITINGNOSTOP = 0x45  # ???
 MCP2221_RETRY_MAX = 50
 MCP2221_MAX_I2C_DATA_LEN = 60
 MASK_ADDR_NACK = 0x40
-# pylint: enable=bad-whitespace
 
 
 class MCP2221:
@@ -53,7 +51,8 @@ class MCP2221:
     def __init__(self):
         self._hid = hid.device()
         self._hid.open(MCP2221.VID, MCP2221.PID)
-        self._reset()
+        if MCP2221_RESET_DELAY >= 0:
+            self._reset()
         self._gp_config = [0x07] * 4  # "don't care" initial value
         for pin in range(4):
             self.gp_set_mode(pin, self.GP_GPIO)  # set to GPIO mode
@@ -286,6 +285,8 @@ class MCP2221:
                     continue
                 if resp[2] in (RESP_READ_COMPL, RESP_READ_PARTIAL):
                     break
+            else:
+                raise RuntimeError("I2C read error: max retries reached.")
 
             # move data into buffer
             chunk = min(end - start, 60)
@@ -295,7 +296,7 @@ class MCP2221:
 
     # pylint: enable=too-many-arguments
 
-    def i2c_configure(self, baudrate=100000):
+    def _i2c_configure(self, baudrate=100000):
         """Configure I2C"""
         self._hid_xfer(
             bytes(

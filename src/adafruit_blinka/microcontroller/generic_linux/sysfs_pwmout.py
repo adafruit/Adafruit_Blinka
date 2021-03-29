@@ -5,11 +5,13 @@ License: MIT
 """
 
 import os
+from time import sleep
+from errno import EACCES
 
 try:
     from microcontroller.pin import pwmOuts
 except ImportError:
-    raise RuntimeError("No PWM outputs defined for this board")
+    raise RuntimeError("No PWM outputs defined for this board") from ImportError
 
 
 # pylint: disable=unnecessary-pass
@@ -24,6 +26,11 @@ class PWMError(IOError):
 
 class PWMOut:
     """Pulse Width Modulation Output Class"""
+
+    # Number of retries to check for successful PWM export on open
+    PWM_STAT_RETRIES = 10
+    # Delay between check for scucessful PWM export on open (100ms)
+    PWM_STAT_DELAY = 0.1
 
     # Sysfs paths
     _sysfs_path = "/sys/class/pwm/"
@@ -107,7 +114,26 @@ class PWMOut:
             with open(os.path.join(channel_path, self._export_path), "w") as f_export:
                 f_export.write("%d\n" % self._pwmpin)
         except IOError as e:
-            raise PWMError(e.errno, "Exporting PWM pin: " + e.strerror)
+            raise PWMError(e.errno, "Exporting PWM pin: " + e.strerror) from IOError
+
+        # Loop until 'period' is writable, because application of udev rules
+        # after the above pin export is asynchronous.
+        # Without this loop, the following properties may not be writable yet.
+        for i in range(PWMOut.PWM_STAT_RETRIES):
+            try:
+                with open(
+                    os.path.join(
+                        channel_path, self._pin_path.format(self._pwmpin), "period"
+                    ),
+                    "w",
+                ):
+                    break
+            except IOError as e:
+                if e.errno != EACCES or (
+                    e.errno == EACCES and i == PWMOut.PWM_STAT_RETRIES - 1
+                ):
+                    raise PWMError(e.errno, "Opening PWM period: " + e.strerror) from e
+            sleep(PWMOut.PWM_STAT_DELAY)
 
         # self._set_enabled(False) # This line causes a write error when trying to enable
 
@@ -136,7 +162,9 @@ class PWMOut:
                 ) as f_unexport:
                     f_unexport.write("%d\n" % self._pwmpin)
             except IOError as e:
-                raise PWMError(e.errno, "Unexporting PWM pin: " + e.strerror)
+                raise PWMError(
+                    e.errno, "Unexporting PWM pin: " + e.strerror
+                ) from IOError
 
         self._channel = None
         self._pwmpin = None
@@ -184,7 +212,9 @@ class PWMOut:
         try:
             period_ns = int(period_ns)
         except ValueError:
-            raise PWMError(None, 'Unknown period value: "%s"' % period_ns)
+            raise PWMError(
+                None, 'Unknown period value: "%s"' % period_ns
+            ) from ValueError
 
         # Convert period from nanoseconds to seconds
         period = period_ns / 1e9
@@ -222,7 +252,9 @@ class PWMOut:
         try:
             duty_cycle_ns = int(duty_cycle_ns)
         except ValueError:
-            raise PWMError(None, 'Unknown duty cycle value: "%s"' % duty_cycle_ns)
+            raise PWMError(
+                None, 'Unknown duty cycle value: "%s"' % duty_cycle_ns
+            ) from ValueError
 
         # Convert duty cycle from nanoseconds to seconds
         duty_cycle = duty_cycle_ns / 1e9

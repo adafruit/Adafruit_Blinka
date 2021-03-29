@@ -35,7 +35,7 @@ jobs:
         source actions-ci/install.sh
     - name: Pip install pylint, black, & Sphinx
       run: |
-        pip install --force-reinstall pylint black==19.10b0 Sphinx sphinx-rtd-theme
+        pip install --force-reinstall pylint black Sphinx sphinx-rtd-theme
     - name: Library version
       run: git describe --dirty --always --tags
     - name: Check formatting

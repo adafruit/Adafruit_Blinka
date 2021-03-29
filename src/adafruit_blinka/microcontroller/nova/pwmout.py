@@ -3,7 +3,7 @@
 try:
     from microcontroller.pin import pwmOuts
 except ImportError:
-    raise RuntimeError("No PWM outputs defined for this board")
+    raise RuntimeError("No PWM outputs defined for this board") from ImportError
 
 from microcontroller.pin import Pin
 
@@ -60,6 +60,7 @@ class PWMOut:
 
     def __del__(self):
         self.deinit()
+        PWMOut._nova.close()
 
     def __enter__(self):
         return self

@@ -5,7 +5,7 @@ except ImportError:
     raise ImportError(
         "Periphery Python bindings not found, please install and try again! "
         "Try running 'pip3 install python-periphery'"
-    )
+    ) from ImportError
 
 
 class Pin:

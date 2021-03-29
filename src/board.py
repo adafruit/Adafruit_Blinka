@@ -50,10 +50,10 @@ elif detector.board.any_raspberry_pi_40_pin:
 elif detector.board.any_raspberry_pi_cm:
     from adafruit_blinka.board.raspberrypi.raspi_cm import *
 
-elif detector.board.RASPBERRY_PI_A or detector.board.RASPBERRY_PI_B_REV1:
+elif detector.board.RASPBERRY_PI_B_REV1:
     from adafruit_blinka.board.raspberrypi.raspi_1b_rev1 import *
 
-elif detector.board.RASPBERRY_PI_B_REV2:
+elif detector.board.RASPBERRY_PI_A or detector.board.RASPBERRY_PI_B_REV2:
     from adafruit_blinka.board.raspberrypi.raspi_1b_rev2 import *
 
 elif board_id == ap_board.BEAGLEBONE_BLACK:
@@ -67,10 +67,15 @@ elif board_id == ap_board.BEAGLEBONE_BLACK_INDUSTRIAL:
 
 elif board_id == ap_board.BEAGLEBONE_GREEN_WIRELESS:
     from adafruit_blinka.board.beagleboard.beaglebone_black import *
+
 elif board_id == ap_board.BEAGLEBONE_BLACK_WIRELESS:
     from adafruit_blinka.board.beagleboard.beaglebone_black import *
+
 elif board_id == ap_board.BEAGLEBONE_POCKETBEAGLE:
     from adafruit_blinka.board.beagleboard.beaglebone_pocketbeagle import *
+
+elif board_id == ap_board.BEAGLEBONE_AI:
+    from adafruit_blinka.board.beagleboard.beaglebone_ai import *
 
 elif board_id == ap_board.ORANGE_PI_PC:
     from adafruit_blinka.board.orangepi.orangepipc import *
@@ -96,6 +101,18 @@ elif board_id == ap_board.ORANGE_PI_PLUS_2E:
 elif board_id == ap_board.ORANGE_PI_2:
     from adafruit_blinka.board.orangepi.orangepipc import *
 
+elif board_id == ap_board.ORANGE_PI_ZERO_PLUS_2H5:
+    from adafruit_blinka.board.orangepi.orangepizeroplus2h5 import *
+
+elif board_id == ap_board.ORANGE_PI_ZERO_PLUS:
+    from adafruit_blinka.board.orangepi.orangepizeroplus import *
+
+elif board_id == ap_board.ORANGE_PI_ZERO_2:
+    from adafruit_blinka.board.orangepi.orangepizero2 import *
+
+elif board_id == ap_board.BANANA_PI_M2_ZERO:
+    from adafruit_blinka.board.bananapi.bpim2zero import *
+
 elif board_id == ap_board.GIANT_BOARD:
     from adafruit_blinka.board.giantboard import *
 
@@ -104,6 +121,9 @@ elif board_id == ap_board.JETSON_TX1:
 
 elif board_id == ap_board.JETSON_TX2:
     from adafruit_blinka.board.nvidia.jetson_tx2 import *
+
+elif board_id == ap_board.JETSON_TX2_NX:
+    from adafruit_blinka.board.nvidia.jetson_tx2_nx import *
 
 elif board_id == ap_board.JETSON_XAVIER:
     from adafruit_blinka.board.nvidia.jetson_xavier import *
@@ -114,8 +134,14 @@ elif board_id == ap_board.JETSON_NANO:
 elif board_id == ap_board.JETSON_NX:
     from adafruit_blinka.board.nvidia.jetson_nx import *
 
+elif board_id == ap_board.CLARA_AGX_XAVIER:
+    from adafruit_blinka.board.nvidia.clara_agx_xavier import *
+
 elif board_id == ap_board.CORAL_EDGE_TPU_DEV:
-    from adafruit_blinka.board.coral_edge_tpu import *
+    from adafruit_blinka.board.coral_dev_board import *
+
+elif board_id == ap_board.CORAL_EDGE_TPU_DEV_MINI:
+    from adafruit_blinka.board.coral_dev_board_mini import *
 
 elif board_id == ap_board.ODROID_C2:
     from adafruit_blinka.board.hardkernel.odroidc2 import *
@@ -153,6 +179,12 @@ elif board_id == ap_board.SIFIVE_UNLEASHED:
 elif board_id == ap_board.PINE64:
     from adafruit_blinka.board.pine64 import *
 
+elif board_id == ap_board.PINEH64:
+    from adafruit_blinka.board.pineH64 import *
+
+elif board_id == ap_board.SOPINE:
+    from adafruit_blinka.board.soPine import *
+
 elif board_id == ap_board.CLOCKWORK_CPI3:
     from adafruit_blinka.board.clockworkcpi3 import *
 
@@ -161,6 +193,24 @@ elif board_id == ap_board.ONION_OMEGA2:
 
 elif board_id == ap_board.ROCK_PI_S:
     from adafruit_blinka.board.radxa.rockpis import *
+
+elif board_id == ap_board.ROCK_PI_4:
+    from adafruit_blinka.board.radxa.rockpi4 import *
+
+elif board_id == ap_board.UDOO_X86:
+    from adafruit_blinka.board.udoo_x86ultra import *
+
+elif board_id == ap_board.STM32MP157C_DK2:
+    from adafruit_blinka.board.stm32.stm32mp157c_dk2 import *
+
+elif board_id == ap_board.LUBANCAT_IMX6ULL:
+    from adafruit_blinka.board.lubancat.lubancat_imx6ull import *
+
+elif board_id == ap_board.NANOPI_NEO_AIR:
+    from adafruit_blinka.board.nanopi.neoair import *
+
+elif board_id == ap_board.NANOPI_DUO2:
+    from adafruit_blinka.board.nanopi.duo2 import *
 
 elif "sphinx" in sys.modules:
     pass

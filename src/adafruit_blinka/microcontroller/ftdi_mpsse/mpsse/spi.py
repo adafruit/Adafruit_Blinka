@@ -63,13 +63,15 @@ class SPI:
             chunk_end = chunk_start + self._spi.PAYLOAD_MAX_LENGTH
             self._port.write(buf[chunk_start:chunk_end])
         if rest:
-            self._port.write(buf[-1 * rest :])
+            rest_start = start + chunks * self._spi.PAYLOAD_MAX_LENGTH
+            self._port.write(buf[rest_start:end])
 
     # pylint: disable=unused-argument
     def readinto(self, buf, start=0, end=None, write_value=0):
         """Read data from SPI and into the buffer"""
         end = end if end else len(buf)
-        result = self._port.read(end - start)
+        buffer_out = [write_value] * (end - start)
+        result = self._port.exchange(buffer_out, end - start, duplex=True)
         for i, b in enumerate(result):
             buf[start + i] = b
 
