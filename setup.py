@@ -28,6 +28,7 @@ if os.path.exists("/proc/device-tree/compatible"):
         or b"brcm,bcm2836" in compat
         or b"brcm,bcm2837" in compat
         or b"brcm,bcm2838" in compat
+        or b"brcm,bcm2711" in compat
     ):
         board_reqs = ["RPi.GPIO", "rpi_ws281x>=4.0.0", "sysv_ipc>=1.1.0"]
 
@@ -61,7 +62,7 @@ setup(
         "adafruit_blinka.microcontroller.bcm283x.pulseio": ["libgpiod_pulsein"]
     },
     install_requires=[
-        "Adafruit-PlatformDetect>=2.18.1",
+        "Adafruit-PlatformDetect>=3.1.0",
         "Adafruit-PureIO>=1.1.7",
         "pyftdi>=0.40.0",
     ]

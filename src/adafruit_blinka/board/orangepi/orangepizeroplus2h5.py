@@ -14,6 +14,7 @@ PA0 = pin.PA0
 UART2_TX = pin.PA0
 PA3 = pin.PA3
 UART2_CTS = pin.PA3
+PD11 = pin.PD11
 PD14 = pin.PD14
 PL0 = pin.PL0
 PL1 = pin.PL1

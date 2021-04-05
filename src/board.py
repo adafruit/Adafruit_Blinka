@@ -122,6 +122,9 @@ elif board_id == ap_board.JETSON_TX1:
 elif board_id == ap_board.JETSON_TX2:
     from adafruit_blinka.board.nvidia.jetson_tx2 import *
 
+elif board_id == ap_board.JETSON_TX2_NX:
+    from adafruit_blinka.board.nvidia.jetson_tx2_nx import *
+
 elif board_id == ap_board.JETSON_XAVIER:
     from adafruit_blinka.board.nvidia.jetson_xavier import *
 
@@ -187,6 +190,9 @@ elif board_id == ap_board.ONION_OMEGA2:
 
 elif board_id == ap_board.ROCK_PI_S:
     from adafruit_blinka.board.radxa.rockpis import *
+
+elif board_id == ap_board.ROCK_PI_4:
+    from adafruit_blinka.board.radxa.rockpi4 import *
 
 elif board_id == ap_board.UDOO_X86:
     from adafruit_blinka.board.udoo_x86ultra import *

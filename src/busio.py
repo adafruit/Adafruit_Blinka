@@ -204,8 +204,13 @@ class SPI(Lockable):
         elif detector.board.any_beaglebone:
             from adafruit_blinka.microcontroller.am335x.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif detector.board.any_orange_pi and detector.chip.id == ap_chip.SUN8I:
-            from adafruit_blinka.microcontroller.allwinner.h3.pin import Pin
+        elif detector.board.any_orange_pi:
+            if detector.chip.id == ap_chip.SUN8I:
+                from adafruit_blinka.microcontroller.allwinner.h3.pin import Pin
+            elif detector.chip.id == ap_chip.H5:
+                from adafruit_blinka.microcontroller.allwinner.h5.pin import Pin
+            elif detector.chip.id == ap_chip.H616:
+                from adafruit_blinka.microcontroller.allwinner.h616.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif detector.board.any_nanopi and detector.chip.id == ap_chip.SUN8I:
             from adafruit_blinka.microcontroller.allwinner.h3.pin import Pin
@@ -249,6 +254,9 @@ class SPI(Lockable):
         elif detector.board.ROCK_PI_S:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.rockchip.rk3308.pin import Pin
+        elif detector.board.ROCK_PI_4:
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.rockchip.rk3399.pin import Pin
         elif detector.board.SIFIVE_UNLEASHED:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.hfu540.pin import Pin
