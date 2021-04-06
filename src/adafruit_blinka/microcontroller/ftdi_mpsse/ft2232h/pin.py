@@ -1,3 +1,5 @@
+"""FT2232H pin names"""
+
 from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.pin import Pin
 
 # See https://eblot.github.io/pyftdi/pinout.html for detailed FTDI device pinout information
