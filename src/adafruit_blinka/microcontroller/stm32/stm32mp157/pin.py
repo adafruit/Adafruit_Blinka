@@ -152,3 +152,18 @@ I2C_PORTS = (
     (1, PD12, PF15),
     (5, PA11, PA12),
 )
+
+# support busio port check
+# 0 - linux system -> i2c-0
+# 1 - linux system -> i2c-1
+i2cPorts = (
+    (0, PF14, PF15),
+    (1, PZ0, PZ1),
+)
+
+# SysFS analog inputs, Ordered as analog analogInId, device, and channel
+# Because stm32mp157 analog io used special port name,it doesn't like gpiod named form
+# so support analog io in this way
+PAN0 = 0
+PAN1 = 0
+analogIns = ((PAN0, 0, 0),)
