@@ -73,6 +73,8 @@ elif detector.chip.H5:
     from adafruit_blinka.microcontroller.allwinner.h5.pin import Pin
 elif detector.chip.H616:
     from adafruit_blinka.microcontroller.allwinner.h616.pin import Pin
+elif detector.board.pico_u2if:
+    from adafruit_blinka.microcontroller.pico_u2if.pin import Pin
 
 from adafruit_blinka import Enum, ContextManaged
 

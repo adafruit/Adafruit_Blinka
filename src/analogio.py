@@ -29,5 +29,7 @@ elif detector.chip.STM32MP157:
     from adafruit_blinka.microcontroller.generic_linux.sysfs_analogin import AnalogIn
 elif "sphinx" in sys.modules:
     pass
+elif detector.board.pico_u2if:
+    from adafruit_blinka.microcontroller.pico_u2if.analogio import AnalogIn
 else:
     raise NotImplementedError("analogio not supported for this board.")

@@ -72,5 +72,7 @@ elif chip_id == ap_chip.STM32MP157:
     from adafruit_blinka.microcontroller.stm32.stm32mp157.pin import *
 elif chip_id == ap_chip.MT8167:
     from adafruit_blinka.microcontroller.mt8167.pin import *
+elif chip_id == ap_chip.PICO_U2IF:
+    from adafruit_blinka.microcontroller.pico_u2if.pin import *
 else:
     raise NotImplementedError("Microcontroller not supported: ", chip_id)
