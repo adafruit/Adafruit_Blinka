@@ -25,6 +25,7 @@ class PWMOut:
         self.deinit()
 
     def deinit(self):
+        """Deinit PWM."""
         pico_u2if.pwm_deinit(self._pin)
 
     @property

@@ -1,3 +1,5 @@
+"""NeoPixel write for Pico u2if."""
+
 from .pico_u2if import pico_u2if
 
 

@@ -159,6 +159,7 @@ class Pico_u2if:
     # I2C
     # ----------------------------------------------------------------
     def i2c_configure(self, baudrate, pullup=False):
+        """Configure I2C."""
         if self._i2c_index is None:
             raise RuntimeError("I2C bus not initialized.")
 
@@ -176,6 +177,7 @@ class Pico_u2if:
             raise RuntimeError("I2C init error.")
 
     def i2c_set_port(self, index):
+        """Set I2C port."""
         if index not in (0, 1):
             raise ValueError("I2C index must be 0 or 1.")
         self._i2c_index = index
@@ -266,6 +268,7 @@ class Pico_u2if:
     # SPI
     # ----------------------------------------------------------------
     def spi_configure(self, baudrate):
+        """Configure SPI."""
         if self._spi_index is None:
             raise RuntimeError("SPI bus not initialized.")
 
@@ -283,11 +286,13 @@ class Pico_u2if:
             raise RuntimeError("SPI init error.")
 
     def spi_set_port(self, index):
+        """Set SPI port."""
         if index not in (0, 1):
             raise ValueError("SPI index must be 0 or 1.")
         self._spi_index = index
 
     def spi_write(self, buffer, *, start=0, end=None):
+        """SPI write."""
         if self._spi_index is None:
             raise RuntimeError("SPI bus not initialized.")
 
@@ -306,6 +311,7 @@ class Pico_u2if:
             start += chunk
 
     def spi_readinto(self, buffer, *, start=0, end=None, write_value=0):
+        """SPI readinto."""
         if self._spi_index is None:
             raise RuntimeError("SPI bus not initialized.")
 
@@ -330,12 +336,14 @@ class Pico_u2if:
         in_start=0,
         in_end=None
     ):
+        """SPI write and readinto."""
         raise NotImplementedError("SPI write_readinto Not implemented")
 
     # ----------------------------------------------------------------
     # NEOPIXEL
     # ----------------------------------------------------------------
     def neopixel_write(self, gpio, buf):
+        """NeoPixel write."""
         # open serial (data is sent over this)
         if self._serial is None:
             import serial
@@ -392,6 +400,7 @@ class Pico_u2if:
     # PWM
     # ----------------------------------------------------------------
     def pwm_configure(self, pin, frequency=500, duty_cycle=0, variable_frequency=False):
+        """Configure PWM."""
         self.pwm_deinit(pin)
         resp = self._hid_xfer(bytes([self.PWM_INIT_PIN, pin.id]), True)
         if resp[1] != self.RESP_OK:
@@ -401,9 +410,11 @@ class Pico_u2if:
         self.pwm_set_duty_cycle(pin, duty_cycle)
 
     def pwm_deinit(self, pin):
+        """Deinit PWM."""
         self._hid_xfer(bytes([self.PWM_DEINIT_PIN, pin.id]))
 
     def pwm_get_frequency(self, pin):
+        """PWM get freq."""
         resp = self._hid_xfer(
             bytes([self.PWM_GET_FREQ, pin.id])
             + frequency.to_bytes(4, byteorder="little"),
@@ -414,6 +425,7 @@ class Pico_u2if:
         return int.from_bytes(resp[3 : 3 + 4], byteorder="little")
 
     def pwm_set_frequency(self, pin, frequency):
+        """PWM set freq."""
         resp = self._hid_xfer(
             bytes([self.PWM_SET_FREQ, pin.id])
             + frequency.to_bytes(4, byteorder="little"),
@@ -430,12 +442,14 @@ class Pico_u2if:
                 raise RuntimeError("PWM frequency error.")
 
     def pwm_get_duty_cycle(self, pin):
+        """PWM get duty cycle."""
         resp = self._hid_xfer(bytes([self.PWM_GET_DUTY_U16, pin.id]), True)
         if resp[1] != self.RESP_OK:
             raise RuntimeError("PWM get duty cycle error.")
         return int.from_bytes(resp[3 : 3 + 4], byteorder="little")
 
     def pwm_set_duty_cycle(self, pin, duty_cycle):
+        """PWM set duty cycle."""
         resp = self._hid_xfer(
             bytes([self.PWM_SET_DUTY_U16, pin.id])
             + duty_cycle.to_bytes(2, byteorder="little"),
