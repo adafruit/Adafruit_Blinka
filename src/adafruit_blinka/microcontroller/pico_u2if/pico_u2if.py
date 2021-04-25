@@ -1,6 +1,7 @@
 """Chip Definition for Pico with u2if firmware"""
 # https://github.com/execuc/u2if
 
+import time
 import hid
 
 # pylint: disable=import-outside-toplevel,too-many-branches,too-many-statements
@@ -15,6 +16,7 @@ class Pico_u2if:
 
     # MISC
     RESP_OK = 0x01
+    SYS_RESET = 0x10
 
     # GPIO
     GPIO_INIT_PIN = 0x20
@@ -65,13 +67,12 @@ class Pico_u2if:
     PWM_GET_DUTY_NS = 0x37
 
     def __init__(self):
-        self._hid = hid.device()
-        self._hid.open(Pico_u2if.VID, Pico_u2if.PID)
         self._i2c_index = None
         self._spi_index = None
         self._serial = None
         self._neopixel_initialized = False
         self._uart_rx_buffer = None
+        self._reset()
 
     def _hid_xfer(self, report, response=True):
         """Perform HID Transfer"""
@@ -83,6 +84,28 @@ class Pico_u2if:
             # return is 64 byte response report
             return self._hid.read(64)
         return None
+
+    def _reset(self):
+        # get a HID device
+        self._hid = hid.device()
+        # open and reset
+        self._hid.open(Pico_u2if.VID, Pico_u2if.PID)
+        resp = self._hid_xfer(bytes([self.SYS_RESET]), True)
+        if resp[1] != self.RESP_OK:
+            raise RuntimeError("Reset error.")
+        # reopen
+        max_retry = 10
+        retries = 0
+        while True:
+            try:
+                self._hid.open(Pico_u2if.VID, Pico_u2if.PID)
+                return True
+            except OSError:
+                if retries >= max_retry:
+                    break
+                time.sleep(0.1)
+                retries += 1
+        return False
 
     # ----------------------------------------------------------------
     # GPIO
