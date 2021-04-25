@@ -393,6 +393,8 @@ class Pico_u2if:
                 raise RuntimeError("Neopixel init error")
             self._neopixel_initialized = True
 
+        self._serial.reset_output_buffer()
+
         # write
         # command is done over HID
         remain_bytes = len(buf)
@@ -407,14 +409,24 @@ class Pico_u2if:
                     "Neopixel write error : too many pixel for the firmware."
                 )
             elif resp[2] == 0x02:
+                print(resp[0:10])
                 raise RuntimeError(
                     "Neopixel write error : transfer already in progress."
                 )
             else:
-                raise RuntimeError("Neopixel write error")
+                raise RuntimeError("Neopixel write error.")
         # buffer is sent over serial
         self._serial.write(buf)
+        # hack (see u2if)
+        if len(buf) % 64 == 0:
+            self._serial.write([0])
         self._serial.flush()
+        # polling loop to wait for write complete?
+        resp = self._hid.read(64)
+        while resp[0] != self.WS2812B_WRITE:
+            resp = self._hid.read(64)
+        if resp[1] != self.RESP_OK:
+            raise RuntimeError("Neopixel write (flush) error.")
 
     # ----------------------------------------------------------------
     # PWM
