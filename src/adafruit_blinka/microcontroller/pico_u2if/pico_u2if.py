@@ -3,6 +3,9 @@
 
 import hid
 
+# pylint: disable=import-outside-toplevel,too-many-branches,too-many-statements
+# pylint: disable=too-many-arguments,too-many-function-args, too-many-public-methods
+
 
 class Pico_u2if:
     """MCP2221 Device Class Definition"""
@@ -382,6 +385,7 @@ class Pico_u2if:
             True,
         )
         if resp[1] != self.RESP_OK:
+            # pylint: disable=no-else-raise
             if resp[2] == 0x01:
                 raise RuntimeError(
                     "Neopixel write error : too many pixel for the firmware."
@@ -399,6 +403,7 @@ class Pico_u2if:
     # ----------------------------------------------------------------
     # PWM
     # ----------------------------------------------------------------
+    # pylint: disable=unused_argument
     def pwm_configure(self, pin, frequency=500, duty_cycle=0, variable_frequency=False):
         """Configure PWM."""
         self.pwm_deinit(pin)
@@ -415,11 +420,7 @@ class Pico_u2if:
 
     def pwm_get_frequency(self, pin):
         """PWM get freq."""
-        resp = self._hid_xfer(
-            bytes([self.PWM_GET_FREQ, pin.id])
-            + frequency.to_bytes(4, byteorder="little"),
-            True,
-        )
+        resp = self._hid_xfer(bytes([self.PWM_GET_FREQ, pin.id]), True)
         if resp[1] != self.RESP_OK:
             raise RuntimeError("PWM get frequency error.")
         return int.from_bytes(resp[3 : 3 + 4], byteorder="little")
@@ -432,6 +433,7 @@ class Pico_u2if:
             True,
         )
         if resp[1] != self.RESP_OK:
+            # pylint: disable=no-else-raise
             if resp[3] == 0x01:
                 raise RuntimeError("PWM different frequency on same slice.")
             elif resp[3] == 0x02:
