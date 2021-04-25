@@ -21,7 +21,7 @@ class AnalogIn(ContextManaged):
     @property
     def value(self):
         """Read the ADC and return the value"""
-        return pico_u2if.adc_get_value(self.pin_id)
+        return pico_u2if.adc_get_value(self.pin_id) << 4
 
     # pylint: disable=no-self-use
     @value.setter

@@ -64,12 +64,6 @@ class Pico_u2if:
     PWM_SET_DUTY_NS = 0x36
     PWM_GET_DUTY_NS = 0x37
 
-    # UART
-    UART0_INIT = 0x50
-    UART0_DEINIT = 0x51
-    UART0_WRITE = 0x52
-    UART0_READ = 0x53
-
     def __init__(self):
         self._hid = hid.device()
         self._hid.open(Pico_u2if.VID, Pico_u2if.PID)
