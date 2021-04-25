@@ -363,6 +363,7 @@ class Pico_u2if:
         # init
         if not self._neopixel_initialized:
             # deinit any current setup
+            # pylint: disable=protected-access
             self._hid_xfer(bytes([self.WS2812B_DEINIT]))
             resp = self._hid_xfer(
                 bytes(
@@ -403,7 +404,7 @@ class Pico_u2if:
     # ----------------------------------------------------------------
     # PWM
     # ----------------------------------------------------------------
-    # pylint: disable=unused_argument
+    # pylint: disable=unused-argument
     def pwm_configure(self, pin, frequency=500, duty_cycle=0, variable_frequency=False):
         """Configure PWM."""
         self.pwm_deinit(pin)
