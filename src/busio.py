@@ -53,6 +53,11 @@ class I2C(Lockable):
 
             self._i2c = _I2C(frequency=frequency)
             return
+        if detector.board.pico_u2if:
+            from adafruit_blinka.microcontroller.pico_u2if.i2c import I2C as _I2C
+
+            self._i2c = _I2C(scl, sda, frequency=frequency)
+            return
         if detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.i2c import I2C as _I2C
         else:
@@ -171,6 +176,12 @@ class SPI(Lockable):
             self._spi = _SPI()
             self._pins = (SCK, MOSI, MISO)
             return
+        if detector.board.pico_u2if:
+            from adafruit_blinka.microcontroller.pico_u2if.spi import SPI as _SPI
+
+            self._spi = _SPI(clock)            # this is really all that's needed
+            self._pins = (clock, clock, clock) # will determine MOSI/MISO from clock
+            return
         if detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         else:
@@ -286,6 +297,9 @@ class SPI(Lockable):
         elif detector.board.any_lubancat and detector.chip.id == ap_chip.IMX6ULL:
             from adafruit_blinka.microcontroller.nxp_imx6ull.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+        elif detector.board.pico_u2if:
+            from adafruit_blinka.microcontroller.pico_u2if.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.pico_u2if.pin import Pin
         else:
             from machine import SPI as _SPI
             from machine import Pin

@@ -215,6 +215,9 @@ elif board_id == ap_board.NANOPI_NEO_AIR:
 elif board_id == ap_board.NANOPI_DUO2:
     from adafruit_blinka.board.nanopi.duo2 import *
 
+elif board_id == ap_board.PICO_U2IF:
+    from adafruit_blinka.board.pico_u2if import *
+
 elif "sphinx" in sys.modules:
     pass
 
