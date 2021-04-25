@@ -179,8 +179,8 @@ class SPI(Lockable):
         if detector.board.pico_u2if:
             from adafruit_blinka.microcontroller.pico_u2if.spi import SPI as _SPI
 
-            self._spi = _SPI(clock)            # this is really all that's needed
-            self._pins = (clock, clock, clock) # will determine MOSI/MISO from clock
+            self._spi = _SPI(clock)  # this is really all that's needed
+            self._pins = (clock, clock, clock)  # will determine MOSI/MISO from clock
             return
         if detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
