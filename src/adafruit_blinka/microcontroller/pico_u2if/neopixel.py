@@ -11,7 +11,7 @@ def neopixel_write(gpio, buf):
     for i in range(0, len(buf), 3):
         buffer.append(0)
         buffer.append(buf[i + 2])
-        buffer.append(buf[i])
         buffer.append(buf[i + 1])
+        buffer.append(buf[i])
 
     pico_u2if.neopixel_write(gpio, buffer)
