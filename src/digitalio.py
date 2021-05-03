@@ -51,6 +51,8 @@ elif detector.chip.MIPS24KEC:
     from adafruit_blinka.microcontroller.mips24kec.pin import Pin
 elif detector.chip.RK3308:
     from adafruit_blinka.microcontroller.rockchip.rk3308.pin import Pin
+elif detector.chip.RK3399:
+    from adafruit_blinka.microcontroller.rockchip.rk3399.pin import Pin
 elif detector.board.ftdi_ft232h:
     from adafruit_blinka.microcontroller.ft232h.pin import Pin
 elif detector.board.binho_nova:
@@ -71,6 +73,8 @@ elif detector.chip.H5:
     from adafruit_blinka.microcontroller.allwinner.h5.pin import Pin
 elif detector.chip.H616:
     from adafruit_blinka.microcontroller.allwinner.h616.pin import Pin
+elif detector.board.pico_u2if:
+    from adafruit_blinka.microcontroller.pico_u2if.pin import Pin
 
 from adafruit_blinka import Enum, ContextManaged
 

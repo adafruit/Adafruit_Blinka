@@ -22,13 +22,15 @@ elif detector.board.any_giant_board:
 elif detector.board.any_beaglebone:
     from adafruit_blinka.microcontroller.am335x.sysfs_pwmout import PWMOut
 elif detector.board.any_rock_pi_board:
-    from adafruit_blinka.microcontroller.generic_linux.sysfs_pwmout import PWMOut
+    from adafruit_blinka.microcontroller.rockchip.PWMOut import PWMOut
 elif detector.board.binho_nova:
     from adafruit_blinka.microcontroller.nova.pwmout import PWMOut
 elif detector.board.greatfet_one:
     from adafruit_blinka.microcontroller.nxp_lpc4330.pwmout import PWMOut
 elif detector.board.any_lubancat:
     from adafruit_blinka.microcontroller.generic_linux.sysfs_pwmout import PWMOut
+elif detector.board.pico_u2if:
+    from adafruit_blinka.microcontroller.pico_u2if.pwmio import PWMOut
 elif "sphinx" in sys.modules:
     pass
 else:

@@ -49,9 +49,10 @@ class PWMOut:
 
     def deinit(self):
         """Deinit the PWM."""
-        self._pwmpin.stop()
-        GPIO.cleanup(self._pin.id)
-        self._pwmpin = None
+        if self._pwmpin is not None:
+            self._pwmpin.stop()
+            GPIO.cleanup(self._pin.id)
+            self._pwmpin = None
 
     def _is_deinited(self):
         if self._pwmpin is None:

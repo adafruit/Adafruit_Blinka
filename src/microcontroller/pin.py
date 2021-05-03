@@ -18,6 +18,10 @@ elif chip_id == ap_chip.AM33XX:
     from adafruit_blinka.microcontroller.am335x.pin import *
 elif chip_id == ap_chip.SUN8I:
     from adafruit_blinka.microcontroller.allwinner.h3.pin import *
+elif chip_id == ap_chip.H5:
+    from adafruit_blinka.microcontroller.allwinner.h5.pin import *
+elif chip_id == ap_chip.H616:
+    from adafruit_blinka.microcontroller.allwinner.h616.pin import *
 elif chip_id == ap_chip.SAMA5:
     from adafruit_blinka.microcontroller.sama5.pin import *
 elif chip_id == ap_chip.T210:
@@ -56,6 +60,8 @@ elif chip_id == ap_chip.A33:
     from adafruit_blinka.microcontroller.allwinner.a33.pin import *
 elif chip_id == ap_chip.RK3308:
     from adafruit_blinka.microcontroller.rockchip.rk3308.pin import *
+elif chip_id == ap_chip.RK3399:
+    from adafruit_blinka.microcontroller.rockchip.rk3399.pin import *
 elif chip_id == ap_chip.MIPS24KC:
     from adafruit_blinka.microcontroller.atheros.ar9331.pin import *
 elif chip_id == ap_chip.MIPS24KEC:
@@ -66,5 +72,7 @@ elif chip_id == ap_chip.STM32MP157:
     from adafruit_blinka.microcontroller.stm32.stm32mp157.pin import *
 elif chip_id == ap_chip.MT8167:
     from adafruit_blinka.microcontroller.mt8167.pin import *
+elif chip_id == ap_chip.PICO_U2IF:
+    from adafruit_blinka.microcontroller.pico_u2if.pin import *
 else:
     raise NotImplementedError("Microcontroller not supported: ", chip_id)
