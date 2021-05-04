@@ -322,7 +322,7 @@ class Pico_u2if:
             remain_bytes = end - start
             chunk = min(remain_bytes, 64 - 3)
             resp = self._hid_xfer(
-                bytes([write_cmd, chunk]) + buffer[start : (start + chunk)], True
+                bytes([write_cmd, chunk]) + bytes(buffer[start : (start + chunk)]), True
             )
             if resp[1] != self.RESP_OK:
                 raise RuntimeError("SPI write error")
