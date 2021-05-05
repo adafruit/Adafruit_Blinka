@@ -7,7 +7,7 @@ class Pin:
     IN = 0
     OUT = 1
     LOW = 0
-    HIGH = 1  
+    HIGH = 1
     PULL_NONE = 0
     PULL_UP = 1
     PULL_DOWN = 2
