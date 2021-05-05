@@ -2,7 +2,7 @@
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
 PC0 = Pin((1, 64))
-SPI0_CLK = PC0
+SPI0_SCLK = PC0
 PC1 = Pin((1, 65))
 PC2 = Pin((1, 66))
 SPI0_MOSI = PC2
@@ -65,7 +65,7 @@ TWI3_SDA = PH5
 SPI1_CS0 = PH5
 PH6 = Pin((1, 230))
 UART2_RX = PH6
-SPI1_CLK = PH6
+SPI1_SCLK = PH6
 PH7 = Pin((1, 231))
 SPI1_MOSI = PH7
 PH8 = Pin((1, 232))
@@ -95,8 +95,8 @@ PI16 = Pin((1, 272))
 i2cPorts = ((3, TWI3_SCL, TWI3_SDA),)
 # ordered as spiId, sckId, mosiId, misoId
 spiPorts = (
-    (0, SPI0_CLK, SPI0_MOSI, SPI0_MISO),
-    (1, SPI1_CLK, SPI1_MOSI, SPI1_MISO),
+    (0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO),
+    (1, SPI1_SCLK, SPI1_MOSI, SPI1_MISO),
 )
 # ordered as uartId, txId, rxId
 uartPorts = (
