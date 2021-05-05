@@ -39,8 +39,8 @@ SPI1_MISO = PH6
 PH8 = Pin((1, 230))
 PH9 = Pin((1, 231))
 
-PL8 = Pin((1, 360))
-PL9 = Pin((1, 361))
+PL8 = Pin((0, 8))
+PL9 = Pin((0, 9))
 
 i2cPorts = ((0, TWI0_SCL, TWI0_SDA),)
 spiPorts = ((0, SPI1_SCLK, SPI1_MOSI, SPI1_MISO),)
