@@ -31,9 +31,9 @@ import sys
 
 import adafruit_platformdetect.constants.boards as ap_board
 from adafruit_blinka.agnostic import board_id, detector
-import busio
 
 # pylint: disable=wildcard-import,unused-wildcard-import,ungrouped-imports
+# pylint: disable=import-outside-toplevel
 
 if board_id == ap_board.FEATHER_HUZZAH:
     from adafruit_blinka.board.feather_huzzah import *
@@ -225,17 +225,24 @@ else:
     raise NotImplementedError("Board not supported {}".format(board_id))
 
 try:
-    if SDA and SCL:
 
-        def I2C():
-            """The singleton I2C interface"""
-            return busio.I2C(SCL, SDA)
+    def I2C():
+        """The singleton I2C interface"""
+        import busio
 
-    if SCLK:
+        return busio.I2C(SCL, SDA)
 
-        def SPI():
-            """The singleton SPI interface"""
-            return busio.SPI(SCLK, MOSI, MISO)
+
+except NameError:
+    pass
+
+try:
+
+    def SPI():
+        """The singleton SPI interface"""
+        import busio
+
+        return busio.SPI(SCLK, MOSI, MISO)
 
 
 except NameError:
