@@ -28,6 +28,7 @@ See `CircuitPython:board` in CircuitPython for more details.
 * Author(s): cefn
 """
 import sys
+import busio
 
 import adafruit_platformdetect.constants.boards as ap_board
 from adafruit_blinka.agnostic import board_id, detector
@@ -224,19 +225,15 @@ elif "sphinx" in sys.modules:
 else:
     raise NotImplementedError("Board not supported {}".format(board_id))
 
-if SCL and SDA:
+if SDA and SCL:
 
     def I2C():
         """The singleton I2C interface"""
-        import busio
-
         return busio.I2C(SCL, SDA)
 
 
-if SCLK and MOSI and MISO:
+if SCLK:
 
     def SPI():
         """The singleton SPI interface"""
-        import busio
-
         return busio.SPI(SCLK, MOSI, MISO)
