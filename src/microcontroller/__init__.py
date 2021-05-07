@@ -17,7 +17,7 @@ class Pin(Enum):
 
     def __init__(self, pin_id):
         """Identifier for pin, referencing platform-specific pin id"""
-        self._id = pin_id
+        self.id = pin_id
 
     def __repr__(self):
         # pylint: disable=import-outside-toplevel, cyclic-import
