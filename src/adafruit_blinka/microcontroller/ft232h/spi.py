@@ -1,5 +1,6 @@
 """SPI Class for FT232H"""
 from adafruit_blinka.microcontroller.ft232h.pin import Pin
+from adafruit_blinka.microcontroller.ft232h.url import get_ftdi_url
 
 # pylint: disable=protected-access
 class SPI:
@@ -14,7 +15,7 @@ class SPI:
         # pylint: enable=import-outside-toplevel
 
         self._spi = SpiController(cs_count=1)
-        self._spi.configure("ftdi://ftdi:ft232h/1")
+        self._spi.configure(get_ftdi_url())
         self._port = self._spi.get_port(0)
         self._port.set_frequency(100000)
         self._port._cpol = 0
