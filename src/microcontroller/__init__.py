@@ -43,6 +43,8 @@ if chip_id == ap_chip.ESP8266:
     from adafruit_blinka.microcontroller.esp8266 import *
 elif chip_id == ap_chip.STM32F405:
     from adafruit_blinka.microcontroller.stm32.stm32f405 import *
+elif chip_id == ap_chip.RP2040:
+    from adafruit_blinka.microcontroller.rp2040 import *
 elif chip_id == ap_chip.BCM2XXX:
     from adafruit_blinka.microcontroller.bcm283x import *
 elif chip_id == ap_chip.DRA74X:
