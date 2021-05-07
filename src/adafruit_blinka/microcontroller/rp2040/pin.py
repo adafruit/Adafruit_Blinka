@@ -25,10 +25,13 @@ GP19 = Pin(19)
 GP20 = Pin(20)
 GP21 = Pin(21)
 GP22 = Pin(22)
+GP23 = Pin(23)
+GP24 = Pin(24)
 GP25 = Pin(25)
 GP26 = Pin(26)
 GP27 = Pin(27)
 GP28 = Pin(28)
+GP29 = Pin(29)
 
 # ordered as spiId, sckId, mosiId (tx), misoId (rx)
 SPI_PORTS = (
