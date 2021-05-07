@@ -61,6 +61,8 @@ elif detector.board.greatfet_one:
     from adafruit_blinka.microcontroller.nxp_lpc4330.pin import Pin
 elif detector.chip.STM32F405:
     from machine import Pin
+elif detector.chip.RP2040:
+    from machine import Pin
 elif detector.board.microchip_mcp2221:
     from adafruit_blinka.microcontroller.mcp2221.pin import Pin
 elif detector.chip.PENTIUM_N3710:
