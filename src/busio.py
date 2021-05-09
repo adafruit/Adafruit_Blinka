@@ -290,6 +290,9 @@ class SPI(Lockable):
         ):
             from adafruit_blinka.microcontroller.allwinner.a64.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+        elif board_id == ap_board.PINEH64:
+            from adafruit_blinka.microcontroller.allwinner.h6.pin import Pin
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.CLOCKWORK_CPI3:
             from adafruit_blinka.microcontroller.allwinner.a33.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
