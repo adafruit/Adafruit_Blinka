@@ -220,6 +220,8 @@ class SPI(Lockable):
                 from adafruit_blinka.microcontroller.allwinner.h3.pin import Pin
             elif detector.chip.id == ap_chip.H5:
                 from adafruit_blinka.microcontroller.allwinner.h5.pin import Pin
+            elif detector.chip.id == ap_chip.H6:
+                from adafruit_blinka.microcontroller.allwinner.h6.pin import Pin
             elif detector.chip.id == ap_chip.H616:
                 from adafruit_blinka.microcontroller.allwinner.h616.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
