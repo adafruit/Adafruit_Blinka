@@ -34,7 +34,7 @@ GP28 = Pin(28)
 GP29 = Pin(29)
 
 # ordered as spiId, sckId, mosiId (tx), misoId (rx)
-SPI_PORTS = (
+spiPorts = (
     (0, GP2, GP3, GP0),
     (0, GP2, GP3, GP4),
     (0, GP2, GP7, GP0),
@@ -54,7 +54,7 @@ SPI_PORTS = (
 )
 
 # ordered as uartId, txId, rxId
-UART_PORTS = (
+uartPorts = (
     (0, GP0, GP1),
     (0, GP0, GP13),
     (0, GP12, GP1),
@@ -66,7 +66,7 @@ UART_PORTS = (
 )
 
 # ordered as scl, sda
-I2C_PORTS = (
+i2cPorts = (
     (0, GP1, GP0),
     (0, GP1, GP4),
     (0, GP1, GP8),
