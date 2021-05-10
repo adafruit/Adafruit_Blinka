@@ -160,4 +160,4 @@ i2cPorts = ((0, I2C1_SCL, I2C1_SDA),)
 spiPorts = ((0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO),)
 
 # SysFS pwm outputs, pwm channel and pin in first tuple
-pwmOuts = (((2, 0), PWM0),)
+pwmOuts = (((2, 0), PWM2),)
