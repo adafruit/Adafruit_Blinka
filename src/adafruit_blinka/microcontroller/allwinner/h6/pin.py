@@ -43,5 +43,5 @@ PL8 = Pin((0, 8))
 PL9 = Pin((0, 9))
 
 i2cPorts = ((0, TWI0_SCL, TWI0_SDA),)
-spiPorts = ((0, SPI1_SCLK, SPI1_MOSI, SPI1_MISO),)
+spiPorts = ((1, SPI1_SCLK, SPI1_MOSI, SPI1_MISO),)
 uartPorts = ((2, UART2_TX, UART2_RX),)
