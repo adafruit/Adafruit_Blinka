@@ -51,10 +51,10 @@ C13 = Pin("C13")
 D2 = Pin("D2")
 
 # ordered as spiId, sckId, mosiId, misoId
-SPI_PORTS = ((1, B13, B15, B14), (2, A5, A6, A7))
+spiPorts = ((1, B13, B15, B14), (2, A5, A7, A6))
 
 # ordered as uartId, txId, rxId
-UART_PORTS = (
+uartPorts = (
     (1, B6, B7),
     (2, A2, A3),
     (3, B10, B11),
@@ -62,7 +62,7 @@ UART_PORTS = (
     (6, C6, C7),
 )
 
-I2C_PORTS = (
+i2cPorts = (
     (1, B6, B7),
     (2, B10, B11),
 )
