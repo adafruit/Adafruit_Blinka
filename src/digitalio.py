@@ -53,6 +53,8 @@ elif detector.chip.RK3308:
     from adafruit_blinka.microcontroller.rockchip.rk3308.pin import Pin
 elif detector.chip.RK3399:
     from adafruit_blinka.microcontroller.rockchip.rk3399.pin import Pin
+elif detector.chip.RK3328:
+    from adafruit_blinka.microcontroller.rockchip.rk3328.pin import Pin
 elif detector.board.ftdi_ft232h:
     from adafruit_blinka.microcontroller.ft232h.pin import Pin
 elif detector.board.binho_nova:
