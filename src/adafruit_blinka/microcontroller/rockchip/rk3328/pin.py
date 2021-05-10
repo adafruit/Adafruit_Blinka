@@ -154,12 +154,10 @@ UART2_RX = GPIO2_A1
 PWM2 = GPIO2_A6
 
 # ordered as i2cId, SCL, SDA
-i2cPorts = (
-    (0, I2C1_SCL, I2C1_SDA),)
+i2cPorts = ((0, I2C1_SCL, I2C1_SDA),)
 
 # ordered as spiId, sckId, mosiId, misoId
 spiPorts = ((0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO),)
 
 # SysFS pwm outputs, pwm channel and pin in first tuple
-pwmOuts = (
-    ((2, 0), PWM0),)
+pwmOuts = (((2, 0), PWM0),)
