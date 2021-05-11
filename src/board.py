@@ -227,6 +227,14 @@ elif board_id == ap_board.PICO_U2IF:
 elif "sphinx" in sys.modules:
     pass
 
+elif board_id is None:
+    import platform
+    import pkg_resources
+    package = str(pkg_resources.get_distribution('adafruit_platformdetect')).split()
+    raise NotImplementedError("We could not identify what IoT microcomputer running "
+                              "{0} your Adafruit is attached to, please update the package {1} "
+                              "verison {2} to a newer verison by running: 'pip3 install --upgrade adafruit-blinka adafruit-platformdetect' "
+                              "".format(platform.system(),package[0],package[1]))
 else:
     raise NotImplementedError("Board not supported {}".format(board_id))
 
