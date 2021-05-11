@@ -231,10 +231,8 @@ elif board_id is None:
     import platform
     import pkg_resources
     package = str(pkg_resources.get_distribution('adafruit_platformdetect')).split()
-    raise NotImplementedError("We could not identify what IoT microcomputer running "
-                              "{0} your Adafruit is attached to, please update the package {1} "
-                              "verison {2} to a newer verison by running: 'pip3 install --upgrade adafruit-blinka adafruit-platformdetect' "
-                              "".format(platform.system(),package[0],package[1]))
+    raise NotImplementedError("{1} version {2} was unable to identify the board and/or microcontroller running the {0} platform. Please be sure you have the latest packages running: 'pip3 install --upgrade adafruit-blinka adafruit-platformdetect'".format(platform.system(),package[0],package[1]))
+
 else:
     raise NotImplementedError("Board not supported {}".format(board_id))
 
