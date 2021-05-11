@@ -1,4 +1,7 @@
-"""Support for getting the URL from the BLINKA_FT232H and BLINKA_FT2232H_{} environment variables."""
+"""
+Support for getting the URL from the BLINKA_FT232H
+and BLINKA_FT2232H_{} environment variables.
+"""
 
 import os
 
