@@ -44,6 +44,9 @@ elif board_id == ap_board.NODEMCU:
 elif board_id == ap_board.PYBOARD:
     from adafruit_blinka.board.pyboard import *
 
+elif board_id == ap_board.RASPBERRY_PI_PICO:
+    from adafruit_blinka.board.raspberrypi.pico import *
+
 elif detector.board.any_raspberry_pi_40_pin:
     from adafruit_blinka.board.raspberrypi.raspi_40pin import *
 
@@ -55,6 +58,9 @@ elif detector.board.RASPBERRY_PI_B_REV1:
 
 elif detector.board.RASPBERRY_PI_A or detector.board.RASPBERRY_PI_B_REV2:
     from adafruit_blinka.board.raspberrypi.raspi_1b_rev2 import *
+
+elif board_id == ap_board.BEAGLEBONE:
+    from adafruit_blinka.board.beagleboard.beaglebone_black import *
 
 elif board_id == ap_board.BEAGLEBONE_BLACK:
     from adafruit_blinka.board.beagleboard.beaglebone_black import *
@@ -197,6 +203,9 @@ elif board_id == ap_board.ROCK_PI_S:
 elif board_id == ap_board.ROCK_PI_4:
     from adafruit_blinka.board.radxa.rockpi4 import *
 
+elif board_id == ap_board.ROCK_PI_E:
+    from adafruit_blinka.board.radxa.rockpie import *
+
 elif board_id == ap_board.UDOO_X86:
     from adafruit_blinka.board.udoo_x86ultra import *
 
@@ -206,11 +215,17 @@ elif board_id == ap_board.STM32MP157C_DK2:
 elif board_id == ap_board.LUBANCAT_IMX6ULL:
     from adafruit_blinka.board.lubancat.lubancat_imx6ull import *
 
+elif board_id == ap_board.LUBANCAT_STM32MP157:
+    from adafruit_blinka.board.lubancat.lubancat_stm32mp157 import *
+
 elif board_id == ap_board.NANOPI_NEO_AIR:
     from adafruit_blinka.board.nanopi.neoair import *
 
 elif board_id == ap_board.NANOPI_DUO2:
     from adafruit_blinka.board.nanopi.duo2 import *
+
+elif board_id == ap_board.PICO_U2IF:
+    from adafruit_blinka.board.pico_u2if import *
 
 elif "sphinx" in sys.modules:
     pass
@@ -218,16 +233,19 @@ elif "sphinx" in sys.modules:
 else:
     raise NotImplementedError("Board not supported {}".format(board_id))
 
+if "SCL" in locals() and "SDA" in locals():
 
-def I2C():
-    """The singleton I2C interface"""
-    import busio
+    def I2C():
+        """The singleton I2C interface"""
+        import busio
 
-    return busio.I2C(SCL, SDA)
+        return busio.I2C(SCL, SDA)
 
 
-def SPI():
-    """The singleton SPI interface"""
-    import busio
+if "SCLK" in locals() and "MOSI" in locals() and "MISO" in locals():
 
-    return busio.SPI(SCLK, MOSI, MISO)
+    def SPI():
+        """The singleton SPI interface"""
+        import busio
+
+        return busio.SPI(SCLK, MOSI, MISO)

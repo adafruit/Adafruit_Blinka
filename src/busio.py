@@ -18,7 +18,7 @@ from adafruit_blinka import Enum, Lockable, agnostic
 from adafruit_blinka.agnostic import board_id, detector
 
 # pylint: disable=import-outside-toplevel,too-many-branches,too-many-statements
-# pylint: disable=too-many-arguments,too-many-function-args
+# pylint: disable=too-many-arguments,too-many-function-args,consider-using-with
 
 
 class I2C(Lockable):
@@ -53,19 +53,33 @@ class I2C(Lockable):
 
             self._i2c = _I2C(frequency=frequency)
             return
+        if detector.board.pico_u2if:
+            from adafruit_blinka.microcontroller.pico_u2if.i2c import I2C as _I2C
+
+            self._i2c = _I2C(scl, sda, frequency=frequency)
+            return
+        if detector.chip.id == ap_chip.RP2040:
+            from adafruit_blinka.microcontroller.rp2040.i2c import I2C as _I2C
+
+            self._i2c = _I2C(scl, sda, frequency=frequency)
+            return
         if detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.i2c import I2C as _I2C
         elif detector.board.ftdi_ft2232h:
             from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.i2c import I2C as _I2C
         else:
-            from machine import I2C as _I2C
+            from adafruit_blinka.microcontroller.generic_micropython.i2c import (
+                I2C as _I2C,
+            )
         from microcontroller.pin import i2cPorts
 
         for portId, portScl, portSda in i2cPorts:
             try:
+                # pylint: disable=unexpected-keyword-arg
                 if scl == portScl and sda == portSda:
                     self._i2c = _I2C(portId, mode=_I2C.MASTER, baudrate=frequency)
                     break
+                # pylint: enable=unexpected-keyword-arg
             except RuntimeError:
                 pass
         else:
@@ -177,12 +191,26 @@ class SPI(Lockable):
             self._spi = _SPI()
             self._pins = (SCK, MOSI, MISO)
             return
+        if detector.board.pico_u2if:
+            from adafruit_blinka.microcontroller.pico_u2if.spi import SPI as _SPI
+
+            self._spi = _SPI(clock)  # this is really all that's needed
+            self._pins = (clock, clock, clock)  # will determine MOSI/MISO from clock
+            return
+        if detector.chip.id == ap_chip.RP2040:
+            from adafruit_blinka.microcontroller.rp2040.spi import SPI as _SPI
+
+            self._spi = _SPI(clock, MOSI, MISO)  # Pins configured on instantiation
+            self._pins = (clock, clock, clock)  # These don't matter, they're discarded
+            return
         if detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif detector.board.ftdi_ft2232h:
             from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.spi import SPI as _SPI
         else:
-            from machine import SPI as _SPI
+            from adafruit_blinka.microcontroller.generic_micropython.spi import (
+                SPI as _SPI,
+            )
         from microcontroller.pin import spiPorts
 
         for portId, portSck, portMosi, portMiso in spiPorts:
@@ -204,106 +232,82 @@ class SPI(Lockable):
     def configure(self, baudrate=100000, polarity=0, phase=0, bits=8):
         """Update the configuration"""
         if detector.board.any_raspberry_pi or detector.board.any_raspberry_pi_40_pin:
-            from adafruit_blinka.microcontroller.bcm283x.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif detector.board.BEAGLEBONE_AI:
-            from adafruit_blinka.microcontroller.dra74x.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif detector.board.any_beaglebone:
-            from adafruit_blinka.microcontroller.am335x.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif detector.board.any_orange_pi:
-            if detector.chip.id == ap_chip.SUN8I:
-                from adafruit_blinka.microcontroller.allwinner.h3.pin import Pin
-            elif detector.chip.id == ap_chip.H5:
-                from adafruit_blinka.microcontroller.allwinner.h5.pin import Pin
-            elif detector.chip.id == ap_chip.H616:
-                from adafruit_blinka.microcontroller.allwinner.h616.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif detector.board.any_nanopi and detector.chip.id == ap_chip.SUN8I:
-            from adafruit_blinka.microcontroller.allwinner.h3.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.GIANT_BOARD:
-            from adafruit_blinka.microcontroller.sama5.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.CORAL_EDGE_TPU_DEV:
-            from adafruit_blinka.microcontroller.nxp_imx8m.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.CORAL_EDGE_TPU_DEV_MINI:
-            from adafruit_blinka.microcontroller.mt8167.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.ODROID_C2:
-            from adafruit_blinka.microcontroller.amlogic.s905.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.ODROID_C4:
-            from adafruit_blinka.microcontroller.amlogic.s905x3.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.ODROID_XU4:
-            from adafruit_blinka.microcontroller.samsung.exynos5422.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.DRAGONBOARD_410C:
-            from adafruit_blinka.microcontroller.snapdragon.apq8016.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.JETSON_NANO:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-            from adafruit_blinka.microcontroller.tegra.t210.pin import Pin
         elif board_id == ap_board.JETSON_TX1:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-            from adafruit_blinka.microcontroller.tegra.t210.pin import Pin
         elif board_id == ap_board.JETSON_TX2:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-            from adafruit_blinka.microcontroller.tegra.t186.pin import Pin
         elif board_id == ap_board.JETSON_XAVIER:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-            from adafruit_blinka.microcontroller.tegra.t194.pin import Pin
         elif board_id == ap_board.JETSON_NX:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-            from adafruit_blinka.microcontroller.tegra.t194.pin import Pin
         elif detector.board.ROCK_PI_S:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-            from adafruit_blinka.microcontroller.rockchip.rk3308.pin import Pin
         elif detector.board.ROCK_PI_4:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-            from adafruit_blinka.microcontroller.rockchip.rk3399.pin import Pin
+        elif detector.board.ROCK_PI_E:
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif detector.board.SIFIVE_UNLEASHED:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-            from adafruit_blinka.microcontroller.hfu540.pin import Pin
         elif detector.board.ftdi_ft232h:
             from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.spi import (
                 SPI as _SPI,
             )
-            from adafruit_blinka.microcontroller.ftdi_mpsse.ft232h.pin import Pin
         elif detector.board.ftdi_ft2232h:
             from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.spi import (
                 SPI as _SPI,
             )
-            from adafruit_blinka.microcontroller.ftdi_mpsse.ft2232h.pin import Pin
         elif detector.board.binho_nova:
             from adafruit_blinka.microcontroller.nova.spi import SPI as _SPI
-            from adafruit_blinka.microcontroller.nova.pin import Pin
         elif detector.board.greatfet_one:
             from adafruit_blinka.microcontroller.nxp_lpc4330.spi import SPI as _SPI
-            from adafruit_blinka.microcontroller.nxp_lpc4330.pin import Pin
         elif board_id in (
             ap_board.PINE64,
             ap_board.PINEBOOK,
             ap_board.PINEPHONE,
             ap_board.SOPINE,
         ):
-            from adafruit_blinka.microcontroller.allwinner.a64.pin import Pin
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+        elif board_id == ap_board.PINEH64:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.CLOCKWORK_CPI3:
-            from adafruit_blinka.microcontroller.allwinner.a33.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif board_id == ap_board.ONION_OMEGA2:
-            from adafruit_blinka.microcontroller.mips24kec.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif detector.board.any_lubancat and detector.chip.id == ap_chip.IMX6ULL:
-            from adafruit_blinka.microcontroller.nxp_imx6ull.pin import Pin
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+        elif detector.board.pico_u2if:
+            from adafruit_blinka.microcontroller.pico_u2if.spi import SPI as _SPI
+        elif detector.chip.id == ap_chip.RP2040:
+            from adafruit_blinka.microcontroller.rp2040.spi import SPI as _SPI
         else:
-            from machine import SPI as _SPI
-            from machine import Pin
+            from adafruit_blinka.microcontroller.generic_micropython.spi import (
+                SPI as _SPI,
+            )
 
         if self._locked:
             # TODO check if #init ignores MOSI=None rather than unsetting, to save _pinIds attribute
@@ -313,9 +317,6 @@ class SPI(Lockable):
                 phase=phase,
                 bits=bits,
                 firstbit=_SPI.MSB,
-                sck=Pin(self._pins[0].id),
-                mosi=Pin(self._pins[1].id),
-                miso=Pin(self._pins[2].id),
             )
         else:
             raise RuntimeError("First call try_lock()")
@@ -386,13 +387,12 @@ class UART(Lockable):
             from adafruit_blinka.microcontroller.nova.uart import UART as _UART
         elif detector.board.greatfet_one:
             from adafruit_blinka.microcontroller.nxp_lpc4330.uart import UART as _UART
+        elif detector.chip.id == ap_chip.RP2040:
+            from adafruit_blinka.microcontroller.rp2040.uart import UART as _UART
         else:
             from machine import UART as _UART
 
-        if detector.board.binho_nova:
-            from adafruit_blinka.microcontroller.nova.pin import uartPorts
-        else:
-            from microcontroller.pin import uartPorts
+        from microcontroller.pin import uartPorts
 
         self.baudrate = baudrate
 
@@ -411,25 +411,35 @@ class UART(Lockable):
         else:
             raise ValueError("Invalid parity")
 
-        # check tx and rx have hardware support
-        for portId, portTx, portRx in uartPorts:  #
-            if portTx == tx and portRx == rx:
-                self._uart = _UART(
-                    portId,
-                    baudrate,
-                    bits=bits,
-                    parity=parity,
-                    stop=stop,
-                    timeout=timeout,
-                    read_buf_len=receiver_buffer_size,
-                )
-                break
-        else:
-            raise ValueError(
-                "No Hardware UART on (tx,rx)={}\nValid UART ports: {}".format(
-                    (tx, rx), uartPorts
-                )
+        if detector.chip.id == ap_chip.RP2040:
+            self._uart = _UART(
+                tx,
+                rx,
+                baudrate=baudrate,
+                bits=bits,
+                parity=parity,
+                stop=stop,
             )
+        else:
+            # check tx and rx have hardware support
+            for portId, portTx, portRx in uartPorts:  #
+                if portTx == tx and portRx == rx:
+                    self._uart = _UART(
+                        portId,
+                        baudrate,
+                        bits=bits,
+                        parity=parity,
+                        stop=stop,
+                        timeout=timeout,
+                        read_buf_len=receiver_buffer_size,
+                    )
+                    break
+            else:
+                raise ValueError(
+                    "No Hardware UART on (tx,rx)={}\nValid UART ports: {}".format(
+                        (tx, rx), uartPorts
+                    )
+                )
 
     def deinit(self):
         """Deinitialization"""

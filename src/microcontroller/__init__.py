@@ -17,7 +17,7 @@ class Pin(Enum):
 
     def __init__(self, pin_id):
         """Identifier for pin, referencing platform-specific pin id"""
-        self._id = pin_id
+        self.id = pin_id
 
     def __repr__(self):
         # pylint: disable=import-outside-toplevel, cyclic-import
@@ -43,6 +43,8 @@ if chip_id == ap_chip.ESP8266:
     from adafruit_blinka.microcontroller.esp8266 import *
 elif chip_id == ap_chip.STM32F405:
     from adafruit_blinka.microcontroller.stm32.stm32f405 import *
+elif chip_id == ap_chip.RP2040:
+    from adafruit_blinka.microcontroller.rp2040 import *
 elif chip_id == ap_chip.BCM2XXX:
     from adafruit_blinka.microcontroller.bcm283x import *
 elif chip_id == ap_chip.DRA74X:
@@ -53,6 +55,8 @@ elif chip_id == ap_chip.SUN8I:
     from adafruit_blinka.microcontroller.allwinner.h3 import *
 elif chip_id == ap_chip.H5:
     from adafruit_blinka.microcontroller.allwinner.h5.pin import *
+elif chip_id == ap_chip.H6:
+    from adafruit_blinka.microcontroller.allwinner.h6.pin import *
 elif chip_id == ap_chip.H616:
     from adafruit_blinka.microcontroller.allwinner.h616.pin import *
 elif chip_id == ap_chip.SAMA5:
@@ -81,6 +85,8 @@ elif chip_id == ap_chip.RK3308:
     from adafruit_blinka.microcontroller.rockchip.rk3308.pin import *
 elif chip_id == ap_chip.RK3399:
     from adafruit_blinka.microcontroller.rockchip.rk3399.pin import *
+elif chip_id == ap_chip.RK3328:
+    from adafruit_blinka.microcontroller.rockchip.rk3328.pin import *
 elif chip_id == ap_chip.H5:
     from adafruit_blinka.microcontroller.allwinner.h5.pin import *
 elif chip_id == ap_chip.IMX8MX:

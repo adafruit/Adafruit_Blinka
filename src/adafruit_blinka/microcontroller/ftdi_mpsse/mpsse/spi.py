@@ -1,5 +1,9 @@
 """SPI Class for FTDI MPSSE"""
 from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.pin import Pin
+from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.url import (
+    get_ft232h_url,
+    get_ft2232h_url,
+)
 
 # pylint: disable=protected-access
 class SPI:
@@ -15,9 +19,9 @@ class SPI:
 
         self._spi = SpiController(cs_count=1)
         if spi_id is None:
-            self._spi.configure("ftdi://ftdi:ft232h/1")
+            self._spi.configure(get_ft232h_url())
         else:
-            self._spi.configure("ftdi://ftdi:ft2232h/{}".format(spi_id + 1))
+            self._spi.configure(get_ft2232h_url(spi_id + 1))
         self._port = self._spi.get_port(0)
         self._port.set_frequency(100000)
         self._port._cpol = 0

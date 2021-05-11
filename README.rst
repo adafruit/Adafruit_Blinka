@@ -17,16 +17,19 @@ Introduction
     :target: https://github.com/psf/black
     :alt: Code Style: Black
 
-This repository contains a selection of packages mirroring the CircuitPython API
-on hosts running micropython. Working code exists to emulate the CircuitPython packages;
+This repository contains a selection of packages emulating the CircuitPython API
+for devices or hosts running CPython or MicroPython. Working code exists to emulate these CircuitPython packages:
 
-* **board** - breakout-specific pin identities
-* **microcontroller** - chip-specific pin identities
 * **analogio** - analog input/output pins, using pin identities from board+microcontroller packages
-* **digitalio** - digital input/output pins, using pin identities from board+microcontroller packages
 * **bitbangio** - software-driven interfaces for I2C, SPI
+* **board** - breakout-specific pin identities
 * **busio** - hardware-driven interfaces for I2C, SPI, UART
+* **digitalio** - digital input/output pins, using pin identities from board+microcontroller packages
+* **microcontroller** - chip-specific pin identities
+* **micropython** - MicroPython-specific module
+* **neopixel_write** - low-level interface to NeoPixels
 * **pulseio** - contains classes that provide access to basic pulse IO (PWM)
+* **pwmio** - contains classes that provide access to basic pulse IO (PWM)
 
 For details, see the `Blinka API reference
 <https://circuitpython.readthedocs.io/projects/blinka/en/latest/index.html>`_.
@@ -34,12 +37,14 @@ For details, see the `Blinka API reference
 Dependencies
 =============
 
-The Micropython compatibility layers described above are intended to provide a CircuitPython-like API for devices which
-are running CPython or Micropython. Since corresponding packages should be built-in to any standard
-CircuitPython image, they have no value on a device already running CircuitPython and would likely conflict in unhappy ways.
+The emulation described above is intended to provide a
+CircuitPython-like API for devices which are running CPython or
+Micropython. Since corresponding packages should be built-in to any
+standard CircuitPython image, they have no value on a device already
+running CircuitPython and would likely conflict in unhappy ways.
 
 The test suites in the test/src folder under **testing.universal** are by design
-intended to run on *either* CircuitPython *or* Micropython+compatibility layer to prove conformance.
+intended to run on *either* CircuitPython *or* CPython/Micropython+compatibility layer to prove conformance.
 
 Installing from PyPI
 =====================

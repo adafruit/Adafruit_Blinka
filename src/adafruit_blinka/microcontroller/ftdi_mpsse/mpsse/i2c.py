@@ -1,5 +1,9 @@
 """I2C Class for FTDI MPSSE"""
 from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.pin import Pin
+from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.url import (
+    get_ft232h_url,
+    get_ft2232h_url,
+)
 
 
 class I2C:
@@ -23,11 +27,9 @@ class I2C:
 
         self._i2c = I2cController()
         if i2c_id is None:
-            self._i2c.configure("ftdi://ftdi:ft232h/1", frequency=frequency)
+            self._i2c.configure(get_ft232h_url(), frequency=frequency)
         else:
-            self._i2c.configure(
-                "ftdi://ftdi:ft2232h/{}".format(i2c_id + 1), frequency=frequency
-            )
+            self._i2c.configure(get_ft2232h_url(i2c_id), frequency=frequency)
         Pin.mpsse_gpio = self._i2c.get_gpio()
 
     def scan(self):

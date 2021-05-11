@@ -1,5 +1,7 @@
 """MPSSE pin names"""
 
+from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.url import get_ft232h_url, get_ft2232h_url
+
 
 class Pin:
     """A basic Pin class for use with FTDI MPSSEs."""
@@ -14,7 +16,7 @@ class Pin:
 
     mpsse_gpio = None
 
-    def __init__(self, pin_id=None, url="ftdi://ftdi:ft232h/1"):
+    def __init__(self, pin_id=None, interface_id=None):
         # setup GPIO controller if not done yet
         # use one provided by I2C as default
         if not Pin.mpsse_gpio:
@@ -24,7 +26,10 @@ class Pin:
             # pylint: enable=import-outside-toplevel
 
             i2c = I2cController()
-            i2c.configure(url)
+            if interface_id is None:
+                i2c.configure(get_ft232h_url())
+            else:
+                i2c.configure(get_ft2232h_url(interface_id))
             Pin.mpsse_gpio = i2c.get_gpio()
         # check if pin is valid
         if pin_id:
