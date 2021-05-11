@@ -1,6 +1,9 @@
 """MPSSE pin names"""
 
-from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.url import get_ft232h_url, get_ft2232h_url
+from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.url import (
+    get_ft232h_url,
+    get_ft2232h_url,
+)
 
 
 class Pin:
