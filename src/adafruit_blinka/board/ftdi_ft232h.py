@@ -1,5 +1,5 @@
 """Pin definitions for the FTDI FT232H"""
-from adafruit_blinka.microcontroller.ft232h import pin
+from adafruit_blinka.microcontroller.ftdi_mpsse.ft232h import pin
 
 D4 = pin.D4
 D5 = pin.D5

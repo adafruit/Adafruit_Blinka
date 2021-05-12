@@ -1,27 +1,33 @@
-"""SPI Class for FT232H"""
-from adafruit_blinka.microcontroller.ft232h.pin import Pin
-from adafruit_blinka.microcontroller.ft232h.url import get_ftdi_url
+"""SPI Class for FTDI MPSSE"""
+from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.pin import Pin
+from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.url import (
+    get_ft232h_url,
+    get_ft2232h_url,
+)
 
 # pylint: disable=protected-access
 class SPI:
-    """Custom SPI Class for FT232H"""
+    """Custom SPI Class for FTDI MPSSE"""
 
     MSB = 0
 
-    def __init__(self):
+    def __init__(self, spi_id=None):
         # pylint: disable=import-outside-toplevel
         from pyftdi.spi import SpiController
 
         # pylint: enable=import-outside-toplevel
 
         self._spi = SpiController(cs_count=1)
-        self._spi.configure(get_ftdi_url())
+        if spi_id is None:
+            self._spi.configure(get_ft232h_url())
+        else:
+            self._spi.configure(get_ft2232h_url(spi_id + 1))
         self._port = self._spi.get_port(0)
         self._port.set_frequency(100000)
         self._port._cpol = 0
         self._port._cpha = 0
         # Change GPIO controller to SPI
-        Pin.ft232h_gpio = self._spi.get_gpio()
+        Pin.mpsse_gpio = self._spi.get_gpio()
 
     # pylint: disable=too-many-arguments,unused-argument
     def init(
