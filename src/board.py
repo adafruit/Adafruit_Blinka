@@ -227,6 +227,19 @@ elif board_id == ap_board.PICO_U2IF:
 elif "sphinx" in sys.modules:
     pass
 
+elif board_id is None:
+    import platform
+    import pkg_resources
+
+    package = str(pkg_resources.get_distribution("adafruit_platformdetect")).split()
+    raise NotImplementedError(
+        "{1} version {2} was unable to identify the board and/or microcontroller running "
+        "the {0} platform. Please be sure you have the latest packages running: 'pip3 install "
+        "--upgrade adafruit-blinka adafruit-platformdetect'".format(
+            platform.system(), package[0], package[1]
+        )
+    )
+
 else:
     raise NotImplementedError("Board not supported {}".format(board_id))
 
