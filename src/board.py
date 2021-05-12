@@ -233,7 +233,9 @@ elif board_id is None:
 
     package = str(pkg_resources.get_distribution("adafruit_platformdetect")).split()
     raise NotImplementedError(
-        "{1} version {2} was unable to identify the board and/or microcontroller running the {0} platform. Please be sure you have the latest packages running: 'pip3 install --upgrade adafruit-blinka adafruit-platformdetect'".format(
+        "{1} version {2} was unable to identify the board and/or microcontroller running "
+        "the {0} platform. Please be sure you have the latest packages running: 'pip3 install "
+        "--upgrade adafruit-blinka adafruit-platformdetect'".format(
             platform.system(), package[0], package[1]
         )
     )
