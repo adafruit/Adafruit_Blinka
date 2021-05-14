@@ -1,9 +1,9 @@
-"""PICO pin names"""
-from .pico_u2if import pico_u2if
+"""Generic RP2040 pin names"""
+from .rp2040_u2if import rp2040_u2if
 
 
 class Pin:
-    """A basic Pin class for use with MCP2221."""
+    """A basic Pin class for use with RP2040 with u2if firmware."""
 
     # pin modes
     IN = 0
@@ -21,6 +21,9 @@ class Pin:
         self._mode = None
         self._pull = None
 
+    def _u2if_open_hid(self, vid, pid):
+        rp2040_u2if.open(vid, pid)
+
     def init(self, mode=IN, pull=PULL_NONE):
         """Initialize the Pin"""
         pull = Pin.PULL_NONE if pull is None else pull
@@ -31,7 +34,7 @@ class Pin:
         if pull not in (Pin.PULL_NONE, Pin.PULL_UP, Pin.PULL_DOWN):
             raise ValueError("Incorrect pull value.")
 
-        pico_u2if.gpio_init_pin(self.id, mode, pull)
+        rp2040_u2if.gpio_init_pin(self.id, mode,pull)
 
         self._mode = mode
         self._pull = pull
@@ -42,10 +45,10 @@ class Pin:
         if self._mode in (Pin.IN, Pin.OUT):
             # digital read
             if val is None:
-                return pico_u2if.gpio_get_pin(self.id)
+                return rp2040_u2if.gpio_get_pin(self.id)
             # digital write
             if val in (Pin.LOW, Pin.HIGH):
-                pico_u2if.gpio_set_pin(self.id, val)
+                rp2040_u2if.gpio_set_pin(self.id, val)
                 return None
             # nope
             raise ValueError("Invalid value for pin.")
@@ -79,6 +82,9 @@ GP19 = Pin(19)
 GP20 = Pin(20)
 GP21 = Pin(21)
 GP22 = Pin(22)
+GP24 = Pin(24)
+GP25 = Pin(25)
 GP26 = Pin(26)
 GP27 = Pin(27)
 GP28 = Pin(28)
+GP29 = Pin(29)

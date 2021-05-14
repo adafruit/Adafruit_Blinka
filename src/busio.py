@@ -54,7 +54,12 @@ class I2C(Lockable):
             self._i2c = _I2C(frequency=frequency)
             return
         if detector.board.pico_u2if:
-            from adafruit_blinka.microcontroller.pico_u2if.i2c import I2C as _I2C
+            from adafruit_blinka.microcontroller.rp2040_u2if.i2c import I2C_Pico as _I2C
+
+            self._i2c = _I2C(scl, sda, frequency=frequency)
+            return
+        if detector.board.feather_u2if:
+            from adafruit_blinka.microcontroller.rp2040_u2if.i2c import I2C_Feather as _I2C
 
             self._i2c = _I2C(scl, sda, frequency=frequency)
             return
@@ -192,7 +197,13 @@ class SPI(Lockable):
             self._pins = (SCK, MOSI, MISO)
             return
         if detector.board.pico_u2if:
-            from adafruit_blinka.microcontroller.pico_u2if.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.rp2040_u2if.spi import SPI_Pico as _SPI
+
+            self._spi = _SPI(clock)  # this is really all that's needed
+            self._pins = (clock, clock, clock)  # will determine MOSI/MISO from clock
+            return
+        if detector.board.feather_u2if:
+            from adafruit_blinka.microcontroller.rp2040_u2if.spi import SPI_Feather as _SPI
 
             self._spi = _SPI(clock)  # this is really all that's needed
             self._pins = (clock, clock, clock)  # will determine MOSI/MISO from clock
@@ -301,7 +312,9 @@ class SPI(Lockable):
         elif detector.board.any_lubancat and detector.chip.id == ap_chip.IMX6ULL:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif detector.board.pico_u2if:
-            from adafruit_blinka.microcontroller.pico_u2if.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.rp2040_u2if.spi import SPI_Pico as _SPI
+        elif detector.board.feather_u2if:
+            from adafruit_blinka.microcontroller.rp2040_u2if.spi import SPI_Feather as _SPI
         elif detector.chip.id == ap_chip.RP2040:
             from adafruit_blinka.microcontroller.rp2040.spi import SPI as _SPI
         else:
