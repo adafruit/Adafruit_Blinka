@@ -28,14 +28,13 @@ class I2C:
         """Perform an I2C Device Scan"""
         return self._i2c.scan()
 
-    # pylint: disable=unused-argument
     def writeto(self, address, buffer, *, stop=True):
         "Write data to the address from the buffer"
-        return self._i2c.writeto(address, buffer)
+        return self._i2c.writeto(address, buffer, stop)
 
     def readfrom_into(self, address, buffer, *, stop=True):
         """Read data from an address and into the buffer"""
-        return self._i2c.readfrom_into(address, buffer)
+        return self._i2c.readfrom_into(address, buffer, stop)
 
     def writeto_then_readfrom(
         self,
@@ -52,14 +51,13 @@ class I2C:
         """Write data from buffer_out to an address and then
         read data from an address and into buffer_in
         """
-        self._i2c.writeto_then_readfrom(
-            address,
-            buffer_out,
-            buffer_in,
-            out_start=out_start,
-            out_end=out_end,
-            in_start=in_start,
-            in_end=in_end,
-        )
-
-    # pylint: enable=unused-argument
+        if out_end:
+            self.writeto(address, buffer_out[out_start:out_end], stop=stop)
+        else:
+            self.writeto(address, buffer_out[out_start:], stop=stop)
+        read_buffer = buffer_in
+        self.readfrom_into(address, read_buffer, stop=stop)
+        if in_end:
+            buffer_in[in_start:in_end] = read_buffer[in_start:in_end]
+        else:
+            buffer_in[in_start:] = read_buffer[in_start:]
