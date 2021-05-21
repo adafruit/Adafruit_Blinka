@@ -47,3 +47,11 @@ class AnalogIn_Feather(AnalogIn):
         if pin.id not in (26, 27, 28):
             raise ValueError("Pin does not support ADC.")
         super().__init__(pin)
+
+class AnalogIn_QTPY(AnalogIn):
+    """AnalogIn Base Class for QT Py 2040 u2if"""
+
+    def __init__(self, pin):
+        if pin.id not in (26, 27, 28):
+            raise ValueError("Pin does not support ADC.")
+        super().__init__(pin)

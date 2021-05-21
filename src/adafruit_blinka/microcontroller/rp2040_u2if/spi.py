@@ -84,3 +84,13 @@ class SPI_Feather(SPI):
         if index is None:
             raise ValueError("No SPI port on specified pin.")
         super().__init__(index, baudrate=baudrate)
+
+class SPI_QTPY(SPI):
+
+    def __init__(self, clock, *, baudrate=100000):
+        index = None
+        if clock.id == 6:
+            index = 0
+        if index is None:
+            raise ValueError("No SPI port on specified pin.")
+        super().__init__(index, baudrate=baudrate)
