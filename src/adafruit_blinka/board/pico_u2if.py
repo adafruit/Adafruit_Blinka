@@ -46,4 +46,5 @@ MOSI1 = GP11
 MISO1 = GP12
 
 # access u2if via pin instance to open for specifc VID/PID
+# pylint:disable = protected-access
 pin.GP0._u2if_open_hid(0xCAFE, 0x4005)

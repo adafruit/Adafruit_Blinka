@@ -21,6 +21,7 @@ class Pin:
         self._mode = None
         self._pull = None
 
+    # pylint:disable = no-self-use
     def _u2if_open_hid(self, vid, pid):
         rp2040_u2if.open(vid, pid)
 

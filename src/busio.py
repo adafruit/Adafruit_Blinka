@@ -18,7 +18,7 @@ from adafruit_blinka import Enum, Lockable, agnostic
 from adafruit_blinka.agnostic import board_id, detector
 
 # pylint: disable=import-outside-toplevel,too-many-branches,too-many-statements
-# pylint: disable=too-many-arguments,too-many-function-args,consider-using-with
+# pylint: disable=too-many-arguments,too-many-function-args,consider-using-with,too-many-return-statements
 
 
 class I2C(Lockable):
