@@ -35,5 +35,7 @@ elif detector.board.feather_u2if:
     from adafruit_blinka.microcontroller.rp2040_u2if.analogio import AnalogIn_Feather as AnalogIn
 elif detector.board.qtpy_u2if:
     from adafruit_blinka.microcontroller.rp2040_u2if.analogio import AnalogIn_QTPY as AnalogIn
+elif detector.board.itsybitsy_u2if:
+    from adafruit_blinka.microcontroller.rp2040_u2if.analogio import AnalogIn_ItsyBitsy as AnalogIn
 else:
     raise NotImplementedError("analogio not supported for this board.")

@@ -41,4 +41,4 @@ MOSI = pin.GP19
 MISO = pin.GP20
 
 # access u2if via pin instance to open for specifc VID/PID
-pin.GP0._u2if_open_hid(0x239A, 0x80F2)
+pin.GP0._u2if_open_hid(0x239A, 0x00F1)

@@ -83,13 +83,26 @@ class I2C_Feather(I2C):
         super().__init__(index, frequency=frequency)
 
 class I2C_QTPY(I2C):
-    """I2C Class for QT2040 Trinkey u2if"""
+    """I2C Class for QT Py 2if"""
 
     def __init__(self, scl, sda, *, frequency=100000):
         index = None
         if scl.id == 25 and sda.id == 24:
             index = 0
         if scl.id == 23 and sda.id == 22:
+            index = 1
+        if index is None:
+            raise ValueError("I2C not found on specified pins.")
+        self._index = index
+
+        super().__init__(index, frequency=frequency)
+
+class I2C_ItsyBitsy(I2C):
+    """I2C Class for ItsyBitsy u2if"""
+
+    def __init__(self, scl, sda, *, frequency=100000):
+        index = None
+        if scl.id == 3 and sda.id == 2:
             index = 1
         if index is None:
             raise ValueError("I2C not found on specified pins.")
