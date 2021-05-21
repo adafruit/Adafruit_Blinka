@@ -34,7 +34,7 @@ class Pin:
         if pull not in (Pin.PULL_NONE, Pin.PULL_UP, Pin.PULL_DOWN):
             raise ValueError("Incorrect pull value.")
 
-        rp2040_u2if.gpio_init_pin(self.id, mode,pull)
+        rp2040_u2if.gpio_init_pin(self.id, mode, pull)
 
         self._mode = mode
         self._pull = pull

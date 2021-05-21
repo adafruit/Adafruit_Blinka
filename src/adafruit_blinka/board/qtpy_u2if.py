@@ -29,7 +29,7 @@ D8 = pin.GP6
 D9 = pin.GP4
 D10 = pin.GP3
 
-#A0 = pin.GP29 # not currently supported in firmware
+# A0 = pin.GP29 # not currently supported in firmware
 A1 = pin.GP28
 A2 = pin.GP27
 A3 = pin.GP26

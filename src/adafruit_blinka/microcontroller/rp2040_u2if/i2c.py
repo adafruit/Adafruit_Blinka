@@ -54,6 +54,7 @@ class I2C:
 
     # pylint: enable=unused-argument
 
+
 class I2C_Pico(I2C):
     """I2C Class for Pico u2if"""
 
@@ -69,6 +70,7 @@ class I2C_Pico(I2C):
 
         super().__init__(index, frequency=frequency)
 
+
 class I2C_Feather(I2C):
     """I2C Class for Feather u2if"""
 
@@ -81,6 +83,7 @@ class I2C_Feather(I2C):
         self._index = index
 
         super().__init__(index, frequency=frequency)
+
 
 class I2C_QTPY(I2C):
     """I2C Class for QT Py 2if"""
@@ -97,6 +100,7 @@ class I2C_QTPY(I2C):
 
         super().__init__(index, frequency=frequency)
 
+
 class I2C_ItsyBitsy(I2C):
     """I2C Class for ItsyBitsy u2if"""
 
@@ -110,6 +114,7 @@ class I2C_ItsyBitsy(I2C):
 
         super().__init__(index, frequency=frequency)
 
+
 class I2C_QT2040_Trinkey(I2C):
     """I2C Class for QT2040 Trinkey u2if"""
 
@@ -122,5 +127,3 @@ class I2C_QT2040_Trinkey(I2C):
         self._index = index
 
         super().__init__(index, frequency=frequency)
-
-

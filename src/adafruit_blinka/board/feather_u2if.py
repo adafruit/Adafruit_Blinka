@@ -31,7 +31,7 @@ D25 = pin.GP25
 A0 = pin.GP26
 A1 = pin.GP27
 A2 = pin.GP28
-#A3 = pin.GP29 # not currently supported in firmware
+# A3 = pin.GP29 # not currently supported in firmware
 
 SCL = pin.GP3
 SDA = pin.GP2

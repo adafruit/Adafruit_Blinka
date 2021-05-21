@@ -15,4 +15,3 @@ def neopixel_write(gpio, buf):
         buffer.append(buf[i])
 
     rp2040_u2if.neopixel_write(gpio, buffer)
-

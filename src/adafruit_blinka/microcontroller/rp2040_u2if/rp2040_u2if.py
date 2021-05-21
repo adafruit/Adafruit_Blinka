@@ -506,4 +506,5 @@ class RP2040_u2if:
         if resp[1] != self.RESP_OK:
             raise RuntimeError("PWM set duty cycle error.")
 
+
 rp2040_u2if = RP2040_u2if()

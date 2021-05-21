@@ -63,6 +63,7 @@ class SPI:
 
     # pylint: enable=too-many-arguments
 
+
 class SPI_Pico(SPI):
     """SPI Class for Pico u2if"""
 
@@ -76,6 +77,7 @@ class SPI_Pico(SPI):
             raise ValueError("No SPI port on specified pin.")
         super().__init__(index, baudrate=baudrate)
 
+
 class SPI_Feather(SPI):
     """SPI Class for Feather u2if"""
 
@@ -87,6 +89,7 @@ class SPI_Feather(SPI):
             raise ValueError("No SPI port on specified pin.")
         super().__init__(index, baudrate=baudrate)
 
+
 class SPI_QTPY(SPI):
     """SPI Class for QT Py u2if"""
 
@@ -97,6 +100,7 @@ class SPI_QTPY(SPI):
         if index is None:
             raise ValueError("No SPI port on specified pin.")
         super().__init__(index, baudrate=baudrate)
+
 
 class SPI_ItsyBitsy(SPI):
     """SPI Class for ItsyBitsy u2if"""

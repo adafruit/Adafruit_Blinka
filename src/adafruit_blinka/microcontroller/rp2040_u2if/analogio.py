@@ -31,6 +31,7 @@ class AnalogIn(ContextManaged):
     def deinit(self):
         pass
 
+
 class AnalogIn_Pico(AnalogIn):
     """AnalogIn Base Class for Pico u2if"""
 
@@ -40,6 +41,7 @@ class AnalogIn_Pico(AnalogIn):
             raise ValueError("Pin does not support ADC.")
         super().__init__(pin)
 
+
 class AnalogIn_Feather(AnalogIn):
     """AnalogIn Base Class for Feather u2if"""
 
@@ -48,6 +50,7 @@ class AnalogIn_Feather(AnalogIn):
             raise ValueError("Pin does not support ADC.")
         super().__init__(pin)
 
+
 class AnalogIn_QTPY(AnalogIn):
     """AnalogIn Base Class for QT Py 2040 u2if"""
 
@@ -55,6 +58,7 @@ class AnalogIn_QTPY(AnalogIn):
         if pin.id not in (26, 27, 28):
             raise ValueError("Pin does not support ADC.")
         super().__init__(pin)
+
 
 class AnalogIn_ItsyBitsy(AnalogIn):
     """AnalogIn Base Class for ItsyBitsy 2040 u2if"""
