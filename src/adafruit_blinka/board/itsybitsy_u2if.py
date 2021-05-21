@@ -1,6 +1,6 @@
-"""Pin definitions for the ItsyBitsy RP2040 with u2if firmware."""
-
 """
+Pin definitions for the ItsyBitsy RP2040 with u2if firmware.
+
 Adafruit CircuitPython 6.2.0 on 2021-04-05; Adafruit ItsyBitsy RP2040 with rp2040
 >>> import board
 >>> board.
@@ -50,4 +50,5 @@ NEOPIXEL_POWER = pin.GP16
 BUTTON = pin.GP13
 
 # access u2if via pin instance to open for specifc VID/PID
+# pylint:disable = protected-access
 pin.GP0._u2if_open_hid(0x239A, 0x00FD)

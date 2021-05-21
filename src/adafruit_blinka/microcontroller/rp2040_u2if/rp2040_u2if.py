@@ -68,22 +68,15 @@ class RP2040_u2if:
     PWM_GET_DUTY_NS = 0x37
 
     def __init__(self):
+        self._vid = None
+        self._pid = None
+        self._hid = None
         self._opened = False
         self._i2c_index = None
         self._spi_index = None
         self._serial = None
         self._neopixel_initialized = False
-        # self._vid = vid
-        # self._pid = pid
-        # self._hid = hid.device()
-        # self._hid.open(self._vid, self._pid)
-        # if RP2040_U2IF_RESET_DELAY >= 0:
-        #     self._reset()
-        # self._i2c_index = None
-        # self._spi_index = None
-        # self._serial = None
-        # self._neopixel_initialized = False
-        # self._uart_rx_buffer = None
+        self._uart_rx_buffer = None
 
     def _hid_xfer(self, report, response=True):
         """Perform HID Transfer"""
@@ -113,6 +106,8 @@ class RP2040_u2if:
     # MISC
     # ----------------------------------------------------------------
     def open(self, vid, pid):
+        """Open HID interface for given USB VID and PID."""
+
         if self._opened:
             return
         self._vid = vid

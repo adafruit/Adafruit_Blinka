@@ -10,4 +10,5 @@ SDA = pin.GP16
 NEOPIXEL = pin.GP27
 
 # access u2if via pin instance to open for specifc VID/PID
+# pylint:disable = protected-access
 pin.GP0._u2if_open_hid(0x239A, 0x0109)
