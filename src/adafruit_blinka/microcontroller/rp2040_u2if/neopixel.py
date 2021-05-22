@@ -1,6 +1,6 @@
 """NeoPixel write for Pico u2if."""
 
-from .pico_u2if import pico_u2if
+from .rp2040_u2if import rp2040_u2if
 
 
 def neopixel_write(gpio, buf):
@@ -14,4 +14,4 @@ def neopixel_write(gpio, buf):
         buffer.append(buf[i + 1])
         buffer.append(buf[i])
 
-    pico_u2if.neopixel_write(gpio, buffer)
+    rp2040_u2if.neopixel_write(gpio, buffer)

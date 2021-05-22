@@ -1,4 +1,4 @@
-"""Chip Definition for Pico with u2if firmware"""
+"""Helper class for use with RP2040 running u2if firmware"""
 # https://github.com/execuc/u2if
 
 import os
@@ -6,17 +6,14 @@ import time
 import hid
 
 # Use to set delay between reset and device reopen. if negative, don't reset at all
-PICO_U2IF_RESET_DELAY = float(os.environ.get("PICO_U2IF_RESET_DELAY", 1))
+RP2040_U2IF_RESET_DELAY = float(os.environ.get("RP2040_U2IF_RESET_DELAY", 1))
 
 # pylint: disable=import-outside-toplevel,too-many-branches,too-many-statements
 # pylint: disable=too-many-arguments,too-many-function-args, too-many-public-methods
 
 
-class Pico_u2if:
-    """MCP2221 Device Class Definition"""
-
-    VID = 0xCAFE
-    PID = 0x4005
+class RP2040_u2if:
+    """Helper class for use with RP2040 running u2if firmware"""
 
     # MISC
     RESP_OK = 0x01
@@ -71,10 +68,10 @@ class Pico_u2if:
     PWM_GET_DUTY_NS = 0x37
 
     def __init__(self):
-        self._hid = hid.device()
-        self._hid.open(Pico_u2if.VID, Pico_u2if.PID)
-        if PICO_U2IF_RESET_DELAY >= 0:
-            self._reset()
+        self._vid = None
+        self._pid = None
+        self._hid = None
+        self._opened = False
         self._i2c_index = None
         self._spi_index = None
         self._serial = None
@@ -94,16 +91,32 @@ class Pico_u2if:
 
     def _reset(self):
         self._hid_xfer(bytes([self.SYS_RESET]), False)
-        time.sleep(PICO_U2IF_RESET_DELAY)
+        time.sleep(RP2040_U2IF_RESET_DELAY)
         start = time.monotonic()
         while time.monotonic() - start < 5:
             try:
-                self._hid.open(Pico_u2if.VID, Pico_u2if.PID)
+                self._hid.open(self._vid, self._pid)
             except OSError:
                 time.sleep(0.1)
                 continue
             return
-        raise OSError("Pico open error.")
+        raise OSError("RP2040 u2if open error.")
+
+    # ----------------------------------------------------------------
+    # MISC
+    # ----------------------------------------------------------------
+    def open(self, vid, pid):
+        """Open HID interface for given USB VID and PID."""
+
+        if self._opened:
+            return
+        self._vid = vid
+        self._pid = pid
+        self._hid = hid.device()
+        self._hid.open(self._vid, self._pid)
+        if RP2040_U2IF_RESET_DELAY >= 0:
+            self._reset()
+        self._opened = True
 
     # ----------------------------------------------------------------
     # GPIO
@@ -369,7 +382,7 @@ class Pico_u2if:
 
             ports = serial.tools.list_ports.comports()
             for port in ports:
-                if port.vid == self.VID and port.pid == self.PID:
+                if port.vid == self._vid and port.pid == self._pid:
                     self._serial = serial.Serial(port.device)
                     break
         if self._serial is None:
@@ -409,7 +422,6 @@ class Pico_u2if:
                     "Neopixel write error : too many pixel for the firmware."
                 )
             elif resp[2] == 0x02:
-                print(resp[0:10])
                 raise RuntimeError(
                     "Neopixel write error : transfer already in progress."
                 )
@@ -422,6 +434,7 @@ class Pico_u2if:
             self._serial.write([0])
         self._serial.flush()
         # polling loop to wait for write complete?
+        time.sleep(0.1)
         resp = self._hid.read(64)
         while resp[0] != self.WS2812B_WRITE:
             resp = self._hid.read(64)
@@ -489,4 +502,4 @@ class Pico_u2if:
             raise RuntimeError("PWM set duty cycle error.")
 
 
-pico_u2if = Pico_u2if()
+rp2040_u2if = RP2040_u2if()

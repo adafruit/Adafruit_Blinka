@@ -30,7 +30,14 @@ elif detector.board.greatfet_one:
 elif detector.board.any_lubancat:
     from adafruit_blinka.microcontroller.generic_linux.sysfs_pwmout import PWMOut
 elif detector.board.pico_u2if:
-    from adafruit_blinka.microcontroller.pico_u2if.pwmio import PWMOut
+    from adafruit_blinka.microcontroller.rp2040_u2if.pwmio import PWMOut
+elif (
+    detector.board.feather_u2if
+    or detector.board.qtpy_u2if
+    or detector.board.itsybitsy_u2if
+    or detector.board.qt2040_trinkey_u2if
+):
+    from adafruit_blinka.microcontroller.rp2040_u2if.pwmio import PWMOut
 elif "sphinx" in sys.modules:
     pass
 else:

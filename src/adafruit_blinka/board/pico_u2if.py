@@ -1,5 +1,5 @@
-"""Pin definitions for the MicroChip MCP2221"""
-from adafruit_blinka.microcontroller.pico_u2if import pin
+"""Pin definitions for the Raspberry Pi Pico running u2if firmware"""
+from adafruit_blinka.microcontroller.rp2040_u2if import pin
 
 GP0 = pin.GP0
 GP1 = pin.GP1
@@ -44,3 +44,7 @@ MISO = MISO0 = GP12
 SCLK1 = SCK1 = GP10
 MOSI1 = GP11
 MISO1 = GP12
+
+# access u2if via pin instance to open for specifc VID/PID
+# pylint:disable = protected-access
+pin.GP0._u2if_open_hid(0xCAFE, 0x4005)
