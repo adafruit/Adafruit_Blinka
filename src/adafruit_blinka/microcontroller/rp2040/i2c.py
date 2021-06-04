@@ -55,9 +55,8 @@ class I2C:
             self.writeto(address, buffer_out[out_start:out_end], stop=stop)
         else:
             self.writeto(address, buffer_out[out_start:], stop=stop)
-        read_buffer = buffer_in
+
+        if not in_end:
+            in_end = len(buffer_in)
+        read_buffer = memoryview(buffer_in)[in_start:in_end]
         self.readfrom_into(address, read_buffer, stop=stop)
-        if in_end:
-            buffer_in[in_start:in_end] = read_buffer[in_start:in_end]
-        else:
-            buffer_in[in_start:] = read_buffer[in_start:]
