@@ -1,5 +1,6 @@
 """Microcontroller pins"""
 
+import sys
 import time
 
 from adafruit_platformdetect.constants import chips as ap_chip
@@ -113,5 +114,7 @@ elif chip_id == ap_chip.STM32MP157:
     from adafruit_blinka.microcontroller.stm32.stm32mp157.pin import *
 elif chip_id == ap_chip.MT8167:
     from adafruit_blinka.microcontroller.mt8167.pin import *
+elif "sphinx" in sys.modules:
+    pass
 else:
     raise NotImplementedError("Microcontroller not supported:", chip_id)
