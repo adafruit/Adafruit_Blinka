@@ -29,6 +29,10 @@ PC14 = pin.PC14
 
 PC15 = pin.PC15
 
+PC1 = pin.PC1
+PH10 = pin.PH10
+PI6 = pin.PI6
+PI16 = pin.PI16
 
 SCLK = pin.PH6
 MOSI = pin.PH7
