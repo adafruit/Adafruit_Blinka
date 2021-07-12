@@ -17,12 +17,8 @@ class Pin:
     PULL_UP = 1
     PULL_DOWN = 2
 
-<<<<<<< HEAD:src/adafruit_blinka/microcontroller/ft232h/pin.py
     i2c = None
-    ft232h_gpio = None
-=======
     mpsse_gpio = None
->>>>>>> upstream/main:src/adafruit_blinka/microcontroller/ftdi_mpsse/mpsse/pin.py
 
     def __init__(self, pin_id=None, interface_id=None):
         # setup GPIO controller if not done yet
@@ -32,19 +28,13 @@ class Pin:
             from pyftdi.i2c import I2cController
 
             # pylint: enable=import-outside-toplevel
-
-<<<<<<< HEAD:src/adafruit_blinka/microcontroller/ft232h/pin.py
             Pin.i2c = I2cController()
-            Pin.i2c.configure("ftdi://ftdi:ft232h/1")
-            Pin.ft232h_gpio = Pin.i2c.get_gpio()
-=======
-            i2c = I2cController()
             if interface_id is None:
-                i2c.configure(get_ft232h_url())
+                Pin.i2c.configure(get_ft232h_url())
             else:
-                i2c.configure(get_ft2232h_url(interface_id))
-            Pin.mpsse_gpio = i2c.get_gpio()
->>>>>>> upstream/main:src/adafruit_blinka/microcontroller/ftdi_mpsse/mpsse/pin.py
+                Pin.i2c.configure(get_ft2232h_url(interface_id))
+            Pin.mpsse_gpio = Pin.i2c.get_gpio()
+
         # check if pin is valid
         if pin_id:
             if Pin.mpsse_gpio.all_pins & 1 << pin_id == 0:
