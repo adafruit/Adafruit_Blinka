@@ -25,7 +25,7 @@ def final():
 
 atexit.register(final)
 
-# pylint: disable=c-extension-no-member, consider-using-with
+# pylint: disable=c-extension-no-member
 class PulseIn:
     """PulseIn Class to read PWM signals"""
 
