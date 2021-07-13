@@ -57,6 +57,7 @@ setup(
         "pulseio",
         "pwmio",
         "neopixel_write",
+        "rainbowio",
     ],
     package_data={
         "adafruit_blinka.microcontroller.bcm283x.pulseio": ["libgpiod_pulsein"]
