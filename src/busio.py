@@ -279,47 +279,7 @@ class SPI(Lockable):
 
     def configure(self, baudrate=100000, polarity=0, phase=0, bits=8):
         """Update the configuration"""
-        if detector.board.any_raspberry_pi or detector.board.any_raspberry_pi_40_pin:
-            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif detector.board.BEAGLEBONE_AI:
-            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif detector.board.any_beaglebone:
-            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif detector.board.any_orange_pi:
-            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif detector.board.any_nanopi and detector.chip.id == ap_chip.SUN8I:
-            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif board_id == ap_board.GIANT_BOARD:
-            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif board_id == ap_board.CORAL_EDGE_TPU_DEV:
-            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif board_id == ap_board.CORAL_EDGE_TPU_DEV_MINI:
-            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif board_id == ap_board.ODROID_C2:
-            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif board_id == ap_board.ODROID_C4:
-            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif board_id == ap_board.ODROID_XU4:
-            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif board_id == ap_board.DRAGONBOARD_410C:
-            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif board_id == ap_board.JETSON_NANO:
-            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif board_id == ap_board.JETSON_TX1:
-            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif board_id == ap_board.JETSON_TX2:
-            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif board_id == ap_board.JETSON_XAVIER:
-            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif board_id == ap_board.JETSON_NX:
-            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif detector.board.ROCK_PI_S:
-            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif detector.board.ROCK_PI_4:
-            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif detector.board.ROCK_PI_E:
-            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif detector.board.SIFIVE_UNLEASHED:
+        if detector.board.any_nanopi and detector.chip.id == ap_chip.SUN8I:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif detector.board.ftdi_ft232h:
             from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.spi import (
@@ -333,19 +293,6 @@ class SPI(Lockable):
             from adafruit_blinka.microcontroller.nova.spi import SPI as _SPI
         elif detector.board.greatfet_one:
             from adafruit_blinka.microcontroller.nxp_lpc4330.spi import SPI as _SPI
-        elif board_id in (
-            ap_board.PINE64,
-            ap_board.PINEBOOK,
-            ap_board.PINEPHONE,
-            ap_board.SOPINE,
-        ):
-            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif board_id == ap_board.PINEH64:
-            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif board_id == ap_board.CLOCKWORK_CPI3:
-            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
-        elif board_id == ap_board.ONION_OMEGA2:
-            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif detector.board.any_lubancat and detector.chip.id == ap_chip.IMX6ULL:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif detector.board.pico_u2if:
@@ -362,6 +309,8 @@ class SPI(Lockable):
             from adafruit_blinka.microcontroller.rp2040_u2if.spi import SPI_QTPY as _SPI
         elif detector.chip.id == ap_chip.RP2040:
             from adafruit_blinka.microcontroller.rp2040.spi import SPI as _SPI
+        elif detector.board.any_embedded_linux:
+            from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         else:
             from adafruit_blinka.microcontroller.generic_micropython.spi import (
                 SPI as _SPI,
@@ -389,10 +338,10 @@ class SPI(Lockable):
         """Return the baud rate if implemented"""
         try:
             return self._spi.frequency
-        except AttributeError:
+        except AttributeError as error:
             raise NotImplementedError(
                 "Frequency attribute not implemented for this platform"
-            ) from AttributeError
+            ) from error
 
     def write(self, buf, start=0, end=None):
         """Write to the SPI device"""
