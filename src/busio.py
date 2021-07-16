@@ -12,6 +12,7 @@ try:
 except ImportError:
     threading = None
 
+# pylint: disable=unused-import
 import adafruit_platformdetect.constants.boards as ap_board
 import adafruit_platformdetect.constants.chips as ap_chip
 from adafruit_blinka import Enum, Lockable, agnostic
