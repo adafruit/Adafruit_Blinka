@@ -52,6 +52,8 @@ elif chip_id == ap_chip.DRA74X:
     from adafruit_blinka.microcontroller.dra74x.pin import *
 elif chip_id == ap_chip.AM33XX:
     from adafruit_blinka.microcontroller.am335x import *
+elif chip_id == ap_chip.JH71x0:
+    from adafruit_blinka.microcontroller.starfive.JH71x0 import *
 elif chip_id == ap_chip.SUN8I:
     from adafruit_blinka.microcontroller.allwinner.h3 import *
 elif chip_id == ap_chip.H5:
@@ -101,9 +103,9 @@ elif chip_id == ap_chip.BINHO:
 elif chip_id == ap_chip.LPC4330:
     from adafruit_blinka.microcontroller.nxp_lpc4330 import *
 elif chip_id == ap_chip.MIPS24KC:
-    from adafruit_blinka.microcontroller.atheros.ar9331.pin import *
+    from adafruit_blinka.microcontroller.atheros.ar9331 import *
 elif chip_id == ap_chip.MIPS24KEC:
-    from adafruit_blinka.microcontroller.mips24kec.pin import *
+    from adafruit_blinka.microcontroller.mips24kec import *
 elif chip_id == ap_chip.FT232H:
     from adafruit_blinka.microcontroller.ftdi_mpsse.ft232h.pin import *
 elif chip_id == ap_chip.FT2232H:
