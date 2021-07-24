@@ -1,12 +1,12 @@
 """I2C Class for MCP2221"""
-from .mcp2221 import mcp2221
+from .mcp2221 import MCP2221
 
 
 class I2C:
     """Custom I2C Class for MCP2221"""
 
-    def __init__(self, *, frequency=100000):
-        self._mcp2221 = mcp2221
+    def __init__(self, *, frequency=100000, bus_id=None):
+        self._mcp2221 = MCP2221(bus_id)
         self._mcp2221._i2c_configure(frequency)
 
     def scan(self):

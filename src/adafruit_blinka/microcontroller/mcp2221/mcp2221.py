@@ -48,9 +48,16 @@ class MCP2221:
     GP_ALT1 = 0b011
     GP_ALT2 = 0b100
 
-    def __init__(self):
+    def __init__(self, bus_id=None):
+        if bus_id is None:
+            first_device = [mcp["path"] for mcp in hid.enumerate(MCP2221.VID, MCP2221.PID)][0]
+            self._bus_id = first_device
+        else:
+            self._bus_id = bus_id
+        print(self._bus_id)
+
         self._hid = hid.device()
-        self._hid.open(MCP2221.VID, MCP2221.PID)
+        self._hid.open_path(self._bus_id)
         if MCP2221_RESET_DELAY >= 0:
             self._reset()
         self._gp_config = [0x07] * 4  # "don't care" initial value
@@ -117,16 +124,26 @@ class MCP2221:
         self._pretty_report(b"\x61")
 
     def _reset(self):
+        dev_list_before_reset = [mcp["path"] for mcp in hid.enumerate(MCP2221.VID, MCP2221.PID)]
+        dev_list_before_reset.remove(self._bus_id)
         self._hid_xfer(b"\x70\xAB\xCD\xEF", response=False)
         time.sleep(MCP2221_RESET_DELAY)
+
         start = time.monotonic()
         while time.monotonic() - start < 5:
-            try:
-                self._hid.open(MCP2221.VID, MCP2221.PID)
-            except OSError:
-                # try again
+            dev_list_after_reset = [mcp["path"] for mcp in hid.enumerate(MCP2221.VID, MCP2221.PID)]
+            print("dev_list_before_reset:")
+            print(dev_list_before_reset)
+            print("dev_list_after_reset:")
+            print(dev_list_after_reset)
+            device_new_path = set(dev_list_before_reset) ^ set(dev_list_after_reset)
+            print(device_new_path)
+            if not device_new_path:
                 time.sleep(0.1)
                 continue
+            device_new_path = next(iter(device_new_path))
+            print("Using path: {}".format(device_new_path))
+            self._hid.open_path(device_new_path)
             return
         raise OSError("open failed")
 
@@ -381,4 +398,4 @@ class MCP2221:
     # pylint: enable=unused-argument
 
 
-mcp2221 = MCP2221()
+# mcp2221 = MCP2221()
