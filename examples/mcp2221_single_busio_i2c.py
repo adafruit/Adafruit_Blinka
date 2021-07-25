@@ -4,8 +4,9 @@ import busio
 
 # Usage:
 # $ lsusb | grep Microchip
-# Bus 001 Device 045: ID 04d8:00dd Microchip Technology, Inc.
-# $ python mcp2221_first_busio_i2c.py -b 1 -d 45
+# Bus 001 Device 082: ID 04d8:00dd Microchip Technology, Inc.
+# Bus 001 Device 083: ID 04d8:00dd Microchip Technology, Inc.
+# $ python mcp2221_single_busio_i2c.py -b 1 -d 83
 # I2C devices found:  ['0x70']
 
 
