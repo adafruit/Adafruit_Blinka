@@ -59,8 +59,6 @@ class MCP2221:
         else:
             self._bus_id = bus_id
 
-        print("opening: {}".format(self._bus_id))
-
         self._hid = hid.device()
         self._hid.open_path(self._bus_id)
         if MCP2221_RESET_DELAY >= 0:
@@ -72,18 +70,15 @@ class MCP2221:
 
     @staticmethod
     def get_instance(bus_id=None):
-        print("get_instance: {}".format(bus_id))
         if bus_id is None:
             if not MCP2221.instances:
                 instance = MCP2221()
                 MCP2221.instances[instance._bus_id] = instance
-            print(MCP2221.instances)
             return next(iter(MCP2221.instances.values()))
         else:
             if bus_id not in MCP2221.instances:
                 instance = MCP2221(bus_id)
                 MCP2221.instances[bus_id] = instance
-            print(MCP2221.instances)
             return MCP2221.instances[bus_id]
 
     def _hid_xfer(self, report, response=True):
