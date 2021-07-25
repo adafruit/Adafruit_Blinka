@@ -6,7 +6,7 @@ class I2C:
     """Custom I2C Class for MCP2221"""
 
     def __init__(self, *, frequency=100000, bus_id=None):
-        self._mcp2221 = MCP2221(bus_id)
+        self._mcp2221 = MCP2221.get_instance(bus_id)
         self._mcp2221._i2c_configure(frequency)
 
     def scan(self):

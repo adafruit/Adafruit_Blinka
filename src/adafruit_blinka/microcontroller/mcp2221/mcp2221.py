@@ -48,6 +48,8 @@ class MCP2221:
     GP_ALT1 = 0b011
     GP_ALT2 = 0b100
 
+    instances = {}
+
     def __init__(self, bus_id=None):
         if bus_id is None:
             first_device = [
@@ -57,6 +59,8 @@ class MCP2221:
         else:
             self._bus_id = bus_id
 
+        print("opening: {}".format(self._bus_id))
+
         self._hid = hid.device()
         self._hid.open_path(self._bus_id)
         if MCP2221_RESET_DELAY >= 0:
@@ -65,6 +69,22 @@ class MCP2221:
         for pin in range(4):
             self.gp_set_mode(pin, self.GP_GPIO)  # set to GPIO mode
             self.gpio_set_direction(pin, 1)  # set to INPUT
+
+    @staticmethod
+    def get_instance(bus_id=None):
+        print("get_instance: {}".format(bus_id))
+        if bus_id is None:
+            if not MCP2221.instances:
+                instance = MCP2221()
+                MCP2221.instances[instance._bus_id] = instance
+            print(MCP2221.instances)
+            return next(iter(MCP2221.instances.values()))
+        else:
+            if bus_id not in MCP2221.instances:
+                instance = MCP2221(bus_id)
+                MCP2221.instances[bus_id] = instance
+            print(MCP2221.instances)
+            return MCP2221.instances[bus_id]
 
     def _hid_xfer(self, report, response=True):
         """Perform HID Transfer"""
@@ -137,13 +157,17 @@ class MCP2221:
             dev_list_after_reset = [
                 mcp["path"] for mcp in hid.enumerate(MCP2221.VID, MCP2221.PID)
             ]
+            # The new device is the one present after reset but not before
             device_new_path = set(dev_list_before_reset) ^ set(dev_list_after_reset)
             if not device_new_path:
                 time.sleep(0.1)
                 continue
+            # The set should have only a single value, get it out of the set
             device_new_path = next(iter(device_new_path))
             self._hid.open_path(device_new_path)
+            self._bus_id = device_new_path
             return
+
         raise OSError("open failed")
 
     # ----------------------------------------------------------------

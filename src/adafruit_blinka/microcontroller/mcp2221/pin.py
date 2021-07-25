@@ -1,5 +1,8 @@
 """MCP2221 pin names"""
-from .mcp2221 import mcp2221
+from .mcp2221 import MCP2221
+
+
+mcp2221 = MCP2221.get_instance()
 
 
 class Pin:
