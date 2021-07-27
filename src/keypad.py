@@ -180,8 +180,11 @@ class _KeysBase:
 
     def _scanning_loop(self):
         while True:
+            remaining_delay = self._interval - (time.monotonic() - self._last_scan)
+            if remaining_delay > 0:
+                time.sleep(remaining_delay)
+            self._last_scan = time.monotonic()
             self._scanning_function()
-            time.sleep(0.001)
 
 
 class Keys(_KeysBase):
@@ -251,10 +254,6 @@ class Keys(_KeysBase):
         return len(self._digitalinouts)
 
     def _keypad_keys_scan(self):
-        if time.monotonic() - self._last_scan < self._interval:
-            return
-        self._last_scan = time.monotonic()
-
         for key_number, dio in enumerate(self._digitalinouts):
             self._previously_pressed[key_number] = self._currently_pressed[key_number]
             current = dio.value == self._value_when_pressed
@@ -348,10 +347,6 @@ class KeyMatrix(_KeysBase):
         return row * len(self._column_digitalinouts) + column
 
     def _keypad_keymatrix_scan(self):
-        if time.monotonic() - self._last_scan < self._interval:
-            return
-        self._last_scan = time.monotonic()
-
         for row, row_dio in enumerate(self._row_digitalinouts):
             row_dio.switch_to_output(
                 value=(not self._columns_to_anodes),
@@ -471,10 +466,6 @@ class ShiftRegisterKeys(_KeysBase):
         return self._events
 
     def _keypad_shiftregisterkeys_scan(self):
-        if time.monotonic() - self._last_scan < self._interval:
-            return
-        self._last_scan = time.monotonic()
-
         self._latch.value = self._value_to_latch
         for key_number in range(self._key_count):
             self._clock.value = False
