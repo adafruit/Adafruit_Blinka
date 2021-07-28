@@ -80,11 +80,11 @@ class MCP2221:
                 instance = MCP2221()
                 MCP2221.instances[instance._bus_id] = instance
             return next(iter(MCP2221.instances.values()))
-        else:
-            if bus_id not in MCP2221.instances:
-                instance = MCP2221(bus_id)
-                MCP2221.instances[bus_id] = instance
-            return MCP2221.instances[bus_id]
+
+        if bus_id not in MCP2221.instances:
+            instance = MCP2221(bus_id)
+            MCP2221.instances[bus_id] = instance
+        return MCP2221.instances[bus_id]
 
     def _hid_xfer(self, report, response=True):
         """Perform HID Transfer"""
