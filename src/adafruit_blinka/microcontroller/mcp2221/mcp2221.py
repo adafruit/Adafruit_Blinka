@@ -70,6 +70,11 @@ class MCP2221:
 
     @staticmethod
     def get_instance(bus_id=None):
+        """Get the instance matching bus id
+
+        Returns:
+            Instance bound to the provided id or first instance if None
+        """
         if bus_id is None:
             if not MCP2221.instances:
                 instance = MCP2221()
