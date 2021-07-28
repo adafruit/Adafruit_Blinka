@@ -47,7 +47,9 @@ class I2C(Lockable):
         if detector.board.microchip_mcp2221:
             from adafruit_blinka.microcontroller.mcp2221.i2c import I2C as _I2C
 
+            # pylint: disable=unexpected-keyword-arg
             self._i2c = _I2C(frequency=frequency, bus_id=bus_id)
+            # pylint: enable=unexpected-keyword-arg
             return
         if detector.board.greatfet_one:
             from adafruit_blinka.microcontroller.nxp_lpc4330.i2c import I2C as _I2C
