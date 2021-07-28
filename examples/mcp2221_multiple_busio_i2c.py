@@ -1,5 +1,5 @@
-import busio
 import hid
+import busio
 
 
 # Usage:
