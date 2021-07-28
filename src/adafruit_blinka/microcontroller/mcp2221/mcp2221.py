@@ -78,7 +78,9 @@ class MCP2221:
         if bus_id is None:
             if not MCP2221.instances:
                 instance = MCP2221()
+                # pylint: disable=protected-access
                 MCP2221.instances[instance._bus_id] = instance
+                # pylint: enable=protected-access
             return next(iter(MCP2221.instances.values()))
 
         if bus_id not in MCP2221.instances:
