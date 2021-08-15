@@ -189,7 +189,7 @@ class MCP2221:
             # bus release will need "a few hundred microseconds"
             time.sleep(0.001)
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,too-many-branches
     def _i2c_write(self, cmd, address, buffer, start=0, end=None):
         if self._i2c_state() != 0x00:
             self._i2c_cancel()
