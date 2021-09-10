@@ -176,7 +176,7 @@ class DigitalInOut(ContextManaged):
 
     @property
     def value(self):
-        """Get or Set the Digital Pin Value"""
+        """The Digital Pin Value"""
         return self._pin.value() == 1
 
     @value.setter
@@ -188,7 +188,7 @@ class DigitalInOut(ContextManaged):
 
     @property
     def pull(self):
-        """Get or Set the Digital Pin Direction"""
+        """The pin pull direction"""
         if self.direction is Direction.INPUT:
             return self.__pull
         raise AttributeError("Not an input")
@@ -215,7 +215,7 @@ class DigitalInOut(ContextManaged):
 
     @property
     def drive_mode(self):
-        """Get or Set the Digital Pin Drive Mode"""
+        """The Digital Pin Drive Mode"""
         if self.direction is Direction.OUTPUT:
             return self.__drive_mode  #
         raise AttributeError("Not an output")
