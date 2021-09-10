@@ -5,6 +5,7 @@ import os
 import atexit
 import random
 import sysv_ipc
+import struct
 
 DEBUG = False
 queues = []
@@ -49,9 +50,15 @@ class PulseIn:
                 "Message queue creation failed"
             ) from sysv_ipc.ExistentialError
 
+        # Check if OS is 64-bit
+        if struct.calcsize("P") * 8 == 64:
+            libgpiod_filename = "libgpiod_pulsein64"
+        else:
+            libgpiod_filename = "libgpiod_pulsein"
+
         dir_path = os.path.dirname(os.path.realpath(__file__))
         cmd = [
-            dir_path + "/libgpiod_pulsein",
+            dir_path + "/" + libgpiod_filename,
             "--pulses",
             str(maxlen),
             "--queue",
