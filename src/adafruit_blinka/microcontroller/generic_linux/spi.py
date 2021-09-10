@@ -129,7 +129,7 @@ class SPI:
             self._spi.bits_per_word = self.bits
             data = self._spi.transfer(list(buffer_out[out_start : out_end + 1]))
             for i in range((in_end - in_start)):
-                buffer_in[i + in_start] = data[i + 1]
+                buffer_in[i + in_start] = data[i]
             # self._spi.close()
         except FileNotFoundError:
             print("Could not open SPI device - check if SPI is enabled in kernel!")
