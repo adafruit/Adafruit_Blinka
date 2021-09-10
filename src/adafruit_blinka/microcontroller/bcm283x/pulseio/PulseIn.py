@@ -4,8 +4,8 @@ import subprocess
 import os
 import atexit
 import random
-import sysv_ipc
 import struct
+import sysv_ipc
 
 DEBUG = False
 queues = []
