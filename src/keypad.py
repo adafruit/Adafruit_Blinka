@@ -6,6 +6,11 @@ See `CircuitPython:keypad` in CircuitPython for more details.
 * Author(s): Melissa LeBlanc-Williams
 """
 
+
+__version__ = "0.0.0-auto.0"
+__repo__ = "https://github.com/adafruit/Adafruit_Blinka.git"
+
+
 import time
 import threading
 from collections import deque

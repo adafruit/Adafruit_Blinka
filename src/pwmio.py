@@ -7,6 +7,11 @@ Not supported by all boards.
 * Author(s): Melissa LeBlanc-Williams
 """
 
+
+__version__ = "0.0.0-auto.0"
+__repo__ = "https://github.com/adafruit/Adafruit_Blinka.git"
+
+
 import sys
 
 from adafruit_blinka.agnostic import detector
