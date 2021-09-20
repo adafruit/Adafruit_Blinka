@@ -33,8 +33,7 @@ if os.path.exists("/proc/device-tree/compatible"):
         board_reqs = ["RPi.GPIO", "rpi_ws281x>=4.0.0", "sysv_ipc>=1.1.0"]
 
 setup(
-    # name="Adafruit-Blinka",
-    name="samourai-Adafruit-Blinka",
+    name="Adafruit-Blinka",
     use_scm_version={
         # This is needed for the PyPI version munging in the Github Actions release.yml
         "git_describe_command": "git describe --tags --long",
