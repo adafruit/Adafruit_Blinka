@@ -462,7 +462,7 @@ class ShiftRegisterKeys(_KeysBase):
 
     @property
     def events(self):
-        """The `EventQueue` associated with this `Keys` object. (read-only)"""
+        """The ``EventQueue`` associated with this `Keys` object. (read-only)"""
         return self._events
 
     def _keypad_shiftregisterkeys_scan(self):
