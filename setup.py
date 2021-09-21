@@ -34,7 +34,11 @@ if os.path.exists("/proc/device-tree/compatible"):
 
 setup(
     name="Adafruit-Blinka",
-    use_scm_version=True,
+    use_scm_version={
+        # This is needed for the PyPI version munging in the Github Actions release.yml
+        "git_describe_command": "git describe --tags --long",
+        "local_scheme": "no-local-version",
+    },
     setup_requires=["setuptools_scm"],
     description="CircuitPython APIs for non-CircuitPython versions of Python such as CPython on Linux and MicroPython.",
     long_description=long_description,
@@ -53,10 +57,11 @@ setup(
         "board",
         "busio",
         "digitalio",
+        "keypad",
         "micropython",
+        "neopixel_write",
         "pulseio",
         "pwmio",
-        "neopixel_write",
         "rainbowio",
     ],
     package_data={
