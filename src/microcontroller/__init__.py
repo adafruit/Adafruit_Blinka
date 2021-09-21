@@ -1,4 +1,9 @@
-"""Microcontroller pins"""
+"""
+`microcontroller` - Pin references and cpu functionality
+========================================================
+
+* Author(s): Melissa LeBlanc-Williams
+"""
 
 import sys
 import time
@@ -14,7 +19,12 @@ def delay_us(delay):
 
 
 class Pin(Enum):
-    """Reference Pin object"""
+    """
+    Identifies an IO pin on the microcontroller.
+
+    They are fixed by the hardware so they cannot be constructed on demand. Instead, use board or
+    microcontroller.pin to reference the desired pin.
+    """
 
     def __init__(self, pin_id):
         """Identifier for pin, referencing platform-specific pin id"""

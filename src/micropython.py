@@ -1,6 +1,6 @@
 """
 `micropython` - MicroPython Specific Decorator Functions
-=================================================
+========================================================
 
 * Author(s): cefn
 """
