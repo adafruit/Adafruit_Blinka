@@ -29,5 +29,8 @@ jobs:
         TWINE_USERNAME: ${{ secrets.pypi_username }}
         TWINE_PASSWORD: ${{ secrets.pypi_password }}
       run: |
+        for file in $(find -not -path "./.*" -not -path "./docs*" -name "*.py"); do
+            sed -i -e "s/0.0.0-auto.0/${{github.event.release.tag_name}}/" $file;
+        done;
         python setup.py sdist
         twine upload dist/*
