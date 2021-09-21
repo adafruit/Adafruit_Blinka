@@ -8,10 +8,6 @@ Not supported by all boards.
 """
 
 
-__version__ = "0.0.0-auto.0"
-__repo__ = "https://github.com/adafruit/Adafruit_Blinka.git"
-
-
 def colorwheel(color_value):
     """
     A colorwheel. ``0`` and ``255`` are red, ``85`` is green, and ``170`` is blue, with the values

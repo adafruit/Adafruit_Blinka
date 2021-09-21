@@ -6,10 +6,6 @@
 """
 
 
-__version__ = "0.0.0-auto.0"
-__repo__ = "https://github.com/adafruit/Adafruit_Blinka.git"
-
-
 def const(x):
     "Emulate making a constant"
     return x

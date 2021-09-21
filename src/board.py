@@ -27,13 +27,6 @@ See `CircuitPython:board` in CircuitPython for more details.
 
 * Author(s): cefn
 """
-
-
-__version__ = "0.0.0-auto.0"
-__repo__ = "https://github.com/adafruit/Adafruit_Blinka.git"
-__blinka__ = True
-
-
 import sys
 
 import adafruit_platformdetect.constants.boards as ap_board

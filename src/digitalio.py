@@ -7,11 +7,6 @@ See `CircuitPython:digitalio` in CircuitPython for more details.
 * Author(s): cefn
 """
 
-
-__version__ = "0.0.0-auto.0"
-__repo__ = "https://github.com/adafruit/Adafruit_Blinka.git"
-
-
 from adafruit_blinka.agnostic import board_id, detector
 
 # pylint: disable=ungrouped-imports,wrong-import-position
