@@ -33,6 +33,8 @@ A1 = pin.GP27
 A2 = pin.GP28
 # A3 = pin.GP29 # not currently supported in firmware
 
+NEOPIXEL = pin.GP16
+
 SCL = pin.GP3
 SDA = pin.GP2
 
