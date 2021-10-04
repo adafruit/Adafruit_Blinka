@@ -189,7 +189,7 @@ class MCP2221:
             # bus release will need "a few hundred microseconds"
             time.sleep(0.001)
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,too-many-branches
     def _i2c_write(self, cmd, address, buffer, start=0, end=None):
         if self._i2c_state() != 0x00:
             self._i2c_cancel()
@@ -198,7 +198,7 @@ class MCP2221:
         length = end - start
         retries = 0
 
-        while (end - start) > 0:
+        while (end - start) > 0 or not buffer:
             chunk = min(end - start, MCP2221_MAX_I2C_DATA_LEN)
             # write out current chunk
             resp = self._hid_xfer(
@@ -223,6 +223,8 @@ class MCP2221:
             # yay chunk sent!
             while self._i2c_state() == RESP_I2C_PARTIALDATA:
                 time.sleep(0.001)
+            if not buffer:
+                break
             start += chunk
             retries = 0
 
