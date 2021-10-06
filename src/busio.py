@@ -323,7 +323,7 @@ class SPI(Lockable):
             )
         elif detector.board.macropad_u2if:
             from adafruit_blinka.microcontroller.rp2040_u2if.spi import (
-                SPI_Macropad as _SPI,
+                SPI_MacroPad as _SPI,
             )
         elif detector.board.qtpy_u2if:
             from adafruit_blinka.microcontroller.rp2040_u2if.spi import SPI_QTPY as _SPI
