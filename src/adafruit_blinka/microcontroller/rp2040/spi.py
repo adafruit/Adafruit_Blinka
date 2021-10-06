@@ -7,6 +7,8 @@ from microcontroller.pin import spiPorts
 class SPI:
     """Custom SPI Class for RP2040"""
 
+    MSB = _SPI.MSB
+
     def __init__(self, clock, MOSI=None, MISO=None, *, baudrate=1000000):
         self._frequency = baudrate
         for portId, portSck, portMosi, portMiso in spiPorts:
