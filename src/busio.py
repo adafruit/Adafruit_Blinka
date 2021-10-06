@@ -82,6 +82,7 @@ class I2C(Lockable):
             from adafruit_blinka.microcontroller.rp2040_u2if.i2c import (
                 I2C_MacroPad as _I2C,
             )
+
             self._i2c = _I2C(scl, sda, frequency=frequency)
             return
         if detector.board.qt2040_trinkey_u2if:

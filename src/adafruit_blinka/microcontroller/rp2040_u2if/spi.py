@@ -113,6 +113,7 @@ class SPI_ItsyBitsy(SPI):
             raise ValueError("No SPI port on specified pin.")
         super().__init__(index, baudrate=baudrate)
 
+
 class SPI_MacroPad(SPI):
     """SPI Class for MacroPad u2if"""
 
