@@ -32,6 +32,8 @@ elif detector.chip.T186:
     from adafruit_blinka.microcontroller.tegra.t186.pin import Pin
 elif detector.chip.T194:
     from adafruit_blinka.microcontroller.tegra.t194.pin import Pin
+elif detector.chip.T234:
+    from adafruit_blinka.microcontroller.tegra.t234.pin import Pin
 elif detector.chip.S905:
     from adafruit_blinka.microcontroller.amlogic.s905.pin import Pin
 elif detector.chip.S905X3:

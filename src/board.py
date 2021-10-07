@@ -148,6 +148,9 @@ elif board_id == ap_board.JETSON_NANO:
 elif board_id == ap_board.JETSON_NX:
     from adafruit_blinka.board.nvidia.jetson_nx import *
 
+elif board_id == ap_board.JETSON_AGX_ORIN:
+    from adafruit_blinka.board.nvidia.jetson_orin import *
+
 elif board_id == ap_board.CLARA_AGX_XAVIER:
     from adafruit_blinka.board.nvidia.clara_agx_xavier import *
 
