@@ -246,6 +246,9 @@ elif board_id == ap_board.QTPY_U2IF:
 elif board_id == ap_board.ITSYBITSY_U2IF:
     from adafruit_blinka.board.itsybitsy_u2if import *
 
+elif board_id == ap_board.MACROPAD_U2IF:
+    from adafruit_blinka.board.macropad_u2if import *
+
 elif board_id == ap_board.QT2040_TRINKEY_U2IF:
     from adafruit_blinka.board.qt2040_trinkey_u2if import *
 

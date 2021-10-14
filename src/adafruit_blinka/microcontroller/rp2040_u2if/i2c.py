@@ -115,6 +115,19 @@ class I2C_ItsyBitsy(I2C):
         super().__init__(index, frequency=frequency)
 
 
+class I2C_MacroPad(I2C):
+    """I2C Class for MacroPad u2if"""
+
+    def __init__(self, scl, sda, *, frequency=100000):
+        index = None
+        if scl.id == 21 and sda.id == 20:
+            index = 0
+        if index is None:
+            raise ValueError("I2C not found on specified pins.")
+        self._index = index
+        super().__init__(index, frequency=frequency)
+
+
 class I2C_QT2040_Trinkey(I2C):
     """I2C Class for QT2040 Trinkey u2if"""
 

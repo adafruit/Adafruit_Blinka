@@ -112,3 +112,15 @@ class SPI_ItsyBitsy(SPI):
         if index is None:
             raise ValueError("No SPI port on specified pin.")
         super().__init__(index, baudrate=baudrate)
+
+
+class SPI_MacroPad(SPI):
+    """SPI Class for MacroPad u2if"""
+
+    def __init__(self, clock, *, baudrate=100000):
+        index = None
+        if clock.id == 26:
+            index = 1
+        if index is None:
+            raise ValueError("No SPI port on specified pin.")
+        super().__init__(index, baudrate=baudrate)
