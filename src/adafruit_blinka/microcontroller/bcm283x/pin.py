@@ -1,5 +1,6 @@
 """Broadcom BCM283x pin names"""
 import RPi.GPIO as GPIO
+from adafruit_blinka.agnostic import detector
 
 GPIO.setmode(GPIO.BCM)  # Use BCM pins D4 = GPIO #4
 GPIO.setwarnings(False)  # shh!
@@ -138,14 +139,21 @@ D44 = Pin(44)
 D45 = Pin(45)
 
 # ordered as spiId, sckId, mosiId, misoId
-spiPorts = (
-    (0, SCLK, MOSI, MISO),
-    (1, SCLK_1, MOSI_1, MISO_1),
-    (2, SCLK_2, MOSI_2, MISO_2),
-    (3, D3, D2, D1),  # SPI3 on Pi4/CM4
-    (4, D7, D6, D5),  # SPI4 on Pi4/CM4
-    (5, D15, D14, D13),  # SPI5 on Pi4/CM4
-)
+if detector.board.id in ["RASPBERRY_PI_4B", "RASPBERRY_PI_CM4"]:
+    spiPorts = (
+        (0, SCLK, MOSI, MISO),
+        (6, SCLK_1, MOSI_1, MISO_1),
+        (2, SCLK_2, MOSI_2, MISO_2),
+        (3, D3, D2, D1),
+        (4, D7, D6, D5),
+        (5, D15, D14, D13),
+    )
+else:
+    spiPorts = (
+        (0, SCLK, MOSI, MISO),
+        (1, SCLK_1, MOSI_1, MISO_1),
+        (2, SCLK_2, MOSI_2, MISO_2),
+    )
 
 # ordered as uartId, txId, rxId
 uartPorts = ((1, TXD, RXD),)
