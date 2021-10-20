@@ -1,6 +1,5 @@
 """Broadcom BCM283x pin names"""
 import RPi.GPIO as GPIO
-from adafruit_blinka.agnostic import detector
 
 GPIO.setmode(GPIO.BCM)  # Use BCM pins D4 = GPIO #4
 GPIO.setwarnings(False)  # shh!
