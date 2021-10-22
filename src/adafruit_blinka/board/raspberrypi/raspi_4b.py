@@ -1,4 +1,4 @@
-"""Pin definitions for 40-pin Raspberry Pi models."""
+"""Pin definitions for Raspberry Pi 4 models using the BCM2711."""
 
 from adafruit_blinka.microcontroller.bcm2711 import pin
 
