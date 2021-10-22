@@ -54,6 +54,13 @@ elif board_id == ap_board.PYBOARD:
 elif board_id == ap_board.RASPBERRY_PI_PICO:
     from adafruit_blinka.board.raspberrypi.pico import *
 
+elif (
+    detector.board.RASPBERRY_PI_4B
+    or detector.board.RASPBERRY_PI_CM4
+    or detector.board.RASPBERRY_PI_400
+):
+    from adafruit_blinka.board.raspberrypi.raspi_4b import *
+
 elif detector.board.any_raspberry_pi_40_pin:
     from adafruit_blinka.board.raspberrypi.raspi_40pin import *
 

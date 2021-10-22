@@ -142,9 +142,6 @@ spiPorts = (
     (0, SCLK, MOSI, MISO),
     (1, SCLK_1, MOSI_1, MISO_1),
     (2, SCLK_2, MOSI_2, MISO_2),
-    (3, D3, D2, D1),  # SPI3 on Pi4/CM4
-    (4, D7, D6, D5),  # SPI4 on Pi4/CM4
-    (5, D15, D14, D13),  # SPI5 on Pi4/CM4
 )
 
 # ordered as uartId, txId, rxId
@@ -156,5 +153,4 @@ uartPorts = ((1, TXD, RXD),)
 i2cPorts = (
     (1, SCL, SDA),
     (0, D1, D0),  # both pi 1 and pi 2 i2c ports!
-    (10, D45, D44),  # internal i2c bus for the CM4
 )
