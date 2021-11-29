@@ -13,10 +13,10 @@ jobs:
     - name: Translate Repo Name For Build Tools filename_prefix
       id: repo-name
       run: echo ::set-output name=repo-name::Adafruit-Blinka
-    - name: Set up Python 3.6
+    - name: Set up Python 3.7
       uses: actions/setup-python@v1
       with:
-        python-version: 3.6
+        python-version: 3.7
     - name: Versions
       run: |
         python3 --version
