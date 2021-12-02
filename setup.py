@@ -45,7 +45,7 @@ setup(
     long_description_content_type="text/x-rst",
     author="Adafruit Industries",
     author_email="circuitpython@adafruit.com",
-    python_requires=">=3.6.0",
+    python_requires=">=3.7.0",
     url="https://github.com/adafruit/Adafruit_Blinka",
     package_dir={"": "src"},
     packages=find_packages("src"),
@@ -80,7 +80,7 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: Implementation :: MicroPython",
     ],
 )
