@@ -107,6 +107,8 @@ elif chip_id == ap_chip.RK3399:
     from adafruit_blinka.microcontroller.rockchip.rk3399.pin import *
 elif chip_id == ap_chip.RK3328:
     from adafruit_blinka.microcontroller.rockchip.rk3328.pin import *
+elif chip_id == ap_chip.H3:
+    from adafruit_blinka.microcontroller.allwinner.h3.pin import *
 elif chip_id == ap_chip.H5:
     from adafruit_blinka.microcontroller.allwinner.h5.pin import *
 elif chip_id == ap_chip.IMX8MX:

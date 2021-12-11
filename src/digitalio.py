@@ -77,6 +77,8 @@ elif detector.chip.STM32MP157:
     from adafruit_blinka.microcontroller.stm32.stm32mp157.pin import Pin
 elif detector.chip.MT8167:
     from adafruit_blinka.microcontroller.mt8167.pin import Pin
+elif detector.chip.H3:
+    from adafruit_blinka.microcontroller.allwinner.h3.pin import Pin
 elif detector.chip.H5:
     from adafruit_blinka.microcontroller.allwinner.h5.pin import Pin
 elif detector.chip.H6:
