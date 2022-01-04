@@ -29,6 +29,8 @@ elif chip_id == ap_chip.JH71x0:
     from adafruit_blinka.microcontroller.starfive.JH71x0.pin import *
 elif chip_id == ap_chip.SUN8I:
     from adafruit_blinka.microcontroller.allwinner.h3.pin import *
+elif chip_id == ap_chip.H3:
+    from adafruit_blinka.microcontroller.allwinner.h3.pin import *
 elif chip_id == ap_chip.H5:
     from adafruit_blinka.microcontroller.allwinner.h5.pin import *
 elif chip_id == ap_chip.H6:
