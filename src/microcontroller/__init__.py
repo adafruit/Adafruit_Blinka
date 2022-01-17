@@ -137,6 +137,8 @@ elif chip_id == ap_chip.MT8167:
     from adafruit_blinka.microcontroller.mt8167.pin import *
 elif chip_id == ap_chip.RP2040_U2IF:
     from adafruit_blinka.microcontroller.rp2040_u2if.pin import *
+elif chip_id == ap_chip.MCP2221:
+    from adafruit_blinka.microcontroller.mcp2221.pin import *
 elif chip_id == ap_chip.GENERIC_X86:
     print("WARNING: GENERIC_X86 is not fully supported. Some features may not work.")
 elif "sphinx" in sys.modules:
