@@ -21,7 +21,7 @@
 # THE SOFTWARE.
 """
 `circuitpython_typing` - Define subset of types for C-level protocols
-======================================================
+=====================================================================
 
 See `CircuitPython:board` in CircuitPython for more details.
 
