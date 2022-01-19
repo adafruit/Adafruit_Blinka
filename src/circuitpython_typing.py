@@ -34,17 +34,19 @@ from numpy import ndarray
 
 ReadableBuffer = Union[bytes, bytearray, memoryview, array, ndarray]
 """Classes that implement the readable buffer protocol
-  - `bytes`
-  - `bytearray`
-  - `memoryview`
-  - `array.array`
-  - ``numpy.ndarray``
+
+  * `bytes`
+  * `bytearray`
+  * `memoryview`
+  * `array.array`
+  * ``numpy.ndarray``
 """
 
 WriteableBuffer = Union[bytearray, memoryview, array, ndarray]
 """Classes that implement the writeable buffer protocol
-  - `bytearray`
-  - `memoryview`
-  - `array.array`
-  - ``numpy.ndarray``
+
+  * `bytearray`
+  * `memoryview`
+  * `array.array`
+  * ``numpy.ndarray``
 """
