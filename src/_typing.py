@@ -23,7 +23,7 @@
 `_typing` - Define (legacy) subset of types for C-level protocols
 =================================================================
 
-See `CircuitPython:board` in CircuitPython for more details.
+See `CircuitPython:_typing` in CircuitPython for more details.
 
 * Author(s): Alec Delaney
 """
