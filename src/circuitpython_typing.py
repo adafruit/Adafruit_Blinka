@@ -32,9 +32,7 @@ from typing import Union
 from array import array
 from numpy import ndarray
 
-ReadableBuffer = Union[
-    bytes, bytearray, memoryview, array, ndarray
-]
+ReadableBuffer = Union[bytes, bytearray, memoryview, array, ndarray]
 """Classes that implement the readable buffer protocol
   - `bytes`
   - `bytearray`
@@ -43,9 +41,7 @@ ReadableBuffer = Union[
   - `numpy.ndarray`
 """
 
-WriteableBuffer = Union[
-    bytearray, memoryview, array, ndarray
-]
+WriteableBuffer = Union[bytearray, memoryview, array, ndarray]
 """Classes that implement the writeable buffer protocol
   - `bytearray`
   - `memoryview`

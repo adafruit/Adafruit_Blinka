@@ -28,4 +28,4 @@ See `CircuitPython:board` in CircuitPython for more details.
 * Author(s): Alec Delaney
 """
 
-from circuitpython_typing import *
+from circuitpython_typing import *  # pylint: disable=wildcard-import,unused-wildcard-import
