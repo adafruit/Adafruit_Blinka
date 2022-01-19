@@ -23,7 +23,7 @@
 `circuitpython_typing` - Define subset of types for C-level protocols
 =====================================================================
 
-See `CircuitPython:circuit_python` in CircuitPython for more details.
+See `CircuitPython:circuitpython_typing` in CircuitPython for more details.
 
 * Author(s): Alec Delaney
 """
