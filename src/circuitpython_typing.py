@@ -38,7 +38,7 @@ ReadableBuffer = Union[bytes, bytearray, memoryview, array, ndarray]
   - `bytearray`
   - `memoryview`
   - `array.array`
-  - `ndarray`
+  - `numpy.ndarray`
 """
 
 WriteableBuffer = Union[bytearray, memoryview, array, ndarray]
@@ -46,5 +46,5 @@ WriteableBuffer = Union[bytearray, memoryview, array, ndarray]
   - `bytearray`
   - `memoryview`
   - `array.array`
-  - `ndarray`
+  - `numpy.ndarray`
 """
