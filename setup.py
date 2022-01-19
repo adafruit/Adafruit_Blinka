@@ -52,10 +52,12 @@ setup(
     # py_modules lists top-level single file packages to include.
     # find_packages only finds packages in directories with __init__.py files.
     py_modules=[
+        "_typing",
         "analogio",
         "bitbangio",
         "board",
         "busio",
+        "circuitpython_typing",
         "digitalio",
         "keypad",
         "micropython",
