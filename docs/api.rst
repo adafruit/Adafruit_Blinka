@@ -5,7 +5,7 @@
 .. use this format as the module name: "adafruit_foo.foo"
 
 .. automodule:: _typing
-  :members
+  :members:
 
 .. automodule:: adafruit_blinka
   :members:
