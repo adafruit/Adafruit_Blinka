@@ -1,5 +1,0 @@
-# SPDX-FileCopyrightText: 2021 Kattni Rembor for Adafruit Industries
-#
-# SPDX-License-Identifier: Unlicense
-
-numpy>=1.21.5
