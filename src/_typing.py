@@ -23,9 +23,9 @@
 `_typing` - Define (legacy) subset of types for C-level protocols
 =================================================================
 
-See `CircuitPython:circuitpython_typing` in CircuitPython for more details.
-
 * Author(s): Alec Delaney
+
+See `CircuitPython:circuitpython_typing` in CircuitPython for more details.
 """
 
 from circuitpython_typing import *  # pylint: disable=wildcard-import,unused-wildcard-import
