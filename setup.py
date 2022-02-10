@@ -67,7 +67,7 @@ setup(
         "rainbowio",
     ],
     package_data={
-        "adafruit_blinka.microcontroller.bcm283x.pulseio": ["libgpiod_pulsein"]
+        "adafruit_blinka.microcontroller.bcm283x.pulseio": ["libgpiod_pulsein", "libgpiod_pulsein64"]
     },
     install_requires=[
         "Adafruit-PlatformDetect>=3.13.0",
