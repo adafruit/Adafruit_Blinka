@@ -36,7 +36,7 @@ class I2C:
         out_end=None,
         in_start=0,
         in_end=None,
-        stop=False
+        stop=False,
     ):
         """Write data from buffer_out to an address and then
         read data from an address and into buffer_in

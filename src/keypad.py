@@ -384,7 +384,7 @@ class ShiftRegisterKeys(_KeysBase):
         key_count,
         value_when_pressed,
         interval=0.02,
-        max_events=64
+        max_events=64,
     ):
         """
         Create a `Keys` object that will scan keys attached to a parallel-in serial-out
