@@ -30,7 +30,6 @@ See `CircuitPython:circuitpython_typing` in CircuitPython for more details.
 
 from typing import Union
 from array import array
-from numpy import ndarray
 
 ReadableBuffer = Union[bytes, bytearray, memoryview, array, ndarray]
 """Classes that implement the readable buffer protocol
@@ -39,7 +38,6 @@ ReadableBuffer = Union[bytes, bytearray, memoryview, array, ndarray]
   * `bytearray`
   * `memoryview`
   * `array.array`
-  * ``numpy.ndarray``
 """
 
 WriteableBuffer = Union[bytearray, memoryview, array, ndarray]
@@ -48,5 +46,4 @@ WriteableBuffer = Union[bytearray, memoryview, array, ndarray]
   * `bytearray`
   * `memoryview`
   * `array.array`
-  * ``numpy.ndarray``
 """
