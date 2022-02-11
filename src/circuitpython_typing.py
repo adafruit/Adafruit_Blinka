@@ -30,23 +30,20 @@ See `CircuitPython:circuitpython_typing` in CircuitPython for more details.
 
 from typing import Union
 from array import array
-from numpy import ndarray
 
-ReadableBuffer = Union[bytes, bytearray, memoryview, array, ndarray]
+ReadableBuffer = Union[bytes, bytearray, memoryview, array]
 """Classes that implement the readable buffer protocol
 
   * `bytes`
   * `bytearray`
   * `memoryview`
   * `array.array`
-  * ``numpy.ndarray``
 """
 
-WriteableBuffer = Union[bytearray, memoryview, array, ndarray]
+WriteableBuffer = Union[bytearray, memoryview, array]
 """Classes that implement the writeable buffer protocol
 
   * `bytearray`
   * `memoryview`
   * `array.array`
-  * ``numpy.ndarray``
 """
