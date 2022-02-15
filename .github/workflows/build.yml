@@ -40,7 +40,7 @@ jobs:
       run: git describe --dirty --always --tags
     - name: Check formatting
       run: |
-        black --check --target-version=py35 .
+        black --check --target-version=py37 .
     - name: PyLint
       run: |
         pylint $( find src -name '*.py' )
