@@ -20,12 +20,10 @@ Introduction
 This repository contains a selection of packages emulating the CircuitPython API
 for devices or hosts running CPython or MicroPython. Working code exists to emulate these CircuitPython packages:
 
-* **_typing** - (Legacy) subset of types for C-level protocols
 * **analogio** - analog input/output pins, using pin identities from board+microcontroller packages
 * **bitbangio** - software-driven interfaces for I2C, SPI
 * **board** - breakout-specific pin identities
 * **busio** - hardware-driven interfaces for I2C, SPI, UART
-* **circuitpython_typing** - Subset of types for C-level protocols
 * **digitalio** - digital input/output pins, using pin identities from board+microcontroller packages
 * **keypad** - support for scanning keys and key matrices
 * **microcontroller** - chip-specific pin identities
