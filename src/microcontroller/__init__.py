@@ -13,6 +13,7 @@ from adafruit_blinka import Enum
 from adafruit_blinka.agnostic import board_id, chip_id
 import microcontroller.pin
 
+
 def delay_us(delay):
     """Sleep for delay usecs."""
     time.sleep(delay / 1e6)
