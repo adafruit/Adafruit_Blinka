@@ -1,5 +1,5 @@
 """Generic Connection class for Binho Nova to keep track of connection"""
-
+from .pin import *
 
 class Connection:
     """Connection class"""
