@@ -11,6 +11,7 @@ import time
 from adafruit_platformdetect.constants import chips as ap_chip
 from adafruit_blinka import Enum
 from adafruit_blinka.agnostic import board_id, chip_id
+import microcontroller.pin  # pylint: disable=unused-import
 
 
 def delay_us(delay):
