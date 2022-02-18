@@ -11,7 +11,7 @@ import time
 from adafruit_platformdetect.constants import chips as ap_chip
 from adafruit_blinka import Enum
 from adafruit_blinka.agnostic import board_id, chip_id
-import microcontroller.pin  # pylint: disable=unused-import
+import microcontroller.pin
 
 
 def delay_us(delay):
@@ -35,15 +35,14 @@ class Pin(Enum):
         # pylint: disable=import-outside-toplevel, cyclic-import
         import board
 
+        # pylint: enable=import-outside-toplevel, cyclic-import
+
         for key in dir(board):
             if getattr(board, key) is self:
                 return "board.{}".format(key)
-        import microcontroller.pin as pin
 
-        # pylint: enable=import-outside-toplevel, cyclic-import
-
-        for key in dir(pin):
-            if getattr(pin, key) is self:
+        for key in dir(microcontroller.pin):
+            if getattr(microcontroller.pin, key) is self:
                 return "microcontroller.pin.{}".format(key)
         return repr(self)
 
