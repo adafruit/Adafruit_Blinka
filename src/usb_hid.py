@@ -1,5 +1,6 @@
 from typing import Sequence
 from pathlib import Path
+import os
 import atexit
 
 # https://www.kernel.org/doc/Documentation/usb/gadget_configfs.txt
@@ -16,16 +17,31 @@ class Device():
         self.usage = usage
         self.usage_page = usage_page
         self.descriptor = descriptor
-        self.handle = ''
+        self._last_received_report = None
 
     def send_report(self, report: bytearray, report_id: int = None):
+        device_path = self.gets_device_path(report_id)
+        with open(device_path, 'rb+') as fd:
+            fd.write(report)
+
+    @property
+    def last_received_report(self, ):
+        device_path = self.gets_device_path(self.report_ids[0])
+        with open(device_path, 'rb+') as fd:
+            os.set_blocking(fd.fileno(), False)
+            report = fd.read(self.out_report_lengths[0])
+            if report is not None:
+                self._last_received_report = report
+        return self._last_received_report
+
+    def gets_device_path(self, report_id):
         device = \
             Path('%s/functions/hid.usb%s/dev' % (gadget_root, report_id or self.report_ids[0])) \
                 .read_text() \
                 .strip() \
                 .split(':')[1]
-        with open('/dev/hidg%s' % device, 'rb+') as fd:
-            fd.write(report)
+        device_path = '/dev/hidg%s' % device
+        return device_path
 
 
 Device.KEYBOARD = Device(
