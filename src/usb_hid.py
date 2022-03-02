@@ -1,3 +1,12 @@
+"""
+`usb_hid` - support for usb hid devices via usb_gadget driver
+===========================================================
+See `CircuitPython:usb_hid` in CircuitPython for more details.
+For now using report ids in the descriptor
+
+* Author(s): Björn Bösel
+"""
+
 from typing import Sequence
 from pathlib import Path
 import os
@@ -9,6 +18,8 @@ gadget_root = "/sys/kernel/config/usb_gadget/adafruit-blinka"
 
 
 class Device:
+    """HID Device specification: see https://github.com/adafruit/circuitpython/blob/main/shared-bindings/usb_hid/Device.c"""
+
     def __init__(
         self,
         *,
@@ -30,7 +41,7 @@ class Device:
     def send_report(self, report: bytearray, report_id: int = None):
         device_path = self.gets_device_path(report_id)
         with open(device_path, "rb+") as fd:
-            fd.write(report)
+            fd.write(bytearray(report_id) + report)
 
     @property
     def last_received_report(
@@ -67,6 +78,8 @@ Device.KEYBOARD = Device(
             0x06,  # usage (keyboard)
             0xA1,
             0x01,  # collection (application)
+            0x85,
+            0x01,  # Report ID (1)
             0x05,
             0x07,  # usage page (kbrd/keypad)
             0x19,
@@ -143,6 +156,8 @@ Device.MOUSE = Device(
             0x02,  # Usage (Mouse)
             0xA1,
             0x01,  # Collection (Application)
+            0x85,
+            0x02,  # Report ID (2)
             0x09,
             0x01,  # Usage (Pointer)
             0xA1,
@@ -218,6 +233,8 @@ Device.CONSUMER_CONTROL = Device(
             0x01,  # Usage (Consumer Control)
             0xA1,
             0x01,  # Collection (Application)
+            0x85,
+            0x03,  # Report ID (3)
             0x75,
             0x10,  # Report Size (16)
             0x95,
