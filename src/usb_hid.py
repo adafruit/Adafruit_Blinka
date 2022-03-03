@@ -4,6 +4,7 @@
 See `CircuitPython:usb_hid` in CircuitPython for more details.
 For now using report ids in the descriptor
 
+# regarding usb_gadget see https://www.kernel.org/doc/Documentation/usb/gadget_configfs.txt
 * Author(s): Björn Bösel
 """
 
@@ -12,9 +13,24 @@ from pathlib import Path
 import os
 import atexit
 
-# https://www.kernel.org/doc/Documentation/usb/gadget_configfs.txt
+for module in ["dwc2", "libcomposite"]:
+    if Path("/proc/modules").read_text().find(module) == -1:
+        raise Exception(
+            "%s module not present in your kernel. did you insmod it?" % module
+        )
 
 gadget_root = "/sys/kernel/config/usb_gadget/adafruit-blinka"
+_boot_device = 0
+_active_devices = []
+
+
+@property
+def devices():
+    return _active_devices
+
+
+def get_boot_device() -> int:
+    return _boot_device
 
 
 class Device:
@@ -39,6 +55,8 @@ class Device:
         self._last_received_report = None
 
     def send_report(self, report: bytearray, report_id: int = None):
+
+        report_id = report_id or self.report_ids[0]
         device_path = self.gets_device_path(report_id)
         with open(device_path, "rb+") as fd:
             fd.write(bytearray(report_id) + report)
@@ -46,8 +64,11 @@ class Device:
     @property
     def last_received_report(
         self,
-    ):
-        device_path = self.gets_device_path(self.report_ids[0])
+    ) -> bytes:
+        return self.get_last_received_report()
+
+    def get_last_received_report(self, report_id=None) -> bytes:
+        device_path = self.gets_device_path(report_id or self.report_ids[0])
         with open(device_path, "rb+") as fd:
             os.set_blocking(fd.fileno(), False)
             report = fd.read(self.out_report_lengths[0])
@@ -261,7 +282,6 @@ Device.CONSUMER_CONTROL = Device(
     in_report_lengths=[2],
     out_report_lengths=[0],
 )
-devices = [Device.KEYBOARD, Device.MOUSE, Device.CONSUMER_CONTROL]
 
 
 def disable() -> None:
@@ -291,13 +311,30 @@ def disable() -> None:
         pass
 
 
-# atexit.register(disable)
+atexit.register(disable)
 
 
 def enable(devices: Sequence[Device], boot_device: int = 0) -> None:
+    """
+    Specify which USB HID devices that will be available. Can be called in boot.py, before USB is connected.
+    :param devices:
+    :param boot_device:
+    :return:
+    """
+    global _boot_device, _active_devices
+    _boot_device = boot_device
+
+    """ Enable usb_hid
+    shim for https://docs.circuitpython.org/en/latest/shared-bindings/usb_hid/index.html#usb_hid.enable
+
+    """
     if len(devices) == 0:
         disable()
         return
+
+    if boot_device > 0:
+        raise NotImplementedError("not supported yet")
+
     """
     1. Creating the gadgets
     -----------------------
@@ -389,6 +426,7 @@ def enable(devices: Sequence[Device], boot_device: int = 0) -> None:
         )
         Path("%s/MaxPower" % config_root).write_text("150")
         Path("%s/bmAttributes" % config_root).write_text("%s" % 0x080)
+        _active_devices.append(device)
         """
         3. Creating the functions
         -------------------------
