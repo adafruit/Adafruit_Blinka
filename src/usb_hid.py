@@ -52,9 +52,9 @@ class Device:
 
     def send_report(self, report: bytearray, report_id: int = None):
         """Send an HID report. If the device descriptor specifies zero or one report id's,
-                you can supply `None` (the default) as the value of ``report_id``.
-                Otherwise you must specify which report id to use when sending the report.
-                """
+        you can supply `None` (the default) as the value of ``report_id``.
+        Otherwise you must specify which report id to use when sending the report.
+        """
         report_id = report_id or self.report_ids[0]
         device_path = self.get_device_path(report_id)
         with open(device_path, "rb+") as fd:
