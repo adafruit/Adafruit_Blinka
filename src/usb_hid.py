@@ -12,20 +12,18 @@ from typing import Sequence
 from pathlib import Path
 import os
 import atexit
+import sys
 
 for module in ["dwc2", "libcomposite"]:
     if Path("/proc/modules").read_text().find(module) == -1:
         raise Exception(
             "%s module not present in your kernel. did you insmod it?" % module
         )
+this = sys.modules[__name__]
 
-gadget_root = "/sys/kernel/config/usb_gadget/adafruit-blinka"
-_boot_device = 0
-devices = []
-
-
-def get_boot_device() -> int:
-    return _boot_device
+this.gadget_root = "/sys/kernel/config/usb_gadget/adafruit-blinka"
+this.boot_device = 0
+this.devices = []
 
 
 class Device:
@@ -91,7 +89,7 @@ class Device:
         device = (
             Path(
                 "%s/functions/hid.usb%s/dev"
-                % (gadget_root, report_id or self.report_ids[0])
+                % (this.gadget_root, report_id or self.report_ids[0])
             )
             .read_text()
             .strip()
@@ -460,30 +458,30 @@ def disable() -> None:
     # as `usb_cdc` or `storage` to free up endpoints for use by `usb_hid`.
     # """
     try:
-        Path("%s/UDC" % gadget_root).write_text("")
+        Path("%s/UDC" % this.gadget_root).write_text("")
     except FileNotFoundError:
         pass
-    for symlink in Path(gadget_root).glob("configs/**/hid.usb*"):
+    for symlink in Path(this.gadget_root).glob("configs/**/hid.usb*"):
         symlink.unlink()
 
-    for strings_file in Path(gadget_root).rglob("configs/*/strings/*/*"):
+    for strings_file in Path(this.gadget_root).rglob("configs/*/strings/*/*"):
         if strings_file.is_dir():
             strings_file.rmdir()
 
-    for strings_file in Path(gadget_root).rglob("configs/*/strings/*"):
+    for strings_file in Path(this.gadget_root).rglob("configs/*/strings/*"):
         if strings_file.is_dir():
             strings_file.rmdir()
-    for config_dir in Path(gadget_root).rglob("configs/*"):
+    for config_dir in Path(this.gadget_root).rglob("configs/*"):
         if config_dir.is_dir():
             config_dir.rmdir()
-    for function_dir in Path(gadget_root).rglob("functions/*"):
+    for function_dir in Path(this.gadget_root).rglob("functions/*"):
         if function_dir.is_dir():
             function_dir.rmdir()
     try:
-        Path(gadget_root).rmdir()
+        Path(this.gadget_root).rmdir()
     except FileNotFoundError:
         pass
-
+    this.devices = []
 
 atexit.register(disable)
 
@@ -530,8 +528,7 @@ def enable(requested_devices: Sequence[Device], boot_device: int = 0) -> None:
 # If you specify a non-zero ``boot_device``, and it is not the first device, CircuitPython
 # will enter safe mode to report this error.
 # """
-    global _boot_device, devices
-    _boot_device = boot_device
+    this.boot_device = boot_device
 
     if len(requested_devices) == 0:
         disable()
@@ -577,20 +574,20 @@ def enable(requested_devices: Sequence[Device], boot_device: int = 0) -> None:
     #     $ echo <manufacturer> > strings/0x409/manufacturer
     #     $ echo <product> > strings/0x409/product
     # """
-    Path("%s/functions" % gadget_root).mkdir(parents=True, exist_ok=True)
-    Path("%s/configs" % gadget_root).mkdir(parents=True, exist_ok=True)
-    Path("%s/bcdDevice" % gadget_root).write_text("%s" % 1)  # Version 1.0.0
-    Path("%s/bcdUSB" % gadget_root).write_text("%s" % 0x0200)  # USB 2.0
-    Path("%s/bDeviceClass" % gadget_root).write_text(
+    Path("%s/functions" % this.gadget_root).mkdir(parents=True, exist_ok=True)
+    Path("%s/configs" % this.gadget_root).mkdir(parents=True, exist_ok=True)
+    Path("%s/bcdDevice" % this.gadget_root).write_text("%s" % 1)  # Version 1.0.0
+    Path("%s/bcdUSB" % this.gadget_root).write_text("%s" % 0x0200)  # USB 2.0
+    Path("%s/bDeviceClass" % this.gadget_root).write_text(
         "%s" % 0x00
     )  # multipurpose i guess?
-    Path("%s/bDeviceProtocol" % gadget_root).write_text("%s" % 0x00)
-    Path("%s/bDeviceSubClass" % gadget_root).write_text("%s" % 0x00)
-    Path("%s/bMaxPacketSize0" % gadget_root).write_text("%s" % 0x08)
-    Path("%s/idProduct" % gadget_root).write_text(
+    Path("%s/bDeviceProtocol" % this.gadget_root).write_text("%s" % 0x00)
+    Path("%s/bDeviceSubClass" % this.gadget_root).write_text("%s" % 0x00)
+    Path("%s/bMaxPacketSize0" % this.gadget_root).write_text("%s" % 0x08)
+    Path("%s/idProduct" % this.gadget_root).write_text(
         "%s" % 0x0104
     )  # Multifunction Composite Gadget
-    Path("%s/idVendor" % gadget_root).write_text("%s" % 0x1D6B)  # Linux Foundation
+    Path("%s/idVendor" % this.gadget_root).write_text("%s" % 0x1D6B)  # Linux Foundation
     # """
     # 2. Creating the configurations
     # ------------------------------
@@ -624,7 +621,7 @@ def enable(requested_devices: Sequence[Device], boot_device: int = 0) -> None:
     #     """
 
     for i, device in enumerate(requested_devices):
-        config_root = "%s/configs/device.%s" % (gadget_root, i + 1)
+        config_root = "%s/configs/device.%s" % (this.gadget_root, i + 1)
         Path("%s/" % config_root).mkdir(parents=True, exist_ok=True)
         Path("%s/strings/0x409" % config_root).mkdir(parents=True, exist_ok=True)
         Path("%s/strings/0x409/configuration" % config_root).write_text(
@@ -632,7 +629,7 @@ def enable(requested_devices: Sequence[Device], boot_device: int = 0) -> None:
         )
         Path("%s/MaxPower" % config_root).write_text("150")
         Path("%s/bmAttributes" % config_root).write_text("%s" % 0x080)
-        devices.append(device)
+        this.devices.append(device)
         # """
         # 3. Creating the functions
         # -------------------------
@@ -656,7 +653,7 @@ def enable(requested_devices: Sequence[Device], boot_device: int = 0) -> None:
         # appropriate.
         # Please refer to Documentation/ABI/*/configfs-usb-gadget* for more information.  """
         for report_index, report_id in enumerate(device.report_ids):
-            function_root = "%s/functions/hid.usb%s" % (gadget_root, report_id)
+            function_root = "%s/functions/hid.usb%s" % (this.gadget_root, report_id)
             try:
                 Path("%s/" % function_root).mkdir(parents=True)
             except FileExistsError:
@@ -697,4 +694,4 @@ def enable(requested_devices: Sequence[Device], boot_device: int = 0) -> None:
     #
     # $ echo s3c-hsotg > UDC  """
     udc = next(Path("/sys/class/udc/").glob("*"))
-    Path("%s/UDC" % gadget_root).write_text("%s" % udc.name)
+    Path("%s/UDC" % this.gadget_root).write_text("%s" % udc.name)
