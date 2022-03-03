@@ -30,7 +30,8 @@ def get_boot_device() -> int:
 
 class Device:
     """
-    HID Device specification: see https://github.com/adafruit/circuitpython/blob/main/shared-bindings/usb_hid/Device.c
+    HID Device specification: see
+    https://github.com/adafruit/circuitpython/blob/main/shared-bindings/usb_hid/Device.c
     """
 
     def __init__(
@@ -339,13 +340,15 @@ Device.BOOT_KEYBOARD = Device(
             0x29,
             0x05,  # usage maximum (kana)
             0x91,
-            0x02,  # output (data,var,abs,no wrap,linear,preferred state,no null position,non-volatile)
+            0x02,  # output
+            # (data,var,abs,no wrap,linear,preferred state,no null position,non-volatile)
             0x95,
             0x01,  # report count (1)
             0x75,
             0x05,  # report size (5)
             0x91,
-            0x01,  # output (const,array,abs,no wrap,linear,preferred state,no null position,non-volatile)
+            0x01,  # output
+            # (const,array,abs,no wrap,linear,preferred state,no null position,non-volatile)
             0x95,
             0x06,  # report count (6)
             0x75,
@@ -449,13 +452,13 @@ Device.BOOT_MOUSE = Device(
 
 
 def disable() -> None:
-    """Do not present any USB HID devices to the host computer.
-    Can be called in ``boot.py``, before USB is connected.
-    The HID composite device is normally enabled by default,
-    but on some boards with limited endpoints, including STM32F4,
-    it is disabled by default. You must turn off another USB device such
-    as `usb_cdc` or `storage` to free up endpoints for use by `usb_hid`.
-    """
+    # """Do not present any USB HID devices to the host computer.
+    # Can be called in ``boot.py``, before USB is connected.
+    # The HID composite device is normally enabled by default,
+    # but on some boards with limited endpoints, including STM32F4,
+    # it is disabled by default. You must turn off another USB device such
+    # as `usb_cdc` or `storage` to free up endpoints for use by `usb_hid`.
+    # """
     try:
         Path("%s/UDC" % gadget_root).write_text("")
     except FileNotFoundError:
@@ -478,7 +481,7 @@ def disable() -> None:
             function_dir.rmdir()
     try:
         Path(gadget_root).rmdir()
-    except:
+    except FileNotFoundError:
         pass
 
 
@@ -486,54 +489,50 @@ atexit.register(disable)
 
 
 def enable(requested_devices: Sequence[Device], boot_device: int = 0) -> None:
-    """Specify which USB HID devices that will be available.
-    Can be called in ``boot.py``, before USB is connected.
-
-    :param Sequence devices: `Device` objects.
-      If `devices` is empty, HID is disabled. The order of the ``Devices``
-      may matter to the host. For instance, for MacOS, put the mouse device
-      before any Gamepad or Digitizer HID device or else it will not work.
-    :param int boot_device: If non-zero, inform the host that support for a
-      a boot HID device is available.
-      If ``boot_device=1``, a boot keyboard is available.
-      If ``boot_device=2``, a boot mouse is available. No other values are allowed.
-      See below.
-
-    If you enable too many devices at once, you will run out of USB endpoints.
-    The number of available endpoints varies by microcontroller.
-    CircuitPython will go into safe mode after running ``boot.py`` to inform you if
-    not enough endpoints are available.
-
-    **Boot Devices**
-
-    Boot devices implement a fixed, predefined report descriptor, defined in
-    https://www.usb.org/sites/default/files/hid1_12.pdf, Appendix B. A USB host
-    can request to use the boot device if the USB device says it is available.
-    Usually only a BIOS or other kind of limited-functionality
-    host needs boot keyboard support.
-
-    For example, to make a boot keyboard available, you can use this code::
-
-      usb_hid.enable((Device.KEYBOARD), boot_device=1)  # 1 for a keyboard
-
-    If the host requests the boot keyboard, the report descriptor provided by `Device.KEYBOARD`
-    will be ignored, and the predefined report descriptor will be used.
-    But if the host does not request the boot keyboard,
-    the descriptor provided by `Device.KEYBOARD` will be used.
-
-    The HID boot device must usually be the first or only device presented by CircuitPython.
-    The HID device will be USB interface number 0.
-    To make sure it is the first device, disable other USB devices, including CDC and MSC (CIRCUITPY).
-    If you specify a non-zero ``boot_device``, and it is not the first device, CircuitPython
-    will enter safe mode to report this error.
-    """
+# """Specify which USB HID devices that will be available.
+# Can be called in ``boot.py``, before USB is connected.
+#
+# :param Sequence devices: `Device` objects.
+#   If `devices` is empty, HID is disabled. The order of the ``Devices``
+#   may matter to the host. For instance, for MacOS, put the mouse device
+#   before any Gamepad or Digitizer HID device or else it will not work.
+# :param int boot_device: If non-zero, inform the host that support for a
+#   a boot HID device is available.
+#   If ``boot_device=1``, a boot keyboard is available.
+#   If ``boot_device=2``, a boot mouse is available. No other values are allowed.
+#   See below.
+#
+# If you enable too many devices at once, you will run out of USB endpoints.
+# The number of available endpoints varies by microcontroller.
+# CircuitPython will go into safe mode after running ``boot.py`` to inform you if
+# not enough endpoints are available.
+#
+# **Boot Devices**
+#
+# Boot devices implement a fixed, predefined report descriptor, defined in
+# https://www.usb.org/sites/default/files/hid1_12.pdf, Appendix B. A USB host
+# can request to use the boot device if the USB device says it is available.
+# Usually only a BIOS or other kind of limited-functionality
+# host needs boot keyboard support.
+#
+# For example, to make a boot keyboard available, you can use this code::
+#
+#   usb_hid.enable((Device.KEYBOARD), boot_device=1)  # 1 for a keyboard
+#
+# If the host requests the boot keyboard, the report descriptor provided by `Device.KEYBOARD`
+# will be ignored, and the predefined report descriptor will be used.
+# But if the host does not request the boot keyboard,
+# the descriptor provided by `Device.KEYBOARD` will be used.
+#
+# The HID boot device must usually be the first or only device presented by CircuitPython.
+# The HID device will be USB interface number 0.
+# To make sure it is the first device, disable other USB devices, including CDC and MSC (CIRCUITPY).
+# If you specify a non-zero ``boot_device``, and it is not the first device, CircuitPython
+# will enter safe mode to report this error.
+# """
     global _boot_device, devices
     _boot_device = boot_device
 
-    """ Enable usb_hid
-    shim for https://docs.circuitpython.org/en/latest/shared-bindings/usb_hid/index.html#usb_hid.enable
-
-    """
     if len(requested_devices) == 0:
         disable()
         return
@@ -543,41 +542,41 @@ def enable(requested_devices: Sequence[Device], boot_device: int = 0) -> None:
     if boot_device == 2:
         requested_devices = [Device.BOOT_MOUSE]
 
-    """
-    1. Creating the gadgets
-    -----------------------
-
-    For each gadget to be created its corresponding directory must be created::
-
-        $ mkdir $CONFIGFS_HOME/usb_gadget/<gadget name>
-
-    e.g.::
-
-        $ mkdir $CONFIGFS_HOME/usb_gadget/g1
-
-        ...
-        ...
-        ...
-
-        $ cd $CONFIGFS_HOME/usb_gadget/g1
-
-    Each gadget needs to have its vendor id <VID> and product id <PID> specified::
-
-        $ echo <VID> > idVendor
-        $ echo <PID> > idProduct
-
-    A gadget also needs its serial number, manufacturer and product strings.
-    In order to have a place to store them, a strings subdirectory must be created
-    for each language, e.g.::
-
-        $ mkdir strings/0x409
-
-    Then the strings can be specified::
-
-        $ echo <serial number> > strings/0x409/serialnumber
-        $ echo <manufacturer> > strings/0x409/manufacturer
-        $ echo <product> > strings/0x409/product
-    """
+    # """
+    # 1. Creating the gadgets
+    # -----------------------
+    #
+    # For each gadget to be created its corresponding directory must be created::
+    #
+    #     $ mkdir $CONFIGFS_HOME/usb_gadget/<gadget name>
+    #
+    # e.g.::
+    #
+    #     $ mkdir $CONFIGFS_HOME/usb_gadget/g1
+    #
+    #     ...
+    #     ...
+    #     ...
+    #
+    #     $ cd $CONFIGFS_HOME/usb_gadget/g1
+    #
+    # Each gadget needs to have its vendor id <VID> and product id <PID> specified::
+    #
+    #     $ echo <VID> > idVendor
+    #     $ echo <PID> > idProduct
+    #
+    # A gadget also needs its serial number, manufacturer and product strings.
+    # In order to have a place to store them, a strings subdirectory must be created
+    # for each language, e.g.::
+    #
+    #     $ mkdir strings/0x409
+    #
+    # Then the strings can be specified::
+    #
+    #     $ echo <serial number> > strings/0x409/serialnumber
+    #     $ echo <manufacturer> > strings/0x409/manufacturer
+    #     $ echo <product> > strings/0x409/product
+    # """
     Path("%s/functions" % gadget_root).mkdir(parents=True, exist_ok=True)
     Path("%s/configs" % gadget_root).mkdir(parents=True, exist_ok=True)
     Path("%s/bcdDevice" % gadget_root).write_text("%s" % 1)  # Version 1.0.0
@@ -592,37 +591,37 @@ def enable(requested_devices: Sequence[Device], boot_device: int = 0) -> None:
         "%s" % 0x0104
     )  # Multifunction Composite Gadget
     Path("%s/idVendor" % gadget_root).write_text("%s" % 0x1D6B)  # Linux Foundation
-    """
-    2. Creating the configurations
-    ------------------------------
-
-    Each gadget will consist of a number of configurations, their corresponding
-    directories must be created:
-
-    $ mkdir configs/<name>.<number>
-
-    where <name> can be any string which is legal in a filesystem and the
-    <number> is the configuration's number, e.g.::
-
-        $ mkdir configs/c.1
-
-        ...
-        ...
-        ...
-
-    Each configuration also needs its strings, so a subdirectory must be created
-    for each language, e.g.::
-
-        $ mkdir configs/c.1/strings/0x409
-
-    Then the configuration string can be specified::
-
-        $ echo <configuration> > configs/c.1/strings/0x409/configuration
-
-    Some attributes can also be set for a configuration, e.g.::
-
-        $ echo 120 > configs/c.1/MaxPower
-        """
+    # """
+    # 2. Creating the configurations
+    # ------------------------------
+    #
+    # Each gadget will consist of a number of configurations, their corresponding
+    # directories must be created:
+    #
+    # $ mkdir configs/<name>.<number>
+    #
+    # where <name> can be any string which is legal in a filesystem and the
+    # <number> is the configuration's number, e.g.::
+    #
+    #     $ mkdir configs/c.1
+    #
+    #     ...
+    #     ...
+    #     ...
+    #
+    # Each configuration also needs its strings, so a subdirectory must be created
+    # for each language, e.g.::
+    #
+    #     $ mkdir configs/c.1/strings/0x409
+    #
+    # Then the configuration string can be specified::
+    #
+    #     $ echo <configuration> > configs/c.1/strings/0x409/configuration
+    #
+    # Some attributes can also be set for a configuration, e.g.::
+    #
+    #     $ echo 120 > configs/c.1/MaxPower
+    #     """
 
     for i, device in enumerate(requested_devices):
         config_root = "%s/configs/device.%s" % (gadget_root, i + 1)
@@ -634,32 +633,28 @@ def enable(requested_devices: Sequence[Device], boot_device: int = 0) -> None:
         Path("%s/MaxPower" % config_root).write_text("150")
         Path("%s/bmAttributes" % config_root).write_text("%s" % 0x080)
         devices.append(device)
-        """
-        3. Creating the functions
-        -------------------------
-
-        The gadget will provide some functions, for each function its corresponding
-        directory must be created::
-
-            $ mkdir functions/<name>.<instance name>
-
-        where <name> corresponds to one of allowed function names and instance name
-        is an arbitrary string allowed in a filesystem, e.g.::
-
-          $ mkdir functions/ncm.usb0 # usb_f_ncm.ko gets loaded with request_module()
-
-          ...
-          ...
-          ...
-
-        Each function provides its specific set of attributes, with either read-only
-        or read-write access. Where applicable they need to be written to as
-        appropriate.
-        Please refer to Documentation/ABI/*/configfs-usb-gadget* for more information.
-
-        """
-
-        # create functions
+        # """
+        # 3. Creating the functions
+        # -------------------------
+        #
+        # The gadget will provide some functions, for each function its corresponding
+        # directory must be created::
+        #
+        #     $ mkdir functions/<name>.<instance name>
+        #
+        # where <name> corresponds to one of allowed function names and instance name
+        # is an arbitrary string allowed in a filesystem, e.g.::
+        #
+        #   $ mkdir functions/ncm.usb0 # usb_f_ncm.ko gets loaded with request_module()
+        #
+        #   ...
+        #   ...
+        #   ...
+        #
+        # Each function provides its specific set of attributes, with either read-only
+        # or read-write access. Where applicable they need to be written to as
+        # appropriate.
+        # Please refer to Documentation/ABI/*/configfs-usb-gadget* for more information.  """
         for report_index, report_id in enumerate(device.report_ids):
             function_root = "%s/functions/hid.usb%s" % (gadget_root, report_id)
             try:
@@ -672,39 +667,34 @@ def enable(requested_devices: Sequence[Device], boot_device: int = 0) -> None:
             )
             Path("%s/subclass" % function_root).write_text("%s" % 1)
             Path("%s/report_desc" % function_root).write_bytes(device.descriptor)
-            """
-            4. Associating the functions with their configurations
-            ------------------------------------------------------
-
-            At this moment a number of gadgets is created, each of which has a number of
-            configurations specified and a number of functions available. What remains
-            is specifying which function is available in which configuration (the same
-            function can be used in multiple configurations). This is achieved with
-            creating symbolic links::
-
-                $ ln -s functions/<name>.<instance name> configs/<name>.<number>
-
-            e.g.::
-
-                $ ln -s functions/ncm.usb0 configs/c.1
-            """
-
+            # """
+            # 4. Associating the functions with their configurations
+            # ------------------------------------------------------
+            #
+            # At this moment a number of gadgets is created, each of which has a number of
+            # configurations specified and a number of functions available. What remains
+            # is specifying which function is available in which configuration (the same
+            # function can be used in multiple configurations). This is achieved with
+            # creating symbolic links::
+            #
+            #     $ ln -s functions/<name>.<instance name> configs/<name>.<number>
+            #
+            # e.g.::
+            #
+            #     $ ln -s functions/ncm.usb0 configs/c.1  """
             Path("%s/hid.usb%s" % (config_root, report_id)).symlink_to(function_root)
-    """
-    5. Enabling the gadget
-    ----------------------
-    Such a gadget must be finally enabled so that the USB host can enumerate it.
-
-    In order to enable the gadget it must be bound to a UDC (USB Device
-    Controller)::
-
-        $ echo <udc name> > UDC
-
-    where <udc name> is one of those found in /sys/class/udc/*
-    e.g.::
-
-    $ echo s3c-hsotg > UDC
-
-    """
+    # """ 5. Enabling the gadget
+    # ----------------------
+    # Such a gadget must be finally enabled so that the USB host can enumerate it.
+    #
+    # In order to enable the gadget it must be bound to a UDC (USB Device
+    # Controller)::
+    #
+    #     $ echo <udc name> > UDC
+    #
+    # where <udc name> is one of those found in /sys/class/udc/*
+    # e.g.::
+    #
+    # $ echo s3c-hsotg > UDC  """
     udc = next(Path("/sys/class/udc/").glob("*"))
     Path("%s/UDC" % gadget_root).write_text("%s" % udc.name)
