@@ -51,6 +51,10 @@ class Device:
         self._last_received_report = None
 
     def send_report(self, report: bytearray, report_id: int = None):
+        """Send an HID report. If the device descriptor specifies zero or one report id's,
+                you can supply `None` (the default) as the value of ``report_id``.
+                Otherwise you must specify which report id to use when sending the report.
+                """
         report_id = report_id or self.report_ids[0]
         device_path = self.get_device_path(report_id)
         with open(device_path, "rb+") as fd:
@@ -450,13 +454,13 @@ Device.BOOT_MOUSE = Device(
 
 
 def disable() -> None:
-    # """Do not present any USB HID devices to the host computer.
-    # Can be called in ``boot.py``, before USB is connected.
-    # The HID composite device is normally enabled by default,
-    # but on some boards with limited endpoints, including STM32F4,
-    # it is disabled by default. You must turn off another USB device such
-    # as `usb_cdc` or `storage` to free up endpoints for use by `usb_hid`.
-    # """
+    """Do not present any USB HID devices to the host computer.
+    Can be called in ``boot.py``, before USB is connected.
+    The HID composite device is normally enabled by default,
+    but on some boards with limited endpoints, including STM32F4,
+    it is disabled by default. You must turn off another USB device such
+    as `usb_cdc` or `storage` to free up endpoints for use by `usb_hid`.
+    """
     try:
         Path("%s/UDC" % this.gadget_root).write_text("")
     except FileNotFoundError:
@@ -488,47 +492,48 @@ atexit.register(disable)
 
 
 def enable(requested_devices: Sequence[Device], boot_device: int = 0) -> None:
-    # """Specify which USB HID devices that will be available.
-    # Can be called in ``boot.py``, before USB is connected.
-    #
-    # :param Sequence devices: `Device` objects.
-    #   If `devices` is empty, HID is disabled. The order of the ``Devices``
-    #   may matter to the host. For instance, for MacOS, put the mouse device
-    #   before any Gamepad or Digitizer HID device or else it will not work.
-    # :param int boot_device: If non-zero, inform the host that support for a
-    #   a boot HID device is available.
-    #   If ``boot_device=1``, a boot keyboard is available.
-    #   If ``boot_device=2``, a boot mouse is available. No other values are allowed.
-    #   See below.
-    #
-    # If you enable too many devices at once, you will run out of USB endpoints.
-    # The number of available endpoints varies by microcontroller.
-    # CircuitPython will go into safe mode after running ``boot.py`` to inform you if
-    # not enough endpoints are available.
-    #
-    # **Boot Devices**
-    #
-    # Boot devices implement a fixed, predefined report descriptor, defined in
-    # https://www.usb.org/sites/default/files/hid1_12.pdf, Appendix B. A USB host
-    # can request to use the boot device if the USB device says it is available.
-    # Usually only a BIOS or other kind of limited-functionality
-    # host needs boot keyboard support.
-    #
-    # For example, to make a boot keyboard available, you can use this code::
-    #
-    #   usb_hid.enable((Device.KEYBOARD), boot_device=1)  # 1 for a keyboard
-    #
-    # If the host requests the boot keyboard, the report descriptor provided by `Device.KEYBOARD`
-    # will be ignored, and the predefined report descriptor will be used.
-    # But if the host does not request the boot keyboard,
-    # the descriptor provided by `Device.KEYBOARD` will be used.
-    #
-    # The HID boot device must usually be the first or only device presented by CircuitPython.
-    # The HID device will be USB interface number 0.
-    # To make sure it is the first device, disable other USB devices, including CDC and MSC (CIRCUITPY).
-    # If you specify a non-zero ``boot_device``, and it is not the first device, CircuitPython
-    # will enter safe mode to report this error.
-    # """
+    """Specify which USB HID devices that will be available.
+    Can be called in ``boot.py``, before USB is connected.
+
+    :param Sequence devices: `Device` objects.
+      If `devices` is empty, HID is disabled. The order of the ``Devices``
+      may matter to the host. For instance, for MacOS, put the mouse device
+      before any Gamepad or Digitizer HID device or else it will not work.
+    :param int boot_device: If non-zero, inform the host that support for a
+      a boot HID device is available.
+      If ``boot_device=1``, a boot keyboard is available.
+      If ``boot_device=2``, a boot mouse is available. No other values are allowed.
+      See below.
+
+    If you enable too many devices at once, you will run out of USB endpoints.
+    The number of available endpoints varies by microcontroller.
+    CircuitPython will go into safe mode after running ``boot.py`` to inform you if
+    not enough endpoints are available.
+
+    **Boot Devices**
+
+    Boot devices implement a fixed, predefined report descriptor, defined in
+    https://www.usb.org/sites/default/files/hid1_12.pdf, Appendix B. A USB host
+    can request to use the boot device if the USB device says it is available.
+    Usually only a BIOS or other kind of limited-functionality
+    host needs boot keyboard support.
+
+    For example, to make a boot keyboard available, you can use this code::
+
+      usb_hid.enable((Device.KEYBOARD), boot_device=1)  # 1 for a keyboard
+
+    If the host requests the boot keyboard, the report descriptor provided by `Device.KEYBOARD`
+    will be ignored, and the predefined report descriptor will be used.
+    But if the host does not request the boot keyboard,
+    the descriptor provided by `Device.KEYBOARD` will be used.
+
+    The HID boot device must usually be the first or only device presented by CircuitPython.
+    The HID device will be USB interface number 0.
+    To make sure it is the first device, disable other USB devices, including CDC and MSC
+    (CIRCUITPY).
+    If you specify a non-zero ``boot_device``, and it is not the first device, CircuitPython
+    will enter safe mode to report this error.
+    """
     this.boot_device = boot_device
 
     if len(requested_devices) == 0:
