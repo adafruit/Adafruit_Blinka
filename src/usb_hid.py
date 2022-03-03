@@ -21,12 +21,7 @@ for module in ["dwc2", "libcomposite"]:
 
 gadget_root = "/sys/kernel/config/usb_gadget/adafruit-blinka"
 _boot_device = 0
-_active_devices = []
-
-
-@property
-def devices():
-    return _active_devices
+devices = []
 
 
 def get_boot_device() -> int:
@@ -34,7 +29,9 @@ def get_boot_device() -> int:
 
 
 class Device:
-    """HID Device specification: see https://github.com/adafruit/circuitpython/blob/main/shared-bindings/usb_hid/Device.c"""
+    """
+    HID Device specification: see https://github.com/adafruit/circuitpython/blob/main/shared-bindings/usb_hid/Device.c
+    """
 
     def __init__(
         self,
@@ -55,20 +52,30 @@ class Device:
         self._last_received_report = None
 
     def send_report(self, report: bytearray, report_id: int = None):
-
         report_id = report_id or self.report_ids[0]
-        device_path = self.gets_device_path(report_id)
+        device_path = self.get_device_path(report_id)
         with open(device_path, "rb+") as fd:
-            fd.write(bytearray(report_id) + report)
+            if report_id > 0:
+                report = bytearray(report_id.to_bytes(1, "big")) + report
+            fd.write(report)
 
     @property
     def last_received_report(
         self,
     ) -> bytes:
+        """The HID OUT report as a `bytes` (read-only). `None` if nothing received.
+        Same as `get_last_received_report()` with no argument.
+
+        Deprecated: will be removed in CircutPython 8.0.0. Use `get_last_received_report()` instead.
+        """
         return self.get_last_received_report()
 
     def get_last_received_report(self, report_id=None) -> bytes:
-        device_path = self.gets_device_path(report_id or self.report_ids[0])
+        """Get the last received HID OUT or feature report for the given report ID.
+        The report ID may be omitted if there is no report ID, or only one report ID.
+        Return `None` if nothing received.
+        """
+        device_path = self.get_device_path(report_id or self.report_ids[0])
         with open(device_path, "rb+") as fd:
             os.set_blocking(fd.fileno(), False)
             report = fd.read(self.out_report_lengths[0])
@@ -76,7 +83,10 @@ class Device:
                 self._last_received_report = report
         return self._last_received_report
 
-    def gets_device_path(self, report_id):
+    def get_device_path(self, report_id):
+        """
+        translates the /dev/hidg device from the report id
+        """
         device = (
             Path(
                 "%s/functions/hid.usb%s/dev"
@@ -88,6 +98,10 @@ class Device:
         )
         device_path = "/dev/hidg%s" % device
         return device_path
+
+    KEYBOARD = None
+    MOUSE = None
+    CONSUMER_CONTROL = None
 
 
 Device.KEYBOARD = Device(
@@ -134,13 +148,15 @@ Device.KEYBOARD = Device(
             0x29,
             0x05,  # usage maximum (kana)
             0x91,
-            0x02,  # output (data,var,abs,no wrap,linear,preferred state,no null position,non-volatile)
+            0x02,  # output
+            # (data,var,abs,no wrap,linear,preferred state,no null position,non-volatile)
             0x95,
             0x01,  # report count (1)
             0x75,
             0x05,  # report size (5)
             0x91,
-            0x01,  # output (const,array,abs,no wrap,linear,preferred state,no null position,non-volatile)
+            0x01,  # output
+            # (const,array,abs,no wrap,linear,preferred state,no null position,non-volatile)
             0x95,
             0x06,  # report count (6)
             0x75,
@@ -237,7 +253,6 @@ Device.MOUSE = Device(
             0xC0,  # End Collection
         )
     ),
-    # Omitted for brevity.
     usage_page=0x1,
     usage=0x02,
     report_ids=[2],
@@ -275,7 +290,6 @@ Device.CONSUMER_CONTROL = Device(
             0xC0,  # End Collection
         )
     ),
-    # Omitted for brevity.
     usage_page=0x0C,
     usage=0x01,
     report_ids=[3],
@@ -283,8 +297,165 @@ Device.CONSUMER_CONTROL = Device(
     out_report_lengths=[0],
 )
 
+Device.BOOT_KEYBOARD = Device(
+    descriptor=bytes(
+        (
+            0x05,
+            0x01,  # usage page (generic desktop ctrls)
+            0x09,
+            0x06,  # usage (keyboard)
+            0xA1,
+            0x01,  # collection (application)
+            0x05,
+            0x07,  # usage page (kbrd/keypad)
+            0x19,
+            0xE0,  # usage minimum (0xe0)
+            0x29,
+            0xE7,  # usage maximum (0xe7)
+            0x15,
+            0x00,  # logical minimum (0)
+            0x25,
+            0x01,  # logical maximum (1)
+            0x75,
+            0x01,  # report size (1)
+            0x95,
+            0x08,  # report count (8)
+            0x81,
+            0x02,  # input (data,var,abs,no wrap,linear,preferred state,no null position)
+            0x95,
+            0x01,  # report count (1)
+            0x75,
+            0x08,  # report size (8)
+            0x81,
+            0x01,  # input (const,array,abs,no wrap,linear,preferred state,no null position)
+            0x95,
+            0x03,  # report count (3)
+            0x75,
+            0x01,  # report size (1)
+            0x05,
+            0x08,  # usage page (leds)
+            0x19,
+            0x01,  # usage minimum (num lock)
+            0x29,
+            0x05,  # usage maximum (kana)
+            0x91,
+            0x02,  # output (data,var,abs,no wrap,linear,preferred state,no null position,non-volatile)
+            0x95,
+            0x01,  # report count (1)
+            0x75,
+            0x05,  # report size (5)
+            0x91,
+            0x01,  # output (const,array,abs,no wrap,linear,preferred state,no null position,non-volatile)
+            0x95,
+            0x06,  # report count (6)
+            0x75,
+            0x08,  # report size (8)
+            0x15,
+            0x00,  # logical minimum (0)
+            0x26,
+            0xFF,
+            0x00,  # logical maximum (255)
+            0x05,
+            0x07,  # usage page (kbrd/keypad)
+            0x19,
+            0x00,  # usage minimum (0x00)
+            0x2A,
+            0xFF,
+            0x00,  # usage maximum (0xff)
+            0x81,
+            0x00,  # input (data,array,abs,no wrap,linear,preferred state,no null position)
+            0xC0,  # end collection
+        )
+    ),
+    usage_page=0x1,
+    usage=0x6,
+    report_ids=[0x0],
+    in_report_lengths=[8],
+    out_report_lengths=[1],
+)
+Device.BOOT_MOUSE = Device(
+    descriptor=bytes(
+        (
+            0x05,
+            0x01,  # Usage Page (Generic Desktop Ctrls)
+            0x09,
+            0x02,  # Usage (Mouse)
+            0xA1,
+            0x01,  # Collection (Application)
+            0x09,
+            0x01,  # Usage (Pointer)
+            0xA1,
+            0x00,  # Collection (Physical)
+            0x05,
+            0x09,  # Usage Page (Button)
+            0x19,
+            0x01,  # Usage Minimum (0x01)
+            0x29,
+            0x05,  # Usage Maximum (0x05)
+            0x15,
+            0x00,  # Logical Minimum (0)
+            0x25,
+            0x01,  # Logical Maximum (1)
+            0x95,
+            0x05,  # Report Count (5)
+            0x75,
+            0x01,  # Report Size (1)
+            0x81,
+            0x02,  # Input (Data,Var,Abs,No Wrap,Linear,Preferred State,No Null Position)
+            0x95,
+            0x01,  # Report Count (1)
+            0x75,
+            0x03,  # Report Size (3)
+            0x81,
+            0x01,  # Input (Const,Array,Abs,No Wrap,Linear,Preferred State,No Null Position)
+            0x05,
+            0x01,  # Usage Page (Generic Desktop Ctrls)
+            0x09,
+            0x30,  # Usage (X)
+            0x09,
+            0x31,  # Usage (Y)
+            0x15,
+            0x81,  # Logical Minimum (-127)
+            0x25,
+            0x7F,  # Logical Maximum (127)
+            0x75,
+            0x08,  # Report Size (8)
+            0x95,
+            0x02,  # Report Count (2)
+            0x81,
+            0x06,  # Input (Data,Var,Rel,No Wrap,Linear,Preferred State,No Null Position)
+            0x09,
+            0x38,  # Usage (Wheel)
+            0x15,
+            0x81,  # Logical Minimum (-127)
+            0x25,
+            0x7F,  # Logical Maximum (127)
+            0x75,
+            0x08,  # Report Size (8)
+            0x95,
+            0x01,  # Report Count (1)
+            0x81,
+            0x06,  # Input (Data,Var,Rel,No Wrap,Linear,Preferred State,No Null Position)
+            0xC0,  # End Collection
+            0xC0,  # End Collection
+        )
+    ),
+    usage_page=0x1,
+    usage=0x02,
+    report_ids=[1],
+    in_report_lengths=[4],
+    out_report_lengths=[0],
+)
+
 
 def disable() -> None:
+    """Do not present any USB HID devices to the host computer.
+    Can be called in ``boot.py``, before USB is connected.
+    The HID composite device is normally enabled by default,
+    but on some boards with limited endpoints, including STM32F4,
+    it is disabled by default. You must turn off another USB device such
+    as `usb_cdc` or `storage` to free up endpoints for use by `usb_hid`.
+    """
     try:
         Path("%s/UDC" % gadget_root).write_text("")
     except FileNotFoundError:
@@ -314,26 +485,63 @@ def disable() -> None:
 atexit.register(disable)
 
 
-def enable(devices: Sequence[Device], boot_device: int = 0) -> None:
+def enable(requested_devices: Sequence[Device], boot_device: int = 0) -> None:
+    """Specify which USB HID devices that will be available.
+    Can be called in ``boot.py``, before USB is connected.
+
+    :param Sequence devices: `Device` objects.
+      If `devices` is empty, HID is disabled. The order of the ``Devices``
+      may matter to the host. For instance, for MacOS, put the mouse device
+      before any Gamepad or Digitizer HID device or else it will not work.
+    :param int boot_device: If non-zero, inform the host that support for a
+      a boot HID device is available.
+      If ``boot_device=1``, a boot keyboard is available.
+      If ``boot_device=2``, a boot mouse is available. No other values are allowed.
+      See below.
+
+    If you enable too many devices at once, you will run out of USB endpoints.
+    The number of available endpoints varies by microcontroller.
+    CircuitPython will go into safe mode after running ``boot.py`` to inform you if
+    not enough endpoints are available.
+
+    **Boot Devices**
+
+    Boot devices implement a fixed, predefined report descriptor, defined in
+    https://www.usb.org/sites/default/files/hid1_12.pdf, Appendix B. A USB host
+    can request to use the boot device if the USB device says it is available.
+    Usually only a BIOS or other kind of limited-functionality
+    host needs boot keyboard support.
+
+    For example, to make a boot keyboard available, you can use this code::
+
+      usb_hid.enable((Device.KEYBOARD), boot_device=1)  # 1 for a keyboard
+
+    If the host requests the boot keyboard, the report descriptor provided by `Device.KEYBOARD`
+    will be ignored, and the predefined report descriptor will be used.
+    But if the host does not request the boot keyboard,
+    the descriptor provided by `Device.KEYBOARD` will be used.
+
+    The HID boot device must usually be the first or only device presented by CircuitPython.
+    The HID device will be USB interface number 0.
+    To make sure it is the first device, disable other USB devices, including CDC and MSC (CIRCUITPY).
+    If you specify a non-zero ``boot_device``, and it is not the first device, CircuitPython
+    will enter safe mode to report this error.
     """
-    Specify which USB HID devices that will be available. Can be called in boot.py, before USB is connected.
-    :param devices:
-    :param boot_device:
-    :return:
-    """
-    global _boot_device, _active_devices
+    global _boot_device, devices
     _boot_device = boot_device
 
     """ Enable usb_hid
     shim for https://docs.circuitpython.org/en/latest/shared-bindings/usb_hid/index.html#usb_hid.enable
 
     """
-    if len(devices) == 0:
+    if len(requested_devices) == 0:
         disable()
         return
 
-    if boot_device > 0:
-        raise NotImplementedError("not supported yet")
+    if boot_device == 1:
+        requested_devices = [Device.BOOT_KEYBOARD]
+    if boot_device == 2:
+        requested_devices = [Device.BOOT_MOUSE]
 
     """
     1. Creating the gadgets
@@ -416,9 +624,8 @@ def enable(devices: Sequence[Device], boot_device: int = 0) -> None:
         $ echo 120 > configs/c.1/MaxPower
         """
 
-    for i, device in enumerate(devices):
-
-        config_root = "%s/configs/device.%s" % (gadget_root, 1)
+    for i, device in enumerate(requested_devices):
+        config_root = "%s/configs/device.%s" % (gadget_root, i + 1)
         Path("%s/" % config_root).mkdir(parents=True, exist_ok=True)
         Path("%s/strings/0x409" % config_root).mkdir(parents=True, exist_ok=True)
         Path("%s/strings/0x409/configuration" % config_root).write_text(
@@ -426,7 +633,7 @@ def enable(devices: Sequence[Device], boot_device: int = 0) -> None:
         )
         Path("%s/MaxPower" % config_root).write_text("150")
         Path("%s/bmAttributes" % config_root).write_text("%s" % 0x080)
-        _active_devices.append(device)
+        devices.append(device)
         """
         3. Creating the functions
         -------------------------
