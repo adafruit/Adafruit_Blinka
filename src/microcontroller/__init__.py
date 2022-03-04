@@ -12,41 +12,14 @@ import sys
 import time
 
 from adafruit_platformdetect.constants import chips as ap_chip
-from adafruit_blinka import Enum
 from adafruit_blinka.agnostic import board_id, chip_id
-import microcontroller.pin
+from microcontroller import pin  # pylint: disable=unused-import
+from microcontroller.pin import Pin  # pylint: disable=unused-import
 
 
 def delay_us(delay):
     """Sleep for delay usecs."""
     time.sleep(delay / 1e6)
-
-
-class Pin(Enum):
-    """
-    Identifies an IO pin on the microcontroller.
-
-    They are fixed by the hardware so they cannot be constructed on demand. Instead, use board or
-    microcontroller.pin to reference the desired pin.
-    """
-
-    def __init__(self, pin_id):
-        """Identifier for pin, referencing platform-specific pin id"""
-        self.id = pin_id
-
-    def __repr__(self):
-        # pylint: disable=import-outside-toplevel, cyclic-import
-        import board
-
-        for key in dir(board):
-            if getattr(board, key) is self:
-                return "board.{}".format(key)
-        # pylint: enable=import-outside-toplevel, cyclic-import
-
-        for key in dir(microcontroller.pin):
-            if getattr(microcontroller.pin, key) is self:
-                return "microcontroller.pin.{}".format(key)
-        return repr(self)
 
 
 # We intentionally are patching into this namespace so skip the wildcard check.

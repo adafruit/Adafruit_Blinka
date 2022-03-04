@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 """ESP8266 pin names"""
 
-from microcontroller import Pin
+from ..generic_micropython import Pin
 
 GPIO0 = Pin(0)
 GPIO1 = Pin(1)
