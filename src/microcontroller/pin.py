@@ -98,6 +98,7 @@ elif chip_id == ap_chip.MT8167:
 elif chip_id == ap_chip.RP2040_U2IF:
     from adafruit_blinka.microcontroller.rp2040_u2if.pin import *
 elif "sphinx" in sys.modules:
-    pass
+    # pylint: disable=unused-import
+    from adafruit_blinka.microcontroller.generic_micropython import Pin
 else:
     raise NotImplementedError("Microcontroller not supported: ", chip_id)
