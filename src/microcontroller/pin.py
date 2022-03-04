@@ -1,5 +1,9 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Pins named after their chip name."""
 
+import sys
 from adafruit_platformdetect.constants import chips as ap_chip
 from adafruit_blinka.agnostic import board_id, chip_id
 
@@ -93,5 +97,8 @@ elif chip_id == ap_chip.MT8167:
     from adafruit_blinka.microcontroller.mt8167.pin import *
 elif chip_id == ap_chip.RP2040_U2IF:
     from adafruit_blinka.microcontroller.rp2040_u2if.pin import *
+elif "sphinx" in sys.modules:
+    # pylint: disable=unused-import
+    from adafruit_blinka.microcontroller.generic_micropython import Pin
 else:
     raise NotImplementedError("Microcontroller not supported: ", chip_id)

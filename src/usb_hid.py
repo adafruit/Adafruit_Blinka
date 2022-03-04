@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """
 `usb_hid` - support for usb hid devices via usb_gadget driver
 ===========================================================
@@ -15,7 +18,7 @@ import atexit
 import sys
 
 for module in ["dwc2", "libcomposite"]:
-    if Path("/proc/modules").read_text().find(module) == -1:
+    if Path("/proc/modules").read_text(encoding="utf-8").find(module) == -1:
         raise Exception(
             "%s module not present in your kernel. did you insmod it?" % module
         )
@@ -57,7 +60,7 @@ class Device:
         """
         report_id = report_id or self.report_ids[0]
         device_path = self.get_device_path(report_id)
-        with open(device_path, "rb+") as fd:
+        with open(device_path, "rb+", encoding="utf-8") as fd:
             if report_id > 0:
                 report = bytearray(report_id.to_bytes(1, "big")) + report
             fd.write(report)
@@ -79,7 +82,7 @@ class Device:
         Return `None` if nothing received.
         """
         device_path = self.get_device_path(report_id or self.report_ids[0])
-        with open(device_path, "rb+") as fd:
+        with open(device_path, "rb+", encoding="utf-8") as fd:
             os.set_blocking(fd.fileno(), False)
             report = fd.read(self.out_report_lengths[0])
             if report is not None:
@@ -95,7 +98,7 @@ class Device:
                 "%s/functions/hid.usb%s/dev"
                 % (this.gadget_root, report_id or self.report_ids[0])
             )
-            .read_text()
+            .read_text(encoding="utf-8")
             .strip()
             .split(":")[1]
         )
@@ -462,7 +465,7 @@ def disable() -> None:
     as `usb_cdc` or `storage` to free up endpoints for use by `usb_hid`.
     """
     try:
-        Path("%s/UDC" % this.gadget_root).write_text("")
+        Path("%s/UDC" % this.gadget_root).write_text("", encoding="utf-8")
     except FileNotFoundError:
         pass
     for symlink in Path(this.gadget_root).glob("configs/**/hid.usb*"):
@@ -582,18 +585,30 @@ def enable(requested_devices: Sequence[Device], boot_device: int = 0) -> None:
     # """
     Path("%s/functions" % this.gadget_root).mkdir(parents=True, exist_ok=True)
     Path("%s/configs" % this.gadget_root).mkdir(parents=True, exist_ok=True)
-    Path("%s/bcdDevice" % this.gadget_root).write_text("%s" % 1)  # Version 1.0.0
-    Path("%s/bcdUSB" % this.gadget_root).write_text("%s" % 0x0200)  # USB 2.0
+    Path("%s/bcdDevice" % this.gadget_root).write_text(
+        "%s" % 1, encoding="utf-8"
+    )  # Version 1.0.0
+    Path("%s/bcdUSB" % this.gadget_root).write_text(
+        "%s" % 0x0200, encoding="utf-8"
+    )  # USB 2.0
     Path("%s/bDeviceClass" % this.gadget_root).write_text(
-        "%s" % 0x00
+        "%s" % 0x00, encoding="utf-8"
     )  # multipurpose i guess?
-    Path("%s/bDeviceProtocol" % this.gadget_root).write_text("%s" % 0x00)
-    Path("%s/bDeviceSubClass" % this.gadget_root).write_text("%s" % 0x00)
-    Path("%s/bMaxPacketSize0" % this.gadget_root).write_text("%s" % 0x08)
+    Path("%s/bDeviceProtocol" % this.gadget_root).write_text(
+        "%s" % 0x00, encoding="utf-8"
+    )
+    Path("%s/bDeviceSubClass" % this.gadget_root).write_text(
+        "%s" % 0x00, encoding="utf-8"
+    )
+    Path("%s/bMaxPacketSize0" % this.gadget_root).write_text(
+        "%s" % 0x08, encoding="utf-8"
+    )
     Path("%s/idProduct" % this.gadget_root).write_text(
-        "%s" % 0x0104
+        "%s" % 0x0104, encoding="utf-8"
     )  # Multifunction Composite Gadget
-    Path("%s/idVendor" % this.gadget_root).write_text("%s" % 0x1D6B)  # Linux Foundation
+    Path("%s/idVendor" % this.gadget_root).write_text(
+        "%s" % 0x1D6B, encoding="utf-8"
+    )  # Linux Foundation
     # """
     # 2. Creating the configurations
     # ------------------------------
@@ -631,10 +646,10 @@ def enable(requested_devices: Sequence[Device], boot_device: int = 0) -> None:
         Path("%s/" % config_root).mkdir(parents=True, exist_ok=True)
         Path("%s/strings/0x409" % config_root).mkdir(parents=True, exist_ok=True)
         Path("%s/strings/0x409/configuration" % config_root).write_text(
-            "my configuration"
+            "my configuration", encoding="utf-8"
         )
-        Path("%s/MaxPower" % config_root).write_text("150")
-        Path("%s/bmAttributes" % config_root).write_text("%s" % 0x080)
+        Path("%s/MaxPower" % config_root).write_text("150", encoding="utf-8")
+        Path("%s/bmAttributes" % config_root).write_text("%s" % 0x080, encoding="utf-8")
         this.devices.append(device)
         # """
         # 3. Creating the functions
@@ -664,11 +679,13 @@ def enable(requested_devices: Sequence[Device], boot_device: int = 0) -> None:
                 Path("%s/" % function_root).mkdir(parents=True)
             except FileExistsError:
                 continue
-            Path("%s/protocol" % function_root).write_text("%s" % report_id)
-            Path("%s/report_length" % function_root).write_text(
-                "%s" % device.in_report_lengths[report_index]
+            Path("%s/protocol" % function_root).write_text(
+                "%s" % report_id, encoding="utf-8"
             )
-            Path("%s/subclass" % function_root).write_text("%s" % 1)
+            Path("%s/report_length" % function_root).write_text(
+                "%s" % device.in_report_lengths[report_index], encoding="utf-8"
+            )
+            Path("%s/subclass" % function_root).write_text("%s" % 1, encoding="utf-8")
             Path("%s/report_desc" % function_root).write_bytes(device.descriptor)
             # """
             # 4. Associating the functions with their configurations
@@ -700,4 +717,4 @@ def enable(requested_devices: Sequence[Device], boot_device: int = 0) -> None:
     #
     # $ echo s3c-hsotg > UDC  """
     udc = next(Path("/sys/class/udc/").glob("*"))
-    Path("%s/UDC" % this.gadget_root).write_text("%s" % udc.name)
+    Path("%s/UDC" % this.gadget_root).write_text("%s" % udc.name, encoding="utf-8")

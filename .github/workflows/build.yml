@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
+#
+# SPDX-License-Identifier: Unlicense
 name: Build CI
 
 on: [pull_request, push]
@@ -33,18 +36,14 @@ jobs:
       # (e.g. - apt-get: gettext, etc; pip: circuitpython-build-tools, requirements.txt; etc.)
       run: |
         source actions-ci/install.sh
-    - name: Pip install pylint, black, & Sphinx
+    - name: Pip install Sphinx, pre-commit
       run: |
-        pip install --force-reinstall pylint==2.7.1 black Sphinx sphinx-rtd-theme
+        pip install --force-reinstall Sphinx sphinx-rtd-theme pre-commit
     - name: Library version
       run: git describe --dirty --always --tags
-    - name: Check formatting
+    - name: Pre-commit hooks
       run: |
-        black --check --target-version=py37 .
-    - name: PyLint
-      run: |
-        pylint $( find src -name '*.py' )
-        ([[ ! -d "examples" ]] || pylint --disable=missing-docstring,invalid-name,bad-whitespace $( find . -path "./examples/*.py" ))
+        pre-commit run --all-files
     - name: Build docs
       working-directory: docs
       run: sphinx-build -E -W -b html . _build/html

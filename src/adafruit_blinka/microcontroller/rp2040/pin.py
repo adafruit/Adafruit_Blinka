@@ -1,6 +1,9 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """RP2040 pins"""
 
-from microcontroller import Pin
+from ..generic_micropython import Pin
 
 GP0 = Pin(0)
 GP1 = Pin(1)

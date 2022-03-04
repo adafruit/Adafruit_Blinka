@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """A Pin class for use with Rockchip RK3399."""
 
 from adafruit_blinka.microcontroller.generic_linux.sysfs_pin import Pin

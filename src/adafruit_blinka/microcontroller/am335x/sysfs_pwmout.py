@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """
 Much code from https://github.com/vsergeev/python-periphery/blob/master/periphery/pwm.py
 Copyright (c) 2015-2016 vsergeev / Ivan (Vanya) A. Sergeev
@@ -101,7 +104,7 @@ class PWMOut:
         if not os.path.isdir(pin_path):
             try:
                 with open(
-                    os.path.join(channel_path, self._export_path), "w"
+                    os.path.join(channel_path, self._export_path), "w", encoding="utf-8"
                 ) as f_export:
                     f_export.write("%d\n" % self._pwmpin)
             except IOError as e:
@@ -131,7 +134,9 @@ class PWMOut:
                 try:
                     # unexport_path = os.path.join(channel_path, self._unexport_path)
                     with open(
-                        os.path.join(channel_path, self._unexport_path), "w"
+                        os.path.join(channel_path, self._unexport_path),
+                        "w",
+                        encoding="utf-8",
                     ) as f_unexport:
                         f_unexport.write("%d\n" % self._pwmpin)
                 except IOError as e:
@@ -170,7 +175,7 @@ class PWMOut:
             attr,
         )
 
-        with open(path, "w") as f_attr:
+        with open(path, "w", encoding="utf-8") as f_attr:
             f_attr.write(value + "\n")
 
     def _read_pin_attr(self, attr):
@@ -184,7 +189,7 @@ class PWMOut:
             attr,
         )
 
-        with open(path, "r") as f_attr:
+        with open(path, "r", encoding="utf-8") as f_attr:
             return f_attr.read().strip()
 
     # Mutable properties

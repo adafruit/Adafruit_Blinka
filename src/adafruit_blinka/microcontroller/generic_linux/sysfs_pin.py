@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """
 Much code from https://github.com/vsergeev/python-periphery/blob/master/periphery/gpio.py
 Copyright (c) 2015-2019 vsergeev / Ivan (Vanya) A. Sergeev
@@ -132,7 +135,7 @@ class Pin:
         if not os.path.isdir(gpio_path):
             # Export the line
             try:
-                with open("/sys/class/gpio/export", "w") as f_export:
+                with open("/sys/class/gpio/export", "w", encoding="utf-8") as f_export:
                     f_export.write("{:d}\n".format(self.id))
             except IOError as e:
                 raise GPIOError(e.errno, "Exporting GPIO: " + e.strerror) from IOError
@@ -155,7 +158,9 @@ class Pin:
             # permission rule application after export
             for i in range(self.GPIO_OPEN_RETRIES):
                 try:
-                    with open(os.path.join(gpio_path, "direction"), "w") as f_direction:
+                    with open(
+                        os.path.join(gpio_path, "direction"), "w", encoding="utf-8"
+                    ) as f_direction:
                         f_direction.write(direction.lower() + "\n")
                     break
                 except IOError as e:
@@ -170,7 +175,9 @@ class Pin:
         else:
             # Write direction
             try:
-                with open(os.path.join(gpio_path, "direction"), "w") as f_direction:
+                with open(
+                    os.path.join(gpio_path, "direction"), "w", encoding="utf-8"
+                ) as f_direction:
                     f_direction.write(direction.lower() + "\n")
             except IOError as e:
                 raise GPIOError(
@@ -268,7 +275,7 @@ class Pin:
         gpio_path = "/sys/class/gpio/{:s}/label".format(self.chip_name)
 
         try:
-            with open(gpio_path, "r") as f_label:
+            with open(gpio_path, "r", encoding="utf-8") as f_label:
                 label = f_label.read()
         except (GPIOError, IOError) as e:
             if isinstance(e, IOError):
@@ -287,7 +294,9 @@ class Pin:
     def _get_direction(self):
         # Read direction
         try:
-            with open(os.path.join(self._path, "direction"), "r") as f_direction:
+            with open(
+                os.path.join(self._path, "direction"), "r", encoding="utf-8"
+            ) as f_direction:
                 direction = f_direction.read()
         except IOError as e:
             raise GPIOError(
@@ -304,7 +313,9 @@ class Pin:
 
         # Write direction
         try:
-            with open(os.path.join(self._path, "direction"), "w") as f_direction:
+            with open(
+                os.path.join(self._path, "direction"), "w", encoding="utf-8"
+            ) as f_direction:
                 f_direction.write(direction.lower() + "\n")
         except IOError as e:
             raise GPIOError(

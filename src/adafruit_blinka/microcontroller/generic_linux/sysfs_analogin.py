@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """
 `analogio` - Analog input control
 =================================================
@@ -79,7 +82,7 @@ class AnalogIn(ContextManaged):
             self._channel_path.format(self._channel),
         )
 
-        with open(path, "r") as analog_in:
+        with open(path, "r", encoding="utf-8") as analog_in:
             return int(analog_in.read().strip())
 
     # pylint: disable=no-self-use

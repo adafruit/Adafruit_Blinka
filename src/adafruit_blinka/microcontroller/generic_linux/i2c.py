@@ -1,5 +1,8 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Generic Linux I2C class using PureIO's smbus class"""
-import Adafruit_PureIO.smbus as smbus
+from Adafruit_PureIO import smbus
 
 
 class I2C:

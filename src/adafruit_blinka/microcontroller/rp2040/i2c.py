@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """I2C Class for RP2040"""
 from machine import I2C as _I2C
 from machine import Pin

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Pin definitions for the Octavo OSD32MP1 BRK board."""
 
 # See: https://octavosystems.com/octavosystems.com/wp-content/uploads/2020/05/Default-Pin-Mapping.pdf  # pylint: disable=line-too-long

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Pin definitions for the Raspberry Pi Pico running u2if firmware"""
 from adafruit_blinka.microcontroller.rp2040_u2if import pin
 

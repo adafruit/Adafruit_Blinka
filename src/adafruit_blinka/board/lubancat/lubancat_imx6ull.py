@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Pin definitions for the LubanCat IMX6ULL."""
 
 from adafruit_blinka.microcontroller.nxp_imx6ull import pin

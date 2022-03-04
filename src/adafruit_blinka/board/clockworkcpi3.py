@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Pin definitions for the Clockwork Pi (CPI3) board."""
 
 from adafruit_blinka.microcontroller.allwinner.a33 import pin

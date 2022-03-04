@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """
 Much code from https://github.com/vsergeev/python-periphery/blob/master/periphery/pwm.py
 Copyright (c) 2015-2016 vsergeev / Ivan (Vanya) A. Sergeev
@@ -91,7 +94,9 @@ class PWMOut:
         if not os.path.isdir(self._channel_path):
             # Exporting the PWM.
             try:
-                with open(os.path.join(self._chip_path, "export"), "w") as f_export:
+                with open(
+                    os.path.join(self._chip_path, "export"), "w", encoding="utf-8"
+                ) as f_export:
                     f_export.write("{:d}\n".format(self._channel))
             except IOError as e:
                 raise PWMError(
@@ -122,6 +127,7 @@ class PWMOut:
                     with open(
                         os.path.join(self._channel_path, "period"),
                         "w",
+                        encoding="utf-8",
                     ):
                         break
                 except IOError as e:
@@ -157,11 +163,15 @@ class PWMOut:
         self._channel = None
 
     def _write_channel_attr(self, attr, value):
-        with open(os.path.join(self._channel_path, attr), "w") as f_attr:
+        with open(
+            os.path.join(self._channel_path, attr), "w", encoding="utf-8"
+        ) as f_attr:
             f_attr.write(value + "\n")
 
     def _read_channel_attr(self, attr):
-        with open(os.path.join(self._channel_path, attr), "r") as f_attr:
+        with open(
+            os.path.join(self._channel_path, attr), "r", encoding="utf-8"
+        ) as f_attr:
             return f_attr.read().strip()
 
     # Methods

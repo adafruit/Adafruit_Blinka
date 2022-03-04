@@ -1,6 +1,9 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """STM32F405 pins"""
 
-from microcontroller import Pin
+from ...generic_micropython import Pin
 
 A0 = Pin("A0")
 A1 = Pin("A1")

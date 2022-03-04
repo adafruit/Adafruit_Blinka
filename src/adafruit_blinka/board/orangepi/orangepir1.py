@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Pin definitions for the Orange Pi R1."""
 
 from adafruit_blinka.microcontroller.allwinner.h3 import pin

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Based on https://raw.githubusercontent.com/micropython/micropython-lib/cfa1b9cce0c93a3115bbff3886c9bbcddd9e8047/unittest/unittest.py """
 import sys
 

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Custom PulseIn Class to read PWM signals"""
 import time
 import subprocess
@@ -51,7 +54,7 @@ class PulseIn:
             ) from sysv_ipc.ExistentialError
 
         # Check if OS is 64-bit
-        if struct.calcsize("P") * 8 == 64:
+        if struct.calcsize("P") * 8 == 64:  # pylint: disable=no-member
             libgpiod_filename = "libgpiod_pulsein64"
         else:
             libgpiod_filename = "libgpiod_pulsein"
@@ -71,7 +74,7 @@ class PulseIn:
         if DEBUG:
             print(cmd)
 
-        self._process = subprocess.Popen(cmd)
+        self._process = subprocess.Popen(cmd)  # pylint: disable=consider-using-with
         procs.append(self._process)
 
         # wait for it to start up

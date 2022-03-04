@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """STM32MP157 pins"""
 from adafruit_blinka.microcontroller.generic_linux.periphery_pin import Pin
 
