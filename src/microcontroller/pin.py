@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Pins named after their chip name."""
 
 from adafruit_platformdetect.constants import chips as ap_chip

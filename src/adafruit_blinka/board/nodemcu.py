@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """NodeMCU pin names"""
 
 from adafruit_blinka.microcontroller.esp8266 import pin

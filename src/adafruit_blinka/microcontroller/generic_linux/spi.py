@@ -1,5 +1,8 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Generic Linux SPI class using PureIO's SPI class"""
-import Adafruit_PureIO.spi as spi
+from Adafruit_PureIO import spi
 from adafruit_blinka.agnostic import detector
 
 

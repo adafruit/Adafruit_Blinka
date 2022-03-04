@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """SPI Class for FTDI MPSSE"""
 from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.pin import Pin
 from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.url import (

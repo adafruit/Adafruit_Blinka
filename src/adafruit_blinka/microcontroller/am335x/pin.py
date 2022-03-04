@@ -1,5 +1,8 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """AM335x pin names"""
-import Adafruit_BBIO.GPIO as GPIO
+from Adafruit_BBIO import GPIO
 
 
 class Pin:

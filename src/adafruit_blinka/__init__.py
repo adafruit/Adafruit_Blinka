@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """
 `adafruit_blinka` - Runtime utility objects for re-implementation of CircuitPython API
 ======================================================================================

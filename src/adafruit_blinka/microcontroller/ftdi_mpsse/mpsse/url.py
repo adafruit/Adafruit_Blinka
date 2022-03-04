@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """
 Support for getting the URL from the BLINKA_FT232H
 and BLINKA_FT2232H_{} environment variables.

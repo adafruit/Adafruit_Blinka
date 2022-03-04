@@ -1,5 +1,7 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Generic Connection class for Binho Nova to keep track of connection"""
-from .pin import *
 
 
 class Connection:

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Helper class for use with RP2040 running u2if firmware"""
 # https://github.com/execuc/u2if
 

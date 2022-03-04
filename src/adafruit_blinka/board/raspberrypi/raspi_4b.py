@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Pin definitions for Raspberry Pi 4 models using the BCM2711."""
 
 from adafruit_blinka.microcontroller.bcm2711 import pin

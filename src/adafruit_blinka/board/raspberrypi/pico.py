@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Raspberry Pi Pico pin names"""
 
 from adafruit_blinka.microcontroller.rp2040 import pin

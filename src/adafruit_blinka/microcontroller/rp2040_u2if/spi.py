@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """SPI Classes for RP2040s with u2if firmware"""
 from .rp2040_u2if import rp2040_u2if
 

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """UART Class for NXP LPC4330"""
 from greatfet import GreatFET
 from greatfet.interfaces.uart import UART as _UART

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 import unittest
 from testing import yes_no, await_true
 from testing.board import led_pin, default_pin, led_hardwired, led_inverted

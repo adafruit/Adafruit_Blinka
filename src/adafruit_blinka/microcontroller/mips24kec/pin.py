@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """MIPS 24kec pin names"""
 from adafruit_blinka.microcontroller.generic_linux.periphery_pin import Pin
 

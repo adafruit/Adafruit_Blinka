@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """
 G12A, G12B, and SM1 Common Definitions
 Ref:
@@ -110,7 +113,7 @@ uartPorts = ((1, UART1_TX, UART1_RX),)
 def get_dts_alias(device: str) -> str:
     """Get the Device Tree Alias"""
     uevent_path = "/sys/bus/platform/devices/" + device + "/uevent"
-    with open(uevent_path, "r") as fd:
+    with open(uevent_path, "r", encoding="utf-8") as fd:
         pattern = r"^OF_ALIAS_0=(.*)$"
         uevent = fd.read().split("\n")
         for line in uevent:

@@ -1,6 +1,9 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 import sys
 import time
-import adafruit_blinka.agnostic as agnostic
+from adafruit_blinka import agnostic
 import board
 import digitalio
 

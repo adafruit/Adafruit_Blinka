@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """UART Class for Binho Nova"""
 
 from adafruit_blinka.microcontroller.nova import Connection

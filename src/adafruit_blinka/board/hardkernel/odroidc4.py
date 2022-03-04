@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Pin definitions for the Odroid C4."""
 
 from adafruit_blinka.microcontroller.amlogic.s905x3 import pin

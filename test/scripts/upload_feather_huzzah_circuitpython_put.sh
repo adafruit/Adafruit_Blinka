@@ -1,4 +1,7 @@
 #!/bin/sh
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 PORT=/dev/ttyUSB0
 
 export MPYCROSS=`realpath ../../../circuitpython_2.2.3/mpy-cross/mpy-cross`

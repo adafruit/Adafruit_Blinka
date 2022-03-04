@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """MPSSE pin names"""
 
 from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.url import (

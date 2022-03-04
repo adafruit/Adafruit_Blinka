@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """
 `analogio` - Analog output control
 =================================================
@@ -85,7 +88,7 @@ class AnalogOut(ContextManaged):
             self._channel_path.format(self._channel),
         )
 
-        with open(path, "w") as analog_out:
+        with open(path, "w", encoding="utf-8") as analog_out:
             return analog_out.write(value + "\n")
 
     def deinit(self):

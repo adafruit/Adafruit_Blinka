@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Allows useful indirection to test Pin naming logic by switching platform in testing
     or provide bootstrapping logic for board identification where auto-detection is not
     feasible (e.g. multiple ESP8266 boards architecturally identical). Once runtime

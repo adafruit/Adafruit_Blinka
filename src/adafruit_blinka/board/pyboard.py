@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """PyBoard pin names"""
 
 from adafruit_blinka.microcontroller.stm32.stm32f405 import pin

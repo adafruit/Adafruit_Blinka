@@ -1,5 +1,8 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Custom PWMOut Wrapper for Rpi.GPIO PWM Class"""
-import RPi.GPIO as GPIO
+from RPi import GPIO
 
 GPIO.setmode(GPIO.BCM)  # Use BCM pins D4 = GPIO #4
 GPIO.setwarnings(False)  # shh!

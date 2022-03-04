@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Pin definitions for the NanoPi Duo2."""
 # Enable I2C0, UART1, and SPI by adding the following lines to /boot/armbianEnv.txt
 #    overlays=usbhost2 usbhost3 spi-spidev uart1 i2c0
