@@ -258,7 +258,7 @@ Device.MOUSE = Device(
     ),
     usage_page=0x1,
     usage=0x02,
-    report_ids=[2],
+    report_ids=[0x02],
     in_report_lengths=[4],
     out_report_lengths=[0],
 )
@@ -447,7 +447,7 @@ Device.BOOT_MOUSE = Device(
     ),
     usage_page=0x1,
     usage=0x02,
-    report_ids=[1],
+    report_ids=[0],
     in_report_lengths=[4],
     out_report_lengths=[0],
 )
@@ -626,8 +626,8 @@ def enable(requested_devices: Sequence[Device], boot_device: int = 0) -> None:
     #     $ echo 120 > configs/c.1/MaxPower
     #     """
 
-    for i, device in enumerate(requested_devices):
-        config_root = "%s/configs/device.%s" % (this.gadget_root, i + 1)
+    for device in requested_devices:
+        config_root = "%s/configs/device.1" % this.gadget_root
         Path("%s/" % config_root).mkdir(parents=True, exist_ok=True)
         Path("%s/strings/0x409" % config_root).mkdir(parents=True, exist_ok=True)
         Path("%s/strings/0x409/configuration" % config_root).write_text(
@@ -685,7 +685,12 @@ def enable(requested_devices: Sequence[Device], boot_device: int = 0) -> None:
             # e.g.::
             #
             #     $ ln -s functions/ncm.usb0 configs/c.1  """
-            Path("%s/hid.usb%s" % (config_root, report_id)).symlink_to(function_root)
+            try:
+                Path("%s/hid.usb%s" % (config_root, report_id)).symlink_to(
+                    function_root
+                )
+            except:
+                pass
     # """ 5. Enabling the gadget
     # ----------------------
     # Such a gadget must be finally enabled so that the USB host can enumerate it.
