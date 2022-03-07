@@ -689,7 +689,7 @@ def enable(requested_devices: Sequence[Device], boot_device: int = 0) -> None:
                 Path("%s/hid.usb%s" % (config_root, report_id)).symlink_to(
                     function_root
                 )
-            except:
+            except FileNotFoundError:
                 pass
     # """ 5. Enabling the gadget
     # ----------------------
