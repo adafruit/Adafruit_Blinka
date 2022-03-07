@@ -32,6 +32,7 @@ for devices or hosts running CPython or MicroPython. Working code exists to emul
 * **pulseio** - contains classes that provide access to basic pulse IO (PWM)
 * **pwmio** - contains classes that provide access to basic pulse IO (PWM)
 * **rainbowio** - provides the colorwheel() function
+* **usb_hid** - act as a hid-device using usb_gadget kernel driver
 
 For details, see the `Blinka API reference
 <https://circuitpython.readthedocs.io/projects/blinka/en/latest/index.html>`_.
