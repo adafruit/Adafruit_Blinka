@@ -55,14 +55,7 @@ class MCP2221:
         # make sure the device gets closed before exit
         atexit.register(self.close)
         if MCP2221_RESET_DELAY >= 0:
-            try:
-                self._reset()
-            except OSError:
-                # this might fail on Linux with the hid_mcp2221 native
-                # driver and a short reset delay -- if it fails,
-                # close the device before reraising
-                self.close()
-                raise
+            self._reset()
         self._gp_config = [0x07] * 4  # "don't care" initial value
         for pin in range(4):
             self.gp_set_mode(pin, self.GP_GPIO)  # set to GPIO mode
