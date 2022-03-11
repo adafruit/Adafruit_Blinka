@@ -3,6 +3,7 @@
 import os
 import time
 import atexit
+
 import hid
 
 # Here if you need it
@@ -62,7 +63,7 @@ class MCP2221:
             self.gpio_set_direction(pin, 1)  # set to INPUT
 
     def close(self):
-        """Close the device. Does nothing if the device is not open."""
+        """Close the hid device. Does nothing if the device is not open."""
         self._hid.close()
 
     def __del__(self):
