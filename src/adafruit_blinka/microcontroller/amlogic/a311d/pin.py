@@ -166,6 +166,7 @@ def get_dts_alias(device: str) -> str:
 
         return None
 
+
 # ordered as i2cId, sclId, sdaId
 i2cPorts = []
 

@@ -62,7 +62,7 @@ for it in pin.i2cPorts:
 SCL = pin.i2cPorts[1][1]
 SDA = pin.i2cPorts[1][2]
 
-SCLK=pin.SPI0_SCLK
+SCLK = pin.SPI0_SCLK
 MCLK0 = pin.SPI0_MCLK0
 MISO = pin.SPI0_SDO
 MOSI = pin.SPI0_SDI
