@@ -11,7 +11,7 @@ See `CircuitPython:board` in CircuitPython for more details.
 """
 
 
-__version__ = "0.0.0-auto.0"
+__version__ = "7.1.1"
 __repo__ = "https://github.com/adafruit/Adafruit_Blinka.git"
 __blinka__ = True
 
@@ -162,6 +162,9 @@ elif board_id == ap_board.ODROID_C4:
 
 elif board_id == ap_board.ODROID_N2:
     from adafruit_blinka.board.hardkernel.odroidn2 import *
+
+elif board_id == ap_board.KHADAS_VIM3:
+    from adafruit_blinka.board.khadas.khadasvim3 import *
 
 elif board_id == ap_board.ODROID_XU4:
     from adafruit_blinka.board.hardkernel.odroidxu4 import *
