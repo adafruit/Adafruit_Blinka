@@ -18,17 +18,14 @@ from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 chip0 = gpiod.chip("0")
 chip1 = gpiod.chip("1")
 
-if chip0.num_lines() < 20:
+if chip0.num_lines < 20:
     aobus = 0
     periphs = 1
-    periphs_offset = chip1.num_lines() - 85
+    periphs_offset = chip1.num_lines - 85
 else:
     aobus = 1
     periphs = 0
-    periphs_offset = chip0.num_lines() - 85
-
-chip0.close()
-chip1.close()
+    periphs_offset = chip0.num_lines - 85
 
 GPIOAO_0 = GPIO496 = Pin((aobus, 0))
 GPIOAO_1 = GPIO497 = Pin((aobus, 1))
@@ -170,16 +167,10 @@ def get_dts_alias(device: str) -> str:
 # ordered as i2cId, sclId, sdaId
 i2cPorts = []
 
-alias = get_dts_alias("ffd1d000.i2c")
+alias = get_dts_alias("ff805000.i2c")
 if alias is not None:
     globals()[alias + "_SCL"] = GPIOX_18
     globals()[alias + "_SDA"] = GPIOX_17
     i2cPorts.append((int(alias[3]), GPIOX_18, GPIOX_17))
-
-alias = get_dts_alias("ffd1c000.i2c")
-if alias is not None:
-    globals()[alias + "_SCL"] = GPIOAO_2
-    globals()[alias + "_SDA"] = GPIOAO_3
-    i2cPorts.append((int(alias[3]), GPIOAO_2, GPIOAO_3))
 
 i2cPorts = tuple(i2cPorts)

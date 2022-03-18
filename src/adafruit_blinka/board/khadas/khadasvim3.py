@@ -54,13 +54,8 @@ GPIOE_0 = pin.GPIO508
 GPIOE_1 = pin.GPIO509
 GPIOE_2 = pin.GPIO510
 
-for it in pin.i2cPorts:
-    globals()["SCL" + str(it[0])] = it[1]
-    globals()["SDA" + str(it[0])] = it[2]
-
-# Set second i2c bus as default for backward compatibility.
-SCL = pin.i2cPorts[1][1]
-SDA = pin.i2cPorts[1][2]
+SCL = pin.GPIOX_18
+SDA = pin.GPIOX_17
 
 SCLK = pin.SPI0_SCLK
 MCLK0 = pin.SPI0_MCLK0
