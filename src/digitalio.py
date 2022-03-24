@@ -38,6 +38,8 @@ elif detector.chip.S905X3:
     from adafruit_blinka.microcontroller.amlogic.s905x3.pin import Pin
 elif detector.chip.S922X:
     from adafruit_blinka.microcontroller.amlogic.s922x.pin import Pin
+elif detector.chip.A311D:
+    from adafruit_blinka.microcontroller.amlogic.a311d.pin import Pin
 elif detector.chip.EXYNOS5422:
     from adafruit_blinka.microcontroller.samsung.exynos5422.pin import Pin
 elif detector.chip.APQ8016:
