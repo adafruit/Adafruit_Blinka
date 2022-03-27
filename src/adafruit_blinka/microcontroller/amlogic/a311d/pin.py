@@ -26,7 +26,7 @@ else:
     aobus = 1
     periphs = 0
     periphs_offset = chip0.num_lines() - 85
-    
+
 chip0.close()
 chip1.close()
 
