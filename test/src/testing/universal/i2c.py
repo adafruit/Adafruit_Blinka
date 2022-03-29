@@ -69,7 +69,7 @@ class TestMMA8451Interactive(TestCase):
         sensor = adafruit_mma8451.MMA8451(i2c)
 
         x, y, z = sensor.acceleration
-        absolute = math.sqrt(x ** 2 + y ** 2 + z ** 2)
+        absolute = math.sqrt(x**2 + y**2 + z**2)
         self.assertTrue(9 <= absolute <= 11, "Not earth gravity")
 
         orientation = sensor.orientation

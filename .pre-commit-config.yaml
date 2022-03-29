@@ -4,9 +4,10 @@
 
 repos:
 -   repo: https://github.com/python/black
-    rev: 20.8b1
+    rev: 22.3.0
     hooks:
     - id: black
+      additional_dependencies: ['click==8.0.4']
 -   repo: https://github.com/fsfe/reuse-tool
     rev: v0.12.1
     hooks:

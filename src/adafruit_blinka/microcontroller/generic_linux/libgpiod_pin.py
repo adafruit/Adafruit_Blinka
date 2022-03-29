@@ -10,7 +10,7 @@ except ImportError:
         "https://github.com/adafruit/Raspberry-Pi-Installer-Scripts/blob/master/libgpiod.sh"
     ) from ImportError
 
-
+# pylint: disable=too-many-branches,too-many-statements
 class Pin:
     """Pins dont exist in CPython so...lets make our own!"""
 
@@ -31,10 +31,16 @@ class Pin:
         self.id = pin_id
         if isinstance(pin_id, tuple):
             self._num = int(pin_id[1])
-            self._chip = gpiod.Chip(str(pin_id[0]), gpiod.Chip.OPEN_BY_NUMBER)
+            if hasattr(gpiod, "Chip"):
+                self._chip = gpiod.Chip(str(pin_id[0]), gpiod.Chip.OPEN_BY_NUMBER)
+            else:
+                self._chip = gpiod.chip(str(pin_id[0]), gpiod.chip.OPEN_BY_NUMBER)
         else:
             self._num = int(pin_id)
-            self._chip = gpiod.Chip("gpiochip0", gpiod.Chip.OPEN_BY_NAME)
+            if hasattr(gpiod, "Chip"):
+                self._chip = gpiod.Chip("gpiochip0", gpiod.Chip.OPEN_BY_NAME)
+            else:
+                self._chip = gpiod.chip("gpiochip0", gpiod.chip.OPEN_BY_NAME)
         self._line = None
 
     def __repr__(self):
@@ -52,32 +58,76 @@ class Pin:
         if mode is not None:
             if mode == self.IN:
                 flags = 0
+                self._line.release()
                 if pull is not None:
                     if pull == self.PULL_UP:
-                        raise NotImplementedError(
-                            "Internal pullups not supported in libgpiod, "
-                            "use physical resistor instead!"
-                        )
-                    if pull == self.PULL_DOWN:
-                        raise NotImplementedError(
-                            "Internal pulldowns not supported in libgpiod, "
-                            "use physical resistor instead!"
-                        )
-                    raise RuntimeError("Invalid pull for pin: %s" % self.id)
+                        if hasattr(gpiod, "line") and hasattr(
+                            gpiod.line, "BIAS_PULL_UP"
+                        ):
+                            config = gpiod.line_request()
+                            config.consumer = self._CONSUMER
+                            config.request_type = gpiod.line.BIAS_PULL_UP
+                            self._line.request(config)
+                        else:
+                            self._line.request(
+                                consumer=self._CONSUMER,
+                                type=gpiod.LINE_REQ_DIR_IN,
+                                flags=flags,
+                            )
+                            raise NotImplementedError(
+                                "Internal pullups not supported in this version of libgpiod, "
+                                "use physical resistor instead!"
+                            )
+                    elif pull == self.PULL_DOWN:
+                        if hasattr(gpiod, "line") and hasattr(
+                            gpiod.line, "BIAS_PULL_DOWN"
+                        ):
+                            config = gpiod.line_request()
+                            config.consumer = self._CONSUMER
+                            config.request_type = gpiod.line.BIAS_PULL_DOWN
+                            self._line.request(config)
+                        else:
+                            raise NotImplementedError(
+                                "Internal pulldowns not supported in this version of libgpiod, "
+                                "use physical resistor instead!"
+                            )
+                    elif pull == self.PULL_NONE:
+                        if hasattr(gpiod, "line") and hasattr(
+                            gpiod.line, "BIAS_DISABLE"
+                        ):
+                            config = gpiod.line_request()
+                            config.consumer = self._CONSUMER
+                            config.request_type = gpiod.line.BIAS_DISABLE
+                            self._line.request(config)
+                    else:
+                        raise RuntimeError(f"Invalid pull for pin: {self.id}")
 
                 self._mode = self.IN
                 self._line.release()
-                self._line.request(
-                    consumer=self._CONSUMER, type=gpiod.LINE_REQ_DIR_IN, flags=flags
-                )
+                if hasattr(gpiod, "LINE_REQ_DIR_IN"):
+                    self._line.request(
+                        consumer=self._CONSUMER, type=gpiod.LINE_REQ_DIR_IN, flags=flags
+                    )
+                else:
+                    config = gpiod.line_request()
+                    config.consumer = self._CONSUMER
+                    config.request_type = gpiod.line_request.DIRECTION_INPUT
+                    self._line.request(config)
 
             elif mode == self.OUT:
                 if pull is not None:
                     raise RuntimeError("Cannot set pull resistor on output")
                 self._mode = self.OUT
                 self._line.release()
-                self._line.request(consumer=self._CONSUMER, type=gpiod.LINE_REQ_DIR_OUT)
-
+                if hasattr(gpiod, "LINE_REQ_DIR_OUT"):
+                    self._line.request(
+                        consumer=self._CONSUMER, type=gpiod.LINE_REQ_DIR_OUT
+                    )
+                else:
+                    config = gpiod.line_request()
+                    config.consumer = self._CONSUMER
+                    config.request_type = gpiod.line_request.DIRECTION_OUTPUT
+                    self._line.request(config)
             else:
                 raise RuntimeError("Invalid mode for pin: %s" % self.id)
 
