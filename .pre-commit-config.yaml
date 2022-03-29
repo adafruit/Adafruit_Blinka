@@ -4,7 +4,7 @@
 
 repos:
 -   repo: https://github.com/python/black
-    rev: 22.1.0
+    rev: 22.3.0
     hooks:
     - id: black
       additional_dependencies: ['click==8.0.4']
