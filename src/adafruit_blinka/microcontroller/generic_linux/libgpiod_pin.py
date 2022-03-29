@@ -10,6 +10,7 @@ except ImportError:
         "https://github.com/adafruit/Raspberry-Pi-Installer-Scripts/blob/master/libgpiod.sh"
     ) from ImportError
 
+# pylint: disable=too-many-branches,too-many-statements
 class Pin:
     """Pins dont exist in CPython so...lets make our own!"""
 
@@ -30,13 +31,13 @@ class Pin:
         self.id = pin_id
         if isinstance(pin_id, tuple):
             self._num = int(pin_id[1])
-            if hasattr(gpiod, 'Chip'):
+            if hasattr(gpiod, "Chip"):
                 self._chip = gpiod.Chip(str(pin_id[0]), gpiod.Chip.OPEN_BY_NUMBER)
             else:
                 self._chip = gpiod.chip(str(pin_id[0]), gpiod.chip.OPEN_BY_NUMBER)
         else:
             self._num = int(pin_id)
-            if hasattr(gpiod, 'Chip'):
+            if hasattr(gpiod, "Chip"):
                 self._chip = gpiod.Chip("gpiochip0", gpiod.Chip.OPEN_BY_NAME)
             else:
                 self._chip = gpiod.chip("gpiochip0", gpiod.chip.OPEN_BY_NAME)
@@ -60,32 +61,40 @@ class Pin:
                 self._line.release()
                 if pull is not None:
                     if pull == self.PULL_UP:
-                        if hasattr(gpiod, 'line') and hasattr(gpiod.line, 'BIAS_PULL_UP') :
+                        if hasattr(gpiod, "line") and hasattr(
+                            gpiod.line, "BIAS_PULL_UP"
+                        ):
                             config = gpiod.line_request()
                             config.consumer = self._CONSUMER
                             config.request_type = gpiod.line.BIAS_PULL_UP
                             self._line.request(config)
                         else:
                             self._line.request(
-                                consumer=self._CONSUMER, type=gpiod.LINE_REQ_DIR_IN, flags=flags
+                                consumer=self._CONSUMER,
+                                type=gpiod.LINE_REQ_DIR_IN,
+                                flags=flags,
                             )
                             raise NotImplementedError(
                                 "Internal pullups not supported in this version of libgpiod, "
                                 "use physical resistor instead!"
                             )
                     elif pull == self.PULL_DOWN:
-                        if hasattr(gpiod, 'line') and hasattr(gpiod.line, 'BIAS_PULL_DOWN') :
+                        if hasattr(gpiod, "line") and hasattr(
+                            gpiod.line, "BIAS_PULL_DOWN"
+                        ):
                             config = gpiod.line_request()
                             config.consumer = self._CONSUMER
                             config.request_type = gpiod.line.BIAS_PULL_DOWN
-                            self._line.request(config)                     
+                            self._line.request(config)
                         else:
                             raise NotImplementedError(
                                 "Internal pulldowns not supported in this version of libgpiod, "
                                 "use physical resistor instead!"
                             )
                     elif pull == self.PULL_NONE:
-                        if hasattr(gpiod, 'line') and hasattr(gpiod.line, 'BIAS_DISABLE') :
+                        if hasattr(gpiod, "line") and hasattr(
+                            gpiod.line, "BIAS_DISABLE"
+                        ):
                             config = gpiod.line_request()
                             config.consumer = self._CONSUMER
                             config.request_type = gpiod.line.BIAS_DISABLE
@@ -95,7 +104,7 @@ class Pin:
 
                 self._mode = self.IN
                 self._line.release()
-                if hasattr(gpiod, 'LINE_REQ_DIR_IN'):
+                if hasattr(gpiod, "LINE_REQ_DIR_IN"):
                     self._line.request(
                         consumer=self._CONSUMER, type=gpiod.LINE_REQ_DIR_IN, flags=flags
                     )
@@ -110,8 +119,10 @@ class Pin:
                     raise RuntimeError("Cannot set pull resistor on output")
                 self._mode = self.OUT
                 self._line.release()
-                if hasattr(gpiod, 'LINE_REQ_DIR_OUT'):
-                    self._line.request(consumer=self._CONSUMER, type=gpiod.LINE_REQ_DIR_OUT)
+                if hasattr(gpiod, "LINE_REQ_DIR_OUT"):
+                    self._line.request(
+                        consumer=self._CONSUMER, type=gpiod.LINE_REQ_DIR_OUT
+                    )
                 else:
                     config = gpiod.line_request()
                     config.consumer = self._CONSUMER
