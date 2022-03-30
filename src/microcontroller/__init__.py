@@ -68,6 +68,8 @@ elif chip_id == ap_chip.S905X3:
     from adafruit_blinka.microcontroller.amlogic.s905x3 import *
 elif chip_id == ap_chip.S922X:
     from adafruit_blinka.microcontroller.amlogic.s922x import *
+elif chip_id == ap_chip.A311D:
+    from adafruit_blinka.microcontroller.amlogic.a311d import *
 elif chip_id == ap_chip.EXYNOS5422:
     from adafruit_blinka.microcontroller.samsung.exynos5422 import *
 elif chip_id == ap_chip.APQ8016:
