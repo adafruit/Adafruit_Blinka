@@ -133,6 +133,7 @@ class MCP2221:
 
     def _reset(self):
         self._hid_xfer(b"\x70\xAB\xCD\xEF", response=False)
+        self._hid.close()
         time.sleep(MCP2221_RESET_DELAY)
         start = time.monotonic()
         while time.monotonic() - start < 5:
