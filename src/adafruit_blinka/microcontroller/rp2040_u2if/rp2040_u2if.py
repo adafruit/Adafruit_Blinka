@@ -94,6 +94,7 @@ class RP2040_u2if:
 
     def _reset(self):
         self._hid_xfer(bytes([self.SYS_RESET]), False)
+        self._hid.close()
         time.sleep(RP2040_U2IF_RESET_DELAY)
         start = time.monotonic()
         while time.monotonic() - start < 5:
