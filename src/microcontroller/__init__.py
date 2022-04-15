@@ -118,6 +118,8 @@ elif chip_id == ap_chip.RP2040_U2IF:
     from adafruit_blinka.microcontroller.rp2040_u2if import *
 elif chip_id == ap_chip.GENERIC_X86:
     print("WARNING: GENERIC_X86 is not fully supported. Some features may not work.")
+elif chip_id == None:
+    print("WARNING [__init__.py]: chip_id is None!")
 elif "sphinx" in sys.modules:
     pass
 else:
