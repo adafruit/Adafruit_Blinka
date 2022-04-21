@@ -25,7 +25,6 @@ SCL2 = pin.PB20
 SCLK = D13
 MOSI = D11
 MSIO = D12
-
 CS = D10
 
 
@@ -45,3 +44,8 @@ UART2_TX = D1
 UART2_RX = D0
 UART5_TX = D3
 UART5_RX = D2
+
+#Misc
+BACK_SW = pin.PH17 #Three buttons featured on the board
+HOME_SW = pin.PH18
+MENU_SW = pin.PH19
