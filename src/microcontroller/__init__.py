@@ -46,6 +46,8 @@ elif chip_id == ap_chip.AM33XX:
     from adafruit_blinka.microcontroller.am335x import *
 elif chip_id == ap_chip.JH71x0:
     from adafruit_blinka.microcontroller.starfive.JH71x0 import *
+elif chip_id == ap_chip.SUN4I:
+    from adafruit_blinka.microcontroller.allwinner.a10 import *
 elif chip_id == ap_chip.SUN8I:
     from adafruit_blinka.microcontroller.allwinner.h3 import *
 elif chip_id == ap_chip.H5:
@@ -74,6 +76,8 @@ elif chip_id == ap_chip.EXYNOS5422:
     from adafruit_blinka.microcontroller.samsung.exynos5422 import *
 elif chip_id == ap_chip.APQ8016:
     from adafruit_blinka.microcontroller.snapdragon.apq8016 import *
+elif chip_id == ap_chip.A10:
+    from adafruit_blinka.microcontroller.allwinner.a10 import *
 elif chip_id == ap_chip.A64:
     from adafruit_blinka.microcontroller.allwinner.a64 import *
 elif chip_id == ap_chip.A33:
