@@ -18,11 +18,12 @@ D10 = pin.PI10
 D11 = pin.PI12
 D12 = pin.PI13
 D13 = pin.PI11
-SDA2 = pin.PB21
-SCL2 = pin.PB20
+SDA = pin.PB21
+SCL = pin.PB20
 
 #P7 Header
 SCLK = D13
+SCK = SCLK
 MOSI = D11
 MSIO = D12
 CS = D10
@@ -30,6 +31,7 @@ CS = D10
 
 #P6 Header
 SCLK2 = pin.PC20
+SCK2 = SCLK2
 MOSI2 = pin.PC21
 MSIO2 = pin.PC22
 CS2 = pin.PC19
