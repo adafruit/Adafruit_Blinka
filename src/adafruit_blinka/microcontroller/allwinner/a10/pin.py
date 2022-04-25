@@ -52,10 +52,10 @@ UART2_TX = PI18
 PI19 = Pin(275) #PI19/UART2_RX
 UART2_RX = PI19
 
-ADC_2 = 1 #XP_TP
-ADC_3 = 2 #XN_TP
-ADC_4 = 3 #YP_TP
-ADC_5 = 4 #YN_TP
+XP_TP = 1 #Allwinner touch panel controller as able to operate as four seperate adc chanels
+XN_TP = 2 #offering 12-bit resolution.
+YP_TP = 3
+YN_TP = 4 
 
 # Ordered as i2cId, SCL, SDA
 i2cPorts =((2, TWI2_SCL, TWI2_SDA),)
@@ -77,8 +77,8 @@ pwmOuts = (((0,0), PWM0),
 )
 
 #sysFs analog inputs, Ordered as analogInId, device, and channel
-analogIns = ((ADC_2, 1, 0),
-             (ADC_3, 1, 1),
-             (ADC_4, 1, 2),
-             (ADC_5, 1, 3),
+analogIns = ((XP_TP, 0, 0),
+             (XN_TP, 0, 1),
+             (YP_TP, 0, 2),
+             (YN_TP, 0, 3),
 )
