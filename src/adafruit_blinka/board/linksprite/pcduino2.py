@@ -21,6 +21,13 @@ D13 = pin.PI11
 SDA = pin.PB21
 SCL = pin.PB20
 
+#J9 Header
+#A0 & A1 are LRADC pins with only 6-bit resolution and unlike other pins are only limited to 2v
+A2 = pin.XP_TP
+A3 = pin.XN_TP
+A4 = pin.YP_TP
+A5 = pin.YN_TP
+
 #P7 Header
 SCLK = D13
 SCK = SCLK
