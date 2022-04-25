@@ -72,8 +72,8 @@ uartPorts = (
     (6, UART6_TX, UART6_RX),
 )
 # sysFs pwm outputs, pwm channel and pin first tuple
-pwmOuts = (((1,0), PWM0),
-           ((2,0), PWM1),
+pwmOuts = (((0,0), PWM0),
+           ((0,1), PWM1),
 )
 
 #sysFs analog inputs, Ordered as analogInId, device, and channel

@@ -47,6 +47,9 @@ UART2_RX = D0
 UART5_TX = D3
 UART5_RX = D2
 
+PWM0 = D5
+PWM1 = D6
+
 #Misc
 BACK_SW = pin.PH17 #Three buttons featured on the board
 HOME_SW = pin.PH18
