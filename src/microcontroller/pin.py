@@ -103,7 +103,9 @@ elif "sphinx" in sys.modules:
     # pylint: disable=unused-import
     from adafruit_blinka.microcontroller.generic_micropython import Pin
 elif chip_id is None:
-    print("WARNING: chip_id == None is not fully supported. Some features may not work.")
+    print(
+        "WARNING: chip_id == None is not fully supported. Some features may not work."
+    )
     from adafruit_blinka.microcontroller.generic_micropython import Pin
 else:
     raise NotImplementedError("Microcontroller not supported: ", chip_id)
