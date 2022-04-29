@@ -102,7 +102,7 @@ elif chip_id == ap_chip.RP2040_U2IF:
 elif "sphinx" in sys.modules:
     # pylint: disable=unused-import
     from adafruit_blinka.microcontroller.generic_micropython import Pin
-elif chip_id == None:
+elif chip_id is None:
     print("WARNING: chip_id == None is not fully supported. Some features may not work.")
     from adafruit_blinka.microcontroller.generic_micropython import Pin
 else:
