@@ -78,6 +78,7 @@ setup(
         "Adafruit-PlatformDetect>=3.13.0",
         "Adafruit-PureIO>=1.1.7",
         "pyftdi>=0.40.0",
+        "adafruit-circuitpython-typing",
     ]
     + board_reqs,
     license="MIT",
