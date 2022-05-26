@@ -67,6 +67,7 @@ setup(
         "pulseio",
         "pwmio",
         "rainbowio",
+        "usb_hid",
     ],
     package_data={
         "adafruit_blinka.microcontroller.bcm283x.pulseio": [
