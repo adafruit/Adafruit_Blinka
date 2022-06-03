@@ -64,6 +64,7 @@ setup(
         "keypad",
         "micropython",
         "neopixel_write",
+        "onewireio",
         "pulseio",
         "pwmio",
         "rainbowio",
