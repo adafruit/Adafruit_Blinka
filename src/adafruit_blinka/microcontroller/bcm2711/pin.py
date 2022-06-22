@@ -82,7 +82,7 @@ D45 = Pin(45)
 # ordered as spiId, sckId, mosiId, misoId
 spiPorts = (
     (0, SCLK, MOSI, MISO),
-    (6, SCLK_1, MOSI_1, MISO_1),
+    (1, SCLK_1, MOSI_1, MISO_1),
     (2, SCLK_2, MOSI_2, MISO_2),
     (3, D3, D2, D1),
     (4, D7, D6, D5),

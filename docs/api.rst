@@ -40,6 +40,9 @@
 .. automodule:: neopixel_write
   :members:
 
+.. automodule:: onewireio
+  :members:
+
 .. automodule:: pulseio
   :members:
 

@@ -208,6 +208,9 @@ elif board_id == ap_board.CLOCKWORK_CPI3:
 elif board_id == ap_board.ONION_OMEGA2:
     from adafruit_blinka.board.onion.omega2 import *
 
+elif board_id == ap_board.RADXA_ZERO:
+    from adafruit_blinka.board.radxa.radxazero import *
+
 elif board_id == ap_board.ROCK_PI_S:
     from adafruit_blinka.board.radxa.rockpis import *
 

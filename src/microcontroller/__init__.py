@@ -68,6 +68,8 @@ elif chip_id == ap_chip.S905:
     from adafruit_blinka.microcontroller.amlogic.s905 import *
 elif chip_id == ap_chip.S905X3:
     from adafruit_blinka.microcontroller.amlogic.s905x3 import *
+elif chip_id == ap_chip.S905Y2:
+    from adafruit_blinka.microcontroller.amlogic.s905y2 import *
 elif chip_id == ap_chip.S922X:
     from adafruit_blinka.microcontroller.amlogic.s922x import *
 elif chip_id == ap_chip.A311D:
@@ -122,6 +124,10 @@ elif chip_id == ap_chip.RP2040_U2IF:
     from adafruit_blinka.microcontroller.rp2040_u2if import *
 elif chip_id == ap_chip.GENERIC_X86:
     print("WARNING: GENERIC_X86 is not fully supported. Some features may not work.")
+elif chip_id is None:
+    print(
+        "WARNING: chip_id == None is not fully supported. Some features may not work."
+    )
 elif "sphinx" in sys.modules:
     pass
 else:
