@@ -32,7 +32,7 @@ A5 = pin.YN_TP
 SCLK = D13
 SCK = SCLK
 MOSI = D11
-MSIO = D12
+MISO = D12
 CS = D10
 
 
@@ -40,7 +40,7 @@ CS = D10
 SCLK2 = pin.PC20
 SCK2 = SCLK2
 MOSI2 = pin.PC21
-MSIO2 = pin.PC22
+MISO2 = pin.PC22
 CS2 = pin.PC19
 
 #P10 Header
