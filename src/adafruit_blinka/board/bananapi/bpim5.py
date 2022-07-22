@@ -19,20 +19,20 @@ SPI_CS0 = pin.SPI0_CS0
 
 # Pinout reference:
 # https://wiki.banana-pi.org/Banana_Pi_BPI-M5#BPI-M5_40PIN_GPIO_.28CON2.29
-P3 = pin.GPIOX_17   # I2C_M2_SDA
-P5 = pin.GPIOX_18   # I2C_M2_SCL
+P3 = pin.GPIOX_17  # I2C_M2_SDA
+P5 = pin.GPIOX_18  # I2C_M2_SCL
 P7 = pin.GPIOX_5
-P8 = pin.GPIOX_12   # UART_A_TX
+P8 = pin.GPIOX_12  # UART_A_TX
 P10 = pin.GPIOX_13  # UART_A_RX
 P11 = pin.GPIOX_3
-P12 = pin.GPIOA_8   # TDMB_SCLK
+P12 = pin.GPIOA_8  # TDMB_SCLK
 P13 = pin.GPIOX_4
 P15 = pin.GPIOX_7
 P16 = pin.GPIOX_0
 P18 = pin.GPIOX_1
-P19 = pin.GPIOX_8   # PCM_DIN
-P21 = pin.GPIOX_9   # PCM_DOUT
-P22 = pin.GPIOX_2   # SDIO_D2
+P19 = pin.GPIOX_8  # PCM_DIN
+P21 = pin.GPIOX_9  # PCM_DOUT
+P22 = pin.GPIOX_2  # SDIO_D2
 P23 = pin.GPIOX_11  # PCM_CLK
 P24 = pin.GPIOX_10  # PCM_SYNC
 P26 = pin.GPIOX_16  # PWM_E
@@ -45,5 +45,5 @@ P33 = pin.GPIOX_6
 P35 = pin.GPIOAO_7  # TDMB_FS
 P36 = pin.GPIOH_5
 P37 = pin.GPIOAO_7  # I2S_MCLK
-P38 = pin.GPIOAO_10 # TDMB_DIN SPDIF_OUT
+P38 = pin.GPIOAO_10  # TDMB_DIN SPDIF_OUT
 P40 = pin.GPIOAO_4  # TDMB_DOUT
