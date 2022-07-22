@@ -11,6 +11,7 @@ Linux kernel 5.4.y (mainline)
     linux/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
 """
 
+from typing import Optional
 import os
 import re
 import gpiod
@@ -111,7 +112,7 @@ UART1_RX = GPIOX_13
 uartPorts = ((1, UART1_TX, UART1_RX),)
 
 
-def get_dts_alias(device: str) -> str:
+def get_dts_alias(device: str) -> Optional[str]:
     """Get the Device Tree Alias"""
     uevent_path = "/sys/bus/platform/devices/" + device + "/uevent"
     if os.path.exists(uevent_path):
@@ -122,8 +123,6 @@ def get_dts_alias(device: str) -> str:
               match = re.search(pattern, line)
               if match:
                   return match.group(1).upper()
-
-          return None
 
 
 # ordered as i2cId, sclId, sdaId
