@@ -124,6 +124,9 @@ elif board_id == ap_board.ORANGE_PI_3:
 elif board_id == ap_board.BANANA_PI_M2_ZERO:
     from adafruit_blinka.board.bananapi.bpim2zero import *
 
+elif board_id == ap_board.BANANA_PI_M5:
+    from adafruit_blinka.board.bananapi.bpim5 import *
+
 elif board_id == ap_board.GIANT_BOARD:
     from adafruit_blinka.board.giantboard import *
 
