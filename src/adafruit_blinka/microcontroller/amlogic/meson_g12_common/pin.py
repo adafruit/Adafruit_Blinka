@@ -123,6 +123,7 @@ def get_dts_alias(device: str) -> Optional[str]:
               match = re.search(pattern, line)
               if match:
                   return match.group(1).upper()
+    return None
 
 
 # ordered as i2cId, sclId, sdaId
