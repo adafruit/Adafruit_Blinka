@@ -17,38 +17,33 @@ MOSI = pin.SPI0_MOSI
 MISO = pin.SPI0_MISO
 SPI_CS0 = pin.SPI0_CS0
 
-"""J2: physical pin number"""
-
-D3 = pin.GPIOX_17
-D5 = pin.GPIOX_18
-D7 = pin.GPIOX_5
-D8 = pin.GPIOX_12
-D10 = pin.GPIOX_13
-D11 = pin.GPIOX_3
-D12 = pin.GPIOX_16
-D13 = pin.GPIOX_4
-D15 = pin.GPIOX_7
-D16 = pin.GPIOX_0
-D18 = pin.GPIOX_1
-D19 = pin.GPIOX_8
-D21 = pin.GPIOX_9
-D22 = pin.GPIOX_2
-D23 = pin.GPIOX_11
-D24 = pin.GPIOX_10
-D26 = pin.GPIOH_6
-D27 = pin.GPIOA_14
-D28 = pin.GPIOA_15
-D29 = pin.GPIOX_14
-D31 = pin.GPIOX_15
-D32 = pin.GPIOH_7
-D33 = pin.GPIOX_6
-D35 = pin.GPIOX_19
-D36 = pin.GPIOH_5
-
-"""J7: physical pin number"""
-
-D42 = pin.GPIOAO_10
-D44 = pin.GPIOAO_9
-D45 = pin.GPIOAO_7
-D46 = pin.GPIOAO_8
-D47 = pin.GPIOAO_4
+# Pinout reference:
+# https://wiki.banana-pi.org/Banana_Pi_BPI-M5#BPI-M5_40PIN_GPIO_.28CON2.29
+P3 = pin.GPIOX_17   # I2C_M2_SDA
+P5 = pin.GPIOX_18   # I2C_M2_SCL
+P7 = pin.GPIOX_5    # Verified
+P8 = pin.GPIOX_12   # UART_A_TX
+P10 = pin.GPIOX_13  # UART_A_RX
+P11 = pin.GPIOX_3   # Verified
+P12 = pin.GPIOA_8   # TDMB_SCLK
+P13 = pin.GPIOX_4   # Verified
+P15 = pin.GPIOX_7   # Verified
+P16 = pin.GPIOX_0   # Verified
+P18 = pin.GPIOX_1   # Verified
+P19 = pin.GPIOX_8   # PCM_DIN
+P21 = pin.GPIOX_9   # PCM_DOUT
+P22 = pin.GPIOX_2   # SDIO_D2
+P23 = pin.GPIOX_11  # PCM_CLK
+P24 = pin.GPIOX_10  # PCM_SYNC
+P26 = pin.GPIOX_16  # Verified
+P27 = pin.GPIOA_14  # Verified
+P28 = pin.GPIOA_15  # Verified
+P29 = pin.GPIOX_14  # Verified
+P31 = pin.GPIOX_15  # Verified
+P32 = pin.GPIOX_19  # Verified
+P33 = pin.GPIOX_6   # Verified
+P35 = pin.GPIOAO_7  # Verified
+P36 = pin.GPIOH_5   # Verified
+P37 = pin.GPIOAO_7  # I2S_MCLK
+P38 = pin.GPIOAO_10 # TDMB_DIN SPDIF_OUT
+P40 = pin.GPIOAO_4  # TDMB_DOUT
