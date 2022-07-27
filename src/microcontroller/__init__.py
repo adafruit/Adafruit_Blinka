@@ -62,6 +62,8 @@ elif chip_id == ap_chip.T186:
     from adafruit_blinka.microcontroller.tegra.t186 import *
 elif chip_id == ap_chip.T194:
     from adafruit_blinka.microcontroller.tegra.t194 import *
+elif chip_id == ap_chip.T234:
+    from adafruit_blinka.microcontroller.tegra.t234 import *
 elif chip_id == ap_chip.S905:
     from adafruit_blinka.microcontroller.amlogic.s905 import *
 elif chip_id == ap_chip.S905X3:
