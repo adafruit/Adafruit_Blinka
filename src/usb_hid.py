@@ -60,7 +60,7 @@ class Device:
         """
         report_id = report_id or self.report_ids[0]
         device_path = self.get_device_path(report_id)
-        with open(device_path, "rb+", encoding="utf-8") as fd:
+        with open(device_path, "rb+") as fd:
             if report_id > 0:
                 report = bytearray(report_id.to_bytes(1, "big")) + report
             fd.write(report)
@@ -82,7 +82,7 @@ class Device:
         Return `None` if nothing received.
         """
         device_path = self.get_device_path(report_id or self.report_ids[0])
-        with open(device_path, "rb+", encoding="utf-8") as fd:
+        with open(device_path, "rb+") as fd:
             os.set_blocking(fd.fileno(), False)
             report = fd.read(self.out_report_lengths[0])
             if report is not None:
