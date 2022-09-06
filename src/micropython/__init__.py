@@ -8,22 +8,26 @@
 * Author(s): cefn
 """
 
+from typing import Callable, TypeVar, Any
 
-def const(x):
+Fun = TypeVar("Fun", bound=Callable[..., Any])
+
+
+def const(x: int) -> int:
     "Emulate making a constant"
     return x
 
 
-def native(f):
+def native(f: Fun) -> Fun:
     "Emulate making a native"
     return f
 
 
-def viper(f):
+def viper(f: Fun) -> None:
     "User is attempting to use a viper code emitter"
     raise SyntaxError("invalid micropython decorator")
 
 
-def asm_thumb(f):
+def asm_thumb(f: Fun) -> None:
     "User is attempting to use an inline assembler"
     raise SyntaxError("invalid micropython decorator")
