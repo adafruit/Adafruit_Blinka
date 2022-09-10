@@ -96,6 +96,8 @@ elif detector.chip.H616:
     from adafruit_blinka.microcontroller.allwinner.h616.pin import Pin
 elif detector.board.pico_u2if:
     from adafruit_blinka.microcontroller.rp2040_u2if.pin import Pin
+elif detector.board.LICHEE_D1:
+    from adafruit_blinka.microcontroller.allwinner.D1.pin import Pin
 elif (
     detector.board.feather_u2if
     or detector.board.qtpy_u2if
