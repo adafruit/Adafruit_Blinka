@@ -106,8 +106,6 @@ elif (
     or detector.board.qt2040_trinkey_u2if
 ):
     from adafruit_blinka.microcontroller.rp2040_u2if.pin import Pin
-else:
-    print("Oops!")
 
 from adafruit_blinka import Enum, ContextManaged
 
