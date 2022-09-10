@@ -96,7 +96,7 @@ elif detector.chip.H616:
     from adafruit_blinka.microcontroller.allwinner.h616.pin import Pin
 elif detector.board.pico_u2if:
     from adafruit_blinka.microcontroller.rp2040_u2if.pin import Pin
-elif detector.board.LICHEE_D1:
+elif detector.board.LICHEE_RV:
     from adafruit_blinka.microcontroller.allwinner.D1.pin import Pin
 elif (
     detector.board.feather_u2if
@@ -106,6 +106,8 @@ elif (
     or detector.board.qt2040_trinkey_u2if
 ):
     from adafruit_blinka.microcontroller.rp2040_u2if.pin import Pin
+else:
+    print("Oops!")
 
 from adafruit_blinka import Enum, ContextManaged
 
