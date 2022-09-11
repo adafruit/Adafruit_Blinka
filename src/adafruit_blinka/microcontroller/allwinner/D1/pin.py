@@ -19,13 +19,21 @@ PB10 = Pin(42)
 PB11 = Pin(43)
 PB12 = Pin(44)
 PC0 = Pin(64)
+UART2_TX = PC0
 PC1 = Pin(65)
+UART2_RX = PC1
 PC2 = Pin(66)
+SPI0_SCLK = PC2
 PC3 = Pin(67)
+SPI0_CS = PC3
 PC4 = Pin(68)
+SPI0_MOSI = PC4
 PC5 = Pin(69)
+SPI0_MISO = PC5
 PC6 = Pin(70)
+SPI0_WP = PC6
 PC7 = Pin(71)
+SPI0_HOLD = PC7
 PD0 = Pin(96)
 PD1 = Pin(97)
 PD2 = Pin(98)
@@ -64,13 +72,21 @@ PE11 = Pin(139)
 PE12 = Pin(140)
 PE13 = Pin(141)
 PE14 = Pin(142)
+TWI1_SCL = PE14
 PE15 = Pin(143)
+TWI1_SDA = PE15
 PE16 = Pin(144)
+TWI3_SCL = PE16
 PE17 = Pin(145)
+TWI3_SDA = PE17
 PG6 = Pin(198)
+UART1_TX = PG6
 PG7 = Pin(199)
+UART1_RX = PG7
 PG8 = Pin(200)
+UART1_RTS = PG8
 PG9 = Pin(201)
+UART1_CTS = PG9
 PG10 = Pin(202)
 PG11 = Pin(203)
 PG12 = Pin(204)
@@ -81,5 +97,15 @@ PG16 = Pin(208)
 PG17 = Pin(209)
 PG18 = Pin(210)
 
-i2cPorts = ((2, TWI2_SCL, TWI2_SDA),)
-uartPorts = ((0, UART0_TX, UART0_RX),)
+i2cPorts = (
+    (2, TWI2_SCL, TWI2_SDA),
+    (3, TWI3_SCL, TWI3_SDA),
+)
+uartPorts = (
+    (0, UART0_TX, UART0_RX),
+    (1, UART1_TX, UART1_RX),
+    (2, UART2_TX, UART2_RX),
+)
+spiPorts = (
+    (0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO),
+)
