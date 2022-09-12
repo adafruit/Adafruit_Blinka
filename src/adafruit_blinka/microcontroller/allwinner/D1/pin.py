@@ -106,6 +106,4 @@ uartPorts = (
     (1, UART1_TX, UART1_RX),
     (2, UART2_TX, UART2_RX),
 )
-spiPorts = (
-    (0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO),
-)
+spiPorts = ((0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO),)
