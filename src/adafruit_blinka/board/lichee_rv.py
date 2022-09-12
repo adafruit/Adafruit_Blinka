@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2022 Aleksandr Saiapin for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Pin definitions for the Lichee RV Dock."""
 
 from adafruit_blinka.microcontroller.allwinner.D1 import pin
