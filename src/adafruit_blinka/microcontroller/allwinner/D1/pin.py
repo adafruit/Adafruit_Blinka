@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2022 Aleksandr Saiapin for Adafruit Industries
 #
-# SPDX-License-Identifier: MIT"""Allwinner D1 pin names"""
+# SPDX-License-Identifier: MIT
+# """Allwinner D1 pin names"""
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
 PB0 = Pin(32)
