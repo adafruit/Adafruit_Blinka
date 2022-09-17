@@ -34,6 +34,8 @@ elif detector.chip.T186:
     from adafruit_blinka.microcontroller.tegra.t186.pin import Pin
 elif detector.chip.T194:
     from adafruit_blinka.microcontroller.tegra.t194.pin import Pin
+elif detector.chip.T234:
+    from adafruit_blinka.microcontroller.tegra.t234.pin import Pin
 elif detector.chip.S905:
     from adafruit_blinka.microcontroller.amlogic.s905.pin import Pin
 elif detector.chip.S905X3:
@@ -98,6 +100,8 @@ elif detector.chip.H616:
     from adafruit_blinka.microcontroller.allwinner.h616.pin import Pin
 elif detector.board.pico_u2if:
     from adafruit_blinka.microcontroller.rp2040_u2if.pin import Pin
+elif detector.board.LICHEE_RV:
+    from adafruit_blinka.microcontroller.allwinner.D1.pin import Pin
 elif (
     detector.board.feather_u2if
     or detector.board.qtpy_u2if

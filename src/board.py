@@ -121,8 +121,17 @@ elif board_id == ap_board.ORANGE_PI_ZERO_2:
 elif board_id == ap_board.ORANGE_PI_3:
     from adafruit_blinka.board.orangepi.orangepi3 import *
 
+elif board_id == ap_board.ORANGE_PI_4:
+    from adafruit_blinka.board.orangepi.orangepi4 import *
+
+elif board_id == ap_board.ORANGE_PI_4_LTS:
+    from adafruit_blinka.board.orangepi.orangepi4 import *
+
 elif board_id == ap_board.BANANA_PI_M2_ZERO:
     from adafruit_blinka.board.bananapi.bpim2zero import *
+
+elif board_id == ap_board.BANANA_PI_M5:
+    from adafruit_blinka.board.bananapi.bpim5 import *
 
 elif board_id == ap_board.GIANT_BOARD:
     from adafruit_blinka.board.giantboard import *
@@ -144,6 +153,9 @@ elif board_id == ap_board.JETSON_NANO:
 
 elif board_id == ap_board.JETSON_NX:
     from adafruit_blinka.board.nvidia.jetson_nx import *
+
+elif board_id == ap_board.JETSON_AGX_ORIN:
+    from adafruit_blinka.board.nvidia.jetson_orin import *
 
 elif board_id == ap_board.CLARA_AGX_XAVIER:
     from adafruit_blinka.board.nvidia.clara_agx_xavier import *
@@ -264,6 +276,9 @@ elif board_id == ap_board.MACROPAD_U2IF:
 
 elif board_id == ap_board.QT2040_TRINKEY_U2IF:
     from adafruit_blinka.board.qt2040_trinkey_u2if import *
+
+elif board_id == ap_board.LICHEE_RV:
+    from adafruit_blinka.board.lichee_rv import *
 
 elif "sphinx" in sys.modules:
     pass

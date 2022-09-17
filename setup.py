@@ -52,7 +52,7 @@ setup(
     python_requires=">=3.7.0",
     url="https://github.com/adafruit/Adafruit_Blinka",
     package_dir={"": "src"},
-    packages=find_packages("src"),
+    packages=find_packages("src") + ["micropython-stubs"],
     # py_modules lists top-level single file packages to include.
     # find_packages only finds packages in directories with __init__.py files.
     py_modules=[
@@ -74,8 +74,10 @@ setup(
         "adafruit_blinka.microcontroller.bcm283x.pulseio": [
             "libgpiod_pulsein",
             "libgpiod_pulsein64",
-        ]
+        ],
+        "micropython-stubs": ["*.pyi"],
     },
+    include_package_data=True,
     install_requires=[
         "Adafruit-PlatformDetect>=3.13.0",
         "Adafruit-PureIO>=1.1.7",
