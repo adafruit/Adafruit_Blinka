@@ -48,7 +48,7 @@ jobs:
       working-directory: docs
       run: sphinx-build -E -W -b html . _build/html
     - name: Build Python package
-      if: contains(steps.need-pypi.outputs.pyproject-toml, 'pyproject.toml')
+      if: contains(steps.need-pypi.outputs.setup-py, 'setup.py')
       run: |
         pip install --upgrade build twine
         for file in $(find -not -path "./.*" -not -path "./docs*" \( -name "*.py" -o -name "*.toml" \) ); do
