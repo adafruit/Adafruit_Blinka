@@ -1,1 +1,1 @@
-"""Boards definition from Linksprite Pcduino"""
+"""Boards definition from Linksprite Pcduino based boards"""
