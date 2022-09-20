@@ -2,6 +2,5 @@
 #
 # SPDX-License-Identifier: MIT
 """Return the current version"""
-VERSION = (1, 0, 0)
 
-__version__ = ".".join(map(str, VERSION))
+__version__ = VERSION = "0.0.0+auto.0"

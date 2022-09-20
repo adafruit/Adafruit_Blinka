@@ -49,6 +49,8 @@ elif chip_id == ap_chip.T186:
     from adafruit_blinka.microcontroller.tegra.t186.pin import *
 elif chip_id == ap_chip.T194:
     from adafruit_blinka.microcontroller.tegra.t194.pin import *
+elif chip_id == ap_chip.T234:
+    from adafruit_blinka.microcontroller.tegra.t234.pin import *
 elif chip_id == ap_chip.S905:
     from adafruit_blinka.microcontroller.amlogic.s905.pin import *
 elif chip_id == ap_chip.S905X3:
@@ -101,6 +103,8 @@ elif chip_id == ap_chip.MT8167:
     from adafruit_blinka.microcontroller.mt8167.pin import *
 elif chip_id == ap_chip.RP2040_U2IF:
     from adafruit_blinka.microcontroller.rp2040_u2if.pin import *
+elif chip_id == ap_chip.D1_RISCV:
+    from adafruit_blinka.microcontroller.allwinner.D1.pin import *
 elif "sphinx" in sys.modules:
     # pylint: disable=unused-import
     from adafruit_blinka.microcontroller.generic_micropython import Pin
