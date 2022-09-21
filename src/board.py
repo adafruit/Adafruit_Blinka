@@ -277,6 +277,9 @@ elif board_id == ap_board.QT2040_TRINKEY_U2IF:
 elif board_id == ap_board.LICHEE_RV:
     from adafruit_blinka.board.lichee_rv import *
 
+elif board_id == ap_board.SIEMENS_SIMATIC_IOT2050_ADV:
+    from adafruit_blinka.board.siemens.siemens_iot2050 import *
+
 elif "sphinx" in sys.modules:
     pass
 
