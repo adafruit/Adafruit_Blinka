@@ -8,6 +8,9 @@
 
 import mraa
 
+# pylint: disable=too-many-branches,too-many-statements
+# pylint: disable=pointless-string-statement
+
 
 class Pin:
     """Pins don't exist in CPython so...lets make our own!"""

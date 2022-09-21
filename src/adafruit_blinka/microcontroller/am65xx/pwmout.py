@@ -4,6 +4,11 @@
 # SPDX-FileCopyrightText: 2022 Martin Schnur for Siemens AG
 #
 # SPDX-License-Identifier: MIT
+
+# pylint: disable=pointless-string-statement
+# pylint: disable=ungrouped-imports,wrong-import-position,unused-import
+# pylint: disable=import-outside-toplevel
+
 """Custom PWMOut Wrapper for am65xx"""
 """
 Much code from https://github.com/vsergeev/python-periphery/blob/master/periphery/pwm.py
@@ -11,11 +16,13 @@ Copyright (c) 2015-2016 vsergeev / Ivan (Vanya) A. Sergeev
 License: MIT
 """
 
+
 import mraa
 from adafruit_blinka.microcontroller.am65xx.pin import Pin
 
-
 # pylint: disable=unnecessary-pass
+
+
 class PWMError(IOError):
     """Base class for PWM errors."""
 
