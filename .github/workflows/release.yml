@@ -25,15 +25,15 @@ jobs:
       if: contains(steps.need-pypi.outputs.setup-py, 'setup.py')
       run: |
         python -m pip install --upgrade pip
-        pip install setuptools wheel twine
+        pip install --upgrade build twine
     - name: Build and publish
       if: contains(steps.need-pypi.outputs.setup-py, 'setup.py')
       env:
         TWINE_USERNAME: ${{ secrets.pypi_username }}
         TWINE_PASSWORD: ${{ secrets.pypi_password }}
       run: |
-        for file in $(find -not -path "./.*" -not -path "./docs*" -name "*.py"); do
-            sed -i -e "s/0.0.0-auto.0/${{github.event.release.tag_name}}/" $file;
+        for file in $(find -not -path "./.*" -not -path "./docs*" \( -name "*.py" -o -name "*.toml" \) ); do
+            sed -i -e "s/0.0.0+auto.0/${{github.event.release.tag_name}}/" $file;
         done;
-        python setup.py sdist
+        python -m build
         twine upload dist/*
