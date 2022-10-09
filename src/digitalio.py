@@ -26,6 +26,8 @@ elif detector.chip.DRA74X:
     from adafruit_blinka.microcontroller.dra74x.pin import Pin
 elif detector.chip.SUN4I:
     from adafruit_blinka.microcontroller.allwinner.a10.pin import Pin
+elif detector.chip.SUN7I:
+    from adafruit_blinka.microcontroller.allwinner.a10.pin import Pin
 elif detector.chip.SUN8I:
     from adafruit_blinka.microcontroller.allwinner.h3.pin import Pin
 elif detector.chip.SAMA5:
@@ -59,6 +61,8 @@ elif detector.chip.IMX6ULL:
 elif detector.chip.HFU540:
     from adafruit_blinka.microcontroller.hfu540.pin import Pin
 elif detector.chip.A10:
+    from adafruit_blinka.microcontroller.allwinner.a10.pin import Pin
+elif detector.chip.A30:
     from adafruit_blinka.microcontroller.allwinner.a10.pin import Pin
 elif detector.chip.A64:
     from adafruit_blinka.microcontroller.allwinner.a64.pin import Pin
