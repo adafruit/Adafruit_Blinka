@@ -130,6 +130,9 @@ elif board_id == ap_board.ORANGE_PI_4_LTS:
 elif board_id == ap_board.BANANA_PI_M2_ZERO:
     from adafruit_blinka.board.bananapi.bpim2zero import *
 
+elif board_id == ap_board.BANANA_PI_M2_PLUS:
+    from adafruit_blinka.board.bananapi.bpim2plus import *
+
 elif board_id == ap_board.BANANA_PI_M5:
     from adafruit_blinka.board.bananapi.bpim5 import *
 
@@ -285,6 +288,9 @@ elif board_id == ap_board.LICHEE_RV:
 
 elif board_id == ap_board.SIEMENS_SIMATIC_IOT2050_ADV:
     from adafruit_blinka.board.siemens.siemens_iot2050 import *
+
+elif board_id == ap_board.AML_S905X_CC:
+    from adafruit_blinka.board.librecomputer.aml_s905x_cc_v1 import *
 
 elif "sphinx" in sys.modules:
     pass
