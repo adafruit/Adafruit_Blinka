@@ -39,11 +39,15 @@ CS = D10
 
 
 #P6 Header
-SCLK2 = pin.PC20
+D22 = pin.PC20
+SCLK2 = D22
 SCK2 = SCLK2
-MOSI2 = pin.PC21
-MISO2 = pin.PC22
-CS2 = pin.PC19
+D23 = pin.PC21
+MOSI2 = D23
+D20 = pin.PC22
+MISO2 = D20
+D21 = pin.PC19
+CS2 = D21
 
 #P10 Header
 D14 = pin.PH11
