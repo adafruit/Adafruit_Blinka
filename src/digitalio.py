@@ -14,6 +14,7 @@ from adafruit_blinka.agnostic import board_id, detector
 
 # pylint: disable=ungrouped-imports,wrong-import-position
 
+# By Chip Class
 if detector.chip.BCM2XXX:
     from adafruit_blinka.microcontroller.bcm283x.pin import Pin
 elif detector.chip.AM33XX:
@@ -38,7 +39,7 @@ elif detector.chip.T234:
     from adafruit_blinka.microcontroller.tegra.t234.pin import Pin
 elif detector.chip.S905:
     from adafruit_blinka.microcontroller.amlogic.s905.pin import Pin
-elif detector.board.aml_s905x_cc:
+elif detector.chip.S905X:
     from adafruit_blinka.microcontroller.amlogic.s905x.pin import Pin
 elif detector.chip.S905X3:
     from adafruit_blinka.microcontroller.amlogic.s905x3.pin import Pin
@@ -70,20 +71,6 @@ elif detector.chip.RK3399:
     from adafruit_blinka.microcontroller.rockchip.rk3399.pin import Pin
 elif detector.chip.RK3328:
     from adafruit_blinka.microcontroller.rockchip.rk3328.pin import Pin
-elif detector.board.ftdi_ft232h:
-    from adafruit_blinka.microcontroller.ftdi_mpsse.ft232h.pin import Pin
-elif detector.board.ftdi_ft2232h:
-    from adafruit_blinka.microcontroller.ftdi_mpsse.ft2232h.pin import Pin
-elif detector.board.binho_nova:
-    from adafruit_blinka.microcontroller.nova.pin import Pin
-elif detector.board.greatfet_one:
-    from adafruit_blinka.microcontroller.nxp_lpc4330.pin import Pin
-elif detector.chip.STM32F405:
-    from machine import Pin
-elif detector.chip.RP2040:
-    from machine import Pin
-elif detector.board.microchip_mcp2221:
-    from adafruit_blinka.microcontroller.mcp2221.pin import Pin
 elif detector.chip.PENTIUM_N3710:
     from adafruit_blinka.microcontroller.pentium.n3710.pin import Pin
 elif detector.chip.STM32MP157:
@@ -98,18 +85,26 @@ elif detector.chip.H6:
     from adafruit_blinka.microcontroller.allwinner.h6.pin import Pin
 elif detector.chip.H616:
     from adafruit_blinka.microcontroller.allwinner.h616.pin import Pin
-elif detector.board.pico_u2if:
-    from adafruit_blinka.microcontroller.rp2040_u2if.pin import Pin
-elif detector.board.LICHEE_RV:
+elif detector.chip.D1_RISCV:
     from adafruit_blinka.microcontroller.allwinner.D1.pin import Pin
-elif (
-    detector.board.feather_u2if
-    or detector.board.qtpy_u2if
-    or detector.board.itsybitsy_u2if
-    or detector.board.macropad_u2if
-    or detector.board.qt2040_trinkey_u2if
-):
+# Special Case Boards
+elif detector.board.ftdi_ft232h:
+    from adafruit_blinka.microcontroller.ftdi_mpsse.ft232h.pin import Pin
+elif detector.board.ftdi_ft2232h:
+    from adafruit_blinka.microcontroller.ftdi_mpsse.ft2232h.pin import Pin
+elif detector.board.binho_nova:
+    from adafruit_blinka.microcontroller.nova.pin import Pin
+elif detector.board.greatfet_one:
+    from adafruit_blinka.microcontroller.nxp_lpc4330.pin import Pin
+elif detector.board.microchip_mcp2221:
+    from adafruit_blinka.microcontroller.mcp2221.pin import Pin
+elif detector.chip.RP2040_U2IF:
     from adafruit_blinka.microcontroller.rp2040_u2if.pin import Pin
+# MicroPython Chips
+elif detector.chip.STM32F405:
+    from machine import Pin
+elif detector.chip.RP2040:
+    from machine import Pin
 
 from adafruit_blinka import Enum, ContextManaged
 
