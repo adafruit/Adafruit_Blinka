@@ -1,6 +1,6 @@
 """Pin definitions for the Odroid M1."""
 
-from adafruit_blinka.microcontroller.amlogic.s922x import pin
+from adafruit_blinka.microcontroller.rockchip.RK3568B2 import pin
 
 GPIO3C_6 = pin.GPIO118
 GPIO3C_7 = pin.GPIO119
