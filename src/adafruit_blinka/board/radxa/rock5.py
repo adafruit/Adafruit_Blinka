@@ -2,35 +2,48 @@
 
 from adafruit_blinka.microcontroller.rockchip.rk3588 import pin
 
+# D pin number is ordered by physical pin sequence
 
-D0 = pin.GPIO4_C6
-D1 = pin.GPIO4_C5
-D2 = pin.GPIO4_B3
-D3 = pin.GPIO4_B2
-D4 = pin.GPIO3_C3
-D5 = pin.GPIO1_D7
-D6 = pin.GPIO1_B7
-D7 = pin.GPIO1_B5
-D8 = pin.GPIO1_B4
-D9 = pin.GPIO1_B1
-D10 = pin.GPIO1_B2
-D11 = pin.GPIO1_B3
-D12 = pin.GPIO3_C2
-D13 = pin.GPIO3_A7
-D14 = pin.GPIO0_B5
-D15 = pin.GPIO0_B6
-D16 = pin.GPIO3_B1
-D17 = pin.GPIO3_C1
-D18 = pin.GPIO3_B5
-D19 = pin.GPIO3_B6
-D20 = pin.GPIO3_B2
-D21 = pin.GPIO3_B3
-D22 = pin.GPIO3_C0
-D23 = pin.GPIO3_A4
-D24 = pin.GPIO4_C4
-# D25 = SAR ADC 4
-# D26 = NC
-D27 = pin.GPIO3_B7
+# D1 = +3.3V
+# D2 = +5V
+D3 = pin.GPIO4_B3
+# D4 = +5V
+D5 = pin.GPIO4_B2
+# D6 = GND
+D7 = pin.GPIO3_C3
+D8 = pin.GPIO0_B5
+# D9 = GND
+D10 = pin.GPIO0_B6
+D11 = pin.GPIO3_C1
+D12 = pin.GPIO3_B5
+D13 = pin.GPIO3_B7
+# D14 = GND
+D15 = pin.GPIO3_C0
+D16 = pin.GPIO3_A4
+# D17 = +3.3V
+D18 = pin.GPIO4_C4
+D19 = pin.GPIO1_B2
+# D20 = GND
+D21 = pin.GPIO1_B1
+# D22 = ADC_IN0 // SARADC_IN4
+D23 = pin.GPIO1_B3
+D24 = pin.GPIO1_B4
+# D25 = GND
+D26 = pin.GPIO1_B5
+D27 = pin.GPIO4_C6
+D28 = pin.GPIO4_C5
+D29 = pin.GPIO1_D7
+# D30 = GND
+D31 = pin.GPIO1_B7
+D32 = pin.GPIO3_C2
+D33 = pin.GPIO3_A7
+# D34 = GND
+D35 = pin.GPIO3_B6
+D36 = pin.GPIO3_B1
+# D37 = NC
+D38 = pin.GPIO3_B2
+# D39 = GND
+D40 = pin.GPIO3_B3
 
 
 # UART
@@ -47,18 +60,28 @@ UART7_RX_M1 = pin.GPIO3_C1
 UART7_TX_M2 = pin.GPIO1_B5
 UART7_RX_M2 = pin.GPIO1_B4
 
-# I2C
-SCL0_M1 = pin.GPIO4_C5
-SDA0_M1 = pin.GPIO4_C6
-SCL1_M0 = pin.GPIO0_B5
-SDA1_M0 = pin.GPIO0_B6
-SCL3_M1 = pin.GPIO3_B7
-SDA3_M1 = pin.GPIO3_C0
-SCL7_M3 = pin.GPIO4_B2
-SDA7_M3 = pin.GPIO4_B3
-SCL8_M4 = pin.GPIO3_C2
-SDA8_M4 = pin.GPIO3_C3
+# Default UART -> UART2_M0 
 
+TX = UART2_TX_M0
+RX = UART2_RX_M0
+TXD = UART2_TX_M0
+RXD = UART2_RX_M0
+
+# I2C
+I2C0_SCL_M1 = pin.GPIO4_C5
+I2C0_SDA_M1 = pin.GPIO4_C6
+I2C1_SCL_M0 = pin.GPIO0_B5
+I2C1_SDA_M0 = pin.GPIO0_B6
+I2C3_SCL_M1 = pin.GPIO3_B7
+I2C3_SDA_M1 = pin.GPIO3_C0
+I2C7_SCL_M3 = pin.GPIO4_B2
+I2C7_SDA_M3 = pin.GPIO4_B3
+I2C8_SCL_M4 = pin.GPIO3_C2
+I2C8_SDA_M4 = pin.GPIO3_C3
+
+# Default I2C -> I2C7_M3
+SCL = I2C7_SCL_M3
+SDA = I2C7_SDA_M3
 
 # SPI
 SPI0_MOSI_M2 = pin.GPIO1_B2
@@ -80,6 +103,12 @@ SPI3_MOSI_M0 = pin.GPIO4_C5
 SPI3_SCK_M0 = pin.GPIO4_C6
 SPI3_SCLK_M0 = pin.SPI3_SCK_M0
 
+# Default SPI -> SPI0_M2
+MOSI = SPI0_MOSI_M2
+MISO = SPI0_MISO_M2
+SCLK = SPI0_SCLK_M2
+CS = SPI0_CS0_M2
+CS1 = SPI0_CS1_M2
 
 # PWM
 PWM2_M1 = pin.GPIO3_B1
