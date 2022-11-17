@@ -1,6 +1,6 @@
 """A Pin class for use with Rockchip RK3568B2."""
 
-from adafruit_blinka.microcontroller.generic_linux.sysfs_pin import Pin
+from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
 GPIO3C_6 = pin((3, 22))
 GPIO3C_7 = pin((3, 23))
