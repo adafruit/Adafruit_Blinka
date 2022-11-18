@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2022 MrPanc0 for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
+
 """A Pin class for use with Rockchip RK3568B2."""
 
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
