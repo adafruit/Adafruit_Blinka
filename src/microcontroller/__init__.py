@@ -118,6 +118,8 @@ elif chip_id == ap_chip.FT2232H:
     from adafruit_blinka.microcontroller.ftdi_mpsse.ft2232h import *
 elif chip_id == ap_chip.PENTIUM_N3710:
     from adafruit_blinka.microcontroller.pentium.n3710 import *
+elif chip_id == ap_chip.ATOM_J4105:
+    from adafruit_blinka.microcontroller.pentium.j4105 import *
 elif chip_id == ap_chip.STM32MP157:
     from adafruit_blinka.microcontroller.stm32.stm32mp157 import *
 elif chip_id == ap_chip.MT8167:
