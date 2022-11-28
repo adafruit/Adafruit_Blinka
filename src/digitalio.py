@@ -71,6 +71,8 @@ elif detector.chip.RK3399:
     from adafruit_blinka.microcontroller.rockchip.rk3399.pin import Pin
 elif detector.chip.RK3328:
     from adafruit_blinka.microcontroller.rockchip.rk3328.pin import Pin
+elif detector.chip.RK3566:
+    from adafruit_blinka.microcontroller.rockchip.rk3566.pin import Pin
 elif detector.chip.PENTIUM_N3710:
     from adafruit_blinka.microcontroller.pentium.n3710.pin import Pin
 elif detector.chip.ATOM_J4105:
