@@ -19,7 +19,7 @@ __blinka__ = True
 import sys
 
 import adafruit_platformdetect.constants.boards as ap_board
-from adafruit_blinka.agnostic import board_id, detector
+from adafruit_blinka.agnostic import board_id, chip_id, detector
 
 # pylint: disable=wildcard-import,unused-wildcard-import,ungrouped-imports
 # pylint: disable=import-outside-toplevel
@@ -178,8 +178,11 @@ elif board_id == ap_board.ODROID_C4:
 elif board_id == ap_board.ODROID_N2:
     from adafruit_blinka.board.hardkernel.odroidn2 import *
 
-elif board_id == ap_board.ODROID_M1:
-    from adafruit_blinka.board.hardkernel.odroidm1 import *
+elif board_id == ap_board.ODROID_M1 and chip_id == ap_chip.RK3568:
+    from adafruit_blinka.board.hardkernel.odroidm1_rk3568 import *
+
+elif board_id == ap_board.ODROID_M1 and chip_id == ap_chip.RK3568B2:
+    from adafruit_blinka.board.hardkernel.odroidm1_rk3568b2 import *
 
 elif board_id == ap_board.KHADAS_VIM3:
     from adafruit_blinka.board.khadas.khadasvim3 import *
