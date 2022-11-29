@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2022 MrPanc0 for Adafruit Industries
 #
 # SPDX-License-Identifier: MIT
-"""Pin definitions for the Odroid M1."""
+"""Pin definitions for the Odroid M1 with RK3568B2."""
 
 from adafruit_blinka.microcontroller.rockchip.rk3568b2 import pin
 
