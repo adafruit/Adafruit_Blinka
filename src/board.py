@@ -1,24 +1,6 @@
-# The MIT License (MIT)
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
 #
-# Copyright (c) 2017 cefn for adafruit industries
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
+# SPDX-License-Identifier: MIT
 """
 `board` - Define ids for available pins
 =================================================
@@ -27,6 +9,13 @@ See `CircuitPython:board` in CircuitPython for more details.
 
 * Author(s): cefn
 """
+
+
+__version__ = "0.0.0+auto.0"
+__repo__ = "https://github.com/adafruit/Adafruit_Blinka.git"
+__blinka__ = True
+
+
 import sys
 
 import adafruit_platformdetect.constants.boards as ap_board
@@ -47,6 +36,13 @@ elif board_id == ap_board.PYBOARD:
 elif board_id == ap_board.RASPBERRY_PI_PICO:
     from adafruit_blinka.board.raspberrypi.pico import *
 
+elif (
+    detector.board.RASPBERRY_PI_4B
+    or detector.board.RASPBERRY_PI_CM4
+    or detector.board.RASPBERRY_PI_400
+):
+    from adafruit_blinka.board.raspberrypi.raspi_4b import *
+
 elif detector.board.any_raspberry_pi_40_pin:
     from adafruit_blinka.board.raspberrypi.raspi_40pin import *
 
@@ -66,6 +62,9 @@ elif board_id == ap_board.BEAGLEBONE_BLACK:
     from adafruit_blinka.board.beagleboard.beaglebone_black import *
 
 elif board_id == ap_board.BEAGLEBONE_GREEN:
+    from adafruit_blinka.board.beagleboard.beaglebone_black import *
+
+elif board_id == ap_board.BEAGLEBONE_GREEN_GATEWAY:
     from adafruit_blinka.board.beagleboard.beaglebone_black import *
 
 elif board_id == ap_board.BEAGLEBONE_BLACK_INDUSTRIAL:
@@ -119,8 +118,23 @@ elif board_id == ap_board.ORANGE_PI_ZERO_PLUS:
 elif board_id == ap_board.ORANGE_PI_ZERO_2:
     from adafruit_blinka.board.orangepi.orangepizero2 import *
 
+elif board_id == ap_board.ORANGE_PI_3:
+    from adafruit_blinka.board.orangepi.orangepi3 import *
+
+elif board_id == ap_board.ORANGE_PI_4:
+    from adafruit_blinka.board.orangepi.orangepi4 import *
+
+elif board_id == ap_board.ORANGE_PI_4_LTS:
+    from adafruit_blinka.board.orangepi.orangepi4 import *
+
 elif board_id == ap_board.BANANA_PI_M2_ZERO:
     from adafruit_blinka.board.bananapi.bpim2zero import *
+
+elif board_id == ap_board.BANANA_PI_M2_PLUS:
+    from adafruit_blinka.board.bananapi.bpim2plus import *
+
+elif board_id == ap_board.BANANA_PI_M5:
+    from adafruit_blinka.board.bananapi.bpim5 import *
 
 elif board_id == ap_board.GIANT_BOARD:
     from adafruit_blinka.board.giantboard import *
@@ -143,6 +157,9 @@ elif board_id == ap_board.JETSON_NANO:
 elif board_id == ap_board.JETSON_NX:
     from adafruit_blinka.board.nvidia.jetson_nx import *
 
+elif board_id == ap_board.JETSON_AGX_ORIN:
+    from adafruit_blinka.board.nvidia.jetson_orin import *
+
 elif board_id == ap_board.CLARA_AGX_XAVIER:
     from adafruit_blinka.board.nvidia.clara_agx_xavier import *
 
@@ -160,6 +177,9 @@ elif board_id == ap_board.ODROID_C4:
 
 elif board_id == ap_board.ODROID_N2:
     from adafruit_blinka.board.hardkernel.odroidn2 import *
+
+elif board_id == ap_board.KHADAS_VIM3:
+    from adafruit_blinka.board.khadas.khadasvim3 import *
 
 elif board_id == ap_board.ODROID_XU4:
     from adafruit_blinka.board.hardkernel.odroidxu4 import *
@@ -200,6 +220,9 @@ elif board_id == ap_board.CLOCKWORK_CPI3:
 elif board_id == ap_board.ONION_OMEGA2:
     from adafruit_blinka.board.onion.omega2 import *
 
+elif board_id == ap_board.RADXA_ZERO:
+    from adafruit_blinka.board.radxa.radxazero import *
+
 elif board_id == ap_board.ROCK_PI_S:
     from adafruit_blinka.board.radxa.rockpis import *
 
@@ -215,6 +238,12 @@ elif board_id == ap_board.UDOO_X86:
 elif board_id == ap_board.STM32MP157C_DK2:
     from adafruit_blinka.board.stm32.stm32mp157c_dk2 import *
 
+elif board_id == ap_board.OSD32MP1_RED:
+    from adafruit_blinka.board.stm32.osd32mp1_red import *
+
+elif board_id == ap_board.OSD32MP1_BRK:
+    from adafruit_blinka.board.stm32.osd32mp1_brk import *
+
 elif board_id == ap_board.LUBANCAT_IMX6ULL:
     from adafruit_blinka.board.lubancat.lubancat_imx6ull import *
 
@@ -226,6 +255,9 @@ elif board_id == ap_board.NANOPI_NEO_AIR:
 
 elif board_id == ap_board.NANOPI_DUO2:
     from adafruit_blinka.board.nanopi.duo2 import *
+
+elif board_id == ap_board.NANOPI_NEO:
+    from adafruit_blinka.board.nanopi.neo import *
 
 elif board_id == ap_board.PICO_U2IF:
     from adafruit_blinka.board.pico_u2if import *
@@ -239,8 +271,20 @@ elif board_id == ap_board.QTPY_U2IF:
 elif board_id == ap_board.ITSYBITSY_U2IF:
     from adafruit_blinka.board.itsybitsy_u2if import *
 
+elif board_id == ap_board.MACROPAD_U2IF:
+    from adafruit_blinka.board.macropad_u2if import *
+
 elif board_id == ap_board.QT2040_TRINKEY_U2IF:
     from adafruit_blinka.board.qt2040_trinkey_u2if import *
+
+elif board_id == ap_board.LICHEE_RV:
+    from adafruit_blinka.board.lichee_rv import *
+
+elif board_id == ap_board.SIEMENS_SIMATIC_IOT2050_ADV:
+    from adafruit_blinka.board.siemens.siemens_iot2050 import *
+
+elif board_id == ap_board.AML_S905X_CC:
+    from adafruit_blinka.board.librecomputer.aml_s905x_cc_v1 import *
 
 elif "sphinx" in sys.modules:
     pass

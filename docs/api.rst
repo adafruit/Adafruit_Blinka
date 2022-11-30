@@ -5,12 +5,15 @@
 .. use this format as the module name: "adafruit_foo.foo"
 
 .. automodule:: adafruit_blinka
-   :members:
+  :members:
 
 .. automodule:: adafruit_blinka.agnostic
   :members:
 
 .. automodule:: adafruit_blinka.microcontroller
+  :members:
+
+.. automodule:: analogio
   :members:
 
 .. automodule:: bitbangio
@@ -25,13 +28,26 @@
 .. automodule:: digitalio
   :members:
 
-.. automodule:: analogio
+.. automodule:: keypad
   :members:
 
-.. automodule:: pulseio
+.. automodule:: microcontroller
+  :members:
+
+.. automodule:: micropython
   :members:
 
 .. automodule:: neopixel_write
   :members:
 
+.. automodule:: onewireio
+  :members:
 
+.. automodule:: pulseio
+  :members:
+
+.. automodule:: pwmio
+  :members:
+
+.. automodule:: rainbowio
+  :members:

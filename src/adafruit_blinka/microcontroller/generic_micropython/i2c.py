@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """I2C Class for Generic MicroPython"""
 from machine import I2C as _I2C
 
@@ -33,7 +36,7 @@ class I2C:
         out_end=None,
         in_start=0,
         in_end=None,
-        stop=False
+        stop=False,
     ):
         """Write data from buffer_out to an address and then
         read data from an address and into buffer_in

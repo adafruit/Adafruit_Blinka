@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
+#
+# SPDX-License-Identifier: Unlicense
 [submodule "test/libraries/bme280"]
 	path = test/libraries/bme280
 	url = https://github.com/adafruit/Adafruit_CircuitPython_BME280.git

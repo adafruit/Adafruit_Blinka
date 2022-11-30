@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Pin definitions for the Orange Pi Zero."""
 
 # The Orange Pi Zero uses the AllWinner H2 SoC, but pins

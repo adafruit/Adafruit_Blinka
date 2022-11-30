@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Pin definitions for the Orange Pi Zero Plus 2 H5."""
 
 from adafruit_blinka.microcontroller.allwinner.h5 import pin

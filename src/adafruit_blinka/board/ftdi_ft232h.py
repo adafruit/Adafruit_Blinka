@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Pin definitions for the FTDI FT232H"""
 from adafruit_blinka.microcontroller.ftdi_mpsse.ft232h import pin
 

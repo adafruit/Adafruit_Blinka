@@ -1,5 +1,8 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """
-Samsum Exynos5422
+Samsung Exynos5422
 Ref:
     Linux kernel 4.14.y (hardkernel)
 """

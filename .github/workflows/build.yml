@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
+#
+# SPDX-License-Identifier: Unlicense
 name: Build CI
 
 on: [pull_request, push]
@@ -13,10 +16,10 @@ jobs:
     - name: Translate Repo Name For Build Tools filename_prefix
       id: repo-name
       run: echo ::set-output name=repo-name::Adafruit-Blinka
-    - name: Set up Python 3.6
+    - name: Set up Python 3.7
       uses: actions/setup-python@v1
       with:
-        python-version: 3.6
+        python-version: 3.7
     - name: Versions
       run: |
         python3 --version
@@ -33,18 +36,22 @@ jobs:
       # (e.g. - apt-get: gettext, etc; pip: circuitpython-build-tools, requirements.txt; etc.)
       run: |
         source actions-ci/install.sh
-    - name: Pip install pylint, black, & Sphinx
+    - name: Pip install Sphinx, pre-commit
       run: |
-        pip install --force-reinstall pylint==2.7.1 black Sphinx sphinx-rtd-theme
+        pip install --force-reinstall Sphinx sphinx-rtd-theme pre-commit
     - name: Library version
       run: git describe --dirty --always --tags
-    - name: Check formatting
+    - name: Pre-commit hooks
       run: |
-        black --check --target-version=py35 .
-    - name: PyLint
-      run: |
-        pylint $( find src -name '*.py' )
-        ([[ ! -d "examples" ]] || pylint --disable=missing-docstring,invalid-name,bad-whitespace $( find . -path "./examples/*.py" ))
+        pre-commit run --all-files
     - name: Build docs
       working-directory: docs
       run: sphinx-build -E -W -b html . _build/html
+    - name: Build Python package
+      run: |
+        pip install --upgrade build twine
+        for file in $(find -not -path "./.*" -not -path "./docs*" \( -name "*.py" -o -name "*.toml" \) ); do
+            sed -i -e "s/0.0.0+auto.0/1.2.3/" $file;
+        done;
+        python -m build
+        twine check dist/*

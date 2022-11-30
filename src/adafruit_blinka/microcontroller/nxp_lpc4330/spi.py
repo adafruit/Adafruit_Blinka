@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """SPI Class for NXP LPC4330"""
 from greatfet import GreatFET
 
@@ -69,8 +72,7 @@ class SPI:
         to the found value
         """
         closest_preset = None
-        for frequency in self._presets:
-            preset = self._presets[frequency]
+        for frequency, preset in self._presets.items():
             if self._frequency is None or abs(frequency - target_frequency) < abs(
                 self._frequency - target_frequency
             ):

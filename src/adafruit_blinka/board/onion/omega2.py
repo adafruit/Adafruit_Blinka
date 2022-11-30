@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Pin definitions for the Onion Omega2+ Expansion Dock."""
 
 from adafruit_blinka.microcontroller.mips24kec import pin

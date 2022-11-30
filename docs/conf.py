@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
+
 import os
 import sys
 
@@ -29,7 +33,7 @@ autodoc_mock_imports = [
 ]
 
 intersphinx_mapping = {
-    "python": ("https://docs.python.org/3.6", None),
+    "python": ("https://docs.python.org/3.7", None),
     "CircuitPython": ("https://circuitpython.readthedocs.io/en/latest/", None),
 }
 
@@ -60,7 +64,7 @@ release = "1.0.0"
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = "en"
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.

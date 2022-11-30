@@ -1,11 +1,28 @@
-"""Custom PWMOut Wrapper for Rpi.GPIO PWM Class"""
-import RPi.GPIO as GPIO
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2022 Martin Schnur for Siemens AG
+#
+# SPDX-License-Identifier: MIT
 
-GPIO.setmode(GPIO.BCM)  # Use BCM pins D4 = GPIO #4
-GPIO.setwarnings(False)  # shh!
+# pylint: disable=pointless-string-statement
+# pylint: disable=ungrouped-imports,wrong-import-position,unused-import
+# pylint: disable=import-outside-toplevel
 
+"""Custom PWMOut Wrapper for am65xx"""
+"""
+Much code from https://github.com/vsergeev/python-periphery/blob/master/periphery/pwm.py
+Copyright (c) 2015-2016 vsergeev / Ivan (Vanya) A. Sergeev
+License: MIT
+"""
+
+
+import mraa
+from adafruit_blinka.microcontroller.am65xx.pin import Pin
 
 # pylint: disable=unnecessary-pass
+
+
 class PWMError(IOError):
     """Base class for PWM errors."""
 
@@ -19,8 +36,16 @@ class PWMOut:
     """Pulse Width Modulation Output Class"""
 
     def __init__(self, pin, *, frequency=500, duty_cycle=0, variable_frequency=False):
+        self._frequency = None
+        self._duty_cycle = None
         self._pwmpin = None
         self._period = 0
+        self._enabled = False
+        self._varfreq = variable_frequency
+        # check pin for PWM support
+        self._pin = Pin(pin.id)
+        self._pin.init(mode=Pin.PWM)
+        # initialize pin
         self._open(pin, duty_cycle, frequency, variable_frequency)
 
     def __del__(self):
@@ -33,25 +58,16 @@ class PWMOut:
         self.deinit()
 
     def _open(self, pin, duty=0, freq=500, variable_frequency=False):
-        self._pin = pin
-        GPIO.setup(pin.id, GPIO.OUT)
-        self._pwmpin = GPIO.PWM(pin.id, freq)
-
-        if variable_frequency:
-            print("Variable Frequency is not supported, continuing without it...")
-
-        # set frequency
+        self._pwmpin = mraa.Pwm(pin.id)
         self.frequency = freq
-        # set duty
-        self.duty_cycle = duty
-
         self.enabled = True
+        self._varfreq = variable_frequency
+        self.duty_cycle = duty
 
     def deinit(self):
         """Deinit the PWM."""
         if self._pwmpin is not None:
-            self._pwmpin.stop()
-            GPIO.cleanup(self._pin.id)
+            self._pwmpin.enable(False)
             self._pwmpin = None
 
     def _is_deinited(self):
@@ -106,7 +122,8 @@ class PWMOut:
         duty_cycle /= 65535.0
 
         self._duty_cycle = duty_cycle
-        self._pwmpin.ChangeDutyCycle(round(self._duty_cycle * 100))
+        # self._pwmpin.ChangeDutyCycle(round(self._duty_cycle * 100))
+        self._pwmpin.write(self._duty_cycle)  # mraa duty_cycle 0.0f - 1.0f
 
     @property
     def frequency(self):
@@ -126,7 +143,12 @@ class PWMOut:
         if not isinstance(frequency, (int, float)):
             raise TypeError("Invalid frequency type, should be int or float.")
 
-        self._pwmpin.ChangeFrequency(round(frequency))
+        if self._enabled and not self._varfreq:
+            raise TypeError(
+                " Set variable_frequency = True to allow changing frequency "
+            )
+        # mraa has different variants in seconds,milli(_ms),micro(_us)
+        self._pwmpin.period((1 / frequency))
         self._frequency = frequency
 
     @property
@@ -147,11 +169,11 @@ class PWMOut:
             raise TypeError("Invalid enabled type, should be string.")
 
         if value:
-            self._pwmpin.start(round(self._duty_cycle * 100))
+            self._pwmpin.enable(True)
+            self._enabled = value
         else:
-            self._pwmpin.stop()
-
-        self._enabled = value
+            self._pwmpin.enable(False)
+            self._enabled(False)
 
     # String representation
     def __str__(self):

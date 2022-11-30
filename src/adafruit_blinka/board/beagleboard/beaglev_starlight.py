@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Pin definitions for the BeagleV StarLight."""
 
 from adafruit_blinka.microcontroller.starfive.JH71x0 import pin
