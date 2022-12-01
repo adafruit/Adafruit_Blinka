@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2022 ShangYun
+#
+# SPDX-License-Identifier: MIT
+
 """Pin definitions for the Rock 5"""
 
 from adafruit_blinka.microcontroller.rockchip.rk3588 import pin
@@ -60,7 +64,7 @@ UART7_RX_M1 = pin.GPIO3_C1
 UART7_TX_M2 = pin.GPIO1_B5
 UART7_RX_M2 = pin.GPIO1_B4
 
-# Default UART -> UART2_M0 
+# Default UART -> UART2_M0
 
 TX = UART2_TX_M0
 RX = UART2_RX_M0

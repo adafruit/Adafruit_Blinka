@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+# SPDX-FileCopyrightText: 2022 ShangYun
 #
 # SPDX-License-Identifier: MIT
 """A Pin class for use with Rockchip RK3588."""
@@ -190,7 +190,7 @@ UART7_RX_M2 = GPIO1_B4
 
 # ordered as uartId, txId, rxId
 uartPorts = (
-    (2, UART2_TX_M0, UART2_RX_M0),  
+    (2, UART2_TX_M0, UART2_RX_M0),
     (2, UART2_TX_M2, UART2_RX_M2),
     (3, UART3_TX_M1, UART3_RX_M1),
     (4, UART4_TX_M2, UART4_RX_M2),
@@ -216,7 +216,7 @@ i2cPorts = (
     (0, I2C0_SCL_M1, I2C0_SDA_M1),
     (1, I2C1_SCL_M0, I2C1_SDA_M0),
     (3, I2C3_SCL_M1, I2C3_SDA_M1),
-    (7, I2C7_SCL_M3, I2C7_SDA_M3), 
+    (7, I2C7_SCL_M3, I2C7_SDA_M3),
     (8, I2C8_SCL_M4, I2C8_SDA_M4),
 )
 
@@ -243,7 +243,7 @@ SPI3_SCLK_M0 = SPI3_SCK_M0
 # ordered as spiId, sckId, mosiId, misoId
 spiPorts = (
     (0, SPI0_SCLK_M2, SPI0_MOSI_M2, SPI0_MISO_M2),
-    (1, SPI1_SCLK_M1, SPI1_MOSI_M1, SPI1_MISO_M1),  
+    (1, SPI1_SCLK_M1, SPI1_MOSI_M1, SPI1_MISO_M1),
     (3, SPI3_SCLK_M0, SPI3_MOSI_M0, SPI3_MISO_M0),
 )
 
