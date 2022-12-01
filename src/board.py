@@ -178,6 +178,9 @@ elif board_id == ap_board.ODROID_C4:
 elif board_id == ap_board.ODROID_N2:
     from adafruit_blinka.board.hardkernel.odroidn2 import *
 
+elif board_id == ap_board.ODROID_M1:
+    from adafruit_blinka.board.hardkernel.odroidm1 import *
+
 elif board_id == ap_board.KHADAS_VIM3:
     from adafruit_blinka.board.khadas.khadasvim3 import *
 
@@ -220,6 +223,9 @@ elif board_id == ap_board.CLOCKWORK_CPI3:
 elif board_id == ap_board.ONION_OMEGA2:
     from adafruit_blinka.board.onion.omega2 import *
 
+elif board_id == ap_board.RADXA_CM3:
+    from adafruit_blinka.board.radxa.radxacm3 import *
+
 elif board_id == ap_board.RADXA_ZERO:
     from adafruit_blinka.board.radxa.radxazero import *
 
@@ -237,6 +243,9 @@ elif board_id == ap_board.ROCK_PI_E:
 
 elif board_id == ap_board.UDOO_X86:
     from adafruit_blinka.board.udoo_x86ultra import *
+
+elif board_id == ap_board.ODYSSEY_X86J4105:
+    from adafruit_blinka.board.x86j4105 import *
 
 elif board_id == ap_board.STM32MP157C_DK2:
     from adafruit_blinka.board.stm32.stm32mp157c_dk2 import *
