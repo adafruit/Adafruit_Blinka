@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Pin definitions for the Dragonboard 410c."""
 
 from adafruit_blinka.microcontroller.snapdragon.apq8016 import pin

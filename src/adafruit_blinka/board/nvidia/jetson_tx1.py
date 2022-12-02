@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Pin definitions for Jetson TX1."""
 
 from adafruit_blinka.microcontroller.tegra.t210 import pin

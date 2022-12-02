@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """
 Much code from https://github.com/vsergeev/python-periphery/blob/master/periphery/pwm.py
 Copyright (c) 2015-2016 vsergeev / Ivan (Vanya) A. Sergeev
@@ -105,13 +108,15 @@ class PWMOut:
 
         try:
             with open(
-                os.path.join(channel_path, self._unexport_path), "w"
+                os.path.join(channel_path, self._unexport_path), "w", encoding="utf-8"
             ) as f_unexport:
                 f_unexport.write("%d\n" % self._pwmpin)
-        except IOError as e:
+        except IOError:
             pass  # not unusual, it doesnt already exist
         try:
-            with open(os.path.join(channel_path, self._export_path), "w") as f_export:
+            with open(
+                os.path.join(channel_path, self._export_path), "w", encoding="utf-8"
+            ) as f_export:
                 f_export.write("%d\n" % self._pwmpin)
         except IOError as e:
             raise PWMError(e.errno, "Exporting PWM pin: " + e.strerror) from IOError
@@ -126,6 +131,7 @@ class PWMOut:
                         channel_path, self._pin_path.format(self._pwmpin), "period"
                     ),
                     "w",
+                    encoding="utf-8",
                 ):
                     break
             except IOError as e:
@@ -158,7 +164,9 @@ class PWMOut:
                     self._sysfs_path, self._channel_path.format(self._channel)
                 )
                 with open(
-                    os.path.join(channel_path, self._unexport_path), "w"
+                    os.path.join(channel_path, self._unexport_path),
+                    "w",
+                    encoding="utf-8",
                 ) as f_unexport:
                     f_unexport.write("%d\n" % self._pwmpin)
             except IOError as e:
@@ -187,7 +195,7 @@ class PWMOut:
             attr,
         )
 
-        with open(path, "w") as f_attr:
+        with open(path, "w", encoding="utf-8") as f_attr:
             # print(value, path)
             f_attr.write(value + "\n")
 
@@ -202,7 +210,7 @@ class PWMOut:
             attr,
         )
 
-        with open(path, "r") as f_attr:
+        with open(path, "r", encoding="utf-8") as f_attr:
             return f_attr.read().strip()
 
     # Mutable properties

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """
 `keypad` - Support for scanning keys and key matrices
 ===========================================================
@@ -384,7 +387,7 @@ class ShiftRegisterKeys(_KeysBase):
         key_count,
         value_when_pressed,
         interval=0.02,
-        max_events=64
+        max_events=64,
     ):
         """
         Create a `Keys` object that will scan keys attached to a parallel-in serial-out
@@ -462,7 +465,7 @@ class ShiftRegisterKeys(_KeysBase):
 
     @property
     def events(self):
-        """The `EventQueue` associated with this `Keys` object. (read-only)"""
+        """The ``EventQueue`` associated with this `Keys` object. (read-only)"""
         return self._events
 
     def _keypad_shiftregisterkeys_scan(self):

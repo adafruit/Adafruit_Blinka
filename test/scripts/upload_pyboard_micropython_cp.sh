@@ -1,4 +1,7 @@
 #!/bin/sh
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 
 export PORT="/dev/ttyUSB0"
 export MPYCROSS=`realpath ../../../micropython/mpy-cross/mpy-cross`

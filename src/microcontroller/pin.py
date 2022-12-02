@@ -1,7 +1,11 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Pins named after their chip name."""
 
+import sys
 from adafruit_platformdetect.constants import chips as ap_chip
-from adafruit_blinka.agnostic import chip_id
+from adafruit_blinka.agnostic import board_id, chip_id
 
 # We intentionally are patching into this namespace so skip the wildcard check.
 # pylint: disable=unused-wildcard-import,wildcard-import,ungrouped-imports
@@ -13,14 +17,25 @@ elif chip_id == ap_chip.STM32F405:
 elif chip_id == ap_chip.RP2040:
     from adafruit_blinka.microcontroller.rp2040.pin import *
 elif chip_id == ap_chip.BCM2XXX:
-    from adafruit_blinka.microcontroller.bcm283x.pin import *
+    if board_id in [
+        "RASPBERRY_PI_4B",
+        "RASPBERRY_PI_400",
+        "RASPBERRY_PI_CM4",
+    ]:
+        from adafruit_blinka.microcontroller.bcm2711.pin import *
+    else:
+        from adafruit_blinka.microcontroller.bcm283x.pin import *
 elif chip_id == ap_chip.DRA74X:
     from adafruit_blinka.microcontroller.dra74x.pin import *
 elif chip_id == ap_chip.AM33XX:
     from adafruit_blinka.microcontroller.am335x.pin import *
+elif chip_id == ap_chip.AM65XX:
+    from adafruit_blinka.microcontroller.am65xx.pin import *
 elif chip_id == ap_chip.JH71x0:
     from adafruit_blinka.microcontroller.starfive.JH71x0.pin import *
 elif chip_id == ap_chip.SUN8I:
+    from adafruit_blinka.microcontroller.allwinner.h3.pin import *
+elif chip_id == ap_chip.H3:
     from adafruit_blinka.microcontroller.allwinner.h3.pin import *
 elif chip_id == ap_chip.H5:
     from adafruit_blinka.microcontroller.allwinner.h5.pin import *
@@ -36,12 +51,20 @@ elif chip_id == ap_chip.T186:
     from adafruit_blinka.microcontroller.tegra.t186.pin import *
 elif chip_id == ap_chip.T194:
     from adafruit_blinka.microcontroller.tegra.t194.pin import *
+elif chip_id == ap_chip.T234:
+    from adafruit_blinka.microcontroller.tegra.t234.pin import *
 elif chip_id == ap_chip.S905:
     from adafruit_blinka.microcontroller.amlogic.s905.pin import *
+elif chip_id == ap_chip.S905X:
+    from adafruit_blinka.microcontroller.amlogic.s905x.pin import *
 elif chip_id == ap_chip.S905X3:
     from adafruit_blinka.microcontroller.amlogic.s905x3.pin import *
+elif chip_id == ap_chip.S905Y2:
+    from adafruit_blinka.microcontroller.amlogic.s905y2.pin import *
 elif chip_id == ap_chip.S922X:
     from adafruit_blinka.microcontroller.amlogic.s922x.pin import *
+elif chip_id == ap_chip.A311D:
+    from adafruit_blinka.microcontroller.amlogic.a311d.pin import *
 elif chip_id == ap_chip.EXYNOS5422:
     from adafruit_blinka.microcontroller.samsung.exynos5422.pin import *
 elif chip_id == ap_chip.APQ8016:
@@ -84,5 +107,18 @@ elif chip_id == ap_chip.MT8167:
     from adafruit_blinka.microcontroller.mt8167.pin import *
 elif chip_id == ap_chip.RP2040_U2IF:
     from adafruit_blinka.microcontroller.rp2040_u2if.pin import *
+elif chip_id == ap_chip.D1_RISCV:
+    from adafruit_blinka.microcontroller.allwinner.D1.pin import *
+elif "sphinx" in sys.modules:
+    # pylint: disable=unused-import
+    from adafruit_blinka.microcontroller.generic_micropython import Pin
+elif chip_id == ap_chip.GENERIC_X86:
+    print("WARNING: GENERIC_X86 is not fully supported. Some features may not work.")
+    from adafruit_blinka.microcontroller.generic_micropython import Pin
+elif chip_id is None:
+    print(
+        "WARNING: chip_id == None is not fully supported. Some features may not work."
+    )
+    from adafruit_blinka.microcontroller.generic_micropython import Pin
 else:
     raise NotImplementedError("Microcontroller not supported: ", chip_id)

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """STM32MP157 pins"""
 from adafruit_blinka.microcontroller.generic_linux.periphery_pin import Pin
 
@@ -94,6 +97,7 @@ PF12 = Pin((5, 12))
 PF13 = Pin((5, 13))
 PF14 = Pin((5, 14))
 PF15 = Pin((5, 15))
+PG0 = Pin((6, 0))
 PG1 = Pin((6, 1))
 PG2 = Pin((6, 2))
 PG3 = Pin((6, 3))

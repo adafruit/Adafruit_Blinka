@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """I2C Classes for RP2040s with u2if firmware"""
 from .rp2040_u2if import rp2040_u2if
 
@@ -36,7 +39,7 @@ class I2C:
         out_end=None,
         in_start=0,
         in_end=None,
-        stop=False
+        stop=False,
     ):
         """Write data from buffer_out to an address and then
         read data from an address and into buffer_in
@@ -112,6 +115,19 @@ class I2C_ItsyBitsy(I2C):
             raise ValueError("I2C not found on specified pins.")
         self._index = index
 
+        super().__init__(index, frequency=frequency)
+
+
+class I2C_MacroPad(I2C):
+    """I2C Class for MacroPad u2if"""
+
+    def __init__(self, scl, sda, *, frequency=100000):
+        index = None
+        if scl.id == 21 and sda.id == 20:
+            index = 0
+        if index is None:
+            raise ValueError("I2C not found on specified pins.")
+        self._index = index
         super().__init__(index, frequency=frequency)
 
 

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Helper class for use with RP2040 running u2if firmware"""
 # https://github.com/execuc/u2if
 
@@ -91,6 +94,7 @@ class RP2040_u2if:
 
     def _reset(self):
         self._hid_xfer(bytes([self.SYS_RESET]), False)
+        self._hid.close()
         time.sleep(RP2040_U2IF_RESET_DELAY)
         start = time.monotonic()
         while time.monotonic() - start < 5:
@@ -272,7 +276,7 @@ class RP2040_u2if:
         out_start=0,
         out_end=None,
         in_start=0,
-        in_end=None
+        in_end=None,
     ):
         """Write data from buffer_out to an address and then
         read data from an address and into buffer_in
@@ -365,7 +369,7 @@ class RP2040_u2if:
         out_start=0,
         out_end=None,
         in_start=0,
-        in_end=None
+        in_end=None,
     ):
         """SPI write and readinto."""
         raise NotImplementedError("SPI write_readinto Not implemented")

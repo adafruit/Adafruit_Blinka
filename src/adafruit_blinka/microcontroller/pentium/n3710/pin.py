@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Pentium N3710 (Braswell core SOC) pin names
    i2c and GPIO can be accessed through Blinka.
    For i2c use IC20_SCL, IC20-SDA and IC21-SCL, IC21-SDA in the i2c(<sdl, sda>) calls.

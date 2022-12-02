@@ -1,7 +1,12 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Chip Definition for MCP2221"""
 
 import os
 import time
+import atexit
+
 import hid
 
 # Here if you need it
@@ -61,6 +66,8 @@ class MCP2221:
 
         self._hid = hid.device()
         self._hid.open_path(self._bus_id)
+        # make sure the device gets closed before exit
+        atexit.register(self.close)
         if MCP2221_RESET_DELAY >= 0:
             self._reset()
         self._gp_config = [0x07] * 4  # "don't care" initial value
@@ -87,6 +94,14 @@ class MCP2221:
             instance = MCP2221(bus_id)
             MCP2221.instances[bus_id] = instance
         return MCP2221.instances[bus_id]
+
+    def close(self):
+        """Close the hid device. Does nothing if the device is not open."""
+        self._hid.close()
+
+    def __del__(self):
+        # try to close the device before destroying the instance
+        self.close()
 
     def _hid_xfer(self, report, response=True):
         """Perform HID Transfer"""
@@ -152,6 +167,7 @@ class MCP2221:
         ]
         dev_list_before_reset.remove(self._bus_id)
         self._hid_xfer(b"\x70\xAB\xCD\xEF", response=False)
+        self._hid.close()
         time.sleep(MCP2221_RESET_DELAY)
 
         start = time.monotonic()
@@ -231,7 +247,7 @@ class MCP2221:
             # bus release will need "a few hundred microseconds"
             time.sleep(0.001)
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,too-many-branches
     def _i2c_write(self, cmd, address, buffer, start=0, end=None):
         if self._i2c_state() != 0x00:
             self._i2c_cancel()
@@ -240,7 +256,7 @@ class MCP2221:
         length = end - start
         retries = 0
 
-        while (end - start) > 0:
+        while (end - start) > 0 or not buffer:
             chunk = min(end - start, MCP2221_MAX_I2C_DATA_LEN)
             # write out current chunk
             resp = self._hid_xfer(
@@ -265,6 +281,8 @@ class MCP2221:
             # yay chunk sent!
             while self._i2c_state() == RESP_I2C_PARTIALDATA:
                 time.sleep(0.001)
+            if not buffer:
+                break
             start += chunk
             retries = 0
 

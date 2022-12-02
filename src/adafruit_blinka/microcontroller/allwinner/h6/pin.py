@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Allwinner H6 Pin Names"""
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
@@ -39,8 +42,11 @@ SPI1_MISO = PH6
 PH8 = Pin((1, 230))
 PH9 = Pin((1, 231))
 
+PL2 = Pin((0, 2))
+PL3 = Pin((0, 3))
 PL8 = Pin((0, 8))
 PL9 = Pin((0, 9))
+PL10 = Pin((0, 10))
 
 i2cPorts = ((0, TWI0_SCL, TWI0_SDA),)
 spiPorts = ((1, SPI1_SCLK, SPI1_MOSI, SPI1_MISO),)

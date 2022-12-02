@@ -1,6 +1,9 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """Tegra T194 pin names"""
 import atexit
-import Jetson.GPIO as GPIO
+from Jetson import GPIO
 
 GPIO.setmode(GPIO.TEGRA_SOC)
 GPIO.setwarnings(False)  # shh!

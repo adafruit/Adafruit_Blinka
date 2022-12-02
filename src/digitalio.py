@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """
 `digitalio` - Digital input and output control (GPIO)
 =====================================================
@@ -11,10 +14,13 @@ from adafruit_blinka.agnostic import board_id, detector
 
 # pylint: disable=ungrouped-imports,wrong-import-position
 
+# By Chip Class
 if detector.chip.BCM2XXX:
     from adafruit_blinka.microcontroller.bcm283x.pin import Pin
 elif detector.chip.AM33XX:
     from adafruit_blinka.microcontroller.am335x.pin import Pin
+elif detector.chip.AM65XX:
+    from adafruit_blinka.microcontroller.am65xx.pin import Pin
 elif detector.chip.JH71x0:
     from adafruit_blinka.microcontroller.starfive.JH71x0.pin import Pin
 elif detector.chip.DRA74X:
@@ -29,12 +35,20 @@ elif detector.chip.T186:
     from adafruit_blinka.microcontroller.tegra.t186.pin import Pin
 elif detector.chip.T194:
     from adafruit_blinka.microcontroller.tegra.t194.pin import Pin
+elif detector.chip.T234:
+    from adafruit_blinka.microcontroller.tegra.t234.pin import Pin
 elif detector.chip.S905:
     from adafruit_blinka.microcontroller.amlogic.s905.pin import Pin
+elif detector.chip.S905X:
+    from adafruit_blinka.microcontroller.amlogic.s905x.pin import Pin
 elif detector.chip.S905X3:
     from adafruit_blinka.microcontroller.amlogic.s905x3.pin import Pin
+elif detector.chip.S905Y2:
+    from adafruit_blinka.microcontroller.amlogic.s905y2.pin import Pin
 elif detector.chip.S922X:
     from adafruit_blinka.microcontroller.amlogic.s922x.pin import Pin
+elif detector.chip.A311D:
+    from adafruit_blinka.microcontroller.amlogic.a311d.pin import Pin
 elif detector.chip.EXYNOS5422:
     from adafruit_blinka.microcontroller.samsung.exynos5422.pin import Pin
 elif detector.chip.APQ8016:
@@ -57,6 +71,23 @@ elif detector.chip.RK3399:
     from adafruit_blinka.microcontroller.rockchip.rk3399.pin import Pin
 elif detector.chip.RK3328:
     from adafruit_blinka.microcontroller.rockchip.rk3328.pin import Pin
+elif detector.chip.PENTIUM_N3710:
+    from adafruit_blinka.microcontroller.pentium.n3710.pin import Pin
+elif detector.chip.STM32MP157:
+    from adafruit_blinka.microcontroller.stm32.stm32mp157.pin import Pin
+elif detector.chip.MT8167:
+    from adafruit_blinka.microcontroller.mt8167.pin import Pin
+elif detector.chip.H3:
+    from adafruit_blinka.microcontroller.allwinner.h3.pin import Pin
+elif detector.chip.H5:
+    from adafruit_blinka.microcontroller.allwinner.h5.pin import Pin
+elif detector.chip.H6:
+    from adafruit_blinka.microcontroller.allwinner.h6.pin import Pin
+elif detector.chip.H616:
+    from adafruit_blinka.microcontroller.allwinner.h616.pin import Pin
+elif detector.chip.D1_RISCV:
+    from adafruit_blinka.microcontroller.allwinner.D1.pin import Pin
+# Special Case Boards
 elif detector.board.ftdi_ft232h:
     from adafruit_blinka.microcontroller.ftdi_mpsse.ft232h.pin import Pin
 elif detector.board.ftdi_ft2232h:
@@ -65,33 +96,15 @@ elif detector.board.binho_nova:
     from adafruit_blinka.microcontroller.nova.pin import Pin
 elif detector.board.greatfet_one:
     from adafruit_blinka.microcontroller.nxp_lpc4330.pin import Pin
+elif detector.board.microchip_mcp2221:
+    from adafruit_blinka.microcontroller.mcp2221.pin import Pin
+elif detector.chip.RP2040_U2IF:
+    from adafruit_blinka.microcontroller.rp2040_u2if.pin import Pin
+# MicroPython Chips
 elif detector.chip.STM32F405:
     from machine import Pin
 elif detector.chip.RP2040:
     from machine import Pin
-elif detector.board.microchip_mcp2221:
-    from adafruit_blinka.microcontroller.mcp2221.pin import Pin
-elif detector.chip.PENTIUM_N3710:
-    from adafruit_blinka.microcontroller.pentium.n3710.pin import Pin
-elif detector.chip.STM32MP157:
-    from adafruit_blinka.microcontroller.stm32.stm32mp157.pin import Pin
-elif detector.chip.MT8167:
-    from adafruit_blinka.microcontroller.mt8167.pin import Pin
-elif detector.chip.H5:
-    from adafruit_blinka.microcontroller.allwinner.h5.pin import Pin
-elif detector.chip.H6:
-    from adafruit_blinka.microcontroller.allwinner.h6.pin import Pin
-elif detector.chip.H616:
-    from adafruit_blinka.microcontroller.allwinner.h616.pin import Pin
-elif detector.board.pico_u2if:
-    from adafruit_blinka.microcontroller.rp2040_u2if.pin import Pin
-elif (
-    detector.board.feather_u2if
-    or detector.board.qtpy_u2if
-    or detector.board.itsybitsy_u2if
-    or detector.board.qt2040_trinkey_u2if
-):
-    from adafruit_blinka.microcontroller.rp2040_u2if.pin import Pin
 
 from adafruit_blinka import Enum, ContextManaged
 
@@ -176,7 +189,7 @@ class DigitalInOut(ContextManaged):
 
     @property
     def value(self):
-        """Get or Set the Digital Pin Value"""
+        """The Digital Pin Value"""
         return self._pin.value() == 1
 
     @value.setter
@@ -188,7 +201,7 @@ class DigitalInOut(ContextManaged):
 
     @property
     def pull(self):
-        """Get or Set the Digital Pin Direction"""
+        """The pin pull direction"""
         if self.direction is Direction.INPUT:
             return self.__pull
         raise AttributeError("Not an input")
@@ -215,7 +228,7 @@ class DigitalInOut(ContextManaged):
 
     @property
     def drive_mode(self):
-        """Get or Set the Digital Pin Drive Mode"""
+        """The Digital Pin Drive Mode"""
         if self.direction is Direction.OUTPUT:
             return self.__drive_mode  #
         raise AttributeError("Not an output")

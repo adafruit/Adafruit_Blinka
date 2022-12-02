@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """
 `neopixel_write` - NeoPixel precision timed writing support
 ===========================================================
@@ -20,6 +23,7 @@ elif (
     detector.board.feather_u2if
     or detector.board.qtpy_u2if
     or detector.board.itsybitsy_u2if
+    or detector.board.macropad_u2if
     or detector.board.qt2040_trinkey_u2if
 ):
     from adafruit_blinka.microcontroller.rp2040_u2if import neopixel as _neopixel

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 """
 Pin definitions for the Feather RP2040 with u2if firmware.
 
@@ -32,6 +35,8 @@ A0 = pin.GP26
 A1 = pin.GP27
 A2 = pin.GP28
 # A3 = pin.GP29 # not currently supported in firmware
+
+NEOPIXEL = pin.GP16
 
 SCL = pin.GP3
 SDA = pin.GP2
