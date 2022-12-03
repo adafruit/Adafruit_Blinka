@@ -12,8 +12,16 @@ See the `CircuitPython docs <https://circuitpython.readthedocs.io/>`_ for extens
     :caption: examples/bbb_digitalio.py
     :linenos:
 
-.. literalinclude:: ../examples/mcps_busio_i2c.py
-    :caption: examples/mcps_busio_i2c.py
+.. literalinclude:: ../examples/mcp2221_first_busio_i2c.py
+    :caption: examples/mcp2221_first_busio_i2c.py
+    :linenos:
+
+.. literalinclude:: ../examples/mcp2221_multiple_busio_i2c.py
+    :caption: examples/mcp2221_multiple_busio_i2c.py
+    :linenos:
+
+.. literalinclude:: ../examples/mcp2221_single_busio_i2c.py
+    :caption: examples/mcp2221_single_busio_i2c.py
     :linenos:
 
 .. literalinclude:: ../examples/pb_digitalio.py
