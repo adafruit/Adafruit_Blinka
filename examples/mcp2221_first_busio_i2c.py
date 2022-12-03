@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2022, The Blinka Authors.
+#
 # SPDX-License-Identifier: MIT
 import busio
 
