@@ -53,19 +53,39 @@ class MCP2221:
     GP_ALT1 = 0b011
     GP_ALT2 = 0b100
 
+    # attempting to reopen the same hid device results in an error,
+    # so we cache and return already opened devices
     instances = {}
 
-    def __init__(self, bus_id=None):
-        if bus_id is None:
-            first_device = [
-                mcp["path"] for mcp in hid.enumerate(MCP2221.VID, MCP2221.PID)
-            ][0]
-            self._bus_id = first_device
-        else:
-            self._bus_id = bus_id
+    def __new__(cls, bus_id=None):
+        """Return a (possibly cached) MCP2221 instance."""
+        print(f'MCP2221.__new__; {bus_id=}; instances={list(cls.instances)}')
+        # check for an existing cached instance
+        if bus_id in cls.instances:
+            # return the corresponding cached instance
+            print(f'Returning cached {bus_id}...')
+            return cls.instances[bus_id]
+        if bus_id is None and cls.instances:
+            # return the instance for the first bus_id, if already cached
+            first_bus_id = cls.available_paths(require_mcps=True)[0]
+            if first_bus_id in cls.instances:
+                print(f'Returning cached {first_bus_id}...')
+                return cls.instances[first_bus_id]
 
-        self._hid = hid.device()
-        self._hid.open_path(self._bus_id)
+        # create a new instance
+        if bus_id is not None:
+            # use the given bus_id
+            self = super().__new__(cls)
+            self._hid = hid.device()
+            print(f'Opening {bus_id}.')
+            self._hid.open_path(bus_id)
+            self._bus_id = bus_id
+            # cache the new instance
+            cls.instances[bus_id] = self
+        else:
+            # find the first available MCP
+            self = cls.new_instance()
+
         # make sure the device gets closed before exit
         atexit.register(self.close)
         if MCP2221_RESET_DELAY >= 0:
@@ -74,26 +94,46 @@ class MCP2221:
         for pin in range(4):
             self.gp_set_mode(pin, self.GP_GPIO)  # set to GPIO mode
             self.gpio_set_direction(pin, 1)  # set to INPUT
+        return self
 
     @staticmethod
-    def get_instance(bus_id=None):
-        """Get the instance matching bus id
+    def available_paths(*, require_mcps=False):
+        """Return a list of paths of the currently available MCP2221s.
 
-        Returns:
-            Instance bound to the provided id or first instance if None
+        Raises a RuntimeError if *require_mcps* is True and there
+        are no MCP2221 connected.
         """
-        if bus_id is None:
-            if not MCP2221.instances:
-                instance = MCP2221()
-                # pylint: disable=protected-access
-                MCP2221.instances[instance._bus_id] = instance
-                # pylint: enable=protected-access
-            return next(iter(MCP2221.instances.values()))
+        mcps = hid.enumerate(MCP2221.VID, MCP2221.PID)
+        if require_mcps and not mcps:
+            raise RuntimeError('No MCP2221 detected.')
+        return [mcp["path"] for mcp in mcps]
 
-        if bus_id not in MCP2221.instances:
-            instance = MCP2221(bus_id)
-            MCP2221.instances[bus_id] = instance
-        return MCP2221.instances[bus_id]
+    @classmethod
+    def new_instance(cls):
+        """Find a new MCP2221, create an instance, and return it."""
+        self = super().__new__(cls)
+        self._hid = hid.device()
+        bus_ids = cls.available_paths(require_mcps=True)
+        print(f'{bus_ids=}')
+        # loop through all the available MCPs
+        for bus_id in bus_ids:
+            print(f'Opening {bus_id}...', end=' ')
+            try:
+                self._hid.open_path(bus_id)
+                self._bus_id = bus_id
+                # cache the new instance
+                cls.instances[bus_id] = self
+                print('[OK]')
+                return self
+            except (OSError, RuntimeError) as e:
+                print(f'[ERR]: {e}')
+                if len(bus_ids) == 1:
+                    raise  # we failed to open the only MCP
+                continue  # try opening the next one
+        else:
+            print('Failed to open all hid devices')
+            raise RuntimeError(f'Can not open any of the {len(bus_ids)} '
+                               f'connected MCP2221 devices.')
 
     def close(self):
         """Close the hid device. Does nothing if the device is not open."""
@@ -162,9 +202,7 @@ class MCP2221:
         self._pretty_report(b"\x61")
 
     def _reset(self):
-        dev_list_before_reset = [
-            mcp["path"] for mcp in hid.enumerate(MCP2221.VID, MCP2221.PID)
-        ]
+        dev_list_before_reset = MCP2221.available_paths()
         dev_list_before_reset.remove(self._bus_id)
         self._hid_xfer(b"\x70\xAB\xCD\xEF", response=False)
         self._hid.close()
@@ -172,9 +210,7 @@ class MCP2221:
 
         start = time.monotonic()
         while time.monotonic() - start < 5:
-            dev_list_after_reset = [
-                mcp["path"] for mcp in hid.enumerate(MCP2221.VID, MCP2221.PID)
-            ]
+            dev_list_after_reset = MCP2221.available_paths()
             # The new device is the one present after reset but not before
             device_new_path = set(dev_list_before_reset) ^ set(dev_list_after_reset)
             if not device_new_path:
@@ -437,3 +473,8 @@ class MCP2221:
         report = bytearray(b"\x60" + b"\x00" * 63)
         report[4] = 1 << 7 | (value & 0b11111)
         self._hid_xfer(report)
+
+   # pylint: enable=unused-argument
+
+
+mcp2221 = MCP2221()

@@ -5,7 +5,7 @@
 from .mcp2221 import MCP2221
 
 
-mcp2221 = MCP2221.get_instance()
+mcp2221 = MCP2221()
 
 
 class Pin:
