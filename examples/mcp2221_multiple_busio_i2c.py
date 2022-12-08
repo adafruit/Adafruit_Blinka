@@ -19,12 +19,11 @@ from adafruit_blinka.microcontroller.mcp2221.mcp2221 import MCP2221
 # addresses = [mcp["path"] for mcp in hid.enumerate(MCP2221_VID, MCP2221_PID)]
 
 addresses = MCP2221.available_paths()
-print(f'{len(addresses)} MCP2221(s) found: {addresses}')
+print(f"{len(addresses)} MCP2221(s) found: {addresses}")
 
 i2c_busses = []
 for address in addresses:
     i2c_busses.append(busio.I2C(bus_id=address))
 
 for address, i2c in zip(addresses, i2c_busses):
-    print(f'I2C devices found on {address.decode()}:',
-          [hex(i) for i in i2c.scan()])
+    print(f"I2C devices found on {address.decode()}:", [hex(i) for i in i2c.scan()])
