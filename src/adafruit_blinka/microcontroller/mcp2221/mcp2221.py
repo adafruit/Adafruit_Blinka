@@ -57,6 +57,8 @@ class MCP2221:
     # so we cache and return already opened devices
     instances = {}
 
+    # pylint gets confused by the use of __new__, so disable no-member checks
+    # pylint: disable=no-member
     def __new__(cls, bus_id=None):
         """Return a (possibly cached) MCP2221 instance."""
         print(f"MCP2221.__new__; bus_id={bus_id}; instances={list(cls.instances)}")
@@ -204,6 +206,7 @@ class MCP2221:
 
     def _reset(self):
         dev_list_before_reset = MCP2221.available_paths()
+        # pylint: disable-next=access-member-before-definition
         dev_list_before_reset.remove(self._bus_id)
         self._hid_xfer(b"\x70\xAB\xCD\xEF", response=False)
         self._hid.close()
