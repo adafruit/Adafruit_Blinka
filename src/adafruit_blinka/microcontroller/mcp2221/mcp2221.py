@@ -59,7 +59,7 @@ class MCP2221:
 
     def __new__(cls, bus_id=None):
         """Return a (possibly cached) MCP2221 instance."""
-        print(f"MCP2221.__new__; {bus_id=}; instances={list(cls.instances)}")
+        print(f"MCP2221.__new__; bus_id={bus_id}; instances={list(cls.instances)}")
         # check for an existing cached instance
         if bus_id in cls.instances:
             # return the corresponding cached instance
@@ -114,7 +114,7 @@ class MCP2221:
         self = super().__new__(cls)
         self._hid = hid.device()
         bus_ids = cls.available_paths(require_mcps=True)
-        print(f"{bus_ids=}")
+        print(f"bus_ids={bus_ids}")
         # loop through all the available MCPs
         for bus_id in bus_ids:
             print(f"Opening {bus_id}...", end=" ")
