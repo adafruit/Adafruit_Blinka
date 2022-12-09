@@ -5,20 +5,20 @@
 
 from adafruit_blinka.microcontroller.rockchip.rk3566 import pin
 
-#  lbancat zero board 40-pin  J8 or J7:
-#  --------------------------
-#  3V3   | (1)  (2)  | 5V
-#  GPIO3 | (3)  (4)  | 5V
-#  GPIO5 | (5)  (6)  | GND
-#  GPIO7 | (7)  (8)  | GPIO8
-#  GND   | (9)  (10) | GPIO10
-#  .......................  #
-#  .......................  #
-#  GPIO33| (33) (34) | GND
-#  GPIO35| (35) (36) | GPIO36
-#  GPIO37| (37) (38) | GPIO38
-#  GND   | (39) (40) | GPIO40
-#  --------------------------
+# lbancat zero board 40-pin  J8 or J7:
+# --------------------------
+# 3V3   | (1)  (2)  | 5V
+# GPIO3 | (3)  (4)  | 5V
+# GPIO5 | (5)  (6)  | GND
+# GPIO7 | (7)  (8)  | GPIO8
+# GND   | (9)  (10) | GPIO10
+# .......................
+# .......................
+# GPIO33| (33) (34) | GND
+# GPIO35| (35) (36) | GPIO36
+# GPIO37| (37) (38) | GPIO38
+# GND   | (39) (40) | GPIO40
+# --------------------------
 
 GPIO3 = pin.GPIO1_A0
 GPIO5 = pin.GPIO1_A1
@@ -49,7 +49,7 @@ GPIO37 = pin.GPIO1_B1
 GPIO38 = pin.GPIO3_A6
 GPIO40 = pin.GPIO3_A7
 
-#I2C3
+# I2C3
 I2C3_SDA = pin.I2C3_SDA_M0
 I2C3_SCL = pin.I2C3_SCL_M0
 I2C5_SCL = pin.I2C5_SCL_M0
