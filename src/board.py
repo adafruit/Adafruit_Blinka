@@ -238,8 +238,8 @@ elif board_id == ap_board.ROCK_PI_E:
 elif board_id == ap_board.UDOO_X86:
     from adafruit_blinka.board.udoo_x86ultra import *
 
-elif board_id == ap_board.ODYSSEY_X86J4105:
-    from adafruit_blinka.board.x86j4105 import *
+elif board_id == ap_board.ODYSSEY_X86J41X5:
+    from adafruit_blinka.board.x86j41x5 import *
 
 elif board_id == ap_board.STM32MP157C_DK2:
     from adafruit_blinka.board.stm32.stm32mp157c_dk2 import *

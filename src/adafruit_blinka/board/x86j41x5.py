@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
 #
 # SPDX-License-Identifier: MIT
-"""Pin definitions for the Odyssey X86j4105."""
+"""Pin definitions for the Odyssey X86j41X5."""
 
 from adafruit_blinka.microcontroller.pentium.j4105 import pin
 
