@@ -259,6 +259,12 @@ elif board_id == ap_board.LUBANCAT_IMX6ULL:
 elif board_id == ap_board.LUBANCAT_STM32MP157:
     from adafruit_blinka.board.lubancat.lubancat_stm32mp157 import *
 
+elif board_id == ap_board.LUBANCAT_ZERO:
+    from adafruit_blinka.board.lubancat.lubancat_zero import *
+
+elif board_id == ap_board.LUBANCAT1:
+    from adafruit_blinka.board.lubancat.lubancat1 import *
+
 elif board_id == ap_board.NANOPI_NEO_AIR:
     from adafruit_blinka.board.nanopi.neoair import *
 
