@@ -6,6 +6,7 @@
 import os
 import time
 import atexit
+import warnings
 
 import hid
 
@@ -62,31 +63,45 @@ class MCP2221:
     def __new__(cls, bus_id=None):
         """Return a (possibly cached) MCP2221 instance."""
         print(f"MCP2221.__new__; bus_id={bus_id}; instances={list(cls.instances)}")
-        # check for an existing cached instance
+        # check for an existing cached instance and return it
         if bus_id in cls.instances:
-            # return the corresponding cached instance
             print(f"Returning cached {bus_id}...")
             return cls.instances[bus_id]
-        if bus_id is None and cls.instances:
-            # return the instance for the first bus_id, if already cached
-            first_bus_id = cls.available_paths(require_mcps=True)[0]
-            if first_bus_id in cls.instances:
-                print(f"Returning cached {first_bus_id}...")
-                return cls.instances[first_bus_id]
 
-        # create a new instance
+        # if there is no cached instance, create a new one
+        self = super().__new__(cls)
+        self._hid = hid.device()
         if bus_id is not None:
             # use the given bus_id
-            self = super().__new__(cls)
-            self._hid = hid.device()
-            print(f"Opening {bus_id}.")
+            print(f"Opening {bus_id}...", end=" ")
             self._hid.open_path(bus_id)
             self._bus_id = bus_id
-            # cache the new instance
-            cls.instances[bus_id] = self
+            print("[OK]")
         else:
             # find the first available MCP
-            self = cls.new_instance()
+            bus_ids = cls.available_paths(require_mcps=True)
+            print(f"bus_ids={bus_ids}")
+            # loop through all the available MCPs
+            for bus_id in bus_ids:
+                print(f"Opening {bus_id}...", end=" ")
+                try:
+                    # pylint: disable-next=protected-access
+                    self._hid.open_path(bus_id)
+                    self._bus_id = bus_id
+                    print("[OK]")
+                    break  # we found an MCP that is available
+                except (OSError, RuntimeError) as e:
+                    print(f"[ERR]: {e}")
+                    if len(bus_ids) == 1:
+                        raise  # we failed to open the only MCP
+                    continue  # try opening the next one
+            else:
+                print("Failed to open all hid devices")
+                raise RuntimeError(
+                    f"Can not open any of the {len(bus_ids)} connected MCP2221 devices."
+                )
+        # cache the new instance
+        cls.instances[self._bus_id] = self
 
         # make sure the device gets closed before exit
         atexit.register(self.close)
@@ -109,35 +124,6 @@ class MCP2221:
         if require_mcps and not mcps:
             raise RuntimeError("No MCP2221 detected.")
         return [mcp["path"] for mcp in mcps]
-
-    @classmethod
-    def new_instance(cls):
-        """Find a new MCP2221, create an instance, and return it."""
-        self = super().__new__(cls)
-        # pylint: disable-next=protected-access
-        self._hid = hid.device()
-        bus_ids = cls.available_paths(require_mcps=True)
-        print(f"bus_ids={bus_ids}")
-        # loop through all the available MCPs
-        for bus_id in bus_ids:
-            print(f"Opening {bus_id}...", end=" ")
-            try:
-                # pylint: disable-next=protected-access
-                self._hid.open_path(bus_id)
-                self._bus_id = bus_id
-                # cache the new instance
-                cls.instances[bus_id] = self
-                print("[OK]")
-                return self
-            except (OSError, RuntimeError) as e:
-                print(f"[ERR]: {e}")
-                if len(bus_ids) == 1:
-                    raise  # we failed to open the only MCP
-                continue  # try opening the next one
-        print("Failed to open all hid devices")
-        raise RuntimeError(
-            f"Can not open any of the {len(bus_ids)} connected MCP2221 devices."
-        )
 
     def close(self):
         """Close the hid device. Does nothing if the device is not open."""
@@ -482,4 +468,10 @@ class MCP2221:
     # pylint: enable=unused-argument
 
 
-mcp2221 = MCP2221()
+def __getattr__(name):
+    if name == "mcp2221":
+        # someone is trying to import the module-level instance
+        msg = "Import the MCP2221 class and create a new instance instead."
+        warnings.warn(msg, DeprecationWarning, stacklevel=2)
+        return MCP2221(MCP2221.available_paths()[0])
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
