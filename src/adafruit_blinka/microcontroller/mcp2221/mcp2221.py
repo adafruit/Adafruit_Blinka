@@ -82,6 +82,7 @@ class MCP2221:
             bus_ids = cls.available_paths(require_mcps=True)
             print(f"bus_ids={bus_ids}")
             # loop through all the available MCPs
+            # pylint: disable-next=redefined-argument-from-local
             for bus_id in bus_ids:
                 print(f"Opening {bus_id}...", end=" ")
                 try:
