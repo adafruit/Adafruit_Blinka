@@ -83,7 +83,7 @@ class MCP2221:
                     self._hid.open_path(bus_id)
                     self._bus_id = bus_id
                     break  # we found an MCP that is available
-                except (OSError, RuntimeError) as e:
+                except (OSError, RuntimeError):
                     if len(bus_ids) == 1:
                         raise  # we failed to open the only MCP
                     continue  # try opening the next one
