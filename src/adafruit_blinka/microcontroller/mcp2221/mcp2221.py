@@ -62,42 +62,32 @@ class MCP2221:
     # pylint: disable=no-member
     def __new__(cls, bus_id=None):
         """Return a (possibly cached) MCP2221 instance."""
-        print(f"MCP2221.__new__; bus_id={bus_id}; instances={list(cls.instances)}")
         # check for an existing cached instance and return it
         if bus_id in cls.instances:
-            print(f"Returning cached {bus_id}...")
             return cls.instances[bus_id]
-
         # if there is no cached instance, create a new one
         self = super().__new__(cls)
         self._hid = hid.device()
         if bus_id is not None:
             # use the given bus_id
-            print(f"Opening {bus_id}...", end=" ")
             self._hid.open_path(bus_id)
             self._bus_id = bus_id
-            print("[OK]")
         else:
             # find the first available MCP
             bus_ids = cls.available_paths(require_mcps=True)
-            print(f"bus_ids={bus_ids}")
             # loop through all the available MCPs
             # pylint: disable-next=redefined-argument-from-local
             for bus_id in bus_ids:
-                print(f"Opening {bus_id}...", end=" ")
                 try:
                     # pylint: disable-next=protected-access
                     self._hid.open_path(bus_id)
                     self._bus_id = bus_id
-                    print("[OK]")
                     break  # we found an MCP that is available
                 except (OSError, RuntimeError) as e:
-                    print(f"[ERR]: {e}")
                     if len(bus_ids) == 1:
                         raise  # we failed to open the only MCP
                     continue  # try opening the next one
             else:
-                print("Failed to open all hid devices")
                 raise RuntimeError(
                     f"Can not open any of the {len(bus_ids)} connected MCP2221 devices."
                 )
@@ -116,7 +106,7 @@ class MCP2221:
 
     @staticmethod
     def available_paths(*, require_mcps=False):
-        """Return a list of paths of the currently available MCP2221s.
+        """Return a list of paths of the currently connected MCP2221s.
 
         Raises a RuntimeError if *require_mcps* is True and there
         are no MCP2221 connected.
