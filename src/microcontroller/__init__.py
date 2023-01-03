@@ -98,8 +98,12 @@ elif chip_id == ap_chip.RK3308:
     from adafruit_blinka.microcontroller.rockchip.rk3308 import *
 elif chip_id == ap_chip.RK3399:
     from adafruit_blinka.microcontroller.rockchip.rk3399 import *
+elif chip_id == ap_chip.RK3588:
+    from adafruit_blinka.microcontroller.rockchip.rk3588 import *
 elif chip_id == ap_chip.RK3328:
     from adafruit_blinka.microcontroller.rockchip.rk3328 import *
+elif chip_id == ap_chip.RK3566:
+    from adafruit_blinka.microcontroller.rockchip.rk3566 import *
 elif chip_id == ap_chip.H3:
     from adafruit_blinka.microcontroller.allwinner.h3 import *
 elif chip_id == ap_chip.H5:
@@ -126,6 +130,8 @@ elif chip_id == ap_chip.FT2232H:
     from adafruit_blinka.microcontroller.ftdi_mpsse.ft2232h import *
 elif chip_id == ap_chip.PENTIUM_N3710:
     from adafruit_blinka.microcontroller.pentium.n3710 import *
+elif chip_id == ap_chip.ATOM_J4105:
+    from adafruit_blinka.microcontroller.pentium.j4105 import *
 elif chip_id == ap_chip.STM32MP157:
     from adafruit_blinka.microcontroller.stm32.stm32mp157 import *
 elif chip_id == ap_chip.MT8167:
