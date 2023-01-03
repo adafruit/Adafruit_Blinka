@@ -73,9 +73,7 @@ i2cPorts = (
 )
 
 # ordered as spiId, sckId, mosiId, misoId
-spiPorts = (
-    (3, SPI3_CLK_M1, SPI3_MOSI_M1, SPI3_MISO_M1),
-)
+spiPorts = ((3, SPI3_CLK_M1, SPI3_MOSI_M1, SPI3_MISO_M1),)
 
 # SysFS pwm outputs, pwm channel and pin in first tuple
 pwmOuts = (
@@ -86,4 +84,3 @@ pwmOuts = (
 )
 
 # SysFS analog inputs, Ordered as analog analogInId, device, and channel
-
