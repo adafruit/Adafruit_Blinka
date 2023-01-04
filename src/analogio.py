@@ -31,6 +31,8 @@ elif detector.chip.RK3399:
     from adafruit_blinka.microcontroller.generic_linux.sysfs_analogin import AnalogIn
 elif detector.chip.RK3588:
     from adafruit_blinka.microcontroller.generic_linux.sysfs_analogin import AnalogIn
+elif detector.chip.RK3568:
+    from adafruit_blinka.microcontroller.generic_linux.sysfs_analogin import AnalogIn
 elif detector.chip.RK3566:
     from adafruit_blinka.microcontroller.generic_linux.sysfs_analogin import AnalogIn
 elif detector.chip.IMX6ULL:
