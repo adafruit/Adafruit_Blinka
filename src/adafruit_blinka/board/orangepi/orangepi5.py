@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2022 Corebb
+#
+# SPDX-License-Identifier: MIT
 """Pin definitions for the Orange Pi 5"""
 
 from adafruit_blinka.microcontroller.rockchip.rk3588 import pin
