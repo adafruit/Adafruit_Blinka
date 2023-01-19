@@ -11,7 +11,7 @@ See `CircuitPython:board` in CircuitPython for more details.
 """
 
 
-__version__ = "0.0.0+auto.0"
+__version__ = "8.12.0"
 __repo__ = "https://github.com/adafruit/Adafruit_Blinka.git"
 __blinka__ = True
 
@@ -309,6 +309,9 @@ elif board_id == ap_board.SIEMENS_SIMATIC_IOT2050_ADV:
 
 elif board_id == ap_board.AML_S905X_CC:
     from adafruit_blinka.board.librecomputer.aml_s905x_cc_v1 import *
+
+elif board_id == ap_board.GENERIC_LINUX_PC:
+    from adafruit_blinka.board.generic_linux_pc import *
 
 elif "sphinx" in sys.modules:
     pass
