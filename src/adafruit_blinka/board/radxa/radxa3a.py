@@ -1,9 +1,9 @@
-# SPDX-FileCopyrightText: 2022 Kenneth Ryerson
+# SPDX-FileCopyrightText: 2023 Enrico Trevisanello
 #
 # SPDX-License-Identifier: MIT
-"""Pin definitions for the Radxa CM3."""
+"""Pin definitions for the Radxa Rock Pi 3A."""
 
-from adafruit_blinka.microcontroller.rockchip.rk3566 import pin
+from adafruit_blinka.microcontroller.rockchip.rk3568 import pin
 
 # 3A IO pins
 
