@@ -310,8 +310,14 @@ elif board_id == ap_board.LICHEE_RV:
 elif board_id == ap_board.SIEMENS_SIMATIC_IOT2050_ADV:
     from adafruit_blinka.board.siemens.siemens_iot2050 import *
 
+elif board_id == ap_board.SIEMENS_SIMATIC_IOT2050_BASIC:
+    from adafruit_blinka.board.siemens.siemens_iot2050 import *
+
 elif board_id == ap_board.AML_S905X_CC:
     from adafruit_blinka.board.librecomputer.aml_s905x_cc_v1 import *
+
+elif board_id == ap_board.GENERIC_LINUX_PC:
+    from adafruit_blinka.board.generic_linux_pc import *
 
 elif "sphinx" in sys.modules:
     pass
