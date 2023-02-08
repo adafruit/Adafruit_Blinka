@@ -1,22 +1,18 @@
-# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+# SPDX-FileCopyrightText: 2023 Wouter Groeneveld
+# See https://wiki.radxa.com/Rock4/hardware/gpio (click EXPAND for the Pi 4C, chip RK3399_T)
 #
 # SPDX-License-Identifier: MIT
-"""A Pin class for use with Rockchip RK3399."""
+"""A Pin class for use with Rockchip RK3399_T."""
 
 from adafruit_blinka.microcontroller.generic_linux.sysfs_pin import Pin
 
 GPIO1_A1 = Pin(33)
-GPIO1_A3 = Pin(35)
+GPIO1_A4 = Pin(36)
 GPIO1_A7 = Pin(39)
 GPIO1_B0 = Pin(40)
 GPIO1_B1 = Pin(41)
 GPIO1_B2 = Pin(42)
-GPIO1_C2 = Pin(50)
 GPIO1_C4 = Pin(52)
-GPIO1_C5 = Pin(53)
-GPIO1_C6 = Pin(54)
-GPIO1_C7 = Pin(55)
-GPIO1_D0 = Pin(56)
 GPIO2_A0 = Pin(64)
 GPIO2_A1 = Pin(65)
 GPIO2_A7 = Pin(71)
@@ -25,15 +21,10 @@ GPIO2_B1 = Pin(73)
 GPIO2_B2 = Pin(74)
 GPIO2_B3 = Pin(75)
 GPIO2_B4 = Pin(76)
+GPIO2_D3 = Pin(91)
 GPIO2_D4 = Pin(92)
 GPIO3_C0 = Pin(112)
-GPIO4_A3 = Pin(131)
-GPIO4_A4 = Pin(132)
 GPIO4_A5 = Pin(133)
-GPIO4_A6 = Pin(134)
-GPIO4_A7 = Pin(135)
-GPIO4_C0 = Pin(144)
-GPIO4_C1 = Pin(145)
 GPIO4_C2 = Pin(146)
 GPIO4_C3 = Pin(147)
 GPIO4_C4 = Pin(148)
@@ -48,14 +39,10 @@ ADC_IN0 = 1
 # I2C
 I2C2_SDA = GPIO2_A0
 I2C2_SCL = GPIO2_A1
-I2C3_SDA = GPIO4_C0
-I2C3_SCL = GPIO4_C1
 I2C6_SDA = GPIO2_B1
 I2C6_SCL = GPIO2_B2
 I2C7_SDA = GPIO2_A7
 I2C7_SCL = GPIO2_B0
-I2C8_SDA = GPIO1_C4
-I2C8_SCL = GPIO1_C5
 
 # SPI
 SPI1_CS = GPIO1_B2
@@ -73,7 +60,6 @@ UART0_RX = GPIO4_C3
 
 # PWM
 PWM0 = GPIO4_C2
-PWM1 = GPIO4_C6
 
 # ordered as i2cId, SCL, SDA
 i2cPorts = (
