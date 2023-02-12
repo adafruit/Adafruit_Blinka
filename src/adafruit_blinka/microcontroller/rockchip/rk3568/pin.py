@@ -1,13 +1,16 @@
-# SPDX-FileCopyrightText: 2022 ShangYun
+# SPDX-FileCopyrightText: 2023 mmontol, etrevis
 #
 # SPDX-License-Identifier: MIT
-"""A Pin class for use with Rockchip RK3588."""
+
+"""A Pin class for use with Rockchip RK3568."""
 
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
+
 
 # GPIOx_yz = x * 32 + y * 8 + z
 # y: A -> 0, B -> 1, C -> 2, D -> 3
 
+# GPIO0
 GPIO0_A0 = Pin((0, 0))
 GPIO0_A1 = Pin((0, 1))
 GPIO0_A2 = Pin((0, 2))
@@ -41,6 +44,7 @@ GPIO0_D5 = Pin((0, 29))
 GPIO0_D6 = Pin((0, 30))
 GPIO0_D7 = Pin((0, 31))
 
+# GPIO1
 GPIO1_A0 = Pin((1, 0))
 GPIO1_A1 = Pin((1, 1))
 GPIO1_A2 = Pin((1, 2))
@@ -74,6 +78,7 @@ GPIO1_D5 = Pin((1, 29))
 GPIO1_D6 = Pin((1, 30))
 GPIO1_D7 = Pin((1, 31))
 
+# GPIO2
 GPIO2_A0 = Pin((2, 0))
 GPIO2_A1 = Pin((2, 1))
 GPIO2_A2 = Pin((2, 2))
@@ -107,6 +112,7 @@ GPIO2_D5 = Pin((2, 29))
 GPIO2_D6 = Pin((2, 30))
 GPIO2_D7 = Pin((2, 31))
 
+# GPIO3
 GPIO3_A0 = Pin((3, 0))
 GPIO3_A1 = Pin((3, 1))
 GPIO3_A2 = Pin((3, 2))
@@ -140,6 +146,7 @@ GPIO3_D5 = Pin((3, 29))
 GPIO3_D6 = Pin((3, 30))
 GPIO3_D7 = Pin((3, 31))
 
+# GPIO4
 GPIO4_A0 = Pin((4, 0))
 GPIO4_A1 = Pin((4, 1))
 GPIO4_A2 = Pin((4, 2))
@@ -173,124 +180,70 @@ GPIO4_D5 = Pin((4, 29))
 GPIO4_D6 = Pin((4, 30))
 GPIO4_D7 = Pin((4, 31))
 
-
-# UART
-UART2_TX_M0 = GPIO0_B5
-UART2_RX_M0 = GPIO0_B6
-UART2_TX_M2 = GPIO3_B1
-UART2_RX_M2 = GPIO3_B2
-UART3_TX_M1 = GPIO3_B5
-UART3_RX_M1 = GPIO3_B6
-UART4_TX_M2 = GPIO1_B3
-UART4_RX_M2 = GPIO1_B2
-UART7_TX_M1 = GPIO3_C0
-UART7_RX_M1 = GPIO3_C1
-UART7_TX_M2 = GPIO1_B5
-UART7_RX_M2 = GPIO1_B4
-
-# ordered as uartId, txId, rxId
-uartPorts = (
-    (2, UART2_TX_M0, UART2_RX_M0),
-    (2, UART2_TX_M2, UART2_RX_M2),
-    (3, UART3_TX_M1, UART3_RX_M1),
-    (4, UART4_TX_M2, UART4_RX_M2),
-    (7, UART7_TX_M1, UART7_RX_M1),
-    (7, UART7_TX_M2, UART7_RX_M2),
-)
-
-
 # I2C
-I2C0_SCL_M1 = GPIO4_C5
-I2C0_SDA_M1 = GPIO4_C6
-I2C1_SCL_M0 = GPIO0_B5
-I2C1_SDA_M0 = GPIO0_B6
-I2C3_SCL_M1 = GPIO3_B7
-I2C3_SDA_M1 = GPIO3_C0
-I2C7_SCL_M3 = GPIO4_B2
-I2C7_SDA_M3 = GPIO4_B3
-I2C8_SCL_M4 = GPIO3_C2
-I2C8_SDA_M4 = GPIO3_C3
-I2C5_SDA_M3 = GPIO1_B7
-I2C5_SCL_M3 = GPIO1_B6
-
-# ordered as i2cId, sclId, sdaId
-i2cPorts = (
-    (0, I2C0_SCL_M1, I2C0_SDA_M1),
-    (1, I2C1_SCL_M0, I2C1_SDA_M0),
-    (3, I2C3_SCL_M1, I2C3_SDA_M1),
-    (5, I2C5_SCL_M3, I2C5_SDA_M3),
-    (7, I2C7_SCL_M3, I2C7_SDA_M3),
-    (8, I2C8_SCL_M4, I2C8_SDA_M4),
-)
+I2C3_SCL_M0 = GPIO1_A1
+I2C3_SDA_M0 = GPIO1_A0
+I2C5_SCL_M0 = GPIO3_B3
+I2C5_SDA_M0 = GPIO3_B4
+I2C2_SCL_M0 = GPIO0_B5
+I2C2_SDA_M0 = GPIO0_B6
+I2C1_SCL = GPIO0_B3
+I2C1_SDA = GPIO0_B4
 
 # SPI
-SPI0_MOSI_M2 = GPIO1_B2
-SPI0_MISO_M2 = GPIO1_B1
-SPI0_CLK_M2 = GPIO1_B3
-SPI0_SCLK_M2 = SPI0_CLK_M2
-SPI0_CS0_M2 = GPIO1_B4
-SPI0_CS1_M2 = GPIO1_B5
+SPI3_CS0_M1 = GPIO4_C6
+SPI3_CS1_M1 = GPIO4_D1
+SPI3_CLK_M1 = GPIO4_C2
+SPI3_MISO_M1 = GPIO4_C5
+SPI3_MOSI_M1 = GPIO4_C3
 
-SPI1_MOSI_M1 = GPIO3_B7
-SPI1_MISO_M1 = GPIO3_C0
-SPI1_CLK_M1 = GPIO3_C1
-SPI1_SCLK_M1 = SPI1_CLK_M1
-SPI1_CS0_M1 = GPIO3_C2
-SPI1_CS1_M1 = GPIO3_C3
-
-SPI3_MISO_M0 = GPIO4_C4
-SPI3_MOSI_M0 = GPIO4_C5
-SPI3_SCK_M0 = GPIO4_C6
-SPI3_SCLK_M0 = SPI3_SCK_M0
-
-SPI4_MISO_M0 = GPIO1_C0
-SPI4_MOSI_M0 = GPIO1_C1
-SPI4_SCK_M0 = GPIO1_C2
-SPI4_SCLK_M0 = SPI4_SCK_M0
-
-# ordered as spiId, sckId, mosiId, misoId
-spiPorts = (
-    (0, SPI0_SCLK_M2, SPI0_MOSI_M2, SPI0_MISO_M2),
-    (1, SPI1_SCLK_M1, SPI1_MOSI_M1, SPI1_MISO_M1),
-    (3, SPI3_SCLK_M0, SPI3_MOSI_M0, SPI3_MISO_M0),
-    (4, SPI4_SCLK_M0, SPI4_MOSI_M0, SPI4_MISO_M0),
-)
+# UART
+UART0_RX = GPIO0_C0
+UART0_TX = GPIO0_C1
+UART2_TX_M0 = GPIO0_D1
+UART2_RX_M0 = GPIO0_D0
+UART3_TX_M0 = GPIO1_A1
+UART3_RX_M0 = GPIO1_A0
+UART3_TX_M1 = GPIO3_B7
+UART3_RX_M1 = GPIO3_C0
+UART7_TX_M1 = GPIO3_C4
+UART7_RX_M1 = GPIO3_C5
 
 # PWM
-PWM2_M1 = GPIO3_B1
-PWM3_IR_M1 = GPIO3_B2
-PWM5_M2 = GPIO4_C4
-PWM6_M2 = GPIO4_C5
-PWM7_IR_M3 = GPIO4_C6
-PWM8_M0 = GPIO3_A7
-PWM12_M0 = GPIO3_B5
-PWM13_M0 = GPIO3_B6
-PWM13_M2 = GPIO1_B7
-PWM14_M0 = GPIO3_C2
-PWM14_M1 = GPIO4_B2
-PWM15_IR_M0 = GPIO3_C3
-PWM15_IR_M1 = GPIO4_B3
-PWM15_IR_M3 = GPIO1_D7
+PWM1_M0 = GPIO0_C0
+PWM1_M1 = GPIO0_B5
+PWM2_M0 = GPIO0_C1
+PWM2_M1 = GPIO0_B6
+PWM8_M0 = GPIO3_B1
+PWM9_M0 = GPIO3_B2
+PWM12_M1 = GPIO4_C5
+PWM13_M1 = GPIO4_C6
+PWM10_M0 = GPIO3_B5
+PWM14_M0 = GPIO3_C4
+PWM14_M1 = GPIO4_C2
+PWM15_IR_M1 = GPIO3_C5
 
+# ordered as i2cId, SCL, SDA
+i2cPorts = (
+    (3, I2C3_SCL_M0, I2C3_SDA_M0),
+    (5, I2C5_SCL_M0, I2C5_SDA_M0),
+    (2, I2C2_SCL_M0, I2C2_SDA_M0),
+    (1, I2C1_SCL, I2C1_SDA),
+)
+
+# ordered as spiId, sckId, mosiId, misoId
+spiPorts = ((3, SPI3_CLK_M1, SPI3_MOSI_M1, SPI3_MISO_M1),)
 
 # SysFS pwm outputs, pwm channel and pin in first tuple
 pwmOuts = (
-    ((0, 2), PWM2_M1),
-    ((0, 3), PWM3_IR_M1),
-    ((0, 5), PWM5_M2),
-    ((0, 6), PWM6_M2),
-    ((0, 7), PWM7_IR_M3),
-    ((0, 8), PWM8_M0),
-    ((0, 12), PWM12_M0),
-    ((0, 13), PWM13_M0),
-    ((0, 13), PWM13_M2),
-    ((0, 14), PWM14_M0),
-    ((0, 14), PWM14_M1),
-    ((0, 15), PWM15_IR_M0),
-    ((0, 15), PWM15_IR_M1),
-    ((0, 15), PWM15_IR_M3),
+    ((1, 0), PWM1_M0),
+    ((1, 0), PWM2_M0),
+    ((1, 0), PWM8_M0),
+    ((1, 0), PWM9_M0),
+    ((1, 0), PWM10_M0),
+    ((1, 0), PWM12_M1),
+    ((1, 0), PWM13_M1),
+    ((1, 0), PWM14_M0),
 )
 
 # SysFS analog inputs, Ordered as analog analogInId, device, and channel
-ADC_IN0 = 0
-analogIns = ((ADC_IN0, 0, 4),)

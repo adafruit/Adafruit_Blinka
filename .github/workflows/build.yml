@@ -15,20 +15,20 @@ jobs:
       run: echo "$GITHUB_CONTEXT"
     - name: Translate Repo Name For Build Tools filename_prefix
       id: repo-name
-      run: echo ::set-output name=repo-name::Adafruit-Blinka
+      run: echo "repo-name=Adafruit-Blinka" >> $GITHUB_OUTPUT
     - name: Set up Python 3.7
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v4
       with:
         python-version: 3.7
     - name: Versions
       run: |
         python3 --version
     - name: Checkout Current Repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         submodules: true
     - name: Checkout tools repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: adafruit/actions-ci-circuitpython-libs
         path: actions-ci

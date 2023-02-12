@@ -127,6 +127,9 @@ elif board_id == ap_board.ORANGE_PI_4:
 elif board_id == ap_board.ORANGE_PI_4_LTS:
     from adafruit_blinka.board.orangepi.orangepi4 import *
 
+elif board_id == ap_board.ORANGE_PI_5:
+    from adafruit_blinka.board.orangepi.orangepi5 import *
+
 elif board_id == ap_board.BANANA_PI_M2_ZERO:
     from adafruit_blinka.board.bananapi.bpim2zero import *
 
@@ -232,6 +235,9 @@ elif board_id == ap_board.ONION_OMEGA2:
 elif board_id == ap_board.RADXA_CM3:
     from adafruit_blinka.board.radxa.radxacm3 import *
 
+elif board_id == ap_board.ROCK_PI_3A:
+    from adafruit_blinka.board.radxa.rockpi3a import *
+
 elif board_id == ap_board.RADXA_ZERO:
     from adafruit_blinka.board.radxa.radxazero import *
 
@@ -240,6 +246,9 @@ elif board_id == ap_board.ROCK_PI_S:
 
 elif board_id == ap_board.ROCK_PI_4:
     from adafruit_blinka.board.radxa.rockpi4 import *
+
+elif board_id == ap_board.ROCK_PI_4_C_PLUS:
+    from adafruit_blinka.board.radxa.rockpi4cplus import *
 
 elif board_id == ap_board.ROCK_PI_5:
     from adafruit_blinka.board.radxa.rock5 import *
@@ -274,6 +283,9 @@ elif board_id == ap_board.LUBANCAT_ZERO:
 elif board_id == ap_board.LUBANCAT1:
     from adafruit_blinka.board.lubancat.lubancat1 import *
 
+elif board_id == ap_board.LUBANCAT2:
+    from adafruit_blinka.board.lubancat.lubancat2 import *
+
 elif board_id == ap_board.NANOPI_NEO_AIR:
     from adafruit_blinka.board.nanopi.neoair import *
 
@@ -307,8 +319,14 @@ elif board_id == ap_board.LICHEE_RV:
 elif board_id == ap_board.SIEMENS_SIMATIC_IOT2050_ADV:
     from adafruit_blinka.board.siemens.siemens_iot2050 import *
 
+elif board_id == ap_board.SIEMENS_SIMATIC_IOT2050_BASIC:
+    from adafruit_blinka.board.siemens.siemens_iot2050 import *
+
 elif board_id == ap_board.AML_S905X_CC:
     from adafruit_blinka.board.librecomputer.aml_s905x_cc_v1 import *
+
+elif board_id == ap_board.GENERIC_LINUX_PC:
+    from adafruit_blinka.board.generic_linux_pc import *
 
 elif "sphinx" in sys.modules:
     pass
