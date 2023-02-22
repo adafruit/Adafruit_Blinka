@@ -5,61 +5,77 @@
 
 from adafruit_blinka.microcontroller.rockchip.rk3399 import pin
 
-D3 = pin.GPIO2_A7  # /I2C7_SDA/PIN 71/
-D5 = pin.GPIO2_B0  # /I2C7_SCL/PIN 72/
-D7 = pin.GPIO2_B3  # /SPI2_CLK/PIN 75/
-D8 = pin.GPIO4_C4  # /UART2_TXD/PIN 148/
-D10 = pin.GPIO4_C3  # /UART2_RXD/PIN 147/
-D11 = pin.GPIO4_C2  # /PWM0/PIN 146/
-D13 = pin.GPIO4_C6  # /PWM1/PIN 150/
-D15 = pin.GPIO4_C5  # /SPDIF_TX/PIN 149/
-D16 = pin.GPIO4_D2  # /PIN 154/
-D17 = pin.GPIO4_D4  # /PIN 156/
-D19 = pin.GPIO1_B0  # /UART4_TXD/SPI1_TXD/PIN 40/
-D21 = pin.GPIO1_A7  # /UART4_RXD/SPI1_RXD/PIN 39/
-D22 = pin.GPIO4_D5  # /PIN 157/
-D23 = pin.GPIO1_B1  # /SPI1_CLK/PIN 41/
-D24 = pin.GPIO1_B2  # /SPI1_CS/PIN 42/
-D27 = pin.GPIO2_A0  # /I2C2_SDA/PIN 64/
-D28 = pin.GPIO2_A1  # /I2C2_SCL/PIN 65/
-D29 = pin.GPIO2_B2  # /I2C6_SCL/SPI2_TXD/PIN 74/
-D31 = pin.GPIO2_B1  # /I2C6_SDA/SPI2_RXD/PIN 73/
-D32 = pin.GPIO3_C0  # /SPDIF_TX/UART3_CTS/PIN 112/
-D33 = pin.GPIO2_B4  # /SPI2_CS/PIN 76/
-D35 = pin.GPIO4_A5  # /I2S1_LRCK_TX/PIN 133/
-D36 = pin.GPIO4_A4  # /I2S1_LRCK_RX/PIN 132/
-D37 = pin.GPIO4_D6  # /PIN 158/
-D38 = pin.GPIO4_A6  # /I2S1_SDI/PIN 134/
-D40 = pin.GPIO4_A7  # /I2S1_SDO/PIN 135/
+# D pin number is ordered by physical pin sequence
+# Reference: https://service.robots.org.nz/wiki/Wiki.jsp?page=OrangePi
 
-SDA2 = D27
-SCL2 = D28
+# +------+-----+----------+------+---+OrangePi 4+---+---+--+----------+-----+------+
+# | GPIO | wPi |   Name   | Mode | V | Physical | V | Mode | Name     | wPi | GPIO |
+# +------+-----+----------+------+---+----++----+---+------+----------+-----+------+
+# |      |     |     3.3V |      |   |  1 || 2  |   |      | 5V       |     |      |
+# |   64 |   0 | I2C2_SDA |   IN | 1 |  3 || 4  |   |      | 5V       |     |      |
+# |   65 |   1 | I2C2_SCL |   IN | 1 |  5 || 6  |   |      | GND      |     |      |
+# |  150 |   2 |     PWM1 | ALT2 | 1 |  7 || 8  | 1 | ALT2 | I2C3_SCL | 3   | 145  |
+# |      |     |      GND |      |   |  9 || 10 | 1 | ALT2 | I2C3_SDA | 4   | 144  |
+# |   33 |   5 | GPIO1_A1 |   IN | 0 | 11 || 12 | 1 | IN   | GPIO1_C2 | 6   | 50   |
+# |   35 |   7 | GPIO1_A3 |  OUT | 1 | 13 || 14 |   |      | GND      |     |      |
+# |   92 |   8 | GPIO2_D4 |   IN | 0 | 15 || 16 | 0 | IN   | GPIO1_C6 | 9   | 54   |
+# |      |     |     3.3V |      |   | 17 || 18 | 0 | IN   | GPIO1_C7 | 10  | 55   |
+# |   40 |  11 | SPI1_TXD | ALT3 | 0 | 19 || 20 |   |      | GND      |     |      |
+# |   39 |  12 | SPI1_RXD | ALT3 | 1 | 21 || 22 | 0 | IN   | GPIO1_D0 | 13  | 56   |
+# |   41 |  14 | SPI1_CLK | ALT3 | 1 | 23 || 24 | 1 | ALT3 | SPI1_CS  | 15  | 42   |
+# |      |     |      GND |      |   | 25 || 26 | 0 | IN   | GPIO4_C5 | 16  | 149  |
+# |   64 |  17 | I2C2_SDA |   IN | 1 | 27 || 28 | 1 | IN   | I2C2_SCL | 18  | 65   |
+# |      |     |  I2S0_RX |      |   | 29 || 30 |   |      | GND      |     |      |
+# |      |     |  I2S0_TX |      |   | 31 || 32 |   |      | I2S_CLK  |     |      |
+# |      |     | I2S0_SCK |      |   | 33 || 34 |   |      | GND      |     |      |
+# |      |     | I2S0_SI0 |      |   | 35 || 36 |   |      | I2S0_SO0 |     |      |
+# |      |     | I2S0_SI1 |      |   | 37 || 38 |   |      | I2S0_SI2 |     |      |
+# |      |     |      GND |      |   | 39 || 40 |   |      | I2S0_SI3 |     |      |
+# +------+-----+----------+------+---+----++----+---+------+----------+-----+------+
+# | GPIO | wPi |   Name   | Mode | V | Physical | V | Mode | Name     | wPi | GPIO |
+# +------+-----+----------+------+---+OrangePi 4+---+---+--+----------+-----+------+
 
-SDA6 = D31
-SCL6 = D29
+# D1 = VCC3V3_SYS
+# D2 = VCC5V0_SYS
+D3 = pin.I2C2_SDA  # I2C2_SDA_3V0
+# D4 = VCC5V0_SYS
+D5 = pin.I2C2_SCL  # I2C2_SCL_3V0
+# D6 = GND
+D7 = pin.GPIO4_C6  # GPIO4_C6/PWM1
+D8 = pin.I2C3_SCL  # I2C3_SCL
+# D9 = GND
+D10 = pin.I2C3_SDA  # I2C3_SDA
+D11 = pin.GPIO1_A1  # GPIO1_A1
+D12 = pin.GPIO1_C2  # GPIO1_C2
+D13 = pin.GPIO1_A3  # GPIO1_A3
+# D14 = GND
+D15 = pin.GPIO2_D4  # GPIO2_D4
+D16 = pin.GPIO1_C6  # GPIO1_C6
+# D17 = GND
+D18 = pin.GPIO1_C7  # GPIO1_C7
+D19 = pin.GPIO1_B0  # UART4_TX / SPI1_TXD
+# D20 = GND
+D21 = pin.GPIO1_A7  # UART4_RX / SPI1_RXD
+D22 = pin.GPIO1_D0  # GPIO1_D0
+D23 = pin.GPIO1_B1  # SPI1_CLK
+D24 = pin.GPIO1_B2  # SPI1_CSn0
+# D25 = GND
+D26 = pin.GPIO4_C5  # GPIO4_C5
+D27 = pin.I2C2_SDA  # I2C2_SDA
+D28 = pin.I2C2_SCL  # I2C2_SCL
+# D29 = pin.I2S0_LRCK_RX
+# D30 = GND
+# D31 = pin.I2S0_LRCK_TX
+# D32 = pin.I2S_CLK
+# D33 = pin.I2S0_SCLK
+# D34 = GND
+# D35 = pin.I2S0_SDI0
+# D36 = pin.I2S0_SDO0
+# D37 = pin.I2S0_SDI1SDO_3
+# D38 = pin.I2S0_SDI2SDO2
+# D39 = GND
+# D40 = pin.I2S0_SDI3SDO1
 
-SDA7 = D3
-SCL7 = D5
-
-SDA = SDA2
-SCL = SCL2
-
-SCLK = D7
-MOSI = D29
-MISO = D31
-CS = D33
-SCK = SCLK
-
-UART2_TX = D8
-UART2_RX = D10
-
-UART4_TX = D19
-UART4_RX = D21
-
-UART_TX = UART2_TX
-UART_RX = UART2_RX
-
-PWM0 = pin.PWM0
-PWM1 = pin.PWM1
-
-ADC_IN0 = pin.ADC_IN0
+# UART
+UART4_TX = pin.GPIO1_B0
+UART4_RX = pin.GPIO1_A7
