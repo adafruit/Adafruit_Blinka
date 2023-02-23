@@ -12,10 +12,10 @@ for it in pin.i2cPorts:
 SCL = pin.i2cPorts[0][1]
 SDA = pin.i2cPorts[0][2]
 
-SCLK = pin.SPI1_SCLK
-MOSI = pin.SPI1_MOSI
-MISO = pin.SPI1_MISO
-SPI_CS = pin.SPI1_CS
+SCLK = pin.SPI0_SCLK
+MOSI = pin.SPI0_MOSI
+MISO = pin.SPI0_MISO
+SPI_CS = pin.SPI0_CS
 
 # Pinout reference:
 # https://github.com/libre-computer-project/libretech-wiring-tool/blob/master/libre-computer/aml-s905x-cc/gpio.map
