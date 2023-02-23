@@ -67,7 +67,10 @@ i2cPorts = (
     (1, I2C1_SCK, I2C1_SDA),
 )
 
-spiPorts = [(0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO)]
+spiPorts = (
+    (0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO),
+    (1, SPI1_SCLK, SPI1_MOSI, SPI1_MISO)
+)
 
 uartPorts = (
     (1, UART1_TX, UART1_RX),
