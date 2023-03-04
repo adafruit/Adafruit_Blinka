@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2023 Wouter Groeneveld
-# See https://wiki.radxa.com/Rock4/hardware/gpio (click EXPAND for the Pi 4C, chip RK3399_T)
+# See https://wiki.radxa.com/Rock4/hardware/gpio
 #
 # SPDX-License-Identifier: MIT
 """A Pin class for use with Rockchip RK3399_T."""
