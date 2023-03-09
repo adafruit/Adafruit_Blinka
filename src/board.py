@@ -319,6 +319,9 @@ elif board_id == ap_board.SIEMENS_SIMATIC_IOT2050_BASIC:
 elif board_id == ap_board.AML_S905X_CC:
     from adafruit_blinka.board.librecomputer.aml_s905x_cc_v1 import *
 
+elif board_id == ap_board.ROC_RK3328_CC:
+    from adafruit_blinka.board.librecomputer.roc_rk3328_cc import *
+
 elif board_id == ap_board.GENERIC_LINUX_PC:
     from adafruit_blinka.board.generic_linux_pc import *
 
