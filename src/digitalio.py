@@ -70,7 +70,7 @@ elif detector.chip.RK3308:
 elif detector.chip.RK3399:
     from adafruit_blinka.microcontroller.rockchip.rk3399.pin import Pin
 elif detector.chip.RK3399_T:
-    from adafruit_blinka.microcontroller.rockchip.rk3399_t.pin import Pin
+    from adafruit_blinka.microcontroller.rockchip.rk3399.pin import Pin
 elif detector.chip.RK3588:
     from adafruit_blinka.microcontroller.rockchip.rk3588.pin import Pin
 elif detector.chip.RK3328:
