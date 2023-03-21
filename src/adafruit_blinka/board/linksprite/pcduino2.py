@@ -1,5 +1,5 @@
 """Pin definitions for the Pcduino2."""
-from adafruit_blinka.microcontroller.allwinner.a10 import pin
+from adafruit_blinka.microcontroller.allwinner.a20 import pin
 
 # J11 Header
 D0 = pin.PI19

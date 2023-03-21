@@ -34,9 +34,9 @@ elif chip_id == ap_chip.AM65XX:
 elif chip_id == ap_chip.JH71x0:
     from adafruit_blinka.microcontroller.starfive.JH71x0.pin import *
 elif chip_id == ap_chip.SUN4I:
-    from adafruit_blinka.microcontroller.allwinner.a10.pin import *
+    from adafruit_blinka.microcontroller.allwinner.a20.pin import *
 elif chip_id == ap_chip.SUN7I:
-    from adafruit_blinka.microcontroller.allwinner.a10.pin import *
+    from adafruit_blinka.microcontroller.allwinner.a20.pin import *
 elif chip_id == ap_chip.SUN8I:
     from adafruit_blinka.microcontroller.allwinner.h3.pin import *
 elif chip_id == ap_chip.H3:
@@ -90,9 +90,9 @@ elif chip_id == ap_chip.LPC4330:
 elif chip_id == ap_chip.MCP2221:
     from adafruit_blinka.microcontroller.mcp2221.pin import *
 elif chip_id == ap_chip.A10:
-    from adafruit_blinka.microcontroller.allwinner.a10.pin import *
+    from adafruit_blinka.microcontroller.allwinner.a20.pin import *
 elif chip_id == ap_chip.A20:
-    from adafruit_blinka.microcontroller.allwinner.a10.pin import *
+    from adafruit_blinka.microcontroller.allwinner.a20.pin import *
 elif chip_id == ap_chip.A64:
     from adafruit_blinka.microcontroller.allwinner.a64.pin import *
 elif chip_id == ap_chip.A33:

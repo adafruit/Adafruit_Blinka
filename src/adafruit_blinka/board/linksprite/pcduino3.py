@@ -1,5 +1,5 @@
 """Pin definitions for the Pcduino3."""
-from adafruit_blinka.microcontroller.allwinner.a10 import pin
+from adafruit_blinka.microcontroller.allwinner.a20 import pin
 
 # Pin wise this is the same as the Pcduino2 but features a daul core A20
 # # rather than a single core A10
