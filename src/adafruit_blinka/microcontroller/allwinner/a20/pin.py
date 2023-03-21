@@ -1,4 +1,4 @@
-"""Allwinner A10 pin names"""
+"""Allwinner A20 pin names"""
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
 PB2 = Pin(34)  # PB2/PWM0
