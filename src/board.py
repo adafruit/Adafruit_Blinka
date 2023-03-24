@@ -61,6 +61,9 @@ elif board_id == ap_board.BEAGLEBONE:
 elif board_id == ap_board.BEAGLEBONE_BLACK:
     from adafruit_blinka.board.beagleboard.beaglebone_black import *
 
+elif board_id == ap_board.BEAGLEBONE_BLUE:
+    from adafruit_blinka.board.beagleboard.beaglebone_blue import *
+
 elif board_id == ap_board.BEAGLEBONE_GREEN:
     from adafruit_blinka.board.beagleboard.beaglebone_black import *
 
