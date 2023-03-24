@@ -12,4 +12,3 @@ LED_USR3 = pin.USR3
 
 SDA = pin.I2C1_SDA
 SCL = pin.I2C1_SCL
-
