@@ -36,6 +36,7 @@ D25 = pin.GP25
 A0 = pin.GP26
 A1 = pin.GP27
 A2 = pin.GP28
+A3 = pin.GP29
 
 LED = pin.GP13
 
