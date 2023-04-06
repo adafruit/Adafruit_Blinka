@@ -301,6 +301,9 @@ elif board_id == ap_board.PICO_U2IF:
 elif board_id == ap_board.FEATHER_U2IF:
     from adafruit_blinka.board.feather_u2if import *
 
+elif board_id == ap_board.FEATHER_EPD_U2IF:
+    from adafruit_blinka.board.feather_epd_u2if import *
+
 elif board_id == ap_board.QTPY_U2IF:
     from adafruit_blinka.board.qtpy_u2if import *
 
@@ -340,15 +343,16 @@ elif board_id is None:
 
     package = str(pkg_resources.get_distribution("adafruit_platformdetect")).split()
     raise NotImplementedError(
-        "{1} version {2} was unable to identify the board and/or microcontroller running "
-        "the {0} platform. Please be sure you have the latest packages running: 'pip3 install "
-        "--upgrade adafruit-blinka adafruit-platformdetect'".format(
-            platform.system(), package[0], package[1]
-        )
+        f"""
+        {package[0]} version {package[1]} was unable to identify the board and/or
+        microcontroller running the {platform.system()} platform. Please be sure you
+        have the latest packages running:
+        'pip3 install --upgrade adafruit-blinka adafruit-platformdetect'
+        """
     )
 
 else:
-    raise NotImplementedError("Board not supported {}".format(board_id))
+    raise NotImplementedError(f"Board not supported {board_id}.")
 
 if "SCL" in locals() and "SDA" in locals():
 

@@ -69,6 +69,13 @@ class I2C(Lockable):
 
             self._i2c = _I2C(scl, sda, frequency=frequency)
             return
+        if detector.board.feather_epd_u2if:
+            from adafruit_blinka.microcontroller.rp2040_u2if.i2c import (
+                I2C_Feather_EPD as _I2C,
+            )
+
+            self._i2c = _I2C(scl, sda, frequency=frequency)
+            return
         if detector.board.qtpy_u2if:
             from adafruit_blinka.microcontroller.rp2040_u2if.i2c import I2C_QTPY as _I2C
 
@@ -248,6 +255,14 @@ class SPI(Lockable):
             self._spi = _SPI(clock)  # this is really all that's needed
             self._pins = (clock, clock, clock)  # will determine MOSI/MISO from clock
             return
+        if detector.board.feather_epd_u2if:
+            from adafruit_blinka.microcontroller.rp2040_u2if.spi import (
+                SPI_Feather_EPD as _SPI,
+            )
+
+            self._spi = _SPI(clock)  # this is really all that's needed
+            self._pins = (clock, clock, clock)  # will determine MOSI/MISO from clock
+            return
         if detector.board.itsybitsy_u2if:
             from adafruit_blinka.microcontroller.rp2040_u2if.spi import (
                 SPI_ItsyBitsy as _SPI,
@@ -331,6 +346,10 @@ class SPI(Lockable):
         elif detector.board.feather_u2if:
             from adafruit_blinka.microcontroller.rp2040_u2if.spi import (
                 SPI_Feather as _SPI,
+            )
+        elif detector.board.feather_epd_u2if:
+            from adafruit_blinka.microcontroller.rp2040_u2if.spi import (
+                SPI_Feather_EPD as _SPI,
             )
         elif detector.board.itsybitsy_u2if:
             from adafruit_blinka.microcontroller.rp2040_u2if.spi import (
