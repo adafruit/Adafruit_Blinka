@@ -87,6 +87,7 @@ class I2C_Feather(I2C):
 
         super().__init__(index, frequency=frequency)
 
+
 class I2C_Feather_CAN(I2C):
     """I2C Class for Feather EPD u2if"""
 
@@ -99,6 +100,7 @@ class I2C_Feather_CAN(I2C):
         self._index = index
 
         super().__init__(index, frequency=frequency)
+
 
 class I2C_Feather_EPD(I2C):
     """I2C Class for Feather EPD u2if"""
@@ -113,6 +115,7 @@ class I2C_Feather_EPD(I2C):
 
         super().__init__(index, frequency=frequency)
 
+
 class I2C_Feather_RFM(I2C):
     """I2C Class for Feather EPD u2if"""
 
@@ -125,6 +128,7 @@ class I2C_Feather_RFM(I2C):
         self._index = index
 
         super().__init__(index, frequency=frequency)
+
 
 class I2C_QTPY(I2C):
     """I2C Class for QT Py 2if"""
