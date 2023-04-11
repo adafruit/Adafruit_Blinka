@@ -99,9 +99,9 @@ class SPI_Feather_EPD(SPI):
 
     def __init__(self, clock, *, baudrate=100000):
         index = None
-        if clock.id == 14:
-            index = 0
         if clock.id == 22:
+            index = 0
+        if clock.id == 14:
             index = 1
         if index is None:
             raise ValueError("No SPI port on specified pin.")
