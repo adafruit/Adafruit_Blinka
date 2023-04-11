@@ -377,9 +377,17 @@ class SPI(Lockable):
             from adafruit_blinka.microcontroller.rp2040_u2if.spi import (
                 SPI_Feather as _SPI,
             )
+        elif detector.board.feather_can_u2if:
+            from adafruit_blinka.microcontroller.rp2040_u2if.spi import (
+                SPI_Feather_CAN as _SPI,
+            )
         elif detector.board.feather_epd_u2if:
             from adafruit_blinka.microcontroller.rp2040_u2if.spi import (
                 SPI_Feather_EPD as _SPI,
+            )
+        elif detector.board.feather_rfm_u2if:
+            from adafruit_blinka.microcontroller.rp2040_u2if.spi import (
+                SPI_Feather_RFM as _SPI,
             )
         elif detector.board.itsybitsy_u2if:
             from adafruit_blinka.microcontroller.rp2040_u2if.spi import (
