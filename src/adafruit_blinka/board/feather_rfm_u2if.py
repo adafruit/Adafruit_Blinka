@@ -11,7 +11,7 @@ A0              A1              A2              A3
 D0              D1              D10             D11
 D12             D13             D24             D25
 D4              D5              D6              D9
-I2C             SDA             SCL             LED   
+I2C             SDA             SCL             LED
 NEOPIXEL        SPI             SCK             MISO
 MOSI            RX              TX              UART
 RFM_CS          RFM_RST         RFM_IO5         RFM_IO3
