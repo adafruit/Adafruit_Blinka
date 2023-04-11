@@ -4,7 +4,6 @@
 """SPI Classes for RP2040s with u2if firmware"""
 from .rp2040_u2if import rp2040_u2if
 
-
 # pylint: disable=protected-access, no-self-use
 class SPI:
     """SPI Base Class for RP2040 u2if"""
@@ -67,7 +66,6 @@ class SPI:
 
     # pylint: enable=too-many-arguments
 
-
 class SPI_Pico(SPI):
     """SPI Class for Pico u2if"""
 
@@ -93,6 +91,16 @@ class SPI_Feather(SPI):
             raise ValueError("No SPI port on specified pin.")
         super().__init__(index, baudrate=baudrate)
 
+class SPI_Feather_CAN(SPI):
+    """SPI Class for Feather EPD u2if"""
+
+    def __init__(self, clock, *, baudrate=100000):
+        index = None
+        if clock.id == 14:
+            index = 1
+        if index is None:
+            raise ValueError("No SPI port on specified pin.")
+        super().__init__(index, baudrate=baudrate)
 
 class SPI_Feather_EPD(SPI):
     """SPI Class for Feather EPD u2if"""
@@ -107,6 +115,16 @@ class SPI_Feather_EPD(SPI):
             raise ValueError("No SPI port on specified pin.")
         super().__init__(index, baudrate=baudrate)
 
+class SPI_Feather_RFM(SPI):
+    """SPI Class for Feather EPD u2if"""
+
+    def __init__(self, clock, *, baudrate=100000):
+        index = None
+        if clock.id == 14:
+            index = 1
+        if index is None:
+            raise ValueError("No SPI port on specified pin.")
+        super().__init__(index, baudrate=baudrate)
 
 class SPI_QTPY(SPI):
     """SPI Class for QT Py u2if"""
