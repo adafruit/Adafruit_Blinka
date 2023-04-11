@@ -356,11 +356,11 @@ else:
 
 if "SCL" in locals() and "SDA" in locals():
 
-    def I2C():
+    def I2C(frequency=100000):
         """The singleton I2C interface"""
         import busio
 
-        return busio.I2C(SCL, SDA)
+        return busio.I2C(SCL, SDA, frequency=frequency)
 
 
 if "SCLK" in locals() and "MOSI" in locals() and "MISO" in locals():
