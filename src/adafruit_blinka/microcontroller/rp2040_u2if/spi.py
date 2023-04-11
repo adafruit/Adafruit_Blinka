@@ -94,6 +94,18 @@ class SPI_Feather(SPI):
         super().__init__(index, baudrate=baudrate)
 
 
+class SPI_Feather_CAN(SPI):
+    """SPI Class for Feather EPD u2if"""
+
+    def __init__(self, clock, *, baudrate=100000):
+        index = None
+        if clock.id == 14:
+            index = 1
+        if index is None:
+            raise ValueError("No SPI port on specified pin.")
+        super().__init__(index, baudrate=baudrate)
+
+
 class SPI_Feather_EPD(SPI):
     """SPI Class for Feather EPD u2if"""
 
@@ -101,6 +113,18 @@ class SPI_Feather_EPD(SPI):
         index = None
         if clock.id == 22:
             index = 0
+        if clock.id == 14:
+            index = 1
+        if index is None:
+            raise ValueError("No SPI port on specified pin.")
+        super().__init__(index, baudrate=baudrate)
+
+
+class SPI_Feather_RFM(SPI):
+    """SPI Class for Feather EPD u2if"""
+
+    def __init__(self, clock, *, baudrate=100000):
+        index = None
         if clock.id == 14:
             index = 1
         if index is None:

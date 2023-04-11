@@ -301,8 +301,14 @@ elif board_id == ap_board.PICO_U2IF:
 elif board_id == ap_board.FEATHER_U2IF:
     from adafruit_blinka.board.feather_u2if import *
 
+elif board_id == ap_board.FEATHER_CAN_U2IF:
+    from adafruit_blinka.board.feather_can_u2if import *
+
 elif board_id == ap_board.FEATHER_EPD_U2IF:
     from adafruit_blinka.board.feather_epd_u2if import *
+
+elif board_id == ap_board.FEATHER_RFM_U2IF:
+    from adafruit_blinka.board.feather_rfm_u2if import *
 
 elif board_id == ap_board.QTPY_U2IF:
     from adafruit_blinka.board.qtpy_u2if import *
