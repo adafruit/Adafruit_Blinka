@@ -7,7 +7,6 @@ import subprocess
 import os
 import atexit
 import random
-import struct
 import sysv_ipc
 
 DEBUG = False
