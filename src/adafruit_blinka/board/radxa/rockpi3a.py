@@ -1,0 +1,54 @@
+# SPDX-FileCopyrightText: 2023 Enrico Trevisanello
+#
+# SPDX-License-Identifier: MIT
+"""Pin definitions for the Radxa Rock Pi 3A."""
+
+from adafruit_blinka.microcontroller.rockchip.rk3568 import pin
+
+# 3A IO pins
+
+D1_A0 = pin.GPIO1_A0  # /I2C3_SDA_M0/PIN 32
+D1_A1 = pin.GPIO1_A1  # /I2C3_SCL_M0/PIN 33
+D0_B5 = pin.GPIO0_B5  # /I2C2_SCL_M0/PIN 13
+D0_D1 = pin.GPIO0_D1  # /UART2_TX_M0/PIN 25
+D0_D0 = pin.GPIO0_D0  # /UART2_RX_M0/PIN 24
+D3_C4 = pin.GPIO3_C4  # /PWM14_M0/PIN 116
+D3_A3 = pin.GPIO3_A3  # /PIN 99
+D3_C5 = pin.GPIO3_C5  # /PWM14_M0/PIN 117
+D3_C0 = pin.GPIO3_C0  # /PWM14_M0/PIN 16
+D0_B2 = pin.GPIO0_B2  # /UART4_TX_M1/PIN 106
+D4_C3 = pin.GPIO4_C3  # /PWM15_IR_M1/PIN 147
+D4_C5 = pin.GPIO4_C5  # /PWM12_M1/PIN 149
+D0_C1 = pin.GPIO0_C1  # /PWM2_M0/ PIN 17
+D4_C2 = pin.GPIO4_C2  # /PWM14_M1/PIN 146
+D4_C6 = pin.GPIO4_C6  # /PWM13_M1/PIN 150
+D4_D1 = pin.GPIO4_D1  # /SPI3_CS1_M1/PIN 153
+D0_B6 = pin.GPIO0_B6  # /I2C2_SDA_M0/PIN 14
+D0_B5 = pin.GPIO0_B5  # /I2C2_SCL_M0/PIN 13
+D2_D7 = pin.GPIO2_D7  # /UART8_TX_M1/PIN 95
+D3_A0 = pin.GPIO3_A0  # /SPI2_CLK_M1/PIN 96
+D3_C2 = pin.GPIO3_C2  # /UART5_TX_M1/PIN 114
+D3_C3 = pin.GPIO3_C3  # /UART5_RX_M1/PIN 115
+D3_A4 = pin.GPIO3_A4  # /PIN 100
+D3_A2 = pin.GPIO3_A2  # /PIN 98
+D3_C0 = pin.GPIO3_C0  # /PWM13_M0/PIN 112
+D3_A6 = pin.GPIO3_A6  # /PIN 102
+D3_A5 = pin.GPIO3_A5  # /PIN 101
+
+# I2C
+SDA = D1_A0
+SCL = D1_A1
+
+# SPI
+CE0 = D4_C6
+SCLK = D4_C2
+MOSI = D4_C3
+MISO = D4_C5
+
+# UART aliases
+UART_TX = D0_D1
+UART_RX = D0_D0
+TXD = D0_D1
+RXD = D0_D0
+TX = D0_D1
+RX = D0_D0

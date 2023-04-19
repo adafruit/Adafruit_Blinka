@@ -110,6 +110,18 @@ AA03 = Pin("GP20_CAN1_DIN")
 I01 = Pin("GP124")
 I00 = Pin("GP123")
 
+
+AC06 = Pin("GP167")
+Y00 = Pin("SPI1_SCK")
+N01 = Pin("GP88_PWM1")
+Y04 = Pin("GP40_SPI3_CS1_N")
+Y03 = Pin("GP39_SPI3_CS0_N")
+Y01 = Pin("GP37_SPI3_MISO")
+Q05 = Pin("GP65")
+G06 = Pin("GP113_PWM7")
+Y02 = Pin("GP38_SPI3_MOSI")
+
+
 i2cPorts = (
     (7, SCL, SDA),
     (1, SCL_1, SDA_1),

@@ -8,6 +8,9 @@ from adafruit_blinka.microcontroller.nxp_imx8m import pin
 # Board name = RPI name [= alias] = pin name
 I2C2_SDA = D2 = SDA = pin.I2C2_SDA
 I2C2_SCL = D3 = SCL = pin.I2C2_SCL
+I2C3_SDA = SDA3 = pin.I2C3_SDA
+I2C3_SCL = SCL3 = pin.I2C3_SCL
+
 
 PWM1 = D12 = pin.PWM1
 PWM2 = D13 = pin.PWM2

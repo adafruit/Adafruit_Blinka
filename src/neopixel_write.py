@@ -10,7 +10,7 @@ Currently supported on Raspberry Pi only.
 
 * Author(s): ladyada
 """
-
+# pylint: disable=too-many-boolean-expressions
 import sys
 
 from adafruit_blinka.agnostic import detector
@@ -21,6 +21,9 @@ elif detector.board.pico_u2if:
     from adafruit_blinka.microcontroller.rp2040_u2if import neopixel as _neopixel
 elif (
     detector.board.feather_u2if
+    or detector.board.feather_can_u2if
+    or detector.board.feather_epd_u2if
+    or detector.board.feather_rfm_u2if
     or detector.board.qtpy_u2if
     or detector.board.itsybitsy_u2if
     or detector.board.macropad_u2if

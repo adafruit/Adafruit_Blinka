@@ -61,6 +61,9 @@ elif board_id == ap_board.BEAGLEBONE:
 elif board_id == ap_board.BEAGLEBONE_BLACK:
     from adafruit_blinka.board.beagleboard.beaglebone_black import *
 
+elif board_id == ap_board.BEAGLEBONE_BLUE:
+    from adafruit_blinka.board.beagleboard.beaglebone_blue import *
+
 elif board_id == ap_board.BEAGLEBONE_GREEN:
     from adafruit_blinka.board.beagleboard.beaglebone_black import *
 
@@ -163,6 +166,9 @@ elif board_id == ap_board.JETSON_NX:
 elif board_id == ap_board.JETSON_AGX_ORIN:
     from adafruit_blinka.board.nvidia.jetson_orin import *
 
+elif board_id in (ap_board.JETSON_ORIN_NX, ap_board.JETSON_ORIN_NANO):
+    from adafruit_blinka.board.nvidia.jetson_orin_nx import *
+
 elif board_id == ap_board.CLARA_AGX_XAVIER:
     from adafruit_blinka.board.nvidia.clara_agx_xavier import *
 
@@ -229,6 +235,9 @@ elif board_id == ap_board.ONION_OMEGA2:
 elif board_id == ap_board.RADXA_CM3:
     from adafruit_blinka.board.radxa.radxacm3 import *
 
+elif board_id == ap_board.ROCK_PI_3A:
+    from adafruit_blinka.board.radxa.rockpi3a import *
+
 elif board_id == ap_board.RADXA_ZERO:
     from adafruit_blinka.board.radxa.radxazero import *
 
@@ -236,6 +245,9 @@ elif board_id == ap_board.ROCK_PI_S:
     from adafruit_blinka.board.radxa.rockpis import *
 
 elif board_id == ap_board.ROCK_PI_4:
+    from adafruit_blinka.board.radxa.rockpi4 import *
+
+elif board_id == ap_board.ROCK_PI_4_C_PLUS:
     from adafruit_blinka.board.radxa.rockpi4 import *
 
 elif board_id == ap_board.ROCK_PI_5:
@@ -289,6 +301,15 @@ elif board_id == ap_board.PICO_U2IF:
 elif board_id == ap_board.FEATHER_U2IF:
     from adafruit_blinka.board.feather_u2if import *
 
+elif board_id == ap_board.FEATHER_CAN_U2IF:
+    from adafruit_blinka.board.feather_can_u2if import *
+
+elif board_id == ap_board.FEATHER_EPD_U2IF:
+    from adafruit_blinka.board.feather_epd_u2if import *
+
+elif board_id == ap_board.FEATHER_RFM_U2IF:
+    from adafruit_blinka.board.feather_rfm_u2if import *
+
 elif board_id == ap_board.QTPY_U2IF:
     from adafruit_blinka.board.qtpy_u2if import *
 
@@ -307,8 +328,17 @@ elif board_id == ap_board.LICHEE_RV:
 elif board_id == ap_board.SIEMENS_SIMATIC_IOT2050_ADV:
     from adafruit_blinka.board.siemens.siemens_iot2050 import *
 
+elif board_id == ap_board.SIEMENS_SIMATIC_IOT2050_BASIC:
+    from adafruit_blinka.board.siemens.siemens_iot2050 import *
+
 elif board_id == ap_board.AML_S905X_CC:
     from adafruit_blinka.board.librecomputer.aml_s905x_cc_v1 import *
+
+elif board_id == ap_board.ROC_RK3328_CC:
+    from adafruit_blinka.board.librecomputer.roc_rk3328_cc import *
+
+elif board_id == ap_board.GENERIC_LINUX_PC:
+    from adafruit_blinka.board.generic_linux_pc import *
 
 elif "sphinx" in sys.modules:
     pass
@@ -319,15 +349,16 @@ elif board_id is None:
 
     package = str(pkg_resources.get_distribution("adafruit_platformdetect")).split()
     raise NotImplementedError(
-        "{1} version {2} was unable to identify the board and/or microcontroller running "
-        "the {0} platform. Please be sure you have the latest packages running: 'pip3 install "
-        "--upgrade adafruit-blinka adafruit-platformdetect'".format(
-            platform.system(), package[0], package[1]
-        )
+        f"""
+        {package[0]} version {package[1]} was unable to identify the board and/or
+        microcontroller running the {platform.system()} platform. Please be sure you
+        have the latest packages running:
+        'pip3 install --upgrade adafruit-blinka adafruit-platformdetect'
+        """
     )
 
 else:
-    raise NotImplementedError("Board not supported {}".format(board_id))
+    raise NotImplementedError(f"Board not supported {board_id}.")
 
 if "SCL" in locals() and "SDA" in locals():
 
