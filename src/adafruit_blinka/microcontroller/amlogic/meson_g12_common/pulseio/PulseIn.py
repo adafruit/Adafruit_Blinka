@@ -38,14 +38,14 @@ class PulseIn:
         a given max length. When it is active, new pulse lengths are
         added to the end of the list. When there is no more room
         (len() == maxlen) the oldest pulse length is removed to make room."""
-                
+
         if isinstance(pin.id, tuple):
             self._pin = str(pin.id[1])
             self._chip = "gpiochip{}".format(pin.id[0])
         else:
             self._pin = str(pin.id)
             self._chip = "gpiochip0"
-        
+
         self._maxlen = maxlen
         self._idle_state = idle_state
         self._queue_key = random.randint(1, 9999)
