@@ -75,6 +75,9 @@ setup(
             "libgpiod_pulsein",
             "libgpiod_pulsein64",
         ],
+        "adafruit_blinka.microcontroller.amlogic.meson_g12_common.pulseio": [
+            "libgpiod_pulsein",
+        ],
         "micropython-stubs": ["*.pyi"],
     },
     include_package_data=True,

@@ -14,3 +14,4 @@ bundles
 dist
 **/*.egg-info
 .vscode
+build
