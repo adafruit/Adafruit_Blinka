@@ -20,5 +20,9 @@ if detector.board.any_raspberry_pi:
     from adafruit_blinka.microcontroller.bcm283x.pulseio.PulseIn import PulseIn
 elif "sphinx" in sys.modules:
     pass
+elif detector.board.any_odroid_40_pin:
+    from adafruit_blinka.microcontroller.amlogic.meson_g12_common.pulseio.PulseIn import (
+        PulseIn,
+    )
 else:
     raise NotImplementedError("pulseio not supported for this board.")

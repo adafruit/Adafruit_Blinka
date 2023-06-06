@@ -14,23 +14,34 @@ Linux kernel 5.4.y (mainline)
 from typing import Optional
 import os
 import re
-import gpiod
+
+try:
+    import gpiod
+except ImportError:
+    raise ImportError(
+        "libgpiod Python bindings not found, please install and try again!"
+    ) from ImportError
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
-chip0 = gpiod.Chip("0")
-chip1 = gpiod.Chip("1")
+if hasattr(gpiod, "Chip"):
+    chip0 = gpiod.Chip("0")
+    chip1 = gpiod.Chip("1")
+else:
+    chip0 = gpiod.chip("0")
+    chip1 = gpiod.chip("1")
 
-if chip0.num_lines() < 20:
+
+if chip0.num_lines < 20:
     aobus = 0
     periphs = 1
-    periphs_offset = chip1.num_lines() - 85
+    periphs_offset = chip1.num_lines - 85
 else:
     aobus = 1
     periphs = 0
-    periphs_offset = chip0.num_lines() - 85
+    periphs_offset = chip0.num_lines - 85
 
-chip0.close()
-chip1.close()
+del chip0
+del chip1
 
 GPIOAO_0 = GPIO496 = Pin((aobus, 0))
 GPIOAO_1 = GPIO497 = Pin((aobus, 1))

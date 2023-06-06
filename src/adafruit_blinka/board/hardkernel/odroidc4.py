@@ -9,8 +9,9 @@ for it in pin.i2cPorts:
     globals()["SCL" + str(it[0])] = it[1]
     globals()["SDA" + str(it[0])] = it[2]
 
-SCL = pin.i2cPorts[0][1]
-SDA = pin.i2cPorts[0][2]
+if pin.i2cPorts:
+    SCL = pin.i2cPorts[0][1]
+    SDA = pin.i2cPorts[0][2]
 
 SCLK = pin.SPI0_SCLK
 MOSI = pin.SPI0_MOSI
