@@ -116,6 +116,13 @@ class I2C(Lockable):
 
             self._i2c = _I2C(scl, sda, frequency=frequency)
             return
+        if detector.board.kb2040_u2if:
+            from adafruit_blinka.microcontroller.rp2040_u2if.i2c import (
+                I2C_KB2040 as _I2C,
+            )
+
+            self._i2c = _I2C(scl, sda, frequency=frequency)
+            return
         if detector.chip.id == ap_chip.RP2040:
             from adafruit_blinka.microcontroller.rp2040.i2c import I2C as _I2C
 
@@ -315,6 +322,12 @@ class SPI(Lockable):
             self._spi = _SPI(clock)  # this is really all that's needed
             self._pins = (clock, clock, clock)  # will determine MOSI/MISO from clock
             return
+        if detector.board.kb2040_u2if:
+            from adafruit_blinka.microcontroller.rp2040_u2if.spi import SPI_KB2040 as _SPI
+
+            self._spi = _SPI(clock)  # this is really all that's needed
+            self._pins = (clock, clock, clock)  # will determine MOSI/MISO from clock
+            return
         if detector.chip.id == ap_chip.RP2040:
             from adafruit_blinka.microcontroller.rp2040.spi import SPI as _SPI
 
@@ -396,6 +409,10 @@ class SPI(Lockable):
         elif detector.board.macropad_u2if:
             from adafruit_blinka.microcontroller.rp2040_u2if.spi import (
                 SPI_MacroPad as _SPI,
+            )
+        elif detector.board.kb2040_u2if:
+            from adafruit_blinka.microcontroller.rp2040_u2if.spi import (
+                SPI_KB2040 as _SPI,
             )
         elif detector.board.qtpy_u2if:
             from adafruit_blinka.microcontroller.rp2040_u2if.spi import SPI_QTPY as _SPI

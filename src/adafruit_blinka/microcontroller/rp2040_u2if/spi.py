@@ -166,3 +166,15 @@ class SPI_MacroPad(SPI):
         if index is None:
             raise ValueError("No SPI port on specified pin.")
         super().__init__(index, baudrate=baudrate)
+
+
+class SPI_KB2040(SPI):
+    """SPI Class for KB2040 u2if"""
+
+    def __init__(self, clock, *, baudrate=100000):
+        index = None
+        if clock.id == 18:
+            index = 0
+        if index is None:
+            raise ValueError("No SPI port on specified pin.")
+        super().__init__(index, baudrate=baudrate)

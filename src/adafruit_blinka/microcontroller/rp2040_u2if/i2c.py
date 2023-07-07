@@ -185,3 +185,17 @@ class I2C_QT2040_Trinkey(I2C):
         self._index = index
 
         super().__init__(index, frequency=frequency)
+
+
+class I2C_KB2040(I2C):
+    """I2C Class for KB2040 u2if"""
+
+    def __init__(self, scl, sda, *, frequency=100000):
+        index = None
+        if scl.id == 13 and sda.id == 12:
+            index = 0
+        if index is None:
+            raise ValueError("I2C not found on specified pins.")
+        self._index = index
+
+        super().__init__(index, frequency=frequency)
