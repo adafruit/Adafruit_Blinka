@@ -45,6 +45,7 @@ elif (
     or detector.board.itsybitsy_u2if
     or detector.board.macropad_u2if
     or detector.board.qt2040_trinkey_u2if
+    or detector.board.kb2040_u2if
 ):
     from adafruit_blinka.microcontroller.rp2040_u2if.pwmio import PWMOut
 elif "sphinx" in sys.modules:
