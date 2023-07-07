@@ -323,7 +323,9 @@ class SPI(Lockable):
             self._pins = (clock, clock, clock)  # will determine MOSI/MISO from clock
             return
         if detector.board.kb2040_u2if:
-            from adafruit_blinka.microcontroller.rp2040_u2if.spi import SPI_KB2040 as _SPI
+            from adafruit_blinka.microcontroller.rp2040_u2if.spi import (
+                SPI_KB2040 as _SPI,
+            )
 
             self._spi = _SPI(clock)  # this is really all that's needed
             self._pins = (clock, clock, clock)  # will determine MOSI/MISO from clock
