@@ -32,7 +32,6 @@ TWI0_SCK = PB0
 PB1 = Pin(33)
 TWI0_SDA = PB1
 PB2 = Pin(34)
-PWM0 = PB2
 PB3 = Pin(35)
 IR0_TX = PB3
 PB4 = Pin(36)
@@ -74,10 +73,11 @@ TWI3_SCK = PI0
 PI1 = Pin(257)
 TWI3_SDA = PI1
 PI3 = Pin(259)
+PWM1 = PI3
 PI10 = Pin(266)
 SPI0_CS0 = PI10
 PI11 = Pin(267)
-SPI0_CLK = PI11
+SPI0_SCLK = PI11
 PI12 = Pin(268)
 SPI0_MOSI = PI12
 PI13 = Pin(269)
@@ -97,7 +97,10 @@ UART7_TX = PI20
 PI21 = Pin(277)
 UART7_RX = PI21
 
-
+# SysFS pwm outputs, pwm channel and pin in first tuple
+pwmOuts = (
+    ((0, 1), PWM1),
+)
 # ordered as i2cId, sclId, sdaId
 i2cPorts = (
     (0, TWI0_SCK, TWI0_SDA),
@@ -106,7 +109,7 @@ i2cPorts = (
 )
 # ordered as spiId, sckId, mosiId, misoId
 spiPorts = (
-    (0, SPI0_CLK, SPI0_MOSI, SPI0_MISO),
+    (0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO),
 )
 # ordered as uartId, txId, rxId
 uartPorts = (

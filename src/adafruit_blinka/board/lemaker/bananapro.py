@@ -41,21 +41,32 @@ from adafruit_blinka.microcontroller.allwinner.a20 import pin
 
 P3 = pin.PB21
 PB21 = pin.PB21
+TWI2_SDA = pin.PB21
 P5 = pin.PB20
 PB20 = pin.PB20
+TWI2_SCL = pin.PB20
 P7 = pin.PH2
+UART_TX = pin.PB22
+PB22 = pin.PB22
+UART_RX = pin.PB23
+PB23 = pin.PB23
 PH2 = pin.PH2
 PH21 = pin.PH21
 PH21 = pin.PH21
 P8 = pin.PH4
 PH4 = pin.PH4
+UART4_RX = pin.PH4
 P10 = pin.PH5
 PH5 = pin.PH5
+UART4_TX = pin.PH5
 P11 = pin.PI19
 PI19 = pin.PI19
+UART2_RX = pin.PI19
 P12 = pin.PI3
+PWM1 = pin.PI3
 PI3 = pin.PI3
 P13 = pin.PI18
+UART2_TX = pin.PI18
 PI18 = pin.PI18
 P15 = pin.PI17
 PI17 = pin.PI17
@@ -65,26 +76,35 @@ P18 = pin.PH21
 PH21 = pin.PH21
 P19 = pin.PI12
 PI12 = pin.PI12
+SPI0_MOSI = pin.PI12
 P21 = pin.PI11
 PI11 = pin.PI11
+SPI0_CLK = pin.PI11
 P22 = pin.PI16
 PI16 = pin.PI16
 P23 = pin.PI13
 PI13 = pin.PI13
+SPI0_MISO = pin.PI13
 P24 = pin.PI10
 PI10 = pin.PI10
+SPI0_CS0 = pin.PI10
 P26 = pin.PI14
 PI14 = pin.PI14
+SPI0_CS1 = pin.PI14
 P27 = pin.PI1
 PI1 = pin.PI1
+TWI3_SDA = pin.PI1
 P28 = pin.PI0
 PI0 = pin.PI0
+TWI3_SCL = pin.PI0
 P29 = pin.PB3
 PB3 = pin.PB3
 P31 = pin.PI21
 PI21 = pin.PI21
+UART7_RX = pin.PI21
 P32 = pin.PI20
 PI20 = pin.PI20
+UART7_TX = pin.PI20
 P33 = pin.PB13
 PB13 = pin.PB13
 P35 = pin.PB7
@@ -98,47 +118,52 @@ PB12 = pin.PB12
 P40 = pin.PB8
 PB8 = pin.PB8
 
-
-UART_TX = pin.PB22
-UART_RX = pin.PB23
-
-UART2_RX = P11
-UART2_TX = P13
-
-UART4_RX = P10
-UART4_TX = P8
-
-UART7_RX = P31
-UART7_TX = P32
-
-TWI3_SDA = P27
-TWI3_SCL = P28
-
-TWI2_SDA = P3
-TWI2_SCL = P5
-
-SPI0_CLK = P23
-SPI0_MOSI = P19
-SPI0_MISO = P21
-SPI0_CS0 = P24
-SPI0_CS1 = P26
-
-## For compatibility to RasPi & others
-
-RX = UART4_RX
-TX = UART4_TX
-
-SDA = TWI2_SDA
-SCL = TWI2_SCL
-
-SCLK = SPI0_CLK
-MOSI = SPI0_MOSI
-MISO = SPI0_MISO
-
 ## Additional Hardware
 
-PWM1 = P12
 LED1 = pin.PH24
-LED_GREEN = LED1
+LED_GREEN = pin.PH24
 LED2 = pin.PG2
-LED_BLUE = LED2
+LED_BLUE = pin.PG2
+
+## For compatibility of 40-pin header to RasPi & others
+## With these definitions most examples run out of the box.
+
+D0 = pin.PI1
+D1 = pin.PI0
+D2 = pin.PB21
+D3 = pin.PB20
+D4 = pin.PH2
+D5 = pin.PB3
+D6 = pin.PI21
+D7 = pin.PI14
+D8 = pin.PI10
+D9 = pin.PI13
+D10 = pin.PI12
+D11 = pin.PI11
+D12 = pin.PI20
+D13 = pin.PB13
+D14 = pin.PH4
+D15 = pin.PH5
+D16 = pin.PB6
+D17 = pin.PI19
+D18 = pin.PI3
+D19 = pin.PB7
+D20 = pin.PB12
+D21 = pin.PB8
+D22 = pin.PI17
+D23 = pin.PH20
+D24 = pin.PH21
+D25 = pin.PI16
+D26 = pin.PB5
+D27 = pin.PI18
+
+RX = pin.PH4
+TX = pin.PH5
+
+SDA = pin.PB21
+SCL = pin.PB20
+
+SCLK = pin.PI11
+MOSI = pin.PI12
+MISO = pin.PI13
+
