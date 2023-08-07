@@ -166,4 +166,3 @@ SCL = pin.PB20
 SCLK = pin.PI11
 MOSI = pin.PI12
 MISO = pin.PI13
-

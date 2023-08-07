@@ -98,9 +98,7 @@ PI21 = Pin(277)
 UART7_RX = PI21
 
 # SysFS pwm outputs, pwm channel and pin in first tuple
-pwmOuts = (
-    ((0, 1), PWM1),
-)
+pwmOuts = (((0, 1), PWM1),)
 # ordered as i2cId, sclId, sdaId
 i2cPorts = (
     (0, TWI0_SCK, TWI0_SDA),
@@ -108,9 +106,7 @@ i2cPorts = (
     (2, TWI2_SCK, TWI2_SDA),
 )
 # ordered as spiId, sckId, mosiId, misoId
-spiPorts = (
-    (0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO),
-)
+spiPorts = ((0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO),)
 # ordered as uartId, txId, rxId
 uartPorts = (
     (0, UART0_TX, UART0_RX),
