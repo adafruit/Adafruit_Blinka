@@ -289,6 +289,9 @@ elif board_id == ap_board.LUBANCAT1:
 elif board_id == ap_board.LUBANCAT2:
     from adafruit_blinka.board.lubancat.lubancat2 import *
 
+elif board_id == ap_board.LUBANCAT4:
+    from adafruit_blinka.board.lubancat.lubancat4 import *
+
 elif board_id == ap_board.NANOPI_NEO_AIR:
     from adafruit_blinka.board.nanopi.neoair import *
 
