@@ -65,14 +65,12 @@ elif detector.chip.HFU540:
     from adafruit_blinka.microcontroller.hfu540.pin import Pin
 elif detector.chip.A10:
     from adafruit_blinka.microcontroller.allwinner.a20.pin import Pin
-elif detector.chip.A30:
+elif detector.chip.A20:
     from adafruit_blinka.microcontroller.allwinner.a20.pin import Pin
 elif detector.chip.A64:
     from adafruit_blinka.microcontroller.allwinner.a64.pin import Pin
 elif detector.chip.A33:
     from adafruit_blinka.microcontroller.allwinner.a33.pin import Pin
-elif detector.chip.A20:
-    from adafruit_blinka.microcontroller.allwinner.a20.pin import Pin
 elif detector.chip.MIPS24KEC:
     from adafruit_blinka.microcontroller.mips24kec.pin import Pin
 elif detector.chip.RK3308:
