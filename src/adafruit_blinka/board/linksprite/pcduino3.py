@@ -1,8 +1,8 @@
+# SPDX-FileCopyrightText: 2023 Ryzer58
+#
+# SPDX-License-Identifier: MIT
 """Pin definitions for the Pcduino3."""
 from adafruit_blinka.microcontroller.allwinner.a20 import pin
-
-# Pin wise this is the same as the Pcduino2 but features a daul core A20
-# # rather than a single core A10
 
 # J11 Header
 D0 = pin.PI19
@@ -25,7 +25,9 @@ SDA = pin.PB21
 SCL = pin.PB20
 
 # J9 Header
-# A0 & A1 are LRADC pins with only 6-bit resolution and unlike other pins are only limited to 2v
+# LRADC pins only have a resolution of 6 bits so not really worth using
+# A0 = LRADC0
+# A1 = LRADC1
 A2 = pin.XP_TP
 A3 = pin.XN_TP
 A4 = pin.YP_TP
@@ -37,7 +39,6 @@ SCK = SCLK
 MOSI = D11
 MISO = D12
 CS = D10
-
 
 # P6 Header
 D22 = pin.PC20
@@ -60,11 +61,17 @@ UART2_TX = D1
 UART2_RX = D0
 UART5_TX = D3
 UART5_RX = D2
+UART6_TX = D11
+UART6_RX = D12
 
 PWM0 = D5
 PWM1 = D6
 
-# Misc
-BACK_SW = pin.PH17  # Three buttons featured on the board
+# On board buttons
+BACK_SW = pin.PH17
 HOME_SW = pin.PH18
 MENU_SW = pin.PH19
+
+# On board LEDs
+LED_TX = pin.PH15
+LED_RX = pin.PH16
