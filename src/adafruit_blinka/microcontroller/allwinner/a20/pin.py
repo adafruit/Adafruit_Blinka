@@ -154,9 +154,9 @@ spiPorts = ((0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO),
 uartPorts = (
     (0, UART0_TX, UART0_RX),
     (2, UART2_TX, UART2_RX),
+    (4, UART4_TX, UART4_RX),
     (5, UART5_TX, UART5_RX),
     (6, UART6_TX, UART6_RX),
-    (4, UART4_TX, UART4_RX),
     (7, UART7_TX, UART7_RX),
 )
 
