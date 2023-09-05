@@ -1,11 +1,8 @@
 categories:
-  - title: "Breaking Changes"
-    labels:
-      - "breaking change"
   - title: "New Boards"
     collapse-after: 1
     labels:
-      - "New Board"
+      - "New Board Request"
 change-template: "- $TITLE #$NUMBER by @$AUTHOR"
 template: |
   ## What's Changed
