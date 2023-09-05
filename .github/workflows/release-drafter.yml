@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2023 Melissa LeBlanc-Williams, written for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
+
 name: Release Drafter
 
 on:
