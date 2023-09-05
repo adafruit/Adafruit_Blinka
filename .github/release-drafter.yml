@@ -1,0 +1,17 @@
+categories:
+  - title: "Breaking Changes"
+    labels:
+      - "breaking change"
+  - title: "New Boards"
+    collapse-after: 1
+    labels:
+      - "New Board"
+change-template: "- $TITLE #$NUMBER by @$AUTHOR"
+template: |
+  ## What's Changed
+
+  $CHANGES
+
+  To use in CPython, `pip3 install adafruit-blinka`.
+
+  Read the [docs](https://circuitpython.readthedocs.io/projects/blinka/en/latest/) for info on how to use it.
