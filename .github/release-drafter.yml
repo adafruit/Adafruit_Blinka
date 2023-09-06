@@ -1,0 +1,18 @@
+# SPDX-FileCopyrightText: 2023 Melissa LeBlanc-Williams, written for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
+
+categories:
+  - title: "New Boards"
+    collapse-after: 1
+    labels:
+      - "New Board Request"
+change-template: "- $TITLE #$NUMBER by @$AUTHOR"
+template: |
+  ## What's Changed
+
+  $CHANGES
+
+  To use in CPython, `pip3 install adafruit-blinka`.
+
+  Read the [docs](https://circuitpython.readthedocs.io/projects/blinka/en/latest/) for info on how to use it.
