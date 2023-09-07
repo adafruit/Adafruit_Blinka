@@ -11,5 +11,5 @@ assignees: ''
 
 ---
 
-<!-- We keep adding new features and enhancements to CircuitPython 🚀
+<!-- We keep adding new features and enhancements to Blinka 🚀
 and would love ❤ to see what new challenge you have got for us... 🙂 -->
