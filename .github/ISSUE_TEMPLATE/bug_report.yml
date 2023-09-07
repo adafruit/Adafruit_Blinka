@@ -1,0 +1,50 @@
+# SPDX-FileCopyrightText: 2023 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
+
+name: 🐞 Bug Report
+description: Create a bug report to help us improve
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        Thanks for taking the time to fill out this bug report!
+        Now that you have encountered a bug... you can file a report for it.
+  - type: input
+    id: board
+    attributes:
+      label: Board Name
+      description: Which board are you using?
+      placeholder: e.g. Raspberry Pi 4
+    validations:
+      required: false
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps
+      description: Please mention the steps needed to replicate the issue.
+      placeholder: |
+        1. SSH into the board...
+        2. Enter the following folder...
+        3. Run the following command...
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Optionally, describe the bug in more detail.
+      placeholder: |
+        - Error while using...
+        - Only happens when...
+        - Might be related to #64...
+  - type: textarea
+    id: more-info
+    attributes:
+      label: Additional information
+      description: >-
+        Optionally, add any other information like screenshot of the page.
+        If you have already done some debugging, mention it here.
+        If you have some code or logs, you can paste it here.
