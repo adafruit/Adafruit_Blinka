@@ -362,7 +362,8 @@ elif board_id is None:
         'pip3 install --upgrade adafruit-blinka adafruit-platformdetect'
 
         If you are running the latest package, your board may not yet be supported. Please
-        open a New Issue on GitHub: https://github.com/adafruit/Adafruit_Blinka/issues
+        open a New Issue on GitHub at https://github.com/adafruit/Adafruit_Blinka/issues and
+        select New Board Request.
         """
     )
 
