@@ -19,7 +19,7 @@ import sys
 
 for module in ["dwc2", "libcomposite"]:
     if Path("/proc/modules").read_text(encoding="utf-8").find(module) == -1:
-        raise Exception(
+        raise Exception(  # pylint: disable=broad-exception-raised
             "%s module not present in your kernel. did you insmod it?" % module
         )
 this = sys.modules[__name__]

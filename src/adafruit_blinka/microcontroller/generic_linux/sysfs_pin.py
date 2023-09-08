@@ -11,6 +11,7 @@ import os
 import errno
 import time
 
+
 # pylint: disable=unnecessary-pass
 class GPIOError(IOError):
     """Base class for GPIO errors."""

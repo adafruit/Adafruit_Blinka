@@ -6,6 +6,7 @@ from machine import UART as _UART
 from machine import Pin
 from microcontroller.pin import uartPorts
 
+
 # pylint: disable=protected-access, no-self-use
 class UART:
     """Custom UART Class for RP2040"""
