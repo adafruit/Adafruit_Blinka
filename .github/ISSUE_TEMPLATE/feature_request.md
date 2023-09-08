@@ -1,7 +1,3 @@
-<!--
-SPDX-FileCopyrightText: 2023 Melissa LeBlanc-Williams for Adafruit Industries
-SPDX-License-Identifier: MIT
--->
 ---
 name: 🚀 Feature Request
 about: Suggest an idea for this project
