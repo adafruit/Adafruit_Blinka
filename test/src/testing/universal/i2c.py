@@ -15,7 +15,6 @@ gc.collect()
 
 class TestBME280Interactive(TestCase):
     def test_read_value(self):
-
         import board
 
         gc.collect()

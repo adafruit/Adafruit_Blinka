@@ -14,6 +14,7 @@ try:
 except ImportError:
     raise RuntimeError("No PWM outputs defined for this board") from ImportError
 
+
 # pylint: disable=unnecessary-pass
 class PWMError(IOError):
     """Base class for PWM errors."""

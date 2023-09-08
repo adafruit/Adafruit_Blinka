@@ -19,7 +19,9 @@ class Connection:
     def __init__(self):
         """Virtually private constructor."""
         if Connection.__instance is not None:
-            raise Exception("This class is a singleton!")
+            raise Exception(  # pylint: disable=broad-exception-raised
+                "This class is a singleton!"
+            )
 
         # pylint: disable=import-outside-toplevel
         from binhoHostAdapter import binhoHostAdapter

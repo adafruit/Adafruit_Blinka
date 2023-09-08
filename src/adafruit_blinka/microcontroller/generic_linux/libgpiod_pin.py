@@ -10,6 +10,7 @@ except ImportError:
         "https://github.com/adafruit/Raspberry-Pi-Installer-Scripts/blob/master/libgpiod.sh"
     ) from ImportError
 
+
 # pylint: disable=too-many-branches,too-many-statements
 class Pin:
     """Pins dont exist in CPython so...lets make our own!"""

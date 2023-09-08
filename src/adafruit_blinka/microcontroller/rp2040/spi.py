@@ -6,6 +6,7 @@ from machine import SPI as _SPI
 from machine import Pin
 from microcontroller.pin import spiPorts
 
+
 # pylint: disable=protected-access, no-self-use
 class SPI:
     """Custom SPI Class for RP2040"""
