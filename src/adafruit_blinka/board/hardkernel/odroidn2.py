@@ -58,9 +58,15 @@ for it in pin.i2cPorts:
     globals()["SCL" + str(it[0])] = it[1]
     globals()["SDA" + str(it[0])] = it[2]
 
+SCL = None
+SDA = None
 # Set second i2c bus as default for backward compatibility.
-SCL = pin.i2cPorts[1][1]
-SDA = pin.i2cPorts[1][2]
+if len(pin.i2cPorts) > 1:
+    SCL = pin.i2cPorts[1][1]
+    SDA = pin.i2cPorts[1][2]
+elif len(pin.i2cPorts) > 0:
+    SCL = pin.i2cPorts[0][1]
+    SDA = pin.i2cPorts[0][2]
 
 SCLK = pin.SPI0_SCLK
 MOSI = pin.SPI0_MOSI
