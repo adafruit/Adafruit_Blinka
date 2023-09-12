@@ -29,6 +29,8 @@ class I2C(Lockable):
     """
     Busio I2C Class for CircuitPython Compatibility. Used
     for both MicroPython and Linux.
+
+    NOTE: Frequency has no effect on Linux systems. The argument is only there for compatibility.
     """
 
     def __init__(self, scl, sda, frequency=100000):
