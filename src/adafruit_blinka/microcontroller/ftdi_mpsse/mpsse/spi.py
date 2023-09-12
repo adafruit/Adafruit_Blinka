@@ -8,6 +8,7 @@ from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.url import (
     get_ft2232h_url,
 )
 
+
 # pylint: disable=protected-access
 class SPI:
     """Custom SPI Class for FTDI MPSSE"""

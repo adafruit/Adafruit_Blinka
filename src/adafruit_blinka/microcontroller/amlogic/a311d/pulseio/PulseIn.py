@@ -14,6 +14,7 @@ DEBUG = False
 queues = []
 procs = []
 
+
 # The message queues live outside of python space, and must be formally cleaned!
 def final():
     """In case the program is cancelled or quit, we need to clean up the PulseIn
@@ -28,6 +29,7 @@ def final():
 
 
 atexit.register(final)
+
 
 # pylint: disable=c-extension-no-member
 class PulseIn:

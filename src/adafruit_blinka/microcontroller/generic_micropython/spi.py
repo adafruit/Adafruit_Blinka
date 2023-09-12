@@ -4,6 +4,7 @@
 """SPI Class for Generic MicroPython"""
 from machine import SPI as _SPI
 
+
 # pylint: disable=protected-access, no-self-use
 class SPI:
     """SPI Class for Generic MicroPython"""
