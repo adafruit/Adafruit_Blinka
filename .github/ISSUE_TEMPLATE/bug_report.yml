@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 name: 🐞 Bug Report
-description: Create a bug report to help us improve
+description: Create a bug report to help us improve. Use New Board Request if your board isn't being detected.
 labels:
   - bug
 body:
