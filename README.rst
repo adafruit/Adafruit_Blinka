@@ -77,15 +77,27 @@ To install in a virtual environment in your current project:
 Usage Example
 =============
 
-At the time of writing (`git:7fc1f8ab <https://github.com/cefn/Adafruit_Micropython_Blinka/tree/7fc1f8ab477124628a5afebbf6826005955805f9>`_),
-the following sequence runs through some basic testing of the digitalio compatibility layer...
+The pin names may vary by board, so you may need to change the pin names in the code. This
+example runs on the Raspberry Pi boards to blink an LED connected to GPIO 18 (Pin 12):
 
 .. code-block:: python
 
-    from testing import test_module_name
-    test_module_name("testing.universal.digitalio")
+    import time
+    import board
+    import digitalio
 
-An example log from running the suites is `here <https://github.com/cefn/Adafruit_Micropython_Blinka/issues/2#issuecomment-366713394>`_ .
+    PIN = board.D18
+
+    print("hello blinky!")
+
+    led = digitalio.DigitalInOut(PIN)
+    led.direction = digitalio.Direction.OUTPUT
+
+    while True:
+        led.value = True
+        time.sleep(0.5)
+        led.value = False
+        time.sleep(0.5)
 
 Contributing
 ============
