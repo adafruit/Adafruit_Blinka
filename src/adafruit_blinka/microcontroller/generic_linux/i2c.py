@@ -2,11 +2,17 @@
 #
 # SPDX-License-Identifier: MIT
 """Generic Linux I2C class using PureIO's smbus class"""
+
+import warnings
 from Adafruit_PureIO import smbus
 
 
 class I2C:
-    """I2C class"""
+    """
+    I2C class
+
+    Baudrate has no effect on Linux systems. The argument is only there for compatibility.
+    """
 
     MASTER = 0
     SLAVE = 1
@@ -20,8 +26,10 @@ class I2C:
             raise NotImplementedError("Only I2C Master supported!")
         _mode = self.MASTER
 
-        # if baudrate != None:
-        #    print("I2C frequency is not settable in python, ignoring!")
+        if baudrate is not None:
+            warnings.warn(
+                "I2C frequency is not settable in python, ignoring!", RuntimeWarning
+            )
 
         try:
             self._i2c_bus = smbus.SMBus(bus_num)

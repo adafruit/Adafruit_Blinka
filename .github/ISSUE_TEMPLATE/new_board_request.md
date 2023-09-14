@@ -1,5 +1,5 @@
 ---
-name: 🚀 New Board Request
+name: 📟 New Board Request
 about: Request Support for a New Board
 title: ''
 labels: 'New Board Request'
