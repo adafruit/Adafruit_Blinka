@@ -138,6 +138,8 @@ class I2C(Lockable):
 
         if detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.i2c import I2C as _I2C
+            if frequency == 100000:
+                frequency = None    # Set to None if default to avoid triggering warning
         elif detector.board.ftdi_ft2232h:
             from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.i2c import I2C as _I2C
         else:
