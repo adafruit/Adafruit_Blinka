@@ -35,6 +35,10 @@ if os.path.exists("/proc/device-tree/compatible"):
         or b"brcm,bcm2711" in compat
     ):
         board_reqs = ["RPi.GPIO", "rpi_ws281x>=4.0.0", "sysv_ipc>=1.1.0"]
+    if (
+        b"ti,am335x" in compat
+    ):  # BeagleBone Black, Green, PocketBeagle, BeagleBone AI, etc.
+        board_reqs = ["Adafruit_BBIO"]
 
 setup(
     name="Adafruit-Blinka",
