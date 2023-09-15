@@ -2,7 +2,10 @@
 #
 # SPDX-License-Identifier: MIT
 """AM335x pin names"""
-from Adafruit_BBIO import GPIO
+try:
+    from Adafruit_BBIO import GPIO
+except ImportError:
+    raise RuntimeError("The library 'Adafruit_BBIO' was not found. To install, try typing: pip install Adafruit_BBIO")
 
 
 class Pin:
