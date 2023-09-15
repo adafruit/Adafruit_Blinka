@@ -4,8 +4,11 @@
 """AM335x pin names"""
 try:
     from Adafruit_BBIO import GPIO
-except ImportError:
-    raise RuntimeError("The library 'Adafruit_BBIO' was not found. To install, try typing: pip install Adafruit_BBIO")
+except ImportError as error:
+    raise RuntimeError(
+        "The library 'Adafruit_BBIO' was not found. To install, try typing: "
+        "pip install Adafruit_BBIO"
+    ) from error
 
 
 class Pin:
