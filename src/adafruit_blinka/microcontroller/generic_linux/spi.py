@@ -73,7 +73,7 @@ class SPI:
 
     def write(self, buf, start=0, end=None):
         """Write data from the buffer to SPI"""
-        if not buf:
+        if buf is None or len(buf) < 1:
             return
         if end is None:
             end = len(buf)
@@ -91,7 +91,7 @@ class SPI:
 
     def readinto(self, buf, start=0, end=None, write_value=0):
         """Read data from SPI and into the buffer"""
-        if not buf:
+        if buf is None or len(buf) < 1:
             return
         if end is None:
             end = len(buf)
@@ -116,7 +116,9 @@ class SPI:
         """Perform a half-duplex write from buffer_out and then
         read data into buffer_in
         """
-        if not buffer_out or not buffer_in:
+        if buffer_out is None or buffer_in is None:
+            return
+        if len(buffer_out) < 1 or len(buffer_in) < 1:
             return
         if out_end is None:
             out_end = len(buffer_out)
