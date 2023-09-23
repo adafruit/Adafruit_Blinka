@@ -127,7 +127,7 @@ UART7_RX = PI21
 
 # A10/A20 has a touch panel controller which can be configured to operate
 # as four seperate adc chanels, providing 12-bit resolution.
-XP_TP = 1 
+XP_TP = 1
 XN_TP = 2
 YP_TP = 3
 YN_TP = 4
@@ -146,8 +146,9 @@ i2cPorts = (
 )
 
 # ordered as spiId, sckId, mosiId, misoId
-spiPorts = ((0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO),
-            (2, SPI2_SCLK, SPI2_MOSI, SPI2_MISO),
+spiPorts = (
+    (0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO),
+    (2, SPI2_SCLK, SPI2_MOSI, SPI2_MISO),
 )
 
 # ordered as uartId, txId, rxId
