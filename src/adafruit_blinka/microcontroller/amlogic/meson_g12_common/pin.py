@@ -30,15 +30,24 @@ else:
     chip0 = gpiod.chip("0")
     chip1 = gpiod.chip("1")
 
+if callable(chip0.num_lines):
+    chip0lines = chip0.num_lines()
+else:
+    chip0lines = chip0.num_lines
 
-if chip0.num_lines < 20:
+if callable(chip1.num_lines):
+    chip1lines = chip1.num_lines()
+else:
+    chip1lines = chip1.num_lines
+
+if chip0lines < 20:
     aobus = 0
     periphs = 1
-    periphs_offset = chip1.num_lines - 85
+    periphs_offset = chip1lines - 85
 else:
     aobus = 1
     periphs = 0
-    periphs_offset = chip0.num_lines - 85
+    periphs_offset = chip0lines - 85
 
 del chip0
 del chip1

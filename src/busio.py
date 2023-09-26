@@ -29,6 +29,8 @@ class I2C(Lockable):
     """
     Busio I2C Class for CircuitPython Compatibility. Used
     for both MicroPython and Linux.
+
+    NOTE: Frequency has no effect on Linux systems. The argument is only there for compatibility.
     """
 
     def __init__(self, scl, sda, frequency=100000):
@@ -136,6 +138,9 @@ class I2C(Lockable):
 
         if detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.i2c import I2C as _I2C
+
+            if frequency == 100000:
+                frequency = None  # Set to None if default to avoid triggering warning
         elif detector.board.ftdi_ft2232h:
             from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.i2c import I2C as _I2C
         else:
