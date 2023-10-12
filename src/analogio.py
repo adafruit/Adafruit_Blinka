@@ -39,6 +39,10 @@ elif detector.chip.IMX6ULL:
     from adafruit_blinka.microcontroller.generic_linux.sysfs_analogin import AnalogIn
 elif detector.chip.STM32MP157:
     from adafruit_blinka.microcontroller.generic_linux.sysfs_analogin import AnalogIn
+elif detector.chip.A10:
+    from adafruit_blinka.microcontroller.generic_linux.sysfs_analogin import AnalogIn
+elif detector.chip.A20:
+    from adafruit_blinka.microcontroller.generic_linux.sysfs_analogin import AnalogIn
 elif "sphinx" in sys.modules:
     pass
 elif detector.board.pico_u2if:

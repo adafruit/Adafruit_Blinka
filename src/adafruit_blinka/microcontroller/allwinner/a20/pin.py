@@ -32,6 +32,7 @@ TWI0_SCK = PB0
 PB1 = Pin(33)
 TWI0_SDA = PB1
 PB2 = Pin(34)
+PWM0 = PB2
 PB3 = Pin(35)
 IR0_TX = PB3
 PB4 = Pin(36)
@@ -55,6 +56,15 @@ UART0_TX = PB22
 PB23 = Pin(55)
 UART0_RX = PB23
 
+PC19 = Pin(83)
+SPI2_CS0 = PC19
+PC20 = Pin(84)
+SPI2_SCLK = PC20
+PC21 = Pin(85)
+SPI2_MOSI = PC21
+PC22 = Pin(86)
+SPI2_MISO = PC22
+
 PG2 = Pin(194)
 
 PH2 = Pin(226)
@@ -62,6 +72,22 @@ PH4 = Pin(228)
 UART4_TX = PH4
 PH5 = Pin(229)
 UART4_RX = PH5
+PH6 = Pin(230)
+UART5_TX = PH6
+PH7 = Pin(231)
+UART5_RX = PH7
+PH8 = Pin(232)
+PH9 = Pin(233)
+PH10 = Pin(234)
+PH11 = Pin(235)
+PH12 = Pin(236)
+PH13 = Pin(237)
+PH14 = Pin(238)
+PH15 = Pin(239)
+PH16 = Pin(240)
+PH17 = Pin(241)
+PH18 = Pin(242)
+PH19 = Pin(243)
 PH20 = Pin(244)
 CAN_TX = PH20
 PH21 = Pin(245)
@@ -80,8 +106,10 @@ PI11 = Pin(267)
 SPI0_SCLK = PI11
 PI12 = Pin(268)
 SPI0_MOSI = PI12
+UART6_TX = PI12
 PI13 = Pin(269)
 SPI0_MISO = PI13
+UART6_RX = PI13
 PI14 = Pin(270)
 SPI0_CS1 = PI14
 PI16 = Pin(272)
@@ -97,20 +125,46 @@ UART7_TX = PI20
 PI21 = Pin(277)
 UART7_RX = PI21
 
+# A10/A20 has a touch panel controller which can be configured to operate
+# as four seperate adc chanels, providing 12-bit resolution.
+XP_TP = 1
+XN_TP = 2
+YP_TP = 3
+YN_TP = 4
+
 # SysFS pwm outputs, pwm channel and pin in first tuple
-pwmOuts = (((0, 1), PWM1),)
+pwmOuts = (
+    ((0, 0), PWM0),
+    ((0, 1), PWM1),
+)
+
 # ordered as i2cId, sclId, sdaId
 i2cPorts = (
     (0, TWI0_SCK, TWI0_SDA),
     (1, TWI1_SCK, TWI1_SDA),
     (2, TWI2_SCK, TWI2_SDA),
 )
+
 # ordered as spiId, sckId, mosiId, misoId
-spiPorts = ((0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO),)
+spiPorts = (
+    (0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO),
+    (2, SPI2_SCLK, SPI2_MOSI, SPI2_MISO),
+)
+
 # ordered as uartId, txId, rxId
 uartPorts = (
     (0, UART0_TX, UART0_RX),
     (2, UART2_TX, UART2_RX),
     (4, UART4_TX, UART4_RX),
+    (5, UART5_TX, UART5_RX),
+    (6, UART6_TX, UART6_RX),
     (7, UART7_TX, UART7_RX),
+)
+
+# sysFs analog inputs, Ordered as analogInId, device, and channel
+analogIns = (
+    (XP_TP, 1, 0),
+    (XN_TP, 1, 1),
+    (YP_TP, 1, 2),
+    (YN_TP, 1, 3),
 )
