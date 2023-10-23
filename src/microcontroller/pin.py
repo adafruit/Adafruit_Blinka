@@ -28,8 +28,6 @@ elif chip_id == ap_chip.BCM2XXX:
         from adafruit_blinka.microcontroller.bcm2712.pin import *
     else:
         from adafruit_blinka.microcontroller.bcm283x.pin import *
-elif chip_id == ap_chip.BCM2712:
-    from adafruit_blinka.microcontroller.bcm2712.pin import *
 elif chip_id == ap_chip.DRA74X:
     from adafruit_blinka.microcontroller.dra74x.pin import *
 elif chip_id == ap_chip.AM33XX:
