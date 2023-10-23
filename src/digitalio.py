@@ -12,11 +12,21 @@ See `CircuitPython:digitalio` in CircuitPython for more details.
 
 from adafruit_blinka.agnostic import board_id, detector
 
-# pylint: disable=ungrouped-imports,wrong-import-position
+# pylint: disable=ungrouped-imports,wrong-import-position,unused-wildcard-import,wildcard-import
 
 # By Chip Class
 if detector.chip.BCM2XXX:
-    from adafruit_blinka.microcontroller.bcm283x.pin import Pin
+    if board_id in (
+        "RASPBERRY_PI_4B",
+        "RASPBERRY_PI_400",
+        "RASPBERRY_PI_CM4",
+        "RASPBERRY_PI_CM4S",
+    ):
+        from adafruit_blinka.microcontroller.bcm2711.pin import *
+    elif board_id in ("RASPBERRY_PI_5",):
+        from adafruit_blinka.microcontroller.bcm2712.pin import *
+    else:
+        from adafruit_blinka.microcontroller.bcm283x.pin import Pin
 elif detector.chip.AM33XX:
     from adafruit_blinka.microcontroller.am335x.pin import Pin
 elif detector.chip.AM65XX:

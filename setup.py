@@ -33,6 +33,7 @@ if os.path.exists("/proc/device-tree/compatible"):
         or b"brcm,bcm2837" in compat
         or b"brcm,bcm2838" in compat
         or b"brcm,bcm2711" in compat
+        or b"brcm,bcm2712" in compat
     ):
         board_reqs = ["RPi.GPIO", "rpi_ws281x>=4.0.0", "sysv_ipc>=1.1.0"]
     if (
@@ -86,7 +87,7 @@ setup(
     },
     include_package_data=True,
     install_requires=[
-        "Adafruit-PlatformDetect>=3.52.0",
+        "Adafruit-PlatformDetect>=3.53.0",
         "Adafruit-PureIO>=1.1.7",
         "pyftdi>=0.40.0",
         "adafruit-circuitpython-typing",
