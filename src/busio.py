@@ -194,18 +194,17 @@ class I2C(Lockable):
             if end is None:
                 end = len(buffer)
             buffer = memoryview(buffer)[start:end]
-        stop = True  # remove for efficiency later
-        return self._i2c.readfrom_into(address, buffer, stop=stop)
+        return self._i2c.readfrom_into(address, buffer, stop=True)
 
-    def writeto(self, address, buffer, *, start=0, end=None, stop=True):
+    def writeto(self, address, buffer, *, start=0, end=None):
         """Write to a device at specified address from a buffer"""
         if isinstance(buffer, str):
             buffer = bytes([ord(x) for x in buffer])
         if start != 0 or end is not None:
             if end is None:
-                return self._i2c.writeto(address, memoryview(buffer)[start:], stop=stop)
-            return self._i2c.writeto(address, memoryview(buffer)[start:end], stop=stop)
-        return self._i2c.writeto(address, buffer, stop=stop)
+                return self._i2c.writeto(address, memoryview(buffer)[start:], stop=True)
+            return self._i2c.writeto(address, memoryview(buffer)[start:end], stop=True)
+        return self._i2c.writeto(address, buffer, stop=True)
 
     def writeto_then_readfrom(
         self,

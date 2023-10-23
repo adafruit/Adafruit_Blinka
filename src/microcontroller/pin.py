@@ -17,14 +17,19 @@ elif chip_id == ap_chip.STM32F405:
 elif chip_id == ap_chip.RP2040:
     from adafruit_blinka.microcontroller.rp2040.pin import *
 elif chip_id == ap_chip.BCM2XXX:
-    if board_id in [
+    if board_id in (
         "RASPBERRY_PI_4B",
         "RASPBERRY_PI_400",
         "RASPBERRY_PI_CM4",
-    ]:
+        "RASPBERRY_PI_CM4S",
+    ):
         from adafruit_blinka.microcontroller.bcm2711.pin import *
+    elif board_id in ("RASPBERRY_PI_5",):
+        from adafruit_blinka.microcontroller.bcm2712.pin import *
     else:
         from adafruit_blinka.microcontroller.bcm283x.pin import *
+elif chip_id == ap_chip.BCM2712:
+    from adafruit_blinka.microcontroller.bcm2712.pin import *
 elif chip_id == ap_chip.DRA74X:
     from adafruit_blinka.microcontroller.dra74x.pin import *
 elif chip_id == ap_chip.AM33XX:
