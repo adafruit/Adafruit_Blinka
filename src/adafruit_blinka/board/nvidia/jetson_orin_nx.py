@@ -1,8 +1,8 @@
-# SPDX-FileCopyrightText: 2022 Linh Hoang for NVIDIA
-# SPDX-FileCopyrightText: 2022 Melissa LeBlanc-Williams for Adafruit Industries
+# SPDX-FileCopyrightText: 2023 Linh Hoang for NVIDIA
+# SPDX-FileCopyrightText: 2023 Melissa LeBlanc-Williams for Adafruit Industries
 #
 # SPDX-License-Identifier: MIT
-"""Pin definitions for Jetson AGX Orin."""
+"""Pin definitions for Jetson Orin Nano and Orin NX."""
 
 from adafruit_blinka.microcontroller.tegra.t234 import pin
 
