@@ -1,4 +1,5 @@
 # SPDX-FileCopyrightText: 2022 Kenneth Ryerson
+# SPDX-FileCopyrightText: 2023 Steve Jeong for Hardkernel
 #
 # SPDX-License-Identifier: MIT
 
@@ -11,9 +12,13 @@ GPIO0_A4 = Pin((0, 4))
 GPIO0_A5 = Pin((0, 5))
 GPIO0_B1 = Pin((0, 9))
 GPIO0_B2 = Pin((0, 10))
+GPIO0_B3 = Pin((0, 11))
+GPIO0_B4 = Pin((0, 12))
 GPIO0_B5 = Pin((0, 13))
 GPIO0_B6 = Pin((0, 14))
 GPIO0_B7 = Pin((0, 15))
+GPIO0_C0 = Pin((0, 16))
+GPIO0_C1 = Pin((0, 17))
 GPIO0_C2 = Pin((0, 18))
 GPIO0_C3 = Pin((0, 19))
 GPIO0_C5 = Pin((0, 21))
@@ -38,10 +43,25 @@ GPIO1_D7 = Pin((1, 31))
 GPIO2_A0 = Pin((2, 0))
 GPIO2_A1 = Pin((2, 1))
 GPIO2_A2 = Pin((2, 2))
+GPIO2_A3 = Pin((2, 3))
+GPIO2_A4 = Pin((2, 4))
+GPIO2_A5 = Pin((2, 5))
+GPIO2_A6 = Pin((2, 6))
+GPIO2_A7 = Pin((2, 7))
+GPIO2_B0 = Pin((2, 8))
+GPIO2_B1 = Pin((2, 9))
+GPIO2_B2 = Pin((2, 10))
+GPIO2_B3 = Pin((2, 11))
+GPIO2_B4 = Pin((2, 12))
+GPIO2_B5 = Pin((2, 13))
+GPIO2_B6 = Pin((2, 14))
+GPIO2_B7 = Pin((2, 15))
+GPIO2_C0 = Pin((3, 16))
 GPIO2_C3 = Pin((2, 19))
 GPIO2_C4 = Pin((2, 20))
 GPIO2_C5 = Pin((2, 21))
 GPIO2_C6 = Pin((2, 22))
+GPIO3_A1 = Pin((3, 1))
 GPIO3_A5 = Pin((3, 5))
 GPIO3_A6 = Pin((3, 6))
 GPIO3_A7 = Pin((3, 7))
@@ -91,6 +111,8 @@ ADC_AIN3 = 37
 # I2C
 I2C0_SCL = GPIO0_B1
 I2C0_SDA = GPIO0_B2
+I2C1_SCL = GPIO0_B3
+I2C1_SDA = GPIO0_B4
 I2C2_SCL_M0 = GPIO0_B5
 I2C2_SDA_M0 = GPIO0_B6
 I2C2_SCL_M1 = GPIO4_B5
@@ -130,6 +152,7 @@ PWM1 = GPIO0_C7
 
 # ordered as i2cId, SCL, SDA
 i2cPorts = (
+    (1, I2C1_SCL, I2C1_SDA),
     (2, I2C2_SCL_M0, I2C2_SDA_M0),
     (3, I2C3_SCL_M0, I2C3_SDA_M0),
     (5, I2C5_SCL_M0, I2C5_SDA_M0),

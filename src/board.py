@@ -196,6 +196,9 @@ elif board_id == ap_board.ODROID_N2:
 elif board_id == ap_board.ODROID_M1:
     from adafruit_blinka.board.hardkernel.odroidm1 import *
 
+elif board_id == ap_board.ODROID_M1S:
+    from adafruit_blinka.board.hardkernel.odroidm1s import *
+
 elif board_id == ap_board.KHADAS_VIM3:
     from adafruit_blinka.board.khadas.khadasvim3 import *
 
