@@ -5,6 +5,8 @@
 
 """A Pin class for use with Rockchip RK3566."""
 
+from adafruit_blinka.agnostic import detector
+from adafruit_blinka.microcontroller.alias import get_dts_alias
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
 GPIO0_A2 = Pin((0, 2))
@@ -151,18 +153,18 @@ PWM0 = GPIO0_B7
 PWM1 = GPIO0_C7
 
 # ordered as i2cId, SCL, SDA
-i2cPorts = (
+i2cPorts = [
     (1, I2C1_SCL, I2C1_SDA),
     (2, I2C2_SCL_M0, I2C2_SDA_M0),
     (3, I2C3_SCL_M0, I2C3_SDA_M0),
     (5, I2C5_SCL_M0, I2C5_SDA_M0),
-)
+]
 
 # ordered as spiId, sckId, mosiId, misoId
-spiPorts = (
+spiPorts = [
     (3, SPI3_CLK_M0, SPI3_MOSI_M0, SPI3_MISO_M0),
     (3, SPI3_CLK_M1, SPI3_MOSI_M1, SPI3_MISO_M1),
-)
+]
 
 # SysFS pwm outputs, pwm channel and pin in first tuple
 pwmOuts = (
@@ -170,5 +172,35 @@ pwmOuts = (
     ((0, 0), PWM1),
 )
 
+uartPorts = []
+
 # SysFS analog inputs, Ordered as analog analogInId, device, and channel
 analogIns = ((ADC_AIN3, 0, 3),)
+
+board = detector.board.id
+if board in ("ODROID_M1S"):
+    alias = get_dts_alias("fe5c0000.i2c")
+    if alias is not None:
+        globals()[alias + "_SCL"] = GPIO3_B5
+        globals()[alias + "_SDA"] = GPIO3_B6
+        i2cPorts.append((int(alias[3]), GPIO3_B5, GPIO3_B6))
+    alias = get_dts_alias("fe620000.spi")
+    if alias is not None:
+        globals()[alias + "_CLK"] = GPIO3_C3
+        globals()[alias + "_MOSI"] = GPIO3_C1
+        globals()[alias + "_MISO"] = GPIO3_C2
+        spiPorts.append((int(alias[3]), GPIO3_C3, GPIO3_C1, GPIO3_C2))
+    alias = get_dts_alias("fdd50000.serial")
+    if alias is not None:
+        globals()[alias + "_TX"] = GPIO0_C1
+        globals()[alias + "_RX"] = GPIO0_C0
+        uartPorts.append((int(alias[3]), GPIO0_C1, GPIO0_C0))
+    alias = get_dts_alias("fe6a0000.serial")
+    if alias is not None:
+        globals()[alias + "_TX"] = GPIO2_A4
+        globals()[alias + "_RX"] = GPIO2_A3
+        uartPorts.append((int(alias[3]), GPIO2_A4, GPIO2_A3))
+
+i2cPorts = tuple(i2cPorts)
+spiPorts = tuple(spiPorts)
+uartPorts = tuple(uartPorts)
