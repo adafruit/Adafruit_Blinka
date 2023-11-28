@@ -7,6 +7,7 @@
 
 from adafruit_blinka.agnostic import detector
 from adafruit_blinka.microcontroller.alias import get_dts_alias
+from adafruit_blinka.microcontroller.alias import get_pwm_chipid
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
 GPIO3C_6 = Pin((3, 22))
@@ -71,6 +72,9 @@ i2cPorts = [
 # ordered as spiId, sckId, mosiId, misoId
 spiPorts = ((0, SPI0_SCLK_M1, SPI0_MOSI_M1, SPI0_MISO_M1),)
 
+# SysFS pwm outputs, pwm channel and pin in first tuple
+pwmOuts = []
+
 # ordered as uartId, txId, rxId
 uartPorts = []
 
@@ -87,6 +91,18 @@ if board in ("ODROID_M1"):
         globals()[alias + "_SCL"] = GPIO3B_5
         globals()[alias + "_SDA"] = GPIO3B_6
         i2cPorts.append((int(alias[3]), GPIO3B_5, GPIO3B_6))
+    alias = get_pwm_chipid("fdd70010.pwm")
+    if alias is not None:
+        globals()["PWM" + alias] = GPIO0C_0
+        pwmOuts.append(((int(alias[3]), 0), GPIO0C_0))
+    alias = get_pwm_chipid("fdd70020.pwm")
+    if alias is not None:
+        globals()["PWM" + alias] = GPIO0C_1
+        pwmOuts.append(((int(alias[3]), 0), GPIO0C_1))
+    alias = get_pwm_chipid("fe6f0010.pwm")
+    if alias is not None:
+        globals()["PWM" + alias] = GPIO3B_2
+        pwmOuts.append(((int(alias[3]), 0), GPIO3B_2))
     alias = get_dts_alias("fdd50000.serial")
     if alias is not None:
         globals()[alias + "_TX"] = GPIO0C_1
@@ -100,4 +116,5 @@ if board in ("ODROID_M1"):
 
 
 i2cPorts = tuple(i2cPorts)
+pwmOuts = tuple(pwmOuts)
 uartPorts = tuple(uartPorts)
