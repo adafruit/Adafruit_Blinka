@@ -113,9 +113,10 @@ elif chip_id == ap_chip.RK3328:
 elif chip_id == ap_chip.RK3566:
     from adafruit_blinka.microcontroller.rockchip.rk3566.pin import *
 elif chip_id == ap_chip.RK3568:
-    from adafruit_blinka.microcontroller.rockchip.rk3568.pin import *
-elif chip_id == ap_chip.RK3568B2:
-    from adafruit_blinka.microcontroller.rockchip.rk3568b2.pin import *
+    if board_id in ("ODROID_M1"):
+        from adafruit_blinka.microcontroller.rockchip.rk3568b2.pin import *
+    else:
+        from adafruit_blinka.microcontroller.rockchip.rk3568.pin import *
 elif chip_id == ap_chip.MIPS24KC:
     from adafruit_blinka.microcontroller.atheros.ar9331.pin import *
 elif chip_id == ap_chip.MIPS24KEC:
