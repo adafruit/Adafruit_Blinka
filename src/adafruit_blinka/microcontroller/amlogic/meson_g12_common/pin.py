@@ -132,7 +132,9 @@ i2cPorts = []
 spiPorts = ((0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO),)
 
 # ordered as uartId, txId, rxId
-uartPorts = [(1, UART1_TX, UART1_RX),]
+uartPorts = [
+    (1, UART1_TX, UART1_RX),
+]
 
 board = detector.board.id
 if board in ("ODROID_C4", "ODROID_N2"):

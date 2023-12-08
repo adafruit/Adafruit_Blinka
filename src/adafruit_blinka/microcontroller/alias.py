@@ -2,9 +2,14 @@
 #
 # SPDX-License-Identifier: MIT
 
+"""
+Device Tree Alias Functions
+"""
+
 from typing import Optional
 import os
 import re
+
 
 def get_dts_alias(device: str) -> Optional[str]:
     """Get the Device Tree Alias"""
