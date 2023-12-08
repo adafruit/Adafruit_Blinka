@@ -27,6 +27,9 @@ from adafruit_blinka.agnostic import board_id, detector
 if board_id == ap_board.FEATHER_HUZZAH:
     from adafruit_blinka.board.feather_huzzah import *
 
+elif board_id == ap_board.OLIMEX_LIME2:
+    from adafruit_blinka.board.OLIMEX_LIME2 import *
+
 elif board_id == ap_board.NODEMCU:
     from adafruit_blinka.board.nodemcu import *
 
