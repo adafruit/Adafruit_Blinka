@@ -1,4 +1,5 @@
 # SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+# SPDX-FileCopyrightText: 2023 Steve Jeong for Hardkernel
 #
 # SPDX-License-Identifier: MIT
 """
@@ -11,9 +12,9 @@ Linux kernel 5.4.y (mainline)
     linux/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
 """
 
-from typing import Optional
-import os
-import re
+from adafruit_blinka.agnostic import detector
+from adafruit_blinka.microcontroller.alias import get_dts_alias
+from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
 try:
     import gpiod
@@ -21,7 +22,6 @@ except ImportError:
     raise ImportError(
         "libgpiod Python bindings not found, please install and try again!"
     ) from ImportError
-from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
 if hasattr(gpiod, "Chip"):
     chip0 = gpiod.Chip("0")
@@ -122,43 +122,42 @@ SPI0_MISO = GPIOX_9
 SPI0_MOSI = GPIOX_8
 SPI0_CS0 = GPIOX_10
 
-# ordered as spiId, sckId, mosiId, misoId
-spiPorts = ((0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO),)
-
 UART1_TX = GPIOX_12
 UART1_RX = GPIOX_13
-
-# ordered as uartId, txId, rxId
-uartPorts = ((1, UART1_TX, UART1_RX),)
-
-
-def get_dts_alias(device: str) -> Optional[str]:
-    """Get the Device Tree Alias"""
-    uevent_path = "/sys/bus/platform/devices/" + device + "/uevent"
-    if os.path.exists(uevent_path):
-        with open(uevent_path, "r", encoding="utf-8") as fd:
-            pattern = r"^OF_ALIAS_0=(.*)$"
-            uevent = fd.read().split("\n")
-            for line in uevent:
-                match = re.search(pattern, line)
-                if match:
-                    return match.group(1).upper()
-    return None
-
 
 # ordered as i2cId, sclId, sdaId
 i2cPorts = []
 
-alias = get_dts_alias("ffd1d000.i2c")
-if alias is not None:
-    globals()[alias + "_SCL"] = GPIOX_18
-    globals()[alias + "_SDA"] = GPIOX_17
-    i2cPorts.append((int(alias[3]), GPIOX_18, GPIOX_17))
+# ordered as spiId, sckId, mosiId, misoId
+spiPorts = ((0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO),)
 
-alias = get_dts_alias("ffd1c000.i2c")
-if alias is not None:
-    globals()[alias + "_SCL"] = GPIOA_15
-    globals()[alias + "_SDA"] = GPIOA_14
-    i2cPorts.append((int(alias[3]), GPIOA_15, GPIOA_14))
+# ordered as uartId, txId, rxId
+uartPorts = [
+    (1, UART1_TX, UART1_RX),
+]
+
+board = detector.board.id
+if board in ("ODROID_C4", "ODROID_N2"):
+    alias = get_dts_alias("ffd1d000.i2c")
+    if alias is not None:
+        globals()[alias + "_SCL"] = GPIOX_18
+        globals()[alias + "_SDA"] = GPIOX_17
+        i2cPorts.append((int(alias[3]), GPIOX_18, GPIOX_17))
+    alias = get_dts_alias("ffd1c000.i2c")
+    if alias is not None:
+        globals()[alias + "_SCL"] = GPIOA_15
+        globals()[alias + "_SDA"] = GPIOA_14
+        i2cPorts.append((int(alias[3]), GPIOA_15, GPIOA_14))
+    alias = get_dts_alias("fdd24000.serial")
+    if alias is not None:
+        globals()[alias + "_TX"] = GPIOX_12
+        globals()[alias + "_RX"] = GPIOX_13
+        uartPorts.append((int(alias[3]), GPIOX_12, GPIOX_13))
+    alias = get_dts_alias("fdd23000.serial")
+    if alias is not None:
+        globals()[alias + "_TX"] = GPIOX_6
+        globals()[alias + "_RX"] = GPIOX_7
+        uartPorts.append((int(alias[3]), GPIOX_6, GPIOX_7))
 
 i2cPorts = tuple(i2cPorts)
+uartPorts = tuple(uartPorts)
