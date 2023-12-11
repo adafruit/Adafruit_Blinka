@@ -57,3 +57,7 @@ I2C0_SDA = D3
 I2C0_SCL = D5
 I2C1_SDA = D27
 I2C1_SCL = D28
+
+""" ADC """
+A0 = 40
+A1 = 37

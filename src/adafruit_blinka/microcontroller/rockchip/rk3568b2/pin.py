@@ -78,13 +78,12 @@ pwmOuts = []
 uartPorts = []
 
 # SysFS analog inputs, Ordered as analog analogInId, device, and channel
-analogIns = (
-    (ADC_AIN0, 0, 0),
-    (ADC_AIN1, 0, 0),
-)
+analogIns = []
 
 board = detector.board.id
 if board in ("ODROID_M1"):
+    analogIns.append((37, 0, 7))
+    analogIns.append((40, 0, 6))
     alias = get_dts_alias("fe5c0000.i2c")
     if alias is not None:
         globals()[alias + "_SCL"] = GPIO3B_5
@@ -113,7 +112,7 @@ if board in ("ODROID_M1"):
         globals()[alias + "_RX"] = GPIO3D_7
         uartPorts.append((int(alias[-1]), GPIO3D_6, GPIO3D_7))
 
-
+analogIns = tuple(analogIns)
 i2cPorts = tuple(i2cPorts)
 pwmOuts = tuple(pwmOuts)
 uartPorts = tuple(uartPorts)

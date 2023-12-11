@@ -98,3 +98,7 @@ D26 = GPIOA_12  # PIN_32
 D27 = GPIOX_19  # PIN_36
 D30 = GPIOA_14  # PIN_27
 D31 = GPIOA_15  # PIN_28
+
+""" ADC """
+A0 = 40
+A1 = 37

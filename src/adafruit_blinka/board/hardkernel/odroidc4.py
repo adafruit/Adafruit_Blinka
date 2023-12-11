@@ -53,3 +53,7 @@ D44 = pin.GPIOAO_9
 D45 = pin.GPIOAO_7
 D46 = pin.GPIOAO_8
 D47 = pin.GPIOAO_4
+
+""" ADC """
+A0 = 40
+A1 = 37
