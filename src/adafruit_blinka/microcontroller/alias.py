@@ -25,6 +25,7 @@ def get_dts_alias(device: str) -> Optional[str]:
                     return match.group(1).upper()
     return None
 
+
 def get_pwm_chipid(device: str):
     """Get the PWM Chip ID"""
     for chipid in range(32):
