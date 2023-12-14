@@ -30,6 +30,8 @@ elif detector.board.any_lemaker:
     from adafruit_blinka.microcontroller.generic_linux.sysfs_pwmout import PWMOut
 elif detector.board.any_siemens_simatic_iot2000:
     from adafruit_blinka.microcontroller.am65xx.pwmout import PWMOut
+elif detector.board.any_odroid_40_pin:
+    from adafruit_blinka.microcontroller.generic_linux.sysfs_pwmout import PWMOut
 elif detector.board.any_rock_pi_board:
     from adafruit_blinka.microcontroller.rockchip.PWMOut import PWMOut
 elif detector.board.binho_nova:
