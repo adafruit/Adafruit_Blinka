@@ -158,7 +158,6 @@ class PWMOut:
     def deinit(self):
         """Deinit the sysfs PWM."""
         if self._channel is not None:
-            self.duty_cycle = 0
             try:
                 channel_path = os.path.join(
                     self._sysfs_path, self._channel_path.format(self._channel)
