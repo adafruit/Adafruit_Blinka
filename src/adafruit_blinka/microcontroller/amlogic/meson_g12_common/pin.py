@@ -142,22 +142,22 @@ if board in ("ODROID_C4", "ODROID_N2"):
     if alias is not None:
         globals()[alias + "_SCL"] = GPIOX_18
         globals()[alias + "_SDA"] = GPIOX_17
-        i2cPorts.append((int(alias[3]), GPIOX_18, GPIOX_17))
+        i2cPorts.append((int(alias[-1]), GPIOX_18, GPIOX_17))
     alias = get_dts_alias("ffd1c000.i2c")
     if alias is not None:
         globals()[alias + "_SCL"] = GPIOA_15
         globals()[alias + "_SDA"] = GPIOA_14
-        i2cPorts.append((int(alias[3]), GPIOA_15, GPIOA_14))
+        i2cPorts.append((int(alias[-1]), GPIOA_15, GPIOA_14))
     alias = get_dts_alias("fdd24000.serial")
     if alias is not None:
         globals()[alias + "_TX"] = GPIOX_12
         globals()[alias + "_RX"] = GPIOX_13
-        uartPorts.append((int(alias[3]), GPIOX_12, GPIOX_13))
+        uartPorts.append((int(alias[-1]), GPIOX_12, GPIOX_13))
     alias = get_dts_alias("fdd23000.serial")
     if alias is not None:
         globals()[alias + "_TX"] = GPIOX_6
         globals()[alias + "_RX"] = GPIOX_7
-        uartPorts.append((int(alias[3]), GPIOX_6, GPIOX_7))
+        uartPorts.append((int(alias[-1]), GPIOX_6, GPIOX_7))
 
 i2cPorts = tuple(i2cPorts)
 uartPorts = tuple(uartPorts)
