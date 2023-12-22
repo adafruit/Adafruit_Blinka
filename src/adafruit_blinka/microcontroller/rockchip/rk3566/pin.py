@@ -184,35 +184,35 @@ if board in ("ODROID_M1S"):
     if alias is not None:
         globals()[alias + "_SCL"] = GPIO3_B5
         globals()[alias + "_SDA"] = GPIO3_B6
-        i2cPorts.append((int(alias[3]), GPIO3_B5, GPIO3_B6))
+        i2cPorts.append((int(alias[-1]), GPIO3_B5, GPIO3_B6))
     alias = get_pwm_chipid("fdd70010.pwm")
     if alias is not None:
         globals()["PWM" + alias] = GPIO0_C0
-        pwmOuts.append(((int(alias[3]), 0), GPIO0_C0))
+        pwmOuts.append(((int(alias[-1]), 0), GPIO0_C0))
     alias = get_pwm_chipid("fdd70020.pwm")
     if alias is not None:
         globals()["PWM" + alias] = GPIO0_C1
-        pwmOuts.append(((int(alias[3]), 0), GPIO0_C1))
+        pwmOuts.append(((int(alias[-1]), 0), GPIO0_C1))
     alias = get_pwm_chipid("fdd70030.pwm")
     if alias is not None:
         globals()["PWM" + alias] = GPIO0_C2
-        pwmOuts.append(((int(alias[3]), 0), GPIO0_C2))
+        pwmOuts.append(((int(alias[-1]), 0), GPIO0_C2))
     alias = get_dts_alias("fe620000.spi")
     if alias is not None:
         globals()[alias + "_CLK"] = GPIO3_C3
         globals()[alias + "_MOSI"] = GPIO3_C1
         globals()[alias + "_MISO"] = GPIO3_C2
-        spiPorts.append((int(alias[3]), GPIO3_C3, GPIO3_C1, GPIO3_C2))
+        spiPorts.append((int(alias[-1]), GPIO3_C3, GPIO3_C1, GPIO3_C2))
     alias = get_dts_alias("fdd50000.serial")
     if alias is not None:
         globals()[alias + "_TX"] = GPIO0_C1
         globals()[alias + "_RX"] = GPIO0_C0
-        uartPorts.append((int(alias[3]), GPIO0_C1, GPIO0_C0))
+        uartPorts.append((int(alias[-1]), GPIO0_C1, GPIO0_C0))
     alias = get_dts_alias("fe6a0000.serial")
     if alias is not None:
         globals()[alias + "_TX"] = GPIO2_A4
         globals()[alias + "_RX"] = GPIO2_A3
-        uartPorts.append((int(alias[3]), GPIO2_A4, GPIO2_A3))
+        uartPorts.append((int(alias[-1]), GPIO2_A4, GPIO2_A3))
 
 i2cPorts = tuple(i2cPorts)
 pwmOuts = tuple(pwmOuts)
