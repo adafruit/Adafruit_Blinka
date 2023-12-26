@@ -6,8 +6,7 @@
 """A Pin class for use with Rockchip RK3566."""
 
 from adafruit_blinka.agnostic import detector
-from adafruit_blinka.microcontroller.alias import get_dts_alias
-from adafruit_blinka.microcontroller.alias import get_pwm_chipid
+from adafruit_blinka.microcontroller.alias import get_dts_alias, get_pwm_chipid
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
 GPIO0_A2 = Pin((0, 2))
