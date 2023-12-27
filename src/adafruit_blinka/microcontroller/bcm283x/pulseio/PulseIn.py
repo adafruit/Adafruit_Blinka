@@ -71,8 +71,12 @@ class PulseIn:
         ]
         if idle_state:
             cmd.append("-i")
-        cmd.append("gpiochip0")
-        cmd.append(str(pin))
+        if isinstance(pin.id, tuple):
+            cmd.append(f"gpiochip{pin.id[0]}")
+            cmd.append(str(pin.id[1]))
+        else:
+            cmd.append("gpiochip0")
+            cmd.append(str(pin))
         if DEBUG:
             print(cmd)
 
