@@ -1,5 +1,4 @@
-# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
-#
+# SPDX-FileCopyrightText: 2023 Felix Rohmeier
 # SPDX-License-Identifier: MIT
 """I2C Class for USB ISS"""
 from usb_iss import UsbIss, defs
@@ -19,30 +18,6 @@ class I2C:
     def scan(self):
         """Perform an I2C Device Scan"""
         raise NotImplementedError()
-
-    # # pylint: disable=unused-argument
-    # def writeto(self, address, buffer, *, start=0, end=None, stop=True):
-    #     """Write data from the buffer to an address"""
-    #     #self._iss.i2c.write(0x40, start, list(buffer))
-    #     print ("w " + str(address))
-    #     print ("ws " + str(start))
-    #     self._iss.i2c.write_ad0(address, list(buffer))
-
-    # def readfrom_into(self, address, buffer, *, start=0, end=None, stop=True):
-    #     """Read data from an address and into the buffer"""
-    #     print ("r " + str(address))
-    #     print ("s " + str(start))
-    #     print ("e " + str(end))
-    #     end = end if end else len(buffer)
-    #     #data = self._iss.i2c.read(0x40, 0, end)
-    #     data = bytes(self._iss.i2c.read_ad0(address, end))
-    #     print (data)
-    #     datab = bytearray(data)
-    #     print (datab)
-    #     print (len(datab))
-    #     print (buffer)
-    #     buffer[0:len(datab)] = datab
-    #     print (buffer)
 
     def writeto(self, address, buffer, *, start=0, end=None, stop=True):
         """Write data from the buffer to an address"""
