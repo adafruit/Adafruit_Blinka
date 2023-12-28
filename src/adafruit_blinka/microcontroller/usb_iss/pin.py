@@ -1,5 +1,4 @@
-# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
-#
+# SPDX-FileCopyrightText: 2023 Felix Rohmeier
 # SPDX-License-Identifier: MIT
 """usb_iss pin names"""
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
