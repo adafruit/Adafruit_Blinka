@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2023 Felix Rohmeier
 # SPDX-License-Identifier: MIT
 """I2C Class for USB ISS"""
-from usb_iss import UsbIss, defs
+from usb_iss import UsbIss
 
 
 class I2C:
@@ -12,21 +12,21 @@ class I2C:
         self._iss = UsbIss()
         self._iss.open("/dev/ttyACM0")
         clock_khz = frequency/1000
-        self._iss.setup_i2c()
+        self._iss.setup_i2c(clock_khz = clock_khz)
         print(self._iss.i2c.read_ad0(0x40, 3))
 
     def scan(self):
         """Perform an I2C Device Scan"""
         raise NotImplementedError()
 
-    def writeto(self, address, buffer, *, start=0, end=None, stop=True):
+    def writeto(self, address, buffer, *, start=0, end=None):
         """Write data from the buffer to an address"""
         end = end if end else len(buffer)
         #port = self._i2c.get_port(address)
         #port.write(buffer[start:end], relax=stop)
         self._iss.i2c.write_ad0(address, list(buffer[start:end]))
 
-    def readfrom_into(self, address, buffer, *, start=0, end=None, stop=True):
+    def readfrom_into(self, address, buffer, *, start=0, end=None):
         """Read data from an address and into the buffer"""
         end = end if end else len(buffer)
         #port = self._i2c.get_port(address)
