@@ -136,6 +136,9 @@ uartPorts = [
     (1, UART1_TX, UART1_RX),
 ]
 
+# SysFS analog inputs, Ordered as analog analogInId, device, and channel
+analogIns = []
+
 board = detector.board.id
 if board in ("ODROID_C4", "ODROID_N2"):
     alias = get_dts_alias("ffd1d000.i2c")
@@ -159,5 +162,13 @@ if board in ("ODROID_C4", "ODROID_N2"):
         globals()[alias + "_RX"] = GPIOX_7
         uartPorts.append((int(alias[-1]), GPIOX_6, GPIOX_7))
 
+if board in ("ODROID_C4"):
+    analogIns.append((37, 0, 2))
+    analogIns.append((40, 0, 0))
+if board in ("ODROID_N2"):
+    analogIns.append((37, 0, 3))
+    analogIns.append((40, 0, 2))
+
+analogIns = tuple(analogIns)
 i2cPorts = tuple(i2cPorts)
 uartPorts = tuple(uartPorts)

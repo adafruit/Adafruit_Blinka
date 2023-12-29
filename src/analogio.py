@@ -22,6 +22,8 @@ if detector.board.microchip_mcp2221:
 elif detector.board.greatfet_one:
     from adafruit_blinka.microcontroller.nxp_lpc4330.analogio import AnalogIn
     from adafruit_blinka.microcontroller.nxp_lpc4330.analogio import AnalogOut
+elif detector.board.any_odroid_40_pin:
+    from adafruit_blinka.microcontroller.generic_linux.sysfs_analogin import AnalogIn
 elif detector.board.any_siemens_simatic_iot2000:
     from adafruit_blinka.microcontroller.am65xx.analogio import AnalogIn
     from adafruit_blinka.microcontroller.am65xx.analogio import AnalogOut
