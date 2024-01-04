@@ -65,7 +65,8 @@ if pin.i2cPorts:
 SCLK = pin.SPI0_SCLK
 MOSI = pin.SPI0_MOSI
 MISO = pin.SPI0_MISO
-SPI_CS0 = pin.GPIO486
+CS0 = pin.GPIO486
+CS1 = pin.GPIO464
 
 D3 = GPIOX_17
 D5 = GPIOX_18

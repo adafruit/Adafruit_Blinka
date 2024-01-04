@@ -16,7 +16,8 @@ if pin.i2cPorts:
 SCLK = pin.SPI0_SCLK
 MOSI = pin.SPI0_MOSI
 MISO = pin.SPI0_MISO
-SPI_CS0 = pin.SPI0_CS0
+CS0 = pin.SPI0_CS0
+CS1 = pin.GPIOH_6
 
 """J2: physical pin number"""
 
