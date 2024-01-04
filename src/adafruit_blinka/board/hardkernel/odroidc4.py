@@ -57,3 +57,6 @@ D47 = pin.GPIOAO_4
 """ ADC """
 A0 = 40
 A1 = 37
+
+""" PWM """
+PWM = D15
