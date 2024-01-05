@@ -154,12 +154,12 @@ if board in ("ODROID_C4", "ODROID_N2"):
         globals()[alias + "_SCL"] = GPIOA_15
         globals()[alias + "_SDA"] = GPIOA_14
         i2cPorts.append((int(alias[-1]), GPIOA_15, GPIOA_14))
-    alias = get_dts_alias("fdd24000.serial")
+    alias = get_dts_alias("ffd24000.serial")
     if alias is not None:
         globals()[alias + "_TX"] = GPIOX_12
         globals()[alias + "_RX"] = GPIOX_13
         uartPorts.append((int(alias[-1]), GPIOX_12, GPIOX_13))
-    alias = get_dts_alias("fdd23000.serial")
+    alias = get_dts_alias("ffd23000.serial")
     if alias is not None:
         globals()[alias + "_TX"] = GPIOX_6
         globals()[alias + "_RX"] = GPIOX_7
