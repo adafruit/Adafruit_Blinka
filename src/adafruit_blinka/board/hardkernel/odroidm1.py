@@ -39,6 +39,7 @@ MOSI = D19
 MISO = D21
 CS0 = D24
 CS1 = D26
+CS = CS0  # aliased for backward compatibility
 
 UART0_TX = D8
 UART0_RX = D10

@@ -67,6 +67,7 @@ MOSI = pin.SPI0_MOSI
 MISO = pin.SPI0_MISO
 CS0 = pin.GPIO486
 CS1 = pin.GPIO464
+SPI_CS0 = CS0  # aliased for backward compatibility
 
 D3 = GPIOX_17
 D5 = GPIOX_18
