@@ -101,3 +101,7 @@ A1 = 37
 
 """ PWM """
 PWM = D15
+
+""" UART """
+UART0_TX = D8
+UART0_RX = D10
