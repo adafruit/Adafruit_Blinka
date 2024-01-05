@@ -37,18 +37,20 @@ EXT_D12 = pin.GPIO3_C5
 EXT_D13 = pin.GPIO3_B3
 EXT_D14 = pin.GPIO3_B4
 
-SDA = D27
-SCL = D28
+SDA = D3
+SCL = D5
 
 SCLK = D23
 MOSI = D19
 MISO = D21
-CS = D24
+CS0 = D24
+CS1 = D26
+CS = CS0  # aliased for backward compatibility
 
-UART0_TX = D13
-UART0_RX = D11
-UART1_TX = D8
-UART1_RX = D10
+UART0_TX = D8
+UART0_RX = D10
+UART1_TX = D13
+UART1_RX = D11
 
 UART1_CTS = D29
 UART1_RTS = D31
@@ -61,3 +63,6 @@ I2C1_SCL = D28
 """ ADC """
 A0 = 40
 A1 = 37
+
+""" PWM """
+PWM = D15
