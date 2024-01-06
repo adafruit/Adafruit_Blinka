@@ -4,7 +4,7 @@
 """Pins named after their chip name."""
 
 import sys
-from adafruit_platformdetect.constants import chips as ap_chip
+from adafruit_platformdetect.constants import chips as ap_chip, boards as ap_boards
 from adafruit_blinka.agnostic import board_id, chip_id
 
 # We intentionally are patching into this namespace so skip the wildcard check.
@@ -113,7 +113,7 @@ elif chip_id == ap_chip.RK3328:
 elif chip_id == ap_chip.RK3566:
     from adafruit_blinka.microcontroller.rockchip.rk3566.pin import *
 elif chip_id == ap_chip.RK3568:
-    if board_id in ("ODROID_M1"):
+    if board_id in (ap_boards.ODROID_M1,):
         from adafruit_blinka.microcontroller.rockchip.rk3568b2.pin import *
     else:
         from adafruit_blinka.microcontroller.rockchip.rk3568.pin import *
