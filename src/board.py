@@ -367,6 +367,9 @@ elif board_id == ap_board.ROC_RK3328_CC:
 elif board_id == ap_board.GENERIC_LINUX_PC:
     from adafruit_blinka.board.generic_linux_pc import *
 
+elif board_id == ap_board.MILKV_DUO:
+    from adafruit_blinka.board.milkv_duo import *
+
 elif "sphinx" in sys.modules:
     pass
 
