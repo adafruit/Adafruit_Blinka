@@ -181,9 +181,9 @@ if board in ("ODROID_C4"):
     alias = get_pwm_chipid("ffd19000.pwm")
     if alias is not None:
         globals()["PWME"] = GPIOX_16
-        globals()["PWMF"] = GPIOH_5
+        globals()["PWMF"] = GPIOX_7
         pwmOuts.append(((int(alias[-1]), 0), GPIOX_16))
-        pwmOuts.append(((int(alias[-1]), 1), GPIOH_5))
+        pwmOuts.append(((int(alias[-1]), 1), GPIOX_7))
     analogIns.append((37, 0, 2))
     analogIns.append((40, 0, 0))
 if board in ("ODROID_N2"):
