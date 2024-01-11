@@ -7,7 +7,7 @@ try:
 except ImportError:
     raise ImportError(
         "libgpiod Python bindings not found, please install and try again! See "
-        "https://github.com/adafruit/Raspberry-Pi-Installer-Scripts/blob/master/libgpiod.sh"
+        "https://github.com/adafruit/Raspberry-Pi-Installer-Scripts/blob/main/libgpiod.py"
     ) from ImportError
 
 # Versions 1.5.4 and earlier have no __version__ attribute
