@@ -149,5 +149,5 @@ i2cPorts = (
     (2, TWI2_SCL, TWI2_SDA),
 )
 
-spiPorts = ((0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO),)
+spiPorts = ((0, SPI1_SCLK, SPI1_MOSI, SPI1_MISO),)
 
