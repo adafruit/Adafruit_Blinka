@@ -373,6 +373,9 @@ elif board_id == ap_board.REPKA_PI_4_H6:
 elif board_id == ap_board.GENERIC_LINUX_PC:
     from adafruit_blinka.board.generic_linux_pc import *
 
+elif board_id == ap_board.LICHEEPI_4A:
+    from adafruit_blinka.board.licheepi_4a import *
+
 elif "sphinx" in sys.modules:
     pass
 
