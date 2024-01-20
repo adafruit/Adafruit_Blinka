@@ -24,6 +24,10 @@ QSPI1_CS = pin.SPI1_CS
 QSPI1_SI = pin.SPI1_MOSI
 QSPI1_CLK = pin.SPI1_SCLK
 
+# Default UART
+TX = U0_TX
+RX = U0_RX
+
 # Default I2C
 SCL = I2C2_SCL
 SDA = I2C2_SDA
