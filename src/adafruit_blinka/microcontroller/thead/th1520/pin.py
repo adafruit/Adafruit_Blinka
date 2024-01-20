@@ -145,9 +145,6 @@ uartPorts = (
     (3, UART3_TX, UART3_RX),
 )
 
-i2cPorts = (
-    (2, TWI2_SCL, TWI2_SDA),
-)
+i2cPorts = ((2, TWI2_SCL, TWI2_SDA),)
 
 spiPorts = ((2, SPI1_SCLK, SPI1_MOSI, SPI1_MISO),)
-
