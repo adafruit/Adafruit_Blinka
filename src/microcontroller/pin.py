@@ -139,6 +139,8 @@ elif chip_id == ap_chip.RP2040_U2IF:
     from adafruit_blinka.microcontroller.rp2040_u2if.pin import *
 elif chip_id == ap_chip.D1_RISCV:
     from adafruit_blinka.microcontroller.allwinner.D1.pin import *
+elif chip_id == ap_chip.TH1520:
+    from adafruit_blinka.microcontroller.thead.th1520.pin import *
 elif "sphinx" in sys.modules:
     # pylint: disable=unused-import
     from adafruit_blinka.microcontroller.generic_micropython import Pin
