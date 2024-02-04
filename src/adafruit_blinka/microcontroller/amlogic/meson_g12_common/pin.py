@@ -15,30 +15,13 @@ Linux kernel 5.4.y (mainline)
 from adafruit_blinka.agnostic import detector
 from adafruit_blinka.microcontroller.alias import get_dts_alias, get_pwm_chipid
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
+from adafruit_blinka.microcontroller.generic_linux.libgpiod_chip import Chip
 
-try:
-    import gpiod
-except ImportError:
-    raise ImportError(
-        "libgpiod Python bindings not found, please install and try again!"
-    ) from ImportError
+chip0 = Chip("0")
+chip1 = Chip("1")
 
-if hasattr(gpiod, "Chip"):
-    chip0 = gpiod.Chip("0")
-    chip1 = gpiod.Chip("1")
-else:
-    chip0 = gpiod.chip("0")
-    chip1 = gpiod.chip("1")
-
-if callable(chip0.num_lines):
-    chip0lines = chip0.num_lines()
-else:
-    chip0lines = chip0.num_lines
-
-if callable(chip1.num_lines):
-    chip1lines = chip1.num_lines()
-else:
-    chip1lines = chip1.num_lines
+chip0lines = chip0.num_lines
+chip1lines = chip1.num_lines
 
 if chip0lines < 20:
     aobus = 0
