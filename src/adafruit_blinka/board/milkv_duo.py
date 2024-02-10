@@ -5,8 +5,8 @@
 
 from adafruit_blinka.microcontroller.cv1800b import pin
 
-# see milkvduo/sdk_linux/duo-buildroot-sdk/buildroot-2021.05/package/python-pinpong/pinpong/extension/milkvDuo.py
-
+# see milkvduo/sdk_linux/duo-buildroot-sdk/buildroot-2021.05/
+#   package/python-pinpong/pinpong/extension/milkvDuo.py
 GP1 = pin.GP1
 GP2 = pin.GP2
 GP3 = pin.GP3
@@ -36,6 +36,5 @@ GP27 = pin.GP27
 SCLK = pin.SPI2_SCLK
 MOSI = pin.SPI2_MOSI
 MISO = pin.SPI2_MISO
-CS   = pin.SPI2_CS
-SCK  = SCLK
-
+CS = pin.SPI2_CS
+SCK = SCLK

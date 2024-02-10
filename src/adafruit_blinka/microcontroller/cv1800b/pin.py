@@ -6,8 +6,8 @@
 # from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 from adafruit_blinka.microcontroller.generic_linux.sysfs_pin import Pin
 
-# see milkvduo/sdk_linux/duo-buildroot-sdk/buildroot-2021.05/package/python-pinpong/pinpong/extension/milkvDuo.py
-
+# see milkvduo/sdk_linux/duo-buildroot-sdk/buildroot-2021.05/
+#   package/python-pinpong/pinpong/extension/milkvDuo.py
 GP0 = Pin(508)
 GP1 = Pin(509)
 GP2 = Pin(378)
@@ -43,4 +43,3 @@ SPI2_MOSI = GP7
 
 # ordered as spiId, sckId, mosiId, misoId
 spiPorts = ((0, SPI2_SCLK, SPI2_MOSI, SPI2_MISO),)
-
