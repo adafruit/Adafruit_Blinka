@@ -364,8 +364,17 @@ elif board_id == ap_board.AML_S905X_CC:
 elif board_id == ap_board.ROC_RK3328_CC:
     from adafruit_blinka.board.librecomputer.roc_rk3328_cc import *
 
+elif board_id == ap_board.REPKA_PI_3_H5:
+    from adafruit_blinka.board.repkapi.repka_pi_3 import *
+
+elif board_id == ap_board.REPKA_PI_4_H6:
+    from adafruit_blinka.board.repkapi.repka_pi_4 import *
+
 elif board_id == ap_board.GENERIC_LINUX_PC:
     from adafruit_blinka.board.generic_linux_pc import *
+
+elif board_id == ap_board.LICHEEPI_4A:
+    from adafruit_blinka.board.licheepi_4a import *
 
 elif board_id == ap_board.MILKV_DUO:
     from adafruit_blinka.board.milkv_duo import *

@@ -115,6 +115,8 @@ elif detector.chip.H616:
     from adafruit_blinka.microcontroller.allwinner.h616.pin import Pin
 elif detector.chip.D1_RISCV:
     from adafruit_blinka.microcontroller.allwinner.D1.pin import Pin
+elif detector.chip.TH1520:
+    from adafruit_blinka.microcontroller.thead.th1520.pin import Pin
 # Special Case Boards
 elif detector.board.ftdi_ft232h:
     from adafruit_blinka.microcontroller.ftdi_mpsse.ft232h.pin import Pin

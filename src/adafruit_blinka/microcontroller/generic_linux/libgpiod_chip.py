@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
 #
 # SPDX-License-Identifier: MIT
-"""A Pin class for use with libgpiod."""
+"""A Chip class for use with libgpiod."""
 try:
     import gpiod
 except ImportError:
@@ -17,6 +17,6 @@ else:
     version = "1.x"
 
 if version.startswith("1."):
-    from .libgpiod.libgpiod_pin_1_x import Pin  # pylint: disable=unused-import
+    from .libgpiod.libgpiod_chip_1_x import Chip  # pylint: disable=unused-import
 else:
-    from .libgpiod.libgpiod_pin_2_x import Pin  # pylint: disable=unused-import
+    from .libgpiod.libgpiod_chip_2_x import Chip  # pylint: disable=unused-import
