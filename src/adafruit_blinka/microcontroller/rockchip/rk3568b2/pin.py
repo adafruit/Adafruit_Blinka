@@ -91,12 +91,12 @@ if board in ("ODROID_M1"):
         i2cPorts.append((int(alias[-1]), GPIO3B_5, GPIO3B_6))
     alias = get_pwm_chipid("fdd70010.pwm")
     if alias is not None:
-        globals()["PWM" + alias] = GPIO0C_0
-        pwmOuts.append(((int(alias[-1]), 0), GPIO0C_0))
+        globals()["PWM" + alias] = GPIO0B_5
+        pwmOuts.append(((int(alias[-1]), 0), GPIO0B_5))
     alias = get_pwm_chipid("fdd70020.pwm")
     if alias is not None:
-        globals()["PWM" + alias] = GPIO0C_1
-        pwmOuts.append(((int(alias[-1]), 0), GPIO0C_1))
+        globals()["PWM" + alias] = GPIO0B_6
+        pwmOuts.append(((int(alias[-1]), 0), GPIO0B_6))
     alias = get_pwm_chipid("fe6f0010.pwm")
     if alias is not None:
         globals()["PWM" + alias] = GPIO3B_2
