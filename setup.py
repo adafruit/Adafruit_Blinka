@@ -36,7 +36,7 @@ if os.path.exists("/proc/device-tree/compatible"):
     ):
         board_reqs = ["RPi.GPIO", "rpi_ws281x>=4.0.0", "sysv_ipc>=1.1.0"]
     # Pi 5
-    if (b"brcm,bcm2712" in compat):
+    if b"brcm,bcm2712" in compat:
         board_reqs = ["rpi_ws281x>=4.0.0", "sysv_ipc>=1.1.0", "rpi-lgpio"]
     if (
         b"ti,am335x" in compat
