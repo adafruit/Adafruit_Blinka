@@ -10,7 +10,6 @@
 
 import io
 import os
-import sys
 
 from setuptools import setup, find_packages
 
@@ -27,15 +26,18 @@ if os.path.exists("/proc/device-tree/compatible"):
         compat = f.read()
     if b"nvidia,tegra" in compat:
         board_reqs = ["Jetson.GPIO"]
+    # Pi 4 and Earlier
     if (
         b"brcm,bcm2835" in compat
         or b"brcm,bcm2836" in compat
         or b"brcm,bcm2837" in compat
         or b"brcm,bcm2838" in compat
         or b"brcm,bcm2711" in compat
-        or b"brcm,bcm2712" in compat
     ):
         board_reqs = ["RPi.GPIO", "rpi_ws281x>=4.0.0", "sysv_ipc>=1.1.0"]
+    # Pi 5
+    if b"brcm,bcm2712" in compat:
+        board_reqs = ["rpi_ws281x>=4.0.0", "sysv_ipc>=1.1.0", "rpi-lgpio"]
     if (
         b"ti,am335x" in compat
     ):  # BeagleBone Black, Green, PocketBeagle, BeagleBone AI, etc.
