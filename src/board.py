@@ -238,6 +238,9 @@ elif board_id == ap_board.PINE64:
 elif board_id == ap_board.PINEH64:
     from adafruit_blinka.board.pineH64 import *
 
+elif board_id == ap_board.QUARTZ64_A:
+    from adafruit_blinka.board.pine64.quartz64_a import *
+
 elif board_id == ap_board.PCDUINO2:
     from adafruit_blinka.board.linksprite.pcduino2 import *
 
