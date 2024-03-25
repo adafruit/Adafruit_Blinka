@@ -233,10 +233,13 @@ elif board_id == ap_board.SIFIVE_UNLEASHED:
     from adafruit_blinka.board.hifive_unleashed import *
 
 elif board_id == ap_board.PINE64:
-    from adafruit_blinka.board.pine64 import *
+    from adafruit_blinka.board.pine64.pine64 import *
 
 elif board_id == ap_board.PINEH64:
     from adafruit_blinka.board.pineH64 import *
+
+elif board_id == ap_board.QUARTZ64_A:
+    from adafruit_blinka.board.pine64.quartz64_a import *
 
 elif board_id == ap_board.PCDUINO2:
     from adafruit_blinka.board.linksprite.pcduino2 import *
