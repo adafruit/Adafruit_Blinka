@@ -9,6 +9,7 @@ from adafruit_blinka.agnostic import detector
 from adafruit_blinka.microcontroller.alias import get_dts_alias, get_pwm_chipid
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
+GPIO0_A0 = Pin((0, 0))
 GPIO0_A2 = Pin((0, 2))
 GPIO0_A4 = Pin((0, 4))
 GPIO0_A5 = Pin((0, 5))
@@ -114,6 +115,9 @@ GPIO4_C6 = Pin((4, 22))
 
 ADC_AIN3 = 37
 
+# labeled as such on Quartz64-A
+CPU_REFCLK_OUT = GPIO0_A0
+
 # I2C
 I2C0_SCL = GPIO0_B1
 I2C0_SDA = GPIO0_B2
@@ -135,6 +139,10 @@ SPI0_CS0_M0 = GPIO0_C6
 SPI0_CLK_M0 = GPIO0_B5
 SPI0_MISO_M0 = GPIO0_C5
 SPI0_MOSI_M0 = GPIO0_B6
+SPI1_CS0_M1 = GPIO0_C6
+SPI1_CLK_M1 = GPIO0_B5
+SPI1_MISO_M1 = GPIO3_C2
+SPI1_MOSI_M1 = GPIO3_C1
 SPI3_CS0_M0 = GPIO4_A6
 SPI3_CLK_M0 = GPIO4_B3
 SPI3_MISO_M0 = GPIO4_B0
@@ -145,6 +153,8 @@ SPI3_MISO_M1 = GPIO4_C5
 SPI3_MOSI_M1 = GPIO4_C3
 
 # UART
+UART0_TX = GPIO0_C1
+UART0_RX = GPIO0_C0
 UART2_TX = GPIO0_D1
 UART2_RX = GPIO0_D0
 UART3_TX_M1 = GPIO3_B7
@@ -166,6 +176,7 @@ i2cPorts = [
 
 # ordered as spiId, sckId, mosiId, misoId
 spiPorts = [
+    (1, SPI1_CLK_M1, SPI1_MOSI_M1, SPI1_MISO_M1),
     (3, SPI3_CLK_M0, SPI3_MOSI_M0, SPI3_MISO_M0),
     (3, SPI3_CLK_M1, SPI3_MOSI_M1, SPI3_MISO_M1),
 ]
