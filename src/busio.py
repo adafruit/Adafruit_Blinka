@@ -54,6 +54,11 @@ class I2C(Lockable):
 
             self._i2c = _I2C(frequency=frequency)
             return
+        if detector.board.microchip_usb_iss:
+            from adafruit_blinka.microcontroller.usb_iss.i2c import I2C as _I2C
+
+            self._i2c = _I2C(frequency=frequency)
+            return            
         if detector.board.greatfet_one:
             from adafruit_blinka.microcontroller.nxp_lpc4330.i2c import I2C as _I2C
 
