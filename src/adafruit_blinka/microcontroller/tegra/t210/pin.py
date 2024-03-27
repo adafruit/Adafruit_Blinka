@@ -135,3 +135,9 @@ i2cPorts = (
 
 # ordered as spiId, sckId, mosiId, misoId
 spiPorts = ((0, C02, C00, C01), (1, B06, B04, B05))
+
+# SysFS pwm outputs, pwm channel and pin in first tuple
+pwmOuts = (
+    ((0, 0), V00),
+    ((0, 1), E06),
+)

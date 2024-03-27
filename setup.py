@@ -89,7 +89,7 @@ setup(
     },
     include_package_data=True,
     install_requires=[
-        "Adafruit-PlatformDetect>=3.53.0",
+        "Adafruit-PlatformDetect>=3.62.0",
         "Adafruit-PureIO>=1.1.7",
         "pyftdi>=0.40.0",
         "adafruit-circuitpython-typing",
