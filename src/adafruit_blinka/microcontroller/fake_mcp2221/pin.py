@@ -21,7 +21,7 @@ class Pin:
     def __init__(self, pin_id=None):
         self.id = pin_id
         self._mode = None
-        self._prv_val = None
+        self._prv_val = False
 
     def init(self, mode=IN, pull=None):
         """Initialize the Pin"""
@@ -53,13 +53,8 @@ class Pin:
         if self._mode in (Pin.IN, Pin.OUT):
             # digital read
             if val is None:
-                # The value returned will toggle between True and False
-                # and will be True on the first digital read
-                # TODO: Behavior needs to be tested
-                if self._prv_val == None or False:
-                    self._prv_val = True
-                else:
-                    self._prv_val = False
+                # The returned value toggles between True and false
+                self._prv_val = not self._prv_val
                 return self._prv_val
             # digital write
             if val in (Pin.LOW, Pin.HIGH):
