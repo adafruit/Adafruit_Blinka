@@ -123,7 +123,10 @@ elif chip_id == ap_chip.BINHO:
 elif chip_id == ap_chip.LPC4330:
     from adafruit_blinka.microcontroller.nxp_lpc4330 import *
 elif chip_id == ap_chip.MCP2221:
-    from adafruit_blinka.microcontroller.mcp2221 import *
+    if "BLINKA_FORCECHIP" not in os.environ:
+        from adafruit_blinka.microcontroller.mcp2221 import *
+    elif os.environ["BLINKA_FORCECHIP"] == "MCP2221":
+        from adafruit_blinka.microcontroller.fake_mcp2221 import *
 elif chip_id == ap_chip.MIPS24KC:
     from adafruit_blinka.microcontroller.atheros.ar9331 import *
 elif chip_id == ap_chip.MIPS24KEC:

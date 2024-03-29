@@ -17,7 +17,7 @@ __blinka__ = True
 
 
 import sys
-
+import os
 import adafruit_platformdetect.constants.boards as ap_board
 from adafruit_blinka.agnostic import board_id, detector
 
@@ -224,7 +224,10 @@ elif board_id == ap_board.BINHO_NOVA:
     from adafruit_blinka.board.binho_nova import *
 
 elif board_id == ap_board.MICROCHIP_MCP2221:
-    from adafruit_blinka.board.microchip_mcp2221 import *
+    if "BLINKA_FORCEBOARD" not in os.environ:
+        from adafruit_blinka.board.microchip_mcp2221 import *
+    elif os.environ["BLINKA_FORCEBOARD"] == "MICROCHIP_MCP2221":
+        from adafruit_blinka.board.fake_microchip_mcp2221 import *
 
 elif board_id == ap_board.GREATFET_ONE:
     from adafruit_blinka.board.greatfet_one import *
