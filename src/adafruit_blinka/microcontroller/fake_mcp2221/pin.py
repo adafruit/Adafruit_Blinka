@@ -3,7 +3,6 @@
 # SPDX-License-Identifier: MIT
 """fake_mcp2221 pin names"""
 import random
-from .fake_mcp2221 import mcp2221
 
 
 class Pin:
@@ -31,20 +30,15 @@ class Pin:
             raise NotImplementedError(
                 "Internal pullups and pulldowns not supported on the MCP2221"
             )
-        if mode in (Pin.IN, Pin.OUT):
-            # All pins can do GPIO
-            pass
-        elif mode == Pin.ADC:
+        if mode == Pin.ADC:
             # ADC only available on these pins
             if self.id not in (1, 2, 3):
                 raise ValueError("Pin does not have ADC capabilities")
-            pass
             # Do nothing
         elif mode == Pin.DAC:
             # DAC only available on these pins
             if self.id not in (2, 3):
                 raise ValueError("Pin does not have DAC capabilities")
-            pass
         else:
             raise ValueError("Incorrect pin mode: {}".format(mode))
         self._mode = mode
