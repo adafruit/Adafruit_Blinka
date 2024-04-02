@@ -3,12 +3,6 @@
 # SPDX-License-Identifier: MIT
 """Chip Definition for MCP2221"""
 
-import os
-import time
-import atexit
-
-import hid
-
 
 class MCP2221:
     """MCP2221 Device Class Definition"""
