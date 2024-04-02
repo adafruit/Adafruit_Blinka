@@ -14,7 +14,7 @@ class MCP2221:
     """MCP2221 Device Class Definition"""
 
     def __init__(self):
-        pass # This is a "fake" implementation
+        pass  # This is a "fake" implementation
 
     def close(self):
         """Close the hid device. Does nothing if the device is not open."""
@@ -23,7 +23,6 @@ class MCP2221:
     def __del__(self):
         # try to close the device before destroying the instance
         pass
-
 
     def _hid_xfer(self, report, response=True):
         """Perform HID Transfer"""
@@ -66,7 +65,6 @@ class MCP2221:
     def gpio_get_pin(self, pin):
         """Get Current GPIO Pin Value"""
         pass
-
 
     # ----------------------------------------------------------------
     # I2C
@@ -119,7 +117,6 @@ class MCP2221:
     def i2c_scan(self, *, start=0, end=0x79):
         """Perform an I2C Device Scan"""
         pass
-
 
     # ----------------------------------------------------------------
     # ADC

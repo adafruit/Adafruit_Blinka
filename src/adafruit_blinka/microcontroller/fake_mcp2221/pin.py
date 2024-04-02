@@ -28,7 +28,9 @@ class Pin:
         if self.id is None:
             raise RuntimeError("Can not init a None type pin.")
         if pull is not None:
-            raise NotImplementedError("Internal pullups and pulldowns not supported on the MCP2221")
+            raise NotImplementedError(
+                "Internal pullups and pulldowns not supported on the MCP2221"
+            )
         if mode in (Pin.IN, Pin.OUT):
             # All pins can do GPIO
             pass

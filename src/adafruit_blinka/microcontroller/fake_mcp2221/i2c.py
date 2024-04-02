@@ -12,7 +12,7 @@ class I2C:
     def __init__(self, *, frequency=100000):
         self._mcp2221 = mcp2221
 
-    def scan(self, address_list = None):
+    def scan(self, address_list=None):
         """Mocks an I2C scan.
         If address_list is not provided, this function returns a list of 3 randomly generated I2C addresses from 0x0 to 0x79.
         For a stimulus-driven test: If address_list is provided, this function returns the provided address_list.
