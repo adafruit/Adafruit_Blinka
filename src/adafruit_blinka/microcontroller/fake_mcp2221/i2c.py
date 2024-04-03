@@ -14,6 +14,7 @@ class I2C:
         self._freq = frequency
 
     # pylint: disable=no-self-use
+    @staticmethod
     def scan(self, address_list=None):
         """Mocks an I2C scan.
         If address_list is not provided, this function returns a
