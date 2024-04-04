@@ -127,7 +127,10 @@ elif detector.board.binho_nova:
 elif detector.board.greatfet_one:
     from adafruit_blinka.microcontroller.nxp_lpc4330.pin import Pin
 elif detector.board.microchip_mcp2221:
-    if "BLINKA_FORCECHIP" in os.environ and os.environ["BLINKA_FORCEBOARD"] == "MICROCHIP_MCP2221":
+    if (
+        "BLINKA_FORCECHIP" in os.environ
+        and os.environ["BLINKA_FORCEBOARD"] == "MICROCHIP_MCP2221"
+    ):
         from adafruit_blinka.microcontroller.fake_mcp2221.pin import Pin
     else:
         from adafruit_blinka.microcontroller.mcp2221.pin import Pin
