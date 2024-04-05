@@ -9,7 +9,7 @@ See `CircuitPython:digitalio` in CircuitPython for more details.
 
 * Author(s): cefn
 """
-
+import os
 from adafruit_blinka.agnostic import board_id, detector
 
 # pylint: disable=ungrouped-imports,wrong-import-position,unused-wildcard-import,wildcard-import
@@ -127,7 +127,13 @@ elif detector.board.binho_nova:
 elif detector.board.greatfet_one:
     from adafruit_blinka.microcontroller.nxp_lpc4330.pin import Pin
 elif detector.board.microchip_mcp2221:
-    from adafruit_blinka.microcontroller.mcp2221.pin import Pin
+    if (
+        "BLINKA_FORCECHIP" in os.environ
+        and os.environ["BLINKA_FORCEBOARD"] == "MICROCHIP_MCP2221"
+    ):
+        from adafruit_blinka.microcontroller.fake_mcp2221.pin import Pin
+    else:
+        from adafruit_blinka.microcontroller.mcp2221.pin import Pin
 elif detector.chip.RP2040_U2IF:
     from adafruit_blinka.microcontroller.rp2040_u2if.pin import Pin
 # MicroPython Chips

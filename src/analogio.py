@@ -9,7 +9,7 @@ Not supported by all boards.
 
 * Author(s): Carter Nelson, Melissa LeBlanc-Williams
 """
-
+import os
 import sys
 
 from adafruit_blinka.agnostic import detector
@@ -17,8 +17,15 @@ from adafruit_blinka.agnostic import detector
 # pylint: disable=ungrouped-imports,wrong-import-position,unused-import
 
 if detector.board.microchip_mcp2221:
-    from adafruit_blinka.microcontroller.mcp2221.analogio import AnalogIn
-    from adafruit_blinka.microcontroller.mcp2221.analogio import AnalogOut
+    if (
+        "BLINKA_FORCECHIP" in os.environ
+        and os.environ["BLINKA_FORCEBOARD"] == "MICROCHIP_MCP2221"
+    ):
+        from adafruit_blinka.microcontroller.fake_mcp2221.analogio import AnalogIn
+        from adafruit_blinka.microcontroller.fake_mcp2221.analogio import AnalogOut
+    else:
+        from adafruit_blinka.microcontroller.mcp2221.analogio import AnalogIn
+        from adafruit_blinka.microcontroller.mcp2221.analogio import AnalogOut
 elif detector.board.greatfet_one:
     from adafruit_blinka.microcontroller.nxp_lpc4330.analogio import AnalogIn
     from adafruit_blinka.microcontroller.nxp_lpc4330.analogio import AnalogOut
