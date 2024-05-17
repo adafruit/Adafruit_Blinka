@@ -11,10 +11,12 @@ Dx_INPUT_TRUE_PULL_UP = pin.D2
 Dx_INPUT_TRUE_PULL_DOWN = pin.D3
 Dx_OUTPUT_TRUE = pin.D4
 Dx_OUTPUT_FALSE = pin.D5
+# Special "digital" pins
+NEOPIXEL = pin.D6
 
 # Analog pins
 Ax_INPUT_RAND_INT = pin.A0
-Ax_INPUT_FIXED_INT = pin.A1
+Ax_INPUT_FIXED_INT_PI = pin.A1
 Ax_OUTPUT_WAVE_SINE = pin.A2
 Ax_OUTPUT_WAVE_SAWTOOTH = pin.A3
 

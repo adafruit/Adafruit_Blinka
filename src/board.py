@@ -17,6 +17,7 @@ __blinka__ = True
 
 
 import sys
+import os
 import adafruit_platformdetect.constants.boards as ap_board
 from adafruit_blinka.agnostic import board_id, detector
 
@@ -386,6 +387,9 @@ elif board_id == ap_board.LICHEEPI_4A:
 
 elif board_id == ap_board.MILKV_DUO:
     from adafruit_blinka.board.milkv_duo import *
+
+elif "BLINKA_FORCECHIP" in os.environ and os.environ["BLINKA_FORCEBOARD"] == "GENERIC_AGNOSTIC_BOARD":
+    from adafruit_blinka.board.generic_agnostic_board import *
 
 elif "sphinx" in sys.modules:
     pass

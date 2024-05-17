@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 """Pins named after their chip name."""
+import os
 import sys
 from adafruit_platformdetect.constants import chips as ap_chip, boards as ap_boards
 from adafruit_blinka.agnostic import board_id, chip_id
@@ -148,6 +149,8 @@ elif "sphinx" in sys.modules:
 elif chip_id == ap_chip.GENERIC_X86:
     print("WARNING: GENERIC_X86 is not fully supported. Some features may not work.")
     from adafruit_blinka.microcontroller.generic_micropython import Pin
+elif "BLINKA_FORCECHIP" in os.environ and os.environ["BLINKA_FORCEBOARD"] == "GENERIC_AGNOSTIC_BOARD":
+    from adafruit_blinka.microcontroller.generic_agnostic_board.pin import *
 elif chip_id is None:
     print(
         "WARNING: chip_id == None is not fully supported. Some features may not work."
