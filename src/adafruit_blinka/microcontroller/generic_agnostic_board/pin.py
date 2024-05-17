@@ -4,8 +4,10 @@
 """generic_agnostic_board pin interface"""
 import random
 
+
 class Pin:
     """A basic Pin class for use with generic_agnostic_board"""
+
     # pin modes
     OUT = 0
     IN = 1
@@ -16,42 +18,57 @@ class Pin:
     HIGH = 1
 
     def return_toggle(self):
-      """Returns the pin's expected value, toggling between True and False"""
-      toggle_state = not self.previous_value
-      return toggle_state
+        """Returns the pin's expected value, toggling between True and False"""
+        toggle_state = not self.previous_value
+        return toggle_state
 
     def return_false(self):
-      """Returns the pin's expected value, False"""
-      return False
+        """Returns the pin's expected value, False"""
+        return False
 
     def return_true(self):
-      """Returns the pin's expected value, True"""
-      return True
+        """Returns the pin's expected value, True"""
+        return True
 
     def return_random_int(self):
-      """Returns a random integer"""
-      return random.randint(0, 65535)
+        """Returns a random integer"""
+        return random.randint(0, 65535)
 
     def return_fixed_int_pi(self):
-      """Returns the first five digits of Pi, 31415"""
-      return 31415
-
-    expected_pin_behavior = {
-      'Dx_INPUT_TRUE': return_true,
-      'Dx_INPUT_FALSE': return_false,
-      'Dx_INPUT_TRUE_THEN_FALSE': return_toggle,
-      'Dx_INPUT_TRUE_PULL_UP': return_true,
-      'Dx_INPUT_TRUE_PULL_DOWN': return_true,
-      'Dx_OUTPUT_TRUE': return_true,
-      'Dx_OUTPUT_FALSE': return_true,
-      'Ax_INPUT_RAND_INT': return_random_int
-    }
+        """Returns the first five digits of Pi, 31415"""
+        return 31415
 
     def __init__(self, pin_id=None):
-      self.id = pin_id
-      self._mode = None
-      self.previous_value = None
-      self.current_value = None
+        self.id = pin_id
+        self._mode = None
+        self.previous_value = None
+        self.current_value = None
+        # TODO: Can we simplify the pin behavior dict and the pin map dict?
+        # mapping of pin definition names to expected behavior
+        self.expected_pin_behavior = {
+            "Dx_INPUT_TRUE": self.return_true,
+            "Dx_INPUT_FALSE": self.return_false,
+            "Dx_INPUT_TRUE_THEN_FALSE": self.return_toggle,
+            "Dx_INPUT_TRUE_PULL_UP": self.return_true,
+            "Dx_INPUT_TRUE_PULL_DOWN": self.return_true,
+            "Dx_OUTPUT_TRUE": self.return_true,
+            "Dx_OUTPUT_FALSE": self.return_false,
+            "Ax_INPUT_RAND_INT": self.return_random_int,
+        }
+        # mapping of pin numbers to pin definition names
+        self.pin_number_to_pin_definition_name = {
+            0: "Dx_INPUT_TRUE",
+            1: "Dx_INPUT_FALSE",
+            2: "Dx_INPUT_TRUE_PULL_UP",
+            3: "Dx_INPUT_TRUE_PULL_DOWN",
+            4: "Dx_OUTPUT_TRUE",
+            5: "Dx_OUTPUT_FALSE",
+            6: "NEOPIXEL",
+            7: "Ax_INPUT_RAND_INT",
+            8: "Ax_INPUT_FIXED_INT_PI",
+            9: "Ax_OUTPUT_WAVE_SINE",
+            10: "Ax_OUTPUT_WAVE_SAWTOOTH",
+        }
 
     def init(self, mode=IN, pull=None):
         """Initialize the Pin"""
@@ -62,15 +79,20 @@ class Pin:
         self._mode = mode
 
     def write(self, new_value):
-      """Saves the new_value to the pin for subsequent calls to .value"""
-      self.previous_value = self.current_value
-      self.current_value = new_value
+        """Saves the new_value to the pin for subsequent calls to .value"""
+        self.previous_value = self.current_value
+        self.current_value = new_value
 
     def read(self):
-      """Returns the pin's expected value."""
-      self.previous_value = self.current_value
-      self.current_value = self.expected_pin_behavior.get(self.pin_id)
-      return self.current_value
+        """Returns the pin's expected value."""
+        self.previous_value = self.current_value
+        # lookup the pin id's name from the mapping
+        pin_name = self.pin_number_to_pin_definition_name.get(self.id)
+        if pin_name:
+            self.current_value = self.expected_pin_behavior[pin_name]()
+        else:  # default to False if the pin is not in the mapping
+            self.current_value = False
+        return self.current_value
 
     def value(self, val=None):
         """Set or return the Pin Value"""
@@ -100,6 +122,7 @@ class Pin:
         raise RuntimeError(
             "No action for mode {} with value {}".format(self._mode, val)
         )
+
 
 # create pin instances for each pin
 D0 = Pin(0)

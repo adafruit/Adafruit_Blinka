@@ -137,8 +137,11 @@ elif detector.chip.RP2040:
     from machine import Pin
 elif detector.chip.CV1800B:
     from adafruit_blinka.microcontroller.cv1800b.pin import Pin
-elif "BLINKA_FORCECHIP" in os.environ and os.environ["BLINKA_FORCEBOARD"] == "GENERIC_AGNOSTIC_BOARD":
-    from adafruit_blinka.microcontroller.generic_agnostic.pin import Pin
+elif (
+    "BLINKA_FORCECHIP" in os.environ
+    and os.environ["BLINKA_FORCEBOARD"] == "GENERIC_AGNOSTIC_BOARD"
+):
+    from adafruit_blinka.microcontroller.generic_agnostic_board.pin import Pin
 
 from adafruit_blinka import Enum, ContextManaged
 
