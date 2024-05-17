@@ -15,6 +15,27 @@ class Pin:
     LOW = 0
     HIGH = 1
 
+    def return_toggle(self):
+      """Returns the pin's expected value, toggling between True and False"""
+      toggle_state = not self.previous_value
+      return toggle_state
+
+    def return_false(self):
+      """Returns the pin's expected value, False"""
+      return False
+
+    def return_true(self):
+      """Returns the pin's expected value, True"""
+      return True
+
+    def return_random_int(self):
+      """Returns a random integer"""
+      return random.randint(0, 65535)
+
+    def return_fixed_int_pi(self):
+      """Returns the first five digits of Pi, 31415"""
+      return 31415
+
     expected_pin_behavior = {
       'Dx_INPUT_TRUE': return_true,
       'Dx_INPUT_FALSE': return_false,
@@ -51,27 +72,6 @@ class Pin:
       self.current_value = self.expected_pin_behavior.get(self.pin_id)
       return self.current_value
 
-    def return_toggle(self):
-      """Returns the pin's expected value, toggling between True and False"""
-      toggle_state = not self.previous_value
-      return toggle_state
-
-    def return_false(self):
-      """Returns the pin's expected value, False"""
-      return False
-
-    def return_true(self):
-      """Returns the pin's expected value, True"""
-      return True
-
-    def return_random_int(self):
-      """Returns a random integer"""
-      return random.randint(0, 65535)
-
-    def return_fixed_int_pi(self):
-      """Returns the first five digits of Pi, 31415"""
-      return 31415
-
     def value(self, val=None):
         """Set or return the Pin Value"""
         # Digital In / Out
@@ -100,3 +100,33 @@ class Pin:
         raise RuntimeError(
             "No action for mode {} with value {}".format(self._mode, val)
         )
+
+# create pin instances for each pin
+D0 = Pin(0)
+D1 = Pin(1)
+D2 = Pin(2)
+D3 = Pin(3)
+D4 = Pin(4)
+D5 = Pin(5)
+# Special "digital" pins
+D6 = Pin(6)
+# Analog pins
+A0 = Pin(7)
+A1 = Pin(8)
+A2 = Pin(9)
+A3 = Pin(10)
+
+# I2C pins
+SDA = Pin()
+SCL = Pin()
+
+# SPI pins
+SCLK = Pin()
+SCK = Pin()
+MOSI = Pin()
+MISO = Pin()
+CS = Pin()
+
+# UART pins
+UART_TX = Pin()
+UART_RX = Pin()
