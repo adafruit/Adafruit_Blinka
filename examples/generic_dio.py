@@ -2,6 +2,18 @@ import pytest
 import board
 import digitalio
 
+# Digital output pins
+
+def test_Dx_OUTPUT_TRUE():
+  assert board.board_id == "GENERIC_AGNOSTIC_BOARD"
+  pin_out = digitalio.DigitalInOut(board.Dx_OUTPUT)
+  pin_out.direction = digitalio.Direction.OUTPUT
+  # Test setting the value and reading it back
+  pin_out.value = True
+  assert pin_out.value == True
+  pin_out.value = False
+  assert pin_out.value == True
+  pin_out.deinit()
 
 # Digital Input Pins
 

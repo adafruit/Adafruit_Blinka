@@ -55,8 +55,7 @@ class Pin:
             1: self.return_false,  # Dx_INPUT_FALSE
             2: self.return_true,  # Dx_INPUT_TRUE_PULL_UP
             3: self.return_true,  # Dx_INPUT_TRUE_PULL_DOWN
-            4: self.return_true,  # Dx_OUTPUT_TRUE
-            5: self.return_false,  # Dx_OUTPUT_FALSE
+            4: self.return_true,  # Dx_OUTPUT
             6: self.return_true,  # NEOPIXEL
             7: self.return_random_int,  # Ax_INPUT_RAND_INT
             8: self.return_fixed_int_pi,  # Ax_INPUT_FIXED_INT_PI
@@ -130,7 +129,6 @@ D1 = Pin(1)
 D2 = Pin(2)
 D3 = Pin(3)
 D4 = Pin(4)
-D5 = Pin(5)
 # Special "digital" pins
 D6 = Pin(6)
 # Analog pins
