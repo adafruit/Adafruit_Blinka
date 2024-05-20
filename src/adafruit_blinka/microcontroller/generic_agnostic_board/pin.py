@@ -80,7 +80,6 @@ class Pin:
         self.current_value = new_value
 
     def read(self):
-        print("\nread mode: ", self._mode)
         """Returns the pin's expected value."""
         self.previous_value = self.current_value
         # perform a lookup on the pin_behavior dict to get the value
@@ -88,10 +87,9 @@ class Pin:
 
         # is pin a pull up and pin is LOW?
         if self._pull == Pin.PULL_UP and self.current_value == False:
-            self.current_value = True
+            self.current_value = False
         # is pin a pull down and pin is HIGH?
         if self._pull == Pin.PULL_DOWN and self.current_value == True:
-            print("switching PDR to False")
             self.current_value = False
 
         return self.current_value
