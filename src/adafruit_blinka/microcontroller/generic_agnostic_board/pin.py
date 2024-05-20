@@ -4,6 +4,31 @@
 """generic_agnostic_board pin interface"""
 import random
 
+# Values for sine wave output
+# (data points = 20, amplitude=100, frequency=1)
+sine_wave = [
+    0,
+    31,
+    59,
+    81,
+    95,
+    100,
+    95,
+    81,
+    59,
+    31,
+    0,
+    -31,
+    -59,
+    -81,
+    -95,
+    -100,
+    -95,
+    -81,
+    -59,
+    -31,
+]
+
 
 class Pin:
     """A basic Pin class for use with generic_agnostic_board"""
@@ -42,12 +67,23 @@ class Pin:
         """Returns the first five digits of Pi, 31415"""
         return 31415
 
+    def return_sine_wave(self):
+        """Returns the next value in the sine wave"""
+        if self._wave_idx is None:
+            self._wave_idx = 0
+        else:
+            self._wave_idx += 1
+        if self._wave_idx >= len(sine_wave):
+            self._wave_idx = 0
+        return sine_wave[self._wave_idx]
+
     def __init__(self, pin_id=None):
         self.id = pin_id
         self._mode = None
         self._pull = None
         self.previous_value = False
         self.current_value = None
+        self._wave_idx = None
 
         # mapping of pin definition names to expected behavior
         self.pin_behavior = {
@@ -59,7 +95,7 @@ class Pin:
             6: self.return_true,  # NEOPIXEL
             7: self.return_random_int,  # Ax_INPUT_RAND_INT
             8: self.return_fixed_int_pi,  # Ax_INPUT_FIXED_INT_PI
-            9: self.return_true,  # Ax_OUTPUT_WAVE_SINE
+            9: self.return_sine_wave,  # Ax_OUTPUT_WAVE_SINE
             10: self.return_true,  # Ax_OUTPUT_WAVE_SAWTOOTH
             11: self.return_toggle,  # Dx_INPUT_TOGGLE
             # Add other mappings as needed
