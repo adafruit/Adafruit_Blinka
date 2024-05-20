@@ -43,31 +43,21 @@ class Pin:
         self._mode = None
         self.previous_value = None
         self.current_value = None
-        # TODO: Can we simplify the pin behavior dict and the pin map dict?
+
         # mapping of pin definition names to expected behavior
-        self.expected_pin_behavior = {
-            "Dx_INPUT_TRUE": self.return_true,
-            "Dx_INPUT_FALSE": self.return_false,
-            "Dx_INPUT_TRUE_THEN_FALSE": self.return_toggle,
-            "Dx_INPUT_TRUE_PULL_UP": self.return_true,
-            "Dx_INPUT_TRUE_PULL_DOWN": self.return_true,
-            "Dx_OUTPUT_TRUE": self.return_true,
-            "Dx_OUTPUT_FALSE": self.return_false,
-            "Ax_INPUT_RAND_INT": self.return_random_int,
-        }
-        # mapping of pin numbers to pin definition names
-        self.pin_number_to_pin_definition_name = {
-            0: "Dx_INPUT_TRUE",
-            1: "Dx_INPUT_FALSE",
-            2: "Dx_INPUT_TRUE_PULL_UP",
-            3: "Dx_INPUT_TRUE_PULL_DOWN",
-            4: "Dx_OUTPUT_TRUE",
-            5: "Dx_OUTPUT_FALSE",
-            6: "NEOPIXEL",
-            7: "Ax_INPUT_RAND_INT",
-            8: "Ax_INPUT_FIXED_INT_PI",
-            9: "Ax_OUTPUT_WAVE_SINE",
-            10: "Ax_OUTPUT_WAVE_SAWTOOTH",
+        self.pin_behavior = {
+            0: self.return_true,  # Dx_INPUT_TRUE
+            1: self.return_false,  # Dx_INPUT_FALSE
+            2: self.return_true,  # Dx_INPUT_TRUE_PULL_UP
+            3: self.return_true,  # Dx_INPUT_TRUE_PULL_DOWN
+            4: self.return_true,  # Dx_OUTPUT_TRUE
+            5: self.return_false,  # Dx_OUTPUT_FALSE
+            6: self.return_true,  # NEOPIXEL
+            7: self.return_random_int,  # Ax_INPUT_RAND_INT
+            8: self.return_fixed_int_pi,  # Ax_INPUT_FIXED_INT_PI
+            9: self.return_true,  # Ax_OUTPUT_WAVE_SINE
+            10: self.return_true,  # Ax_OUTPUT_WAVE_SAWTOOTH
+            # Add other mappings as needed
         }
 
     def init(self, mode=IN, pull=None):
@@ -86,12 +76,8 @@ class Pin:
     def read(self):
         """Returns the pin's expected value."""
         self.previous_value = self.current_value
-        # lookup the pin id's name from the mapping
-        pin_name = self.pin_number_to_pin_definition_name.get(self.id)
-        if pin_name:
-            self.current_value = self.expected_pin_behavior[pin_name]()
-        else:  # default to False if the pin is not in the mapping
-            self.current_value = False
+        # perform a lookup on the pin_behavior dict to get the value
+        self.current_value = self.pin_behavior.get(self.id)()
         return self.current_value
 
     def value(self, val=None):
