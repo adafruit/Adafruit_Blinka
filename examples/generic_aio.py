@@ -53,7 +53,7 @@ sawtooth_wave = [
 ]
 
 
-def test_ax_input_rand_int():
+def test_Ax_INPUT_RAND_INT():
     """Test random integer from pin Ax_INPUT_RAND_INT"""
     assert board.board_id == "GENERIC_AGNOSTIC_BOARD"
     pin_random = analogio.AnalogIn(board.Ax_INPUT_RAND_INT)
@@ -63,7 +63,7 @@ def test_ax_input_rand_int():
     pin_random.deinit()
 
 
-def test_ax_input_fixed_int_pi():
+def test_Ax_INPUT_FIXED_INT_PI():
     """Test fixed integer from pin Ax_INPUT_FIXED_INT_PI"""
     assert board.board_id == "GENERIC_AGNOSTIC_BOARD"
     pin_pi = analogio.AnalogIn(board.Ax_INPUT_FIXED_INT_PI)
@@ -73,7 +73,7 @@ def test_ax_input_fixed_int_pi():
     pin_pi.deinit()
 
 
-def test_ax_input_sine_wave():
+def test_Ax_OUTPUT_WAVE_SINE():
     """Test sine wave from pin Ax_OUTPUT_WAVE_SINE"""
     assert board.board_id == "GENERIC_AGNOSTIC_BOARD"
     pin_sine_wave = analogio.AnalogIn(board.Ax_OUTPUT_WAVE_SINE)
@@ -89,7 +89,7 @@ def test_ax_input_sine_wave():
     pin_sine_wave.deinit()
 
 
-def test_ax_input_saw_wave():
+def test_Ax_OUTPUT_WAVE_SAW():
     """Test sawtooth wave from pin Ax_OUTPUT_WAVE_SAW"""
     assert board.board_id == "GENERIC_AGNOSTIC_BOARD"
     pin_sine_wave = analogio.AnalogIn(board.Ax_OUTPUT_WAVE_SAW)
