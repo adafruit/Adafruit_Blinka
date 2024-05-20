@@ -45,9 +45,8 @@ class AnalogOut(ContextManaged):
 
     @property
     def value(self):
-        """Return an error. This is output only."""
-        # emulate what CircuitPython does
-        raise AttributeError("unreadable attribute")
+        """Fake the output."""
+        return self._pin.value()
 
     @value.setter
     def value(self, value):

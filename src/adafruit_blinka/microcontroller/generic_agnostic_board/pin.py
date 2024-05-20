@@ -178,8 +178,8 @@ class Pin:
         # Analog Out
         if self._mode == Pin.DAC:
             if val is None:
-                # write only
-                raise AttributeError("unreadable attribute")
+                self.previous_value = self.current_value
+                return self.current_value
             self.write(val)
             return None
         raise RuntimeError(
@@ -200,6 +200,7 @@ A0 = Pin(7)
 A1 = Pin(8)
 A2 = Pin(9)
 A3 = Pin(10)
+A4 = Pin(12)
 
 D7 = Pin(11)
 

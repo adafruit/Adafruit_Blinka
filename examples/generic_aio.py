@@ -2,6 +2,23 @@ import pytest
 import board
 import analogio
 
+# Analog Outputs
+
+def test_Ax_OUTPUT():
+    """Test analog output pin functionality."""
+    assert board.board_id == "GENERIC_AGNOSTIC_BOARD"
+    pin_out = analogio.AnalogOut(board.Ax_OUTPUT)
+
+    # Test boundaries of setting the value and reading it back
+    pin_out.value = 0
+    assert pin_out.value == 0
+    pin_out.value = 65535
+    assert pin_out.value == 65535
+
+    pin_out.deinit()
+
+# Analog Inputs
+
 # Values for sine wave
 # (data points = 20, amplitude=100, frequency=1)
 sine_wave = [
@@ -51,7 +68,6 @@ sawtooth_wave = [
     60,
     80,
 ]
-
 
 def test_Ax_INPUT_RAND_INT():
     """Test random integer from pin Ax_INPUT_RAND_INT"""
