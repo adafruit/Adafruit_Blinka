@@ -16,6 +16,10 @@ class Pin:
     # pin values
     LOW = 0
     HIGH = 1
+    # pin pulls
+    PULL_NONE = 0
+    PULL_UP = 1
+    PULL_DOWN = 2
 
     def return_toggle(self):
         """Returns the pin's expected value, toggling between True and False"""
@@ -41,7 +45,8 @@ class Pin:
     def __init__(self, pin_id=None):
         self.id = pin_id
         self._mode = None
-        self.previous_value = None
+        self._pull = None
+        self.previous_value = False
         self.current_value = None
 
         # mapping of pin definition names to expected behavior
@@ -57,6 +62,7 @@ class Pin:
             8: self.return_fixed_int_pi,  # Ax_INPUT_FIXED_INT_PI
             9: self.return_true,  # Ax_OUTPUT_WAVE_SINE
             10: self.return_true,  # Ax_OUTPUT_WAVE_SAWTOOTH
+            11: self.return_toggle,  # Dx_INPUT_TOGGLE
             # Add other mappings as needed
         }
 
@@ -64,8 +70,8 @@ class Pin:
         """Initialize the Pin"""
         if self.id is None:
             raise RuntimeError("Can not init a None type pin.")
-        if pull is not None:
-            raise NotImplementedError("Internal pullups and pulldowns not supported")
+        pull = Pin.PULL_NONE if pull is None else pull
+        self._pull = pull
         self._mode = mode
 
     def write(self, new_value):
@@ -74,10 +80,20 @@ class Pin:
         self.current_value = new_value
 
     def read(self):
+        print("\nread mode: ", self._mode)
         """Returns the pin's expected value."""
         self.previous_value = self.current_value
         # perform a lookup on the pin_behavior dict to get the value
         self.current_value = self.pin_behavior.get(self.id)()
+
+        # is pin a pull up and pin is LOW?
+        if self._pull == Pin.PULL_UP and self.current_value == False:
+            self.current_value = True
+        # is pin a pull down and pin is HIGH?
+        if self._pull == Pin.PULL_DOWN and self.current_value == True:
+            print("switching PDR to False")
+            self.current_value = False
+
         return self.current_value
 
     def value(self, val=None):
@@ -124,6 +140,8 @@ A0 = Pin(7)
 A1 = Pin(8)
 A2 = Pin(9)
 A3 = Pin(10)
+
+D7 = Pin(11)
 
 # I2C pins
 SDA = Pin()
