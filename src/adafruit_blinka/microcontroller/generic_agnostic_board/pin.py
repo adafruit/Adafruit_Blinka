@@ -4,7 +4,7 @@
 """generic_agnostic_board pin interface"""
 import random
 
-# Values for sine wave analog output
+# Values for sine wave
 # (data points = 20, amplitude=100, frequency=1)
 sine_wave = [
     0,
@@ -29,30 +29,31 @@ sine_wave = [
     -31,
 ]
 
-# Values for a square wave analog output
+# Values for a sawtooth wave
 # (data points = 20, amplitude=100)
-square_wave_int = [
-    100,
+sawtooth_wave = [
     -100,
-    100,
+    -80,
+    -60,
+    -40,
+    -20,
+    0,
+    20,
+    40,
+    60,
+    80,
     -100,
-    100,
-    -100,
-    100,
-    -100,
-    100,
-    -100,
-    100,
-    -100,
-    100,
-    -100,
-    100,
-    -100,
-    100,
-    -100,
-    100,
-    -100
+    -80,
+    -60,
+    -40,
+    -20,
+    0,
+    20,
+    40,
+    60,
+    80,
 ]
+
 
 class Pin:
     """A basic Pin class for use with generic_agnostic_board"""
@@ -99,13 +100,13 @@ class Pin:
             self._wave_idx = (self._wave_idx + 1) % len(sine_wave)
         return sine_wave[self._wave_idx]
 
-    def return_square_wave(self):
-        """Returns the next value in the square wave"""
+    def return_sawtooth_wave(self):
+        """Returns the next value in the sawtooth wave"""
         if self._wave_idx is None:
             self._wave_idx = 0
         else:
-            self._wave_idx = (self._wave_idx + 1) % len(square_wave_int)
-        return square_wave_int[self._wave_idx]
+            self._wave_idx = (self._wave_idx + 1) % len(sawtooth_wave)
+        return sawtooth_wave[self._wave_idx]
 
     def __init__(self, pin_id=None):
         self.id = pin_id
@@ -125,8 +126,8 @@ class Pin:
             7: self.return_random_int,  # Ax_INPUT_RAND_INT
             8: self.return_fixed_int_pi,  # Ax_INPUT_FIXED_INT_PI
             9: self.return_sine_wave,  # Ax_OUTPUT_WAVE_SINE
-            10: self.return_square_wave,  # Ax_OUTPUT_WAVE_SAWTOOTH
-            11: self.return_toggle  # Dx_INPUT_TOGGLE
+            10: self.return_sawtooth_wave,  # Ax_OUTPUT_WAVE_SAW
+            11: self.return_toggle,  # Dx_INPUT_TOGGLE
         }
 
     def init(self, mode=IN, pull=None):
