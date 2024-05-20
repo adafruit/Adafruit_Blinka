@@ -90,7 +90,6 @@ class Pin:
         # is pin a pull down and pin is HIGH?
         if self._pull == Pin.PULL_DOWN and self.current_value == True:
             self.current_value = False
-
         return self.current_value
 
     def value(self, val=None):
