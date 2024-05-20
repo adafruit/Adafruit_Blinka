@@ -73,10 +73,10 @@ def test_Ax_INPUT_FIXED_INT_PI():
     pin_pi.deinit()
 
 
-def test_Ax_OUTPUT_WAVE_SINE():
-    """Test sine wave from pin Ax_OUTPUT_WAVE_SINE"""
+def test_Ax_INPUT_WAVE_SINE():
+    """Test sine wave from pin Ax_INPUT_WAVE_SINE"""
     assert board.board_id == "GENERIC_AGNOSTIC_BOARD"
-    pin_sine_wave = analogio.AnalogIn(board.Ax_OUTPUT_WAVE_SINE)
+    pin_sine_wave = analogio.AnalogIn(board.Ax_INPUT_WAVE_SINE)
 
     # Run through the sine wave once
     for i in range(len(sine_wave)):
@@ -89,10 +89,10 @@ def test_Ax_OUTPUT_WAVE_SINE():
     pin_sine_wave.deinit()
 
 
-def test_Ax_OUTPUT_WAVE_SAW():
-    """Test sawtooth wave from pin Ax_OUTPUT_WAVE_SAW"""
+def test_Ax_INPUT_WAVE_SAW():
+    """Test sawtooth wave from pin Ax_INPUT_WAVE_SAW"""
     assert board.board_id == "GENERIC_AGNOSTIC_BOARD"
-    pin_sine_wave = analogio.AnalogIn(board.Ax_OUTPUT_WAVE_SAW)
+    pin_sine_wave = analogio.AnalogIn(board.Ax_INPUT_WAVE_SAW)
 
     # Run through the sine wave once
     for i in range(len(sawtooth_wave)):

@@ -125,8 +125,8 @@ class Pin:
             4: self.return_true,  # Dx_OUTPUT
             7: self.return_random_int,  # Ax_INPUT_RAND_INT
             8: self.return_fixed_int_pi,  # Ax_INPUT_FIXED_INT_PI
-            9: self.return_sine_wave,  # Ax_OUTPUT_WAVE_SINE
-            10: self.return_sawtooth_wave,  # Ax_OUTPUT_WAVE_SAW
+            9: self.return_sine_wave,  # Ax_INPUT_WAVE_SINE
+            10: self.return_sawtooth_wave,  # Ax_INPUT_WAVE_SAW
             11: self.return_toggle,  # Dx_INPUT_TOGGLE
         }
 

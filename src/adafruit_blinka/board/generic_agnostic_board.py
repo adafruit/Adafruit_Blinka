@@ -18,8 +18,8 @@ NEOPIXEL = pin.D6
 # Analog pins
 Ax_INPUT_RAND_INT = pin.A0
 Ax_INPUT_FIXED_INT_PI = pin.A1
-Ax_OUTPUT_WAVE_SINE = pin.A2
-Ax_OUTPUT_WAVE_SAW = pin.A3
+Ax_INPUT_WAVE_SINE = pin.A2
+Ax_INPUT_WAVE_SAW = pin.A3
 
 # I2C pins
 SDA = pin.SDA
