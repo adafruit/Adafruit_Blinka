@@ -123,13 +123,7 @@ elif chip_id == ap_chip.BINHO:
 elif chip_id == ap_chip.LPC4330:
     from adafruit_blinka.microcontroller.nxp_lpc4330 import *
 elif chip_id == ap_chip.MCP2221:
-    if (
-        "BLINKA_FORCECHIP" in os.environ
-        and os.environ["BLINKA_FORCEBOARD"] == "MICROCHIP_MCP2221"
-    ):
-        from adafruit_blinka.microcontroller.fake_mcp2221 import *
-    else:
-        from adafruit_blinka.microcontroller.mcp2221 import *
+    from adafruit_blinka.microcontroller.mcp2221 import *
 elif chip_id == ap_chip.MIPS24KC:
     from adafruit_blinka.microcontroller.atheros.ar9331 import *
 elif chip_id == ap_chip.MIPS24KEC:
@@ -156,6 +150,11 @@ elif chip_id == ap_chip.TH1520:
     from adafruit_blinka.microcontroller.thead.th1520 import *
 elif chip_id == ap_chip.GENERIC_X86:
     print("WARNING: GENERIC_X86 is not fully supported. Some features may not work.")
+elif (
+    "BLINKA_FORCECHIP" in os.environ
+    and os.environ["BLINKA_FORCEBOARD"] == "GENERIC_AGNOSTIC_BOARD"
+):
+    from adafruit_blinka.microcontroller.generic_agnostic_board import *
 elif chip_id is None:
     print(
         "WARNING: chip_id == None is not fully supported. Some features may not work."

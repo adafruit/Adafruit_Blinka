@@ -224,13 +224,7 @@ elif board_id == ap_board.BINHO_NOVA:
     from adafruit_blinka.board.binho_nova import *
 
 elif board_id == ap_board.MICROCHIP_MCP2221:
-    if (
-        "BLINKA_FORCECHIP" in os.environ
-        and os.environ["BLINKA_FORCEBOARD"] == "MICROCHIP_MCP2221"
-    ):
-        from adafruit_blinka.board.fake_microchip_mcp2221 import *
-    else:
-        from adafruit_blinka.board.microchip_mcp2221 import *
+    from adafruit_blinka.board.microchip_mcp2221 import *
 
 elif board_id == ap_board.GREATFET_ONE:
     from adafruit_blinka.board.greatfet_one import *
@@ -393,6 +387,12 @@ elif board_id == ap_board.LICHEEPI_4A:
 
 elif board_id == ap_board.MILKV_DUO:
     from adafruit_blinka.board.milkv_duo import *
+
+elif (
+    "BLINKA_FORCECHIP" in os.environ
+    and os.environ["BLINKA_FORCEBOARD"] == "GENERIC_AGNOSTIC_BOARD"
+):
+    from adafruit_blinka.board.generic_agnostic_board import *
 
 elif "sphinx" in sys.modules:
     pass

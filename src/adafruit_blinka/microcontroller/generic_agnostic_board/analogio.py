@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+# SPDX-FileCopyrightText: 2024 Brent Rubell for Adafruit Industries
 #
 # SPDX-License-Identifier: MIT
 """
@@ -8,7 +8,7 @@ See `CircuitPython:analogio` in CircuitPython for more details.
 * Author(s): Carter Nelson
 """
 
-from adafruit_blinka.microcontroller.fake_mcp2221.pin import Pin
+from adafruit_blinka.microcontroller.generic_agnostic_board.pin import Pin
 from adafruit_blinka import ContextManaged
 
 
@@ -45,9 +45,8 @@ class AnalogOut(ContextManaged):
 
     @property
     def value(self):
-        """Return an error. This is output only."""
-        # emulate what CircuitPython does
-        raise AttributeError("unreadable attribute")
+        """Fake the output."""
+        return self._pin.value()
 
     @value.setter
     def value(self, value):

@@ -51,15 +51,22 @@ class I2C(Lockable):
             self._i2c = _I2C(frequency=frequency)
             return
         if detector.board.microchip_mcp2221:
-            if (
-                "BLINKA_FORCECHIP" in os.environ
-                and os.environ["BLINKA_FORCEBOARD"] == "MICROCHIP_MCP2221"
-            ):
-                from adafruit_blinka.microcontroller.fake_mcp2221.i2c import I2C as _I2C
-            else:
-                from adafruit_blinka.microcontroller.mcp2221.i2c import I2C as _I2C
+            from adafruit_blinka.microcontroller.mcp2221.i2c import I2C as _I2C
+
             self._i2c = _I2C(frequency=frequency)
             return
+
+        if (
+            "BLINKA_FORCECHIP" in os.environ
+            and os.environ["BLINKA_FORCEBOARD"] == "GENERIC_AGNOSTIC_BOARD"
+        ):
+            from adafruit_blinka.microcontroller.generic_agnostic_board.i2c import (
+                I2C as _I2C,
+            )
+
+            self._i2c = _I2C(frequency=frequency)
+            return
+
         if detector.board.greatfet_one:
             from adafruit_blinka.microcontroller.nxp_lpc4330.i2c import I2C as _I2C
 
