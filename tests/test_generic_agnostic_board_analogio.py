@@ -99,12 +99,13 @@ def test_Ax_INPUT_WAVE_SINE():
     pin_sine_wave = analogio.AnalogIn(board.Ax_INPUT_WAVE_SINE)
 
     # Run through the sine wave once
-    for i in range(len(sine_wave)):
-        assert pin_sine_wave.value == sine_wave[i]
+    for i, expected_value in enumerate(sine_wave):
+        assert pin_sine_wave.value == expected_value
+
 
     # Run through the sine wave again to ensure it loops back correctly
-    for i in range(len(sine_wave)):
-        assert pin_sine_wave.value == sine_wave[i]
+    for i, expected_value in enumerate(sine_wave):
+        assert pin_sine_wave.value == expected_value
 
     pin_sine_wave.deinit()
 
@@ -112,14 +113,15 @@ def test_Ax_INPUT_WAVE_SINE():
 def test_Ax_INPUT_WAVE_SAW():
     """Test sawtooth wave from pin Ax_INPUT_WAVE_SAW"""
     assert board.board_id == "GENERIC_AGNOSTIC_BOARD"
-    pin_sine_wave = analogio.AnalogIn(board.Ax_INPUT_WAVE_SAW)
+    pin_saw_wave = analogio.AnalogIn(board.Ax_INPUT_WAVE_SAW)
 
     # Run through the sine wave once
     for i in range(len(sawtooth_wave)):
-        assert pin_sine_wave.value == sawtooth_wave[i]
+        assert pin_saw_wave.value == sawtooth_wave[i]
 
     # Run through the sine wave again to ensure it loops back correctly
     for i in range(len(sawtooth_wave)):
-        assert pin_sine_wave.value == sawtooth_wave[i]
+        assert pin_saw_wave.value == sawtooth_wave[i]
 
-    pin_sine_wave.deinit()
+
+    pin_saw_wave.deinit()

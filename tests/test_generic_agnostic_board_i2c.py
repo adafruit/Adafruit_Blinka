@@ -1,9 +1,9 @@
 # SPDX-FileCopyrightText: 2024 Brent Rubell for Adafruit Industries
 #
 # SPDX-License-Identifier: MIT
-import pytest
+import pytest # pylint: disable=unused-import
 import busio
-from board import *
+from board import SCL, SDA
 
 def test_i2c_scan_random():
     i2c = busio.I2C(SCL, SDA)
