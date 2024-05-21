@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: MIT
 """Chip Definition for a generic, os-agnostic, board."""
 
+
 class GENERIC_AGNOSTIC_BOARD:
     """Generic Agnostic Board Device Class Definition"""
 

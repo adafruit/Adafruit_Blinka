@@ -4,6 +4,7 @@ import analogio
 
 # Analog Outputs
 
+
 def test_Ax_OUTPUT():
     """Test analog output pin functionality."""
     assert board.board_id == "GENERIC_AGNOSTIC_BOARD"
@@ -16,6 +17,7 @@ def test_Ax_OUTPUT():
     assert pin_out.value == 65535
 
     pin_out.deinit()
+
 
 # Analog Inputs
 
@@ -68,6 +70,7 @@ sawtooth_wave = [
     60,
     80,
 ]
+
 
 def test_Ax_INPUT_RAND_INT():
     """Test random integer from pin Ax_INPUT_RAND_INT"""

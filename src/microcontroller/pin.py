@@ -149,7 +149,10 @@ elif "sphinx" in sys.modules:
 elif chip_id == ap_chip.GENERIC_X86:
     print("WARNING: GENERIC_X86 is not fully supported. Some features may not work.")
     from adafruit_blinka.microcontroller.generic_micropython import Pin
-elif "BLINKA_FORCECHIP" in os.environ and os.environ["BLINKA_FORCEBOARD"] == "GENERIC_AGNOSTIC_BOARD":
+elif (
+    "BLINKA_FORCECHIP" in os.environ
+    and os.environ["BLINKA_FORCEBOARD"] == "GENERIC_AGNOSTIC_BOARD"
+):
     from adafruit_blinka.microcontroller.generic_agnostic_board.pin import *
 elif chip_id is None:
     print(

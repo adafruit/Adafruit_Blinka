@@ -3,14 +3,15 @@
 # SPDX-License-Identifier: MIT
 """I2C Class for Generic Agnostic Board"""
 from random import randint
-#from .generic_agnostic_board.pin import generic_agnostic_board
+
+# from .generic_agnostic_board.pin import generic_agnostic_board
 
 
 class I2C:
     """Custom I2C Class for a Generic Agnostic Board"""
 
     def __init__(self, *, frequency=100000):
-        #self._generic_agnostic_board = generic_agnostic_board
+        # self._generic_agnostic_board = generic_agnostic_board
         self.freq = frequency
 
     @staticmethod
