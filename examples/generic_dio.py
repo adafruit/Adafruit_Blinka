@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2024 Brent Rubell for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 import pytest
 import board
 import digitalio

@@ -71,6 +71,8 @@ class Pin:
     PULL_UP = 1
     PULL_DOWN = 2
 
+    # pylint: disable=no-self-use
+
     def return_toggle(self):
         """Returns the pin's expected value, toggling between True and False"""
         toggle_state = not self.previous_value
@@ -150,10 +152,10 @@ class Pin:
         self.current_value = self.pin_behavior.get(self.id)()
 
         # is pin a pull up and pin is LOW?
-        if self._pull == Pin.PULL_UP and self.current_value == False:
+        if self._pull == Pin.PULL_UP and self.current_value is False:
             self.current_value = False
         # is pin a pull down and pin is HIGH?
-        if self._pull == Pin.PULL_DOWN and self.current_value == True:
+        if self._pull == Pin.PULL_DOWN and self.current_value is True:
             self.current_value = False
         return self.current_value
 

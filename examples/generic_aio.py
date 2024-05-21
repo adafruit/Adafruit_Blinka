@@ -1,10 +1,11 @@
+# SPDX-FileCopyrightText: 2024 Brent Rubell for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
 import pytest
 import board
 import analogio
 
 # Analog Outputs
-
-
 def test_Ax_OUTPUT():
     """Test analog output pin functionality."""
     assert board.board_id == "GENERIC_AGNOSTIC_BOARD"
