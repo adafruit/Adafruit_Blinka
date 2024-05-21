@@ -9,6 +9,7 @@ See `CircuitPython:busio` in CircuitPython for more details.
 
 * Author(s): cefn
 """
+import os
 try:
     import threading
 except ImportError:
@@ -53,6 +54,13 @@ class I2C(Lockable):
 
             self._i2c = _I2C(frequency=frequency)
             return
+
+        if "BLINKA_FORCECHIP" in os.environ and os.environ["BLINKA_FORCEBOARD"] == "GENERIC_AGNOSTIC_BOARD":
+            from adafruit_blinka.microcontroller.generic_agnostic_board.i2c import I2C as _I2C
+
+            self._i2c = _I2C(frequency=frequency)
+            return
+
         if detector.board.greatfet_one:
             from adafruit_blinka.microcontroller.nxp_lpc4330.i2c import I2C as _I2C
 
