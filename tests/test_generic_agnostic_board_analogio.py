@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2024 Brent Rubell for Adafruit Industries
 #
 # SPDX-License-Identifier: MIT
-import pytest # pylint: disable=unused-import
+import pytest  # pylint: disable=unused-import
 import board
 import analogio
 
