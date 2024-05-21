@@ -150,7 +150,10 @@ elif chip_id == ap_chip.TH1520:
     from adafruit_blinka.microcontroller.thead.th1520 import *
 elif chip_id == ap_chip.GENERIC_X86:
     print("WARNING: GENERIC_X86 is not fully supported. Some features may not work.")
-  elif "BLINKA_FORCECHIP" in os.environ and os.environ["BLINKA_FORCEBOARD"] == "GENERIC_AGNOSTIC_BOARD":
+elif (
+    "BLINKA_FORCECHIP" in os.environ
+    and os.environ["BLINKA_FORCEBOARD"] == "GENERIC_AGNOSTIC_BOARD"
+):
     from adafruit_blinka.microcontroller.generic_agnostic_board import *
 elif chip_id is None:
     print(
