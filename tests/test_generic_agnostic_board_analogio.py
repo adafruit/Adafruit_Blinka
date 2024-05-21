@@ -5,6 +5,7 @@ import pytest
 import board
 import analogio
 
+
 # Analog Outputs
 def test_Ax_OUTPUT():
     """Test analog output pin functionality."""
@@ -102,7 +103,6 @@ def test_Ax_INPUT_WAVE_SINE():
     for i, expected_value in enumerate(sine_wave):
         assert pin_sine_wave.value == expected_value
 
-
     # Run through the sine wave again to ensure it loops back correctly
     for i, expected_value in enumerate(sine_wave):
         assert pin_sine_wave.value == expected_value
@@ -122,6 +122,5 @@ def test_Ax_INPUT_WAVE_SAW():
     # Run through the sine wave again to ensure it loops back correctly
     for i in range(len(sawtooth_wave)):
         assert pin_saw_wave.value == sawtooth_wave[i]
-
 
     pin_saw_wave.deinit()
