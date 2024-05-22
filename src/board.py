@@ -388,6 +388,9 @@ elif board_id == ap_board.LICHEEPI_4A:
 elif board_id == ap_board.MILKV_DUO:
     from adafruit_blinka.board.milkv_duo import *
 
+elif board_id == ap_board.WALNUT_PI_1B:
+    from adafruit_blinka.board.walnutpi.walnutpi1b import *
+
 elif (
     "BLINKA_FORCECHIP" in os.environ
     and os.environ["BLINKA_FORCEBOARD"] == "GENERIC_AGNOSTIC_BOARD"
