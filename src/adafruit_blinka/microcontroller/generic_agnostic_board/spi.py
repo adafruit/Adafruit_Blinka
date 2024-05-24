@@ -37,15 +37,17 @@ class SPI:
         """Return the current frequency"""
         return self._frequency
 
+    # pylint: disable=unnecessary-pass
     def write(self, buf, start=0, end=None):
         """Write data from the buffer to SPI"""
         pass
 
+    # pylint: disable=unnecessary-pass
     def readinto(self, buf, start=0, end=None, write_value=0):
         """Read data from SPI and into the buffer"""
         pass
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, unnecessary-pass
     def write_readinto(
         self, buffer_out, buffer_in, out_start=0, out_end=None, in_start=0, in_end=None
     ):

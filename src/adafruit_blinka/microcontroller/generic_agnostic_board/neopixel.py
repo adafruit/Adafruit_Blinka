@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 """NeoPixel write mocks for a generic board."""
 
-
+# pylint: disable=unused-argument
 def neopixel_write(gpio, buf):
     """Mocks a neopixel_write function"""
     # pad output buffer from 3 bpp to 4 bpp
