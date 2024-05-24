@@ -11,6 +11,7 @@ Currently supported on Raspberry Pi only.
 * Author(s): ladyada
 """
 # pylint: disable=too-many-boolean-expressions
+import os
 import sys
 
 from adafruit_blinka.agnostic import detector
@@ -19,6 +20,13 @@ if detector.board.any_raspberry_pi:
     from adafruit_blinka.microcontroller.bcm283x import neopixel as _neopixel
 elif detector.board.pico_u2if:
     from adafruit_blinka.microcontroller.rp2040_u2if import neopixel as _neopixel
+elif (
+    "BLINKA_FORCECHIP" in os.environ
+    and os.environ["BLINKA_FORCEBOARD"] == "GENERIC_AGNOSTIC_BOARD"
+):
+    from adafruit_blinka.microcontroller.generic_agnostic_board import (
+        neopixel as _neopixel,
+    )
 elif (
     detector.board.feather_u2if
     or detector.board.feather_can_u2if

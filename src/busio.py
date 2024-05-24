@@ -363,6 +363,13 @@ class SPI(Lockable):
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif detector.board.ftdi_ft2232h:
             from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.spi import SPI as _SPI
+        elif (
+            "BLINKA_FORCECHIP" in os.environ
+            and os.environ["BLINKA_FORCEBOARD"] == "GENERIC_AGNOSTIC_BOARD"
+        ):
+            from adafruit_blinka.microcontroller.generic_agnostic_board.spi import (
+                SPI as _SPI,
+            )
         else:
             from adafruit_blinka.microcontroller.generic_micropython.spi import (
                 SPI as _SPI,
