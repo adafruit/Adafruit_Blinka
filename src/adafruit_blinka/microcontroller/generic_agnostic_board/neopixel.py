@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: MIT
 """NeoPixel write mocks for a generic board."""
 
+
 # pylint: disable=unused-argument
 def neopixel_write(gpio, buf):
     """Mocks a neopixel_write function"""
