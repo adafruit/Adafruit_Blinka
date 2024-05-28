@@ -17,15 +17,8 @@ from adafruit_blinka.agnostic import detector
 # pylint: disable=ungrouped-imports,wrong-import-position,unused-import
 
 if detector.board.microchip_mcp2221:
-    if (
-        "BLINKA_FORCECHIP" in os.environ
-        and os.environ["BLINKA_FORCEBOARD"] == "MICROCHIP_MCP2221"
-    ):
-        from adafruit_blinka.microcontroller.fake_mcp2221.analogio import AnalogIn
-        from adafruit_blinka.microcontroller.fake_mcp2221.analogio import AnalogOut
-    else:
-        from adafruit_blinka.microcontroller.mcp2221.analogio import AnalogIn
-        from adafruit_blinka.microcontroller.mcp2221.analogio import AnalogOut
+    from adafruit_blinka.microcontroller.mcp2221.analogio import AnalogIn
+    from adafruit_blinka.microcontroller.mcp2221.analogio import AnalogOut
 elif detector.board.greatfet_one:
     from adafruit_blinka.microcontroller.nxp_lpc4330.analogio import AnalogIn
     from adafruit_blinka.microcontroller.nxp_lpc4330.analogio import AnalogOut
@@ -69,6 +62,14 @@ elif detector.board.qtpy_u2if:
 elif detector.board.itsybitsy_u2if:
     from adafruit_blinka.microcontroller.rp2040_u2if.analogio import (
         AnalogIn_ItsyBitsy as AnalogIn,
+    )
+elif (
+    "BLINKA_FORCECHIP" in os.environ
+    and os.environ["BLINKA_FORCEBOARD"] == "GENERIC_AGNOSTIC_BOARD"
+):
+    from adafruit_blinka.microcontroller.generic_agnostic_board.analogio import AnalogIn
+    from adafruit_blinka.microcontroller.generic_agnostic_board.analogio import (
+        AnalogOut,
     )
 else:
     raise NotImplementedError("analogio not supported for this board.")
