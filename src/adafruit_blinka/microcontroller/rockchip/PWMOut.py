@@ -78,6 +78,7 @@ class PWMOut:
                 self._chip = pwmout[0][0]
                 self._channel = pwmout[0][1]
 
+
         self._chip_path = os.path.join(
             "/sys/class/pwm", self._chip_path.format(self._chip)
         )
@@ -142,6 +143,8 @@ class PWMOut:
 
             self.frequency = frequency
             self.duty_cycle = duty_cycle
+            self.polarity = "normal"
+            self.enable()
 
             # Cache the period for fast duty cycle updates
             self._period_ns = self._get_period_ns()
