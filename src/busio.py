@@ -56,10 +56,7 @@ class I2C(Lockable):
             self._i2c = _I2C(frequency=frequency)
             return
 
-        if (
-            "BLINKA_FORCECHIP" in os.environ
-            and os.environ["BLINKA_FORCEBOARD"] == "GENERIC_AGNOSTIC_BOARD"
-        ):
+        if detector.board.OS_AGNOSTIC_BOARD:
             from adafruit_blinka.microcontroller.generic_agnostic_board.i2c import (
                 I2C as _I2C,
             )
@@ -363,10 +360,7 @@ class SPI(Lockable):
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif detector.board.ftdi_ft2232h:
             from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.spi import SPI as _SPI
-        elif (
-            "BLINKA_FORCECHIP" in os.environ
-            and os.environ["BLINKA_FORCEBOARD"] == "GENERIC_AGNOSTIC_BOARD"
-        ):
+        elif detector.board.OS_AGNOSTIC_BOARD:
             from adafruit_blinka.microcontroller.generic_agnostic_board.spi import (
                 SPI as _SPI,
             )
