@@ -11,9 +11,11 @@ Dx_INPUT_TRUE_PULL_UP = pin.D2
 Dx_INPUT_TRUE_PULL_DOWN = pin.D3
 Dx_OUTPUT = pin.D4
 Dx_INPUT_TOGGLE = pin.D7
-# Special "digital" pins
-NEOPIXEL = pin.D6
 
+# Special digital pins for pixels
+NEOPIXEL = pin.D6
+DOTSTAR_DATA = pin.D8
+DOTSTAR_CLK = pin.D9
 
 # Analog pins
 Ax_INPUT_RAND_INT = pin.A0
@@ -32,6 +34,9 @@ SCK = pin.SCK
 MOSI = pin.MOSI
 MISO = pin.MISO
 CS = pin.D6
+
+# SPI port
+spiPorts = ((0, SCK, MOSI, MISO),)
 
 # UART pins
 UART_TX = pin.UART_TX

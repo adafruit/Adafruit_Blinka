@@ -204,7 +204,10 @@ A2 = Pin(9)
 A3 = Pin(10)
 A4 = Pin(12)
 
+# Special digital pins for pixels
 D7 = Pin(11)
+D8 = Pin(13)
+D9 = Pin(14)
 
 # I2C pins
 SDA = Pin()
@@ -216,6 +219,9 @@ SCK = Pin()
 MOSI = Pin()
 MISO = Pin()
 CS = Pin()
+
+spiPorts = ((0, SCK, MOSI, MISO),)
+
 
 # UART pins
 UART_TX = Pin()

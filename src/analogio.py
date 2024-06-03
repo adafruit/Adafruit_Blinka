@@ -9,7 +9,6 @@ Not supported by all boards.
 
 * Author(s): Carter Nelson, Melissa LeBlanc-Williams
 """
-import os
 import sys
 
 from adafruit_blinka.agnostic import detector
@@ -63,10 +62,7 @@ elif detector.board.itsybitsy_u2if:
     from adafruit_blinka.microcontroller.rp2040_u2if.analogio import (
         AnalogIn_ItsyBitsy as AnalogIn,
     )
-elif (
-    "BLINKA_FORCECHIP" in os.environ
-    and os.environ["BLINKA_FORCEBOARD"] == "GENERIC_AGNOSTIC_BOARD"
-):
+elif detector.board.OS_AGNOSTIC_BOARD:
     from adafruit_blinka.microcontroller.generic_agnostic_board.analogio import AnalogIn
     from adafruit_blinka.microcontroller.generic_agnostic_board.analogio import (
         AnalogOut,

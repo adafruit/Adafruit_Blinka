@@ -17,7 +17,6 @@ __blinka__ = True
 
 
 import sys
-import os
 import adafruit_platformdetect.constants.boards as ap_board
 from adafruit_blinka.agnostic import board_id, detector
 
@@ -268,6 +267,9 @@ elif board_id == ap_board.ROCK_PI_3C:
 elif board_id == ap_board.RADXA_ZERO:
     from adafruit_blinka.board.radxa.radxazero import *
 
+elif board_id == ap_board.RADXA_ZERO3:
+    from adafruit_blinka.board.radxa.radxazero3 import *
+
 elif board_id == ap_board.ROCK_PI_S:
     from adafruit_blinka.board.radxa.rockpis import *
 
@@ -391,10 +393,7 @@ elif board_id == ap_board.MILKV_DUO:
 elif board_id == ap_board.WALNUT_PI_1B:
     from adafruit_blinka.board.walnutpi.walnutpi1b import *
 
-elif (
-    "BLINKA_FORCECHIP" in os.environ
-    and os.environ["BLINKA_FORCEBOARD"] == "GENERIC_AGNOSTIC_BOARD"
-):
+elif board_id == ap_board.OS_AGNOSTIC_BOARD:
     from adafruit_blinka.board.generic_agnostic_board import *
 
 elif "sphinx" in sys.modules:

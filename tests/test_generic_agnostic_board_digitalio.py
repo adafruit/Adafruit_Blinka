@@ -10,7 +10,7 @@ import digitalio
 
 def test_Dx_OUTPUT_TRUE():
     """Test digital output pin functionality."""
-    assert board.board_id == "GENERIC_AGNOSTIC_BOARD"
+    assert board.board_id == "OS_AGNOSTIC_BOARD"
     pin_out = digitalio.DigitalInOut(board.Dx_OUTPUT)
     pin_out.direction = digitalio.Direction.OUTPUT
     # Test setting the value and reading it back
@@ -26,7 +26,7 @@ def test_Dx_OUTPUT_TRUE():
 
 def test_Dx_INPUT_TRUE():
     """Test digital input pin Dx_INPUT_TRUE."""
-    assert board.board_id == "GENERIC_AGNOSTIC_BOARD"
+    assert board.board_id == "OS_AGNOSTIC_BOARD"
     pin_true = digitalio.DigitalInOut(board.Dx_INPUT_TRUE)
     pin_true.direction = digitalio.Direction.INPUT
     assert pin_true.value is True
@@ -36,7 +36,7 @@ def test_Dx_INPUT_TRUE():
 
 def test_Dx_INPUT_TRUE_PULL_DOWN():
     """Test digital input pin Dx_INPUT_TRUE w/pull down."""
-    assert board.board_id == "GENERIC_AGNOSTIC_BOARD"
+    assert board.board_id == "OS_AGNOSTIC_BOARD"
     pin_true = digitalio.DigitalInOut(board.Dx_INPUT_TRUE)
     pin_true.direction = digitalio.Direction.INPUT
     assert pin_true.value is True
@@ -48,7 +48,7 @@ def test_Dx_INPUT_TRUE_PULL_DOWN():
 
 def test_Dx_INPUT_FALSE_PULL_UP():
     """Test digital input pin Dx_INPUT_FALSE w/pull up."""
-    assert board.board_id == "GENERIC_AGNOSTIC_BOARD"
+    assert board.board_id == "OS_AGNOSTIC_BOARD"
     pin_false = digitalio.DigitalInOut(board.Dx_INPUT_FALSE)
     pin_false.direction = digitalio.Direction.INPUT
     assert pin_false.value is False
@@ -60,7 +60,7 @@ def test_Dx_INPUT_FALSE_PULL_UP():
 
 def test_Dx_INPUT_FALSE():
     """Test digital input pin Dx_INPUT_FALSE"""
-    assert board.board_id == "GENERIC_AGNOSTIC_BOARD"
+    assert board.board_id == "OS_AGNOSTIC_BOARD"
     pin_false = digitalio.DigitalInOut(board.Dx_INPUT_FALSE)
     pin_false.direction = digitalio.Direction.INPUT
     assert pin_false.value is False
@@ -70,7 +70,7 @@ def test_Dx_INPUT_FALSE():
 
 def test_Dx_INPUT_TOGGLE():
     """Test digital input pin Dx_INPUT_TOGGLE"""
-    assert board.board_id == "GENERIC_AGNOSTIC_BOARD"
+    assert board.board_id == "OS_AGNOSTIC_BOARD"
     pin_toggle = digitalio.DigitalInOut(board.Dx_INPUT_TOGGLE)
     pin_toggle.direction = digitalio.Direction.INPUT
     assert pin_toggle.value is True
