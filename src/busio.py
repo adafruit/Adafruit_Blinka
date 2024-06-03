@@ -441,6 +441,10 @@ class SPI(Lockable):
             from adafruit_blinka.microcontroller.am65xx.pin import Pin
         elif detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+        elif detector.board.OS_AGNOSTIC_BOARD:
+            from adafruit_blinka.microcontroller.generic_agnostic_board.spi import (
+                SPI as _SPI,
+            )
         else:
             from adafruit_blinka.microcontroller.generic_micropython.spi import (
                 SPI as _SPI,
