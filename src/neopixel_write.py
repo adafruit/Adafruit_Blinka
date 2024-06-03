@@ -11,7 +11,6 @@ Currently supported on Raspberry Pi only.
 * Author(s): ladyada
 """
 # pylint: disable=too-many-boolean-expressions
-import os
 import sys
 
 from adafruit_blinka.agnostic import detector

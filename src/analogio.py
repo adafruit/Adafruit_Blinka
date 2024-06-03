@@ -9,7 +9,6 @@ Not supported by all boards.
 
 * Author(s): Carter Nelson, Melissa LeBlanc-Williams
 """
-import os
 import sys
 
 from adafruit_blinka.agnostic import detector

@@ -9,8 +9,6 @@ See `CircuitPython:busio` in CircuitPython for more details.
 
 * Author(s): cefn
 """
-import os
-
 try:
     import threading
 except ImportError:

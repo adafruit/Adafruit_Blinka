@@ -17,7 +17,6 @@ __blinka__ = True
 
 
 import sys
-import os
 import adafruit_platformdetect.constants.boards as ap_board
 from adafruit_blinka.agnostic import board_id, detector
 

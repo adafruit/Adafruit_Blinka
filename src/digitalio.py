@@ -9,7 +9,6 @@ See `CircuitPython:digitalio` in CircuitPython for more details.
 
 * Author(s): cefn
 """
-import os
 from adafruit_blinka.agnostic import board_id, detector
 
 # pylint: disable=ungrouped-imports,wrong-import-position,unused-wildcard-import,wildcard-import
