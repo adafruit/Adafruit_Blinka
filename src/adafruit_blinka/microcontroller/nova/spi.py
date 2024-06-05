@@ -180,9 +180,9 @@ class SPI:
                     # loop over half of resp len as we're reading 2 chars at a time to form a byte
                     loops = int(len(resp) / 2)
                     for j in range(loops):
-                        buffer_in[
-                            (i * self.WHR_PAYLOAD_MAX_LENGTH) + in_start + j
-                        ] = int(resp[j * 2] + resp[j * 2 + 1], 16)
+                        buffer_in[(i * self.WHR_PAYLOAD_MAX_LENGTH) + in_start + j] = (
+                            int(resp[j * 2] + resp[j * 2 + 1], 16)
+                        )
                 else:
                     raise RuntimeError(
                         "Received error response from Binho Nova, result = " + result
@@ -198,9 +198,9 @@ class SPI:
                     # loop over half of resp len as we're reading 2 chars at a time to form a byte
                     loops = int(len(resp) / 2)
                     for j in range(loops):
-                        buffer_in[
-                            (i * self.WHR_PAYLOAD_MAX_LENGTH) + in_start + j
-                        ] = int(resp[j * 2] + resp[j * 2 + 1], 16)
+                        buffer_in[(i * self.WHR_PAYLOAD_MAX_LENGTH) + in_start + j] = (
+                            int(resp[j * 2] + resp[j * 2 + 1], 16)
+                        )
                 else:
                     raise RuntimeError(
                         "Received error response from Binho Nova, result = " + result

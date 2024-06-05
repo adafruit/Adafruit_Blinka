@@ -78,7 +78,6 @@ class PWMOut:
                 self._chip = pwmout[0][0]
                 self._channel = pwmout[0][1]
 
-
         self._chip_path = os.path.join(
             "/sys/class/pwm", self._chip_path.format(self._chip)
         )
