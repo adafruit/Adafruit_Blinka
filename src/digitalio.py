@@ -136,6 +136,8 @@ elif detector.chip.RP2040:
     from machine import Pin
 elif detector.chip.CV1800B:
     from adafruit_blinka.microcontroller.cv1800b.pin import Pin
+elif detector.chip.RV1106:
+    from adafruit_blinka.microcontroller.rockchip.rv1106.pin import Pin
 elif detector.chip.OS_AGNOSTIC:
     from adafruit_blinka.microcontroller.generic_agnostic_board.pin import Pin
 
