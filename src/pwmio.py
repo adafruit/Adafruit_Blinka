@@ -44,6 +44,8 @@ elif detector.board.pico_u2if:
     from adafruit_blinka.microcontroller.rp2040_u2if.pwmio import PWMOut
 elif detector.board.any_jetson_board:
     from adafruit_blinka.microcontroller.tegra.PWMOut import PWMOut
+elif detector.board.any_luckfox_pico_board:
+    from adafruit_blinka.microcontroller.generic_linux.sysfs_pwmout import PWMOut
 elif (
     detector.board.feather_u2if
     or detector.board.feather_can_u2if

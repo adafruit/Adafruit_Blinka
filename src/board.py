@@ -396,6 +396,18 @@ elif board_id == ap_board.WALNUT_PI_1B:
 elif board_id == ap_board.OS_AGNOSTIC_BOARD:
     from adafruit_blinka.board.generic_agnostic_board import *
 
+elif board_id == ap_board.LUCKFOX_PICO:
+    from adafruit_blinka.board.luckfox.luckfoxpico import *
+
+elif board_id == ap_board.LUCKFOX_PICO_MINI:
+    from adafruit_blinka.board.luckfox.luckfoxpico_mini import *
+
+elif board_id == ap_board.LUCKFOX_PICO_PLUS:
+    from adafruit_blinka.board.luckfox.luckfoxpico_plus import *
+
+elif board_id == ap_board.LUCKFOX_PICO_MAX:
+    from adafruit_blinka.board.luckfox.luckfoxpico_max import *
+
 elif "sphinx" in sys.modules:
     pass
 
