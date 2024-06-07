@@ -226,9 +226,7 @@ SPI0_CS0_M0 = GPIO1_C0
 SPI0_CS1_M0 = GPIO1_D2
 
 # ordered as spiId, sckId, mosiId, misoId
-spiPorts = (
-    (0, SPI0_CLK_M0, SPI0_MOSI_M0, SPI0_MISO_M0),
-)
+spiPorts = ((0, SPI0_CLK_M0, SPI0_MOSI_M0, SPI0_MISO_M0),)
 
 # PWM
 PWM0 = GPIO1_A2
@@ -257,4 +255,3 @@ analogIns = (
     (ADC_IN0, 0, 0),
     (ADC_IN1, 0, 1),
 )
-

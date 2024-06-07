@@ -7,7 +7,7 @@ from adafruit_blinka.microcontroller.rockchip.rv1106 import pin
 
 G42 = pin.GPIO1_B2
 G43 = pin.GPIO1_B3
-G48 = pin.GPIO1_C0 # This port is in use as CS0. This port is not available.
+G48 = pin.GPIO1_C0  # This port is in use as CS0. This port is not available.
 G49 = pin.GPIO1_C1
 G50 = pin.GPIO1_C2
 G51 = pin.GPIO1_C3
