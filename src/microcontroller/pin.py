@@ -144,6 +144,8 @@ elif chip_id == ap_chip.CV1800B:
     from adafruit_blinka.microcontroller.cv1800b.pin import *
 elif chip_id == ap_chip.TH1520:
     from adafruit_blinka.microcontroller.thead.th1520.pin import *
+elif chip_id == ap_chip.RV1103:
+    from adafruit_blinka.microcontroller.rockchip.rv1103.pin import *
 elif chip_id == ap_chip.RV1106:
     from adafruit_blinka.microcontroller.rockchip.rv1106.pin import *
 elif "sphinx" in sys.modules:
