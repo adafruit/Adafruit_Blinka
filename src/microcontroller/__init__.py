@@ -146,6 +146,8 @@ elif chip_id == ap_chip.D1_RISCV:
     from adafruit_blinka.microcontroller.allwinner.D1 import *
 elif chip_id == ap_chip.CV1800B:
     from adafruit_blinka.microcontroller.cv1800b import *
+elif chip_id == ap_chip.RV1103:
+    from adafruit_blinka.microcontroller.rockchip.rv1103 import *
 elif chip_id == ap_chip.RV1106:
     from adafruit_blinka.microcontroller.rockchip.rv1106 import *
 elif chip_id == ap_chip.TH1520:
