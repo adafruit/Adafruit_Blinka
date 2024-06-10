@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 """Pin definitions for the Lockfox Pico."""
 
-from adafruit_blinka.microcontroller.rockchip.rv1106 import pin
+from adafruit_blinka.microcontroller.rockchip.rv1103 import pin
 
 G42 = pin.GPIO1_B2
 G43 = pin.GPIO1_B3
