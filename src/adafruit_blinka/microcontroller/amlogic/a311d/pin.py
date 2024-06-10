@@ -11,8 +11,8 @@ Linux kernel 5.4.y (mainline)
     linux/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
 """
 
-import re
 import gpiod
+from adafruit_blinka.microcontroller.alias import get_dts_alias
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
 chip0 = gpiod.Chip("0")
@@ -151,21 +151,6 @@ UART1_RX = GPIOH_6
 
 # ordered as uartId, txId, rxId
 uartPorts = ((1, UART1_TX, UART1_RX),)
-
-
-def get_dts_alias(device: str) -> str:
-    """Get the Device Tree Alias"""
-    uevent_path = "/sys/bus/platform/devices/" + device + "/uevent"
-    with open(uevent_path, "r", encoding="utf-8") as fd:
-        pattern = r"^OF_ALIAS_0=(.*)$"
-        uevent = fd.read().split("\n")
-        for line in uevent:
-            match = re.search(pattern, line)
-            if match:
-                return match.group(1).upper()
-
-        return None
-
 
 # ordered as i2cId, sclId, sdaId
 i2cPorts = []

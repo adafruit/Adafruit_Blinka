@@ -9,7 +9,6 @@ See `CircuitPython:busio` in CircuitPython for more details.
 
 * Author(s): cefn
 """
-
 try:
     import threading
 except ImportError:
@@ -59,6 +58,13 @@ class I2C(Lockable):
 
             self._i2c = _I2C(frequency=frequency)
             return            
+        if detector.board.OS_AGNOSTIC_BOARD:
+            from adafruit_blinka.microcontroller.generic_agnostic_board.i2c import (
+                I2C as _I2C,
+            )
+
+            self._i2c = _I2C(frequency=frequency)
+            return
         if detector.board.greatfet_one:
             from adafruit_blinka.microcontroller.nxp_lpc4330.i2c import I2C as _I2C
 
@@ -355,6 +361,10 @@ class SPI(Lockable):
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif detector.board.ftdi_ft2232h:
             from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.spi import SPI as _SPI
+        elif detector.board.OS_AGNOSTIC_BOARD:
+            from adafruit_blinka.microcontroller.generic_agnostic_board.spi import (
+                SPI as _SPI,
+            )
         else:
             from adafruit_blinka.microcontroller.generic_micropython.spi import (
                 SPI as _SPI,
@@ -434,6 +444,10 @@ class SPI(Lockable):
             from adafruit_blinka.microcontroller.am65xx.pin import Pin
         elif detector.board.any_embedded_linux:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
+        elif detector.board.OS_AGNOSTIC_BOARD:
+            from adafruit_blinka.microcontroller.generic_agnostic_board.spi import (
+                SPI as _SPI,
+            )
         else:
             from adafruit_blinka.microcontroller.generic_micropython.spi import (
                 SPI as _SPI,

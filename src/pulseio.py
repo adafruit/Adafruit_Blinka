@@ -21,8 +21,9 @@ if detector.board.any_raspberry_pi:
 elif "sphinx" in sys.modules:
     pass
 elif detector.board.any_odroid_40_pin:
-    from adafruit_blinka.microcontroller.amlogic.meson_g12_common.pulseio.PulseIn import (
-        PulseIn,
-    )
+    if detector.board.id in ("ODROID_C4", "ODROID_N2"):
+        from adafruit_blinka.microcontroller.amlogic.meson_g12_common.pulseio.PulseIn import (
+            PulseIn,
+        )
 else:
     raise NotImplementedError("pulseio not supported for this board.")

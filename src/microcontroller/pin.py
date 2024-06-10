@@ -2,9 +2,8 @@
 #
 # SPDX-License-Identifier: MIT
 """Pins named after their chip name."""
-
 import sys
-from adafruit_platformdetect.constants import chips as ap_chip
+from adafruit_platformdetect.constants import chips as ap_chip, boards as ap_boards
 from adafruit_blinka.agnostic import board_id, chip_id
 
 # We intentionally are patching into this namespace so skip the wildcard check.
@@ -45,11 +44,17 @@ elif chip_id == ap_chip.SUN8I:
 elif chip_id == ap_chip.H3:
     from adafruit_blinka.microcontroller.allwinner.h3.pin import *
 elif chip_id == ap_chip.H5:
-    from adafruit_blinka.microcontroller.allwinner.h5.pin import *
+    if board_id == ap_boards.REPKA_PI_3_H5:
+        from adafruit_blinka.board.repkapi.repka_pi_3 import *
+    else:
+        from adafruit_blinka.microcontroller.allwinner.h5.pin import *
 elif chip_id == ap_chip.H6:
     from adafruit_blinka.microcontroller.allwinner.h6.pin import *
 elif chip_id == ap_chip.H616:
-    from adafruit_blinka.microcontroller.allwinner.h616.pin import *
+    if board_id == ap_boards.REPKA_PI_4_H6:
+        from adafruit_blinka.board.repkapi.repka_pi_4 import *
+    else:
+        from adafruit_blinka.microcontroller.allwinner.h616.pin import *
 elif chip_id == ap_chip.SAMA5:
     from adafruit_blinka.microcontroller.sama5.pin import *
 elif chip_id == ap_chip.T210:
@@ -90,6 +95,8 @@ elif chip_id == ap_chip.BINHO:
     from adafruit_blinka.microcontroller.nova.pin import *
 elif chip_id == ap_chip.LPC4330:
     from adafruit_blinka.microcontroller.nxp_lpc4330.pin import *
+elif chip_id == ap_chip.OS_AGNOSTIC:
+    from adafruit_blinka.microcontroller.generic_agnostic_board.pin import *
 elif chip_id == ap_chip.MCP2221:
     from adafruit_blinka.microcontroller.mcp2221.pin import *
 elif chip_id == ap_chip.A10:
@@ -113,9 +120,10 @@ elif chip_id == ap_chip.RK3328:
 elif chip_id == ap_chip.RK3566:
     from adafruit_blinka.microcontroller.rockchip.rk3566.pin import *
 elif chip_id == ap_chip.RK3568:
-    from adafruit_blinka.microcontroller.rockchip.rk3568.pin import *
-elif chip_id == ap_chip.RK3568B2:
-    from adafruit_blinka.microcontroller.rockchip.rk3568b2.pin import *
+    if board_id in (ap_boards.ODROID_M1,):
+        from adafruit_blinka.microcontroller.rockchip.rk3568b2.pin import *
+    else:
+        from adafruit_blinka.microcontroller.rockchip.rk3568.pin import *
 elif chip_id == ap_chip.MIPS24KC:
     from adafruit_blinka.microcontroller.atheros.ar9331.pin import *
 elif chip_id == ap_chip.MIPS24KEC:
@@ -132,6 +140,14 @@ elif chip_id == ap_chip.RP2040_U2IF:
     from adafruit_blinka.microcontroller.rp2040_u2if.pin import *
 elif chip_id == ap_chip.D1_RISCV:
     from adafruit_blinka.microcontroller.allwinner.D1.pin import *
+elif chip_id == ap_chip.CV1800B:
+    from adafruit_blinka.microcontroller.cv1800b.pin import *
+elif chip_id == ap_chip.TH1520:
+    from adafruit_blinka.microcontroller.thead.th1520.pin import *
+elif chip_id == ap_chip.RV1103:
+    from adafruit_blinka.microcontroller.rockchip.rv1103.pin import *
+elif chip_id == ap_chip.RV1106:
+    from adafruit_blinka.microcontroller.rockchip.rv1106.pin import *
 elif "sphinx" in sys.modules:
     # pylint: disable=unused-import
     from adafruit_blinka.microcontroller.generic_micropython import Pin

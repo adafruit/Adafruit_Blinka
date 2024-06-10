@@ -17,7 +17,6 @@ __blinka__ = True
 
 
 import sys
-
 import adafruit_platformdetect.constants.boards as ap_board
 from adafruit_blinka.agnostic import board_id, detector
 
@@ -26,6 +25,9 @@ from adafruit_blinka.agnostic import board_id, detector
 
 if board_id == ap_board.FEATHER_HUZZAH:
     from adafruit_blinka.board.feather_huzzah import *
+
+elif board_id == ap_board.OLIMEX_LIME2:
+    from adafruit_blinka.board.OLIMEX_LIME2 import *
 
 elif board_id == ap_board.NODEMCU:
     from adafruit_blinka.board.nodemcu import *
@@ -136,6 +138,9 @@ elif board_id == ap_board.ORANGE_PI_4_LTS:
 elif board_id == ap_board.ORANGE_PI_5:
     from adafruit_blinka.board.orangepi.orangepi5 import *
 
+elif board_id == ap_board.ORANGE_PI_5_PLUS:
+    from adafruit_blinka.board.orangepi.orangepi5plus import *
+
 elif board_id == ap_board.BANANA_PI_M2_ZERO:
     from adafruit_blinka.board.bananapi.bpim2zero import *
 
@@ -196,6 +201,9 @@ elif board_id == ap_board.ODROID_N2:
 elif board_id == ap_board.ODROID_M1:
     from adafruit_blinka.board.hardkernel.odroidm1 import *
 
+elif board_id == ap_board.ODROID_M1S:
+    from adafruit_blinka.board.hardkernel.odroidm1s import *
+
 elif board_id == ap_board.KHADAS_VIM3:
     from adafruit_blinka.board.khadas.khadasvim3 import *
 
@@ -227,10 +235,13 @@ elif board_id == ap_board.SIFIVE_UNLEASHED:
     from adafruit_blinka.board.hifive_unleashed import *
 
 elif board_id == ap_board.PINE64:
-    from adafruit_blinka.board.pine64 import *
+    from adafruit_blinka.board.pine64.pine64 import *
 
 elif board_id == ap_board.PINEH64:
     from adafruit_blinka.board.pineH64 import *
+
+elif board_id == ap_board.QUARTZ64_A:
+    from adafruit_blinka.board.pine64.quartz64_a import *
 
 elif board_id == ap_board.PCDUINO2:
     from adafruit_blinka.board.linksprite.pcduino2 import *
@@ -253,8 +264,14 @@ elif board_id == ap_board.RADXA_CM3:
 elif board_id == ap_board.ROCK_PI_3A:
     from adafruit_blinka.board.radxa.rockpi3a import *
 
+elif board_id == ap_board.ROCK_PI_3C:
+    from adafruit_blinka.board.radxa.rockpi3c import *
+
 elif board_id == ap_board.RADXA_ZERO:
     from adafruit_blinka.board.radxa.radxazero import *
+
+elif board_id == ap_board.RADXA_ZERO3:
+    from adafruit_blinka.board.radxa.radxazero3 import *
 
 elif board_id == ap_board.ROCK_PI_S:
     from adafruit_blinka.board.radxa.rockpis import *
@@ -265,8 +282,14 @@ elif board_id == ap_board.ROCK_PI_4:
 elif board_id == ap_board.ROCK_PI_4_C_PLUS:
     from adafruit_blinka.board.radxa.rockpi4 import *
 
+elif board_id == ap_board.ROCK_PI_4_SE:
+    from adafruit_blinka.board.radxa.rockpi4 import *
+
 elif board_id == ap_board.ROCK_PI_5:
     from adafruit_blinka.board.radxa.rock5 import *
+
+elif board_id == ap_board.ROCK_PI_5C:
+    from adafruit_blinka.board.radxa.rock5c import *
 
 elif board_id == ap_board.ROCK_PI_E:
     from adafruit_blinka.board.radxa.rockpie import *
@@ -358,8 +381,38 @@ elif board_id == ap_board.AML_S905X_CC:
 elif board_id == ap_board.ROC_RK3328_CC:
     from adafruit_blinka.board.librecomputer.roc_rk3328_cc import *
 
+elif board_id == ap_board.REPKA_PI_3_H5:
+    from adafruit_blinka.board.repkapi.repka_pi_3 import *
+
+elif board_id == ap_board.REPKA_PI_4_H6:
+    from adafruit_blinka.board.repkapi.repka_pi_4 import *
+
 elif board_id == ap_board.GENERIC_LINUX_PC:
     from adafruit_blinka.board.generic_linux_pc import *
+
+elif board_id == ap_board.LICHEEPI_4A:
+    from adafruit_blinka.board.licheepi_4a import *
+
+elif board_id == ap_board.MILKV_DUO:
+    from adafruit_blinka.board.milkv_duo import *
+
+elif board_id == ap_board.WALNUT_PI_1B:
+    from adafruit_blinka.board.walnutpi.walnutpi1b import *
+
+elif board_id == ap_board.OS_AGNOSTIC_BOARD:
+    from adafruit_blinka.board.generic_agnostic_board import *
+
+elif board_id == ap_board.LUCKFOX_PICO:
+    from adafruit_blinka.board.luckfox.luckfoxpico import *
+
+elif board_id == ap_board.LUCKFOX_PICO_MINI:
+    from adafruit_blinka.board.luckfox.luckfoxpico_mini import *
+
+elif board_id == ap_board.LUCKFOX_PICO_PLUS:
+    from adafruit_blinka.board.luckfox.luckfoxpico_plus import *
+
+elif board_id == ap_board.LUCKFOX_PICO_MAX:
+    from adafruit_blinka.board.luckfox.luckfoxpico_max import *
 
 elif "sphinx" in sys.modules:
     pass

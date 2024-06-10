@@ -9,7 +9,6 @@ See `CircuitPython:digitalio` in CircuitPython for more details.
 
 * Author(s): cefn
 """
-
 from adafruit_blinka.agnostic import board_id, detector
 
 # pylint: disable=ungrouped-imports,wrong-import-position,unused-wildcard-import,wildcard-import
@@ -115,6 +114,8 @@ elif detector.chip.H616:
     from adafruit_blinka.microcontroller.allwinner.h616.pin import Pin
 elif detector.chip.D1_RISCV:
     from adafruit_blinka.microcontroller.allwinner.D1.pin import Pin
+elif detector.chip.TH1520:
+    from adafruit_blinka.microcontroller.thead.th1520.pin import Pin
 # Special Case Boards
 elif detector.board.ftdi_ft232h:
     from adafruit_blinka.microcontroller.ftdi_mpsse.ft232h.pin import Pin
@@ -133,6 +134,14 @@ elif detector.chip.STM32F405:
     from machine import Pin
 elif detector.chip.RP2040:
     from machine import Pin
+elif detector.chip.CV1800B:
+    from adafruit_blinka.microcontroller.cv1800b.pin import Pin
+elif detector.chip.RV1103:
+    from adafruit_blinka.microcontroller.rockchip.rv1103.pin import Pin
+elif detector.chip.RV1106:
+    from adafruit_blinka.microcontroller.rockchip.rv1106.pin import Pin
+elif detector.chip.OS_AGNOSTIC:
+    from adafruit_blinka.microcontroller.generic_agnostic_board.pin import Pin
 
 from adafruit_blinka import Enum, ContextManaged
 

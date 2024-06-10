@@ -142,6 +142,8 @@ class PWMOut:
 
             self.frequency = frequency
             self.duty_cycle = duty_cycle
+            self.polarity = "normal"
+            self.enable()
 
             # Cache the period for fast duty cycle updates
             self._period_ns = self._get_period_ns()

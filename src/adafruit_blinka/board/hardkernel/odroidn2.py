@@ -58,43 +58,50 @@ for it in pin.i2cPorts:
     globals()["SCL" + str(it[0])] = it[1]
     globals()["SDA" + str(it[0])] = it[2]
 
-SCL = None
-SDA = None
-# Set second i2c bus as default for backward compatibility.
-if len(pin.i2cPorts) > 1:
-    SCL = pin.i2cPorts[1][1]
-    SDA = pin.i2cPorts[1][2]
-elif len(pin.i2cPorts) > 0:
+if pin.i2cPorts:
     SCL = pin.i2cPorts[0][1]
     SDA = pin.i2cPorts[0][2]
 
 SCLK = pin.SPI0_SCLK
 MOSI = pin.SPI0_MOSI
 MISO = pin.SPI0_MISO
-SPI_CS0 = pin.GPIO486
+CS0 = pin.GPIO486
+CS1 = pin.GPIO464
+SPI_CS0 = CS0  # aliased for backward compatibility
 
-D0 = GPIOX_3  # PIN_11
-D1 = GPIOX_16  # PIN_12
-D2 = GPIOX_4  # PIN_13
-D3 = GPIOX_7  # PIN_15
-D4 = GPIOX_0  # PIN_16
-D5 = GPIOX_1  # PIN_18
-D6 = GPIOX_2  # PIN_22
-D7 = GPIOA_13  # PIN_7
-D8 = GPIOX_17  # PIN_3
-D9 = GPIOX_18  # PIN_5
-D10 = GPIOX_10  # PIN_24
-D11 = GPIOA_4  # PIN_26
-D12 = GPIOX_8  # PIN_19
-D13 = GPIOX_9  # PIN_21
-D14 = GPIOX_11  # PIN_23
-D15 = GPIOX_12  # PIN_8
-D16 = GPIOX_13  # PIN_10
-D21 = GPIOX_14  # PIN_29
-D22 = GPIOX_15  # PIN_31
-D23 = GPIOX_5  # PIN_33
-D24 = GPIOX_6  # PIN_35
-D26 = GPIOA_12  # PIN_32
-D27 = GPIOX_19  # PIN_36
-D30 = GPIOA_14  # PIN_27
-D31 = GPIOA_15  # PIN_28
+D3 = GPIOX_17
+D5 = GPIOX_18
+D7 = GPIOA_13
+D8 = GPIOX_12
+D10 = GPIOX_13
+D11 = GPIOX_3
+D12 = GPIOX_16
+D13 = GPIOX_4
+D15 = GPIOX_7
+D16 = GPIOX_0
+D18 = GPIOX_1
+D19 = GPIOX_8
+D21 = GPIOX_9
+D22 = GPIOX_2
+D23 = GPIOX_11
+D24 = GPIOX_10
+D26 = GPIOA_4
+D27 = GPIOA_14
+D28 = GPIOA_15
+D29 = GPIOX_14
+D31 = GPIOX_15
+D32 = GPIOA_12
+D33 = GPIOX_5
+D35 = GPIOX_6
+D36 = GPIOX_19
+
+""" ADC """
+A0 = 40
+A1 = 37
+
+""" PWM """
+PWM = D15
+
+""" UART """
+UART0_TX = D8
+UART0_RX = D10

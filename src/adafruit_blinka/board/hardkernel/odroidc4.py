@@ -16,7 +16,9 @@ if pin.i2cPorts:
 SCLK = pin.SPI0_SCLK
 MOSI = pin.SPI0_MOSI
 MISO = pin.SPI0_MISO
-SPI_CS0 = pin.SPI0_CS0
+CS0 = pin.SPI0_CS0
+CS1 = pin.GPIOH_6
+SPI_CS0 = CS0  # aliased for backward compatibility
 
 """J2: physical pin number"""
 
@@ -53,3 +55,14 @@ D44 = pin.GPIOAO_9
 D45 = pin.GPIOAO_7
 D46 = pin.GPIOAO_8
 D47 = pin.GPIOAO_4
+
+""" ADC """
+A0 = 40
+A1 = 37
+
+""" PWM """
+PWM = D15
+
+""" UART """
+UART0_TX = D8
+UART0_RX = D10

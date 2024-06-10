@@ -72,8 +72,6 @@ class Lockable(ContextManaged):
         """Release the lock so others may use the resource."""
         if self._locked:
             self._locked = False
-        else:
-            raise ValueError("Not locked")
 
 
 def patch_system():
