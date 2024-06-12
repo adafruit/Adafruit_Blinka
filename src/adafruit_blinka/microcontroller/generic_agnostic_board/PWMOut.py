@@ -26,7 +26,6 @@ class PWMOut:
 
     def _open(self, pin, duty=0, freq=500, variable_frequency=False):
         self._pin = pin
-        self._pwmpin = GPIO.PWM(pin.id, freq)
 
         if variable_frequency:
             print("Variable Frequency is not supported, continuing without it...")
