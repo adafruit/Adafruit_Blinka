@@ -27,9 +27,6 @@ class PWMOut:
     def _open(self, pin, duty=0, freq=500, variable_frequency=False):
         self._pin = pin
 
-        if variable_frequency:
-            print("Variable Frequency is not supported, continuing without it...")
-
         # set frequency
         self.frequency = freq
         # set duty
@@ -112,7 +109,6 @@ class PWMOut:
     def frequency(self, frequency):
         if not isinstance(frequency, (int, float)):
             raise TypeError("Invalid frequency type, should be int or float.")
-
         self._frequency = frequency
 
     @property
