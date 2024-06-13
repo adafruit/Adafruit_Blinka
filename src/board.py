@@ -96,6 +96,9 @@ elif board_id == ap_board.BEAGLEV_STARLIGHT:
 elif board_id == ap_board.ORANGE_PI_PC:
     from adafruit_blinka.board.orangepi.orangepipc import *
 
+elif board_id == ap_board.ORANGE_PI_PC2:
+    from adafruit_blinka.board.orangepi.orangepipc2 import *
+
 elif board_id == ap_board.ORANGE_PI_R1:
     from adafruit_blinka.board.orangepi.orangepir1 import *
 
