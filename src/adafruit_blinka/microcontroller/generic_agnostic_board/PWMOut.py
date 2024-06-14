@@ -29,6 +29,7 @@ class PWMOut:
 
         # set frequency
         self.frequency = freq
+        self._variable_frequency = variable_frequency
         # set duty
         self.duty_cycle = duty
 
