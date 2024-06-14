@@ -43,6 +43,8 @@ SPI0_SCLK = PC2
 PC3 = Pin((1, 67))
 SPI0_CS = PC3
 PC4 = Pin((1, 68))
+PC5 = Pin((1, 69))
+PC6 = Pin((1, 70))
 PC7 = Pin((1, 71))
 
 PD11 = Pin((1, 107))

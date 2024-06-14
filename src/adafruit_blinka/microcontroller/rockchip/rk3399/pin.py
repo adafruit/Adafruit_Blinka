@@ -207,6 +207,7 @@ UART4_RX = GPIO1_A7
 # PWM
 PWM0 = GPIO4_C2
 PWM1 = GPIO4_C6
+PWM2 = GPIO1_C3
 
 # ordered as i2cId, SCL, SDA
 i2cPorts = (
@@ -224,7 +225,8 @@ spiPorts = (
 # SysFS pwm outputs, pwm channel and pin in first tuple
 pwmOuts = (
     ((0, 0), PWM0),
-    ((0, 0), PWM1),
+    ((1, 0), PWM1),
+    ((2, 0), PWM2),
 )
 
 # SysFS analog inputs, Ordered as analog analogInId, device, and channel
