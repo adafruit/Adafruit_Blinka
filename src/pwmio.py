@@ -47,7 +47,7 @@ elif detector.board.any_jetson_board:
 elif detector.board.any_luckfox_pico_board:
     from adafruit_blinka.microcontroller.generic_linux.sysfs_pwmout import PWMOut
 elif detector.board.OS_AGNOSTIC_BOARD:
-      from adafruit_blinka.microcontroller.generic_agnostic_board.PWMOut import PWMOut
+    from adafruit_blinka.microcontroller.generic_agnostic_board.PWMOut import PWMOut
 elif (
     detector.board.feather_u2if
     or detector.board.feather_can_u2if

@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: MIT
 """Mock PWMOut Wrapper for Generic Agnostic Board"""
 
+
 class PWMError(IOError):
     """Base class for PWM errors."""
 
