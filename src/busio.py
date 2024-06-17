@@ -57,7 +57,7 @@ class I2C(Lockable):
             from adafruit_blinka.microcontroller.usb_iss.i2c import I2C as _I2C
 
             self._i2c = _I2C(frequency=frequency)
-            return            
+            return
         if detector.board.OS_AGNOSTIC_BOARD:
             from adafruit_blinka.microcontroller.generic_agnostic_board.i2c import (
                 I2C as _I2C,

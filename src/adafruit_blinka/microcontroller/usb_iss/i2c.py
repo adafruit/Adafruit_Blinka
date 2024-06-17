@@ -11,8 +11,8 @@ class I2C:
         # Configure I2C mode
         self._iss = UsbIss()
         self._iss.open("/dev/ttyACM0")
-        clock_khz = frequency/1000
-        self._iss.setup_i2c(clock_khz = clock_khz)
+        clock_khz = frequency / 1000
+        self._iss.setup_i2c(clock_khz=clock_khz)
         print(self._iss.i2c.read_ad0(0x40, 3))
 
     def scan(self):
@@ -22,15 +22,15 @@ class I2C:
     def writeto(self, address, buffer, *, start=0, end=None):
         """Write data from the buffer to an address"""
         end = end if end else len(buffer)
-        #port = self._i2c.get_port(address)
-        #port.write(buffer[start:end], relax=stop)
+        # port = self._i2c.get_port(address)
+        # port.write(buffer[start:end], relax=stop)
         self._iss.i2c.write_ad0(address, list(buffer[start:end]))
 
     def readfrom_into(self, address, buffer, *, start=0, end=None):
         """Read data from an address and into the buffer"""
         end = end if end else len(buffer)
-        #port = self._i2c.get_port(address)
-        #result = port.read(len(buffer[start:end]), relax=stop)
+        # port = self._i2c.get_port(address)
+        # result = port.read(len(buffer[start:end]), relax=stop)
         result = self._iss.i2c.read_ad0(address, len(buffer[start:end]))
         for i, b in enumerate(result):
             buffer[start + i] = b
