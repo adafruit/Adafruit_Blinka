@@ -36,6 +36,7 @@ elif chip_id == ap_chip.BCM2XXX:
         "RASPBERRY_PI_4B",
         "RASPBERRY_PI_400",
         "RASPBERRY_PI_CM4",
+        "RASPBERRY_PI_5",
     ]:
         from adafruit_blinka.microcontroller.bcm2711 import *
     else:
