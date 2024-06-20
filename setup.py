@@ -46,7 +46,7 @@ if os.path.exists("/proc/device-tree/compatible"):
     ):  # BeagleBone Black, Green, PocketBeagle, BeagleBone AI, etc.
         board_reqs = ["Adafruit_BBIO"]
 
-if sys.platform == "linux" and platform.machine != "mips":
+if sys.platform == "linux" and platform.machine() != "mips":
     platform_reqs = ["sysv_ipc>=1.1.0"]
 
 setup(
