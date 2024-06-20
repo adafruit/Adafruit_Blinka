@@ -1,10 +1,9 @@
-Adafruit-PlatformDetect>=3.62.0
-Adafruit-PureIO>=1.1.7
-Jetson.GPIO; platform_machine=='aarch64'
-RPi.GPIO; platform_machine=='armv7l' or platform_machine=='armv6l' or platform_machine=='aarch64'
-rpi_ws281x>=4.0.0; platform_machine=='armv7l' or platform_machine=='armv6l' or platform_machine=='aarch64'
-sysv_ipc>=1.1.0; sys_platform == 'linux' and platform_machine!='mips'
-pyftdi>=0.40.0
-binho-host-adapter>=0.1.6
-numpy>=1.21.5
-adafruit-circuitpython-typing
+ # requirements.txt
+ #
+ # installs dependencies from ./setup.py, and the package itself,
+ # in editable mode
+ # -e .
+
+ # (the -e above is optional). you could also just install the package
+ # normally with just the line below (after uncommenting)
+ .

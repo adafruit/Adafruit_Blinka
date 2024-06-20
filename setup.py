@@ -10,6 +10,8 @@
 
 import io
 import os
+import sys
+import platform
 
 from setuptools import setup, find_packages
 
@@ -21,6 +23,7 @@ with io.open(os.path.join(here, "README.rst"), encoding="utf-8") as f:
     long_description = "\n" + f.read()
 
 board_reqs = []
+platform_reqs = []
 if os.path.exists("/proc/device-tree/compatible"):
     with open("/proc/device-tree/compatible", "rb") as f:
         compat = f.read()
@@ -34,14 +37,17 @@ if os.path.exists("/proc/device-tree/compatible"):
         or b"brcm,bcm2838" in compat
         or b"brcm,bcm2711" in compat
     ):
-        board_reqs = ["RPi.GPIO", "rpi_ws281x>=4.0.0", "sysv_ipc>=1.1.0"]
+        board_reqs = ["RPi.GPIO", "rpi_ws281x>=4.0.0"]
     # Pi 5
     if b"brcm,bcm2712" in compat:
-        board_reqs = ["rpi_ws281x>=4.0.0", "sysv_ipc>=1.1.0", "rpi-lgpio"]
+        board_reqs = ["rpi_ws281x>=4.0.0", "rpi-lgpio"]
     if (
         b"ti,am335x" in compat
     ):  # BeagleBone Black, Green, PocketBeagle, BeagleBone AI, etc.
         board_reqs = ["Adafruit_BBIO"]
+
+if sys.platform == "linux" and platform.machine != "mips":
+    platform_reqs = ["sysv_ipc>=1.1.0"]
 
 setup(
     name="Adafruit-Blinka",
@@ -89,12 +95,15 @@ setup(
     },
     include_package_data=True,
     install_requires=[
-        "Adafruit-PlatformDetect>=3.62.0",
+        "Adafruit-PlatformDetect>=3.70.1",
         "Adafruit-PureIO>=1.1.7",
+        "binho-host-adapter>=0.1.6",
         "pyftdi>=0.40.0",
+        "numpy>=1.21.5",
         "adafruit-circuitpython-typing",
     ]
-    + board_reqs,
+    + board_reqs
+    + platform_reqs,
     license="MIT",
     classifiers=[
         # Trove classifiers
