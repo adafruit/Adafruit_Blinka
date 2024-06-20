@@ -34,12 +34,10 @@ if os.path.exists("/proc/device-tree/compatible"):
         or b"brcm,bcm2838" in compat
         or b"brcm,bcm2711" in compat
     ):
-        board_reqs = ["RPi.GPIO", "rpi_ws281x>=4.0.0", "sysv_ipc>=1.1.0"]
+        board_reqs = ["RPi.GPIO", "rpi_ws281x>=4.0.0"]
     # Pi 5
     if b"brcm,bcm2712" in compat:
-        board_reqs = ["rpi_ws281x>=4.0.0", "rpi-lgpio", "sysv_ipc>=1.1.0"]
-    if b"amlogic,a311d" in compat:
-        board_reqs = ["sysv_ipc>=1.1.0"]
+        board_reqs = ["rpi_ws281x>=4.0.0", "rpi-lgpio"]
     if (
         b"ti,am335x" in compat
     ):  # BeagleBone Black, Green, PocketBeagle, BeagleBone AI, etc.
@@ -97,6 +95,7 @@ setup(
         "pyftdi>=0.40.0",
         "numpy>=1.21.5",
         "adafruit-circuitpython-typing",
+        "sysv_ipc>=1.1.0;sys_platform=='linux' and platform_machine!='mips'",
     ]
     + board_reqs,
     license="MIT",
