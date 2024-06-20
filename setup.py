@@ -10,7 +10,6 @@
 
 import io
 import os
-import sys
 import platform
 
 from setuptools import setup, find_packages
@@ -46,7 +45,7 @@ if os.path.exists("/proc/device-tree/compatible"):
     ):  # BeagleBone Black, Green, PocketBeagle, BeagleBone AI, etc.
         board_reqs = ["Adafruit_BBIO"]
 
-if sys.platform == "linux" and platform.machine() != "mips":
+if platform.system() == "Linux" and platform.machine() != "mips":
     platform_reqs = ["sysv_ipc>=1.1.0"]
 
 setup(
