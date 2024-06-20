@@ -248,7 +248,7 @@ class MCP2221:
         for _ in range(MCP2221_RETRY_MAX):
             status = self._i2c_status()
             if status[20] & MASK_ADDR_NACK:
-                raise RuntimeError("I2C slave address was NACK'd")
+                raise OSError("I2C slave address was NACK'd")
             usb_cmd_status = status[8]
             if usb_cmd_status == 0:
                 break
