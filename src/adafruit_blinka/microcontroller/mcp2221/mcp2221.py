@@ -360,7 +360,8 @@ class MCP2221:
             # try a write
             try:
                 self.i2c_writeto(addr, b"\x00")
-            except RuntimeError:  # no reply!
+            except OSError:  # no reply!
+                # We got a NACK, which could be correct
                 continue
             # store if success
             found.append(addr)
