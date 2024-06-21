@@ -35,5 +35,5 @@ jobs:
         for file in $(find -not -path "./.*" -not -path "./docs*" \( -name "*.py" -o -name "*.toml" \) ); do
             sed -i -e "s/0.0.0+auto.0/${{github.event.release.tag_name}}/" $file;
         done;
-        python -m build
+        python -m build -s
         twine upload dist/*
