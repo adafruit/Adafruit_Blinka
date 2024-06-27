@@ -26,6 +26,9 @@ from adafruit_blinka.agnostic import board_id, detector
 if board_id == ap_board.FEATHER_HUZZAH:
     from adafruit_blinka.board.feather_huzzah import *
 
+elif board_id == ap_board.VISIONFIVE2:
+    from adafruit_blinka.board.starfive.visionfive2 import *
+
 elif board_id == ap_board.OLIMEX_LIME2:
     from adafruit_blinka.board.OLIMEX_LIME2 import *
 
@@ -438,6 +441,7 @@ elif board_id is None:
     )
 
 else:
+    
     raise NotImplementedError(f"Board not supported {board_id}.")
 
 if "SCL" in locals() and "SDA" in locals():
