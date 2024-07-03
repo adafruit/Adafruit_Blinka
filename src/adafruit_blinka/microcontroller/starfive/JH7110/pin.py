@@ -101,9 +101,9 @@ SDA = D3
 SCL = D5
 
 # SPI
-MISO = D21
-MOSI = D19
-SCLK = D23
+SPI_MISO = D21
+SPI_MOSI = D19
+SPI_SCLK = D23
 
 # UART
 UART_TX = D8
@@ -113,7 +113,7 @@ UART_RX = D10
 i2cPorts = ((0, SCL, SDA),)
 
 # ordered as spiId, sckId, mosiId, misoId
-spiPorts = ((0, SCLK, MOSI, MISO),)
+spiPorts = ((0, SPI_SCLK, SPI_MOSI, SPI_MISO),)
 
 # ordered as uartId, txId, rxId
 uartPorts = ((0, UART_TX, UART_RX),)
