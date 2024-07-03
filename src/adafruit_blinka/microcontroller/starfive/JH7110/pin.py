@@ -97,23 +97,23 @@ D37 = Pin(37)
 D38 = Pin(38)
 D40 = Pin(40)
 # I2C
-I2C_SDA = D3
-I2C_SCL = D5
+SDA = D3
+SCL = D5
 
 # SPI
-SPI_MISO = D21
-SPI_MOSI = D19
-SPI_SCLK = D23
+MISO = D21
+MOSI = D19
+SCLK = D23
 
 # UART
 UART_TX = D8
 UART_RX = D10
 
 # ordered as i2cId, SCL, SDA
-i2cPorts = ((0, I2C_SCL, I2C_SDA),)
+i2cPorts = ((0, SCL, SDA),)
 
 # ordered as spiId, sckId, mosiId, misoId
-spiPorts = ((0, SPI_SCLK, SPI_MOSI, SPI_MISO),)
+spiPorts = ((0, SCLK, MOSI, MISO),)
 
 # ordered as uartId, txId, rxId
 uartPorts = ((0, UART_TX, UART_RX),)
