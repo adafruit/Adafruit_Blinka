@@ -5,7 +5,7 @@
 
 import VisionFive.gpio as GPIO
 
-GPIO.setmode(GPIO.Board)
+GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
 
 
