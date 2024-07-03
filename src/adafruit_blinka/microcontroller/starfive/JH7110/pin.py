@@ -114,3 +114,6 @@ i2cPorts = ((0, I2C_SCL, I2C_SDA),)
 
 # ordered as spiId, sckId, mosiId, misoId
 spiPorts = ((0, SPI_SCLK, SPI_MOSI, SPI_MISO),)
+
+# ordered as uartId, txId, rxId
+uartPorts = ((0, UART_TX, UART_RX),)

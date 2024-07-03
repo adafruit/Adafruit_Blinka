@@ -6,6 +6,7 @@
 import VisionFive.gpio as GPIO
 
 GPIO.setmode(GPIO.Board)
+GPIO.setwarnings(False)
 
 
 # pylint: disable=unnecessary-pass

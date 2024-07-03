@@ -34,8 +34,8 @@ D37 = pin.D37
 D38 = pin.D38
 D40 = pin.D40
 # I2C
-I2C_SDA = pin.I2C_SDA
-I2C_SCL = pin.I2C_SCL
+SDA = pin.I2C_SDA
+SCL = pin.I2C_SCL
 
 # SPI
 SPI_MISO = pin.SPI_MISO
