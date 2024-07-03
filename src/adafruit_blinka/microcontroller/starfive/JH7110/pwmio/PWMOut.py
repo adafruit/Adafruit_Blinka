@@ -87,27 +87,26 @@ class PWMOut:
     @property
     def duty_cycle(self):
         """Get or set the PWM's output duty cycle which is the fraction of
-        each pulse which is high.
+        each pulse which is high. 16-bit
 
         Raises:
             PWMError: if an I/O or OS error occurs.
             TypeError: if value type is not int or float.
-            ValueError: if value is out of bounds of 0.0 to 100.0.
+            ValueError: if value is out of bounds of 0.0 to 1.0.
 
         :type: int, float
         """
-        return int(self._duty_cycle)
+        return int(self._duty_cycle * 65535)
 
     @duty_cycle.setter
     def duty_cycle(self, duty_cycle):
         if not isinstance(duty_cycle, (int, float)):
             raise TypeError("Invalid duty cycle type, should be int or float.")
 
-        if not 0 <= duty_cycle <= 100:
-            raise ValueError(
-                "Invalid duty cycle value, should be between 0.0 and 100.0"
-            )
+        if not 0 <= duty_cycle <= 65535:
+            raise ValueError("Invalid duty cycle value, should be between 0 and 65535")
 
+        duty_cycle = duty_cycle / 655.35
         self._duty_cycle = duty_cycle
         self._pwmpin.ChangeDutyCycle(round(self._duty_cycle))
 
