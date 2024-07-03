@@ -8,7 +8,6 @@ from machine import I2C as _I2C
 class I2C:
     """I2C Class for Generic MicroPython"""
 
-
     MASTER = 0
 
     # pylint: disable=unused-argument

@@ -1,4 +1,4 @@
 # SPDX-FileCopyrightText: 2024 Vladimir Shtarev
 #
 # SPDX-License-Identifier: MIT
-"""Definition for the StarFive JH7110 chip"""
+"""Custom PWMOut Wrapper for VisionFive.GPIO PWM Class"""
