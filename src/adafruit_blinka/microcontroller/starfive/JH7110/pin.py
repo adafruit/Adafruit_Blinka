@@ -23,8 +23,8 @@ class Pin:
     _value = LOW
     _mode = IN
 
-    def __init__(self, bcm_number):
-        self.id = bcm_number
+    def __init__(self, number):
+        self.id = number
 
     def __repr__(self):
         return str(self.id)
@@ -34,6 +34,7 @@ class Pin:
 
     def init(self, mode=IN, pull=None):
         """Initialize the Pin"""
+        print(self.id)
         if mode is not None:
             if mode == self.IN:
                 self._mode = self.IN
