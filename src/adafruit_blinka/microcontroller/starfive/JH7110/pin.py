@@ -69,46 +69,41 @@ class Pin:
         return GPIO.input(self.id)
 
 
-D3 = Pin(3)
-D5 = Pin(5)
 D7 = Pin(7)
-D8 = Pin(9)
-D10 = Pin(10)
 D11 = Pin(11)
 D12 = Pin(12)
 D13 = Pin(13)
 D15 = Pin(15)
 D16 = Pin(16)
 D18 = Pin(18)
-D19 = Pin(19)
-D21 = Pin(21)
 D22 = Pin(22)
-D23 = Pin(23)
 D24 = Pin(24)
 D26 = Pin(26)
 D27 = Pin(27)
 D28 = Pin(28)
 D29 = Pin(29)
 D31 = Pin(31)
-D32 = Pin(32)
-D33 = Pin(33)
 D35 = Pin(35)
 D36 = Pin(36)
 D37 = Pin(37)
 D38 = Pin(38)
 D40 = Pin(40)
 # I2C
-I2C_SDA = D3
-I2C_SCL = D5
+I2C_SDA = Pin(3)
+I2C_SCL = Pin(5)
 
 # SPI
-SPI_MISO = D21
-SPI_MOSI = D19
-SPI_SCLK = D23
+SPI_MISO = Pin(21)
+SPI_MOSI = Pin(19)
+SPI_SCLK = Pin(23)
 
 # UART
-UART_TX = D8
-UART_RX = D10
+UART_TX = Pin(8)
+UART_RX = Pin(10)
+
+# PWM
+PWM1 = Pin(32)
+PWM2 = Pin(33)
 
 # ordered as i2cId, SCL, SDA
 i2cPorts = ((0, I2C_SCL, I2C_SDA),)

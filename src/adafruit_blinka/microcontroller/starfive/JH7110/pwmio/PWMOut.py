@@ -19,6 +19,16 @@ class PWMError(IOError):
 # pylint: enable=unnecessary-pass
 
 
+def create(pin, *, frequency=500, duty_cycle=0, variable_frequency=False):
+    """test"""
+    return PWMOut(
+        pin,
+        frequency=frequency,
+        duty_cycle=duty_cycle,
+        variable_frequency=variable_frequency,
+    )
+
+
 class PWMOut:
     """Pulse Width Modulation Output Class"""
 
