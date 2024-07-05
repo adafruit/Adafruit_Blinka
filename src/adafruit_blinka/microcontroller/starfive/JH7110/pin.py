@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2024 Vladimir Shtarev
+# SPDX-FileCopyrightText: 2024 Vladimir Shtarev, Jetbrains Research
 #
 # SPDX-License-Identifier: MIT
 """A Pin class for use with StarFive JH7110."""
@@ -101,7 +101,7 @@ SPI_SCLK = Pin(23)
 UART_TX = Pin(8)
 UART_RX = Pin(10)
 
-# PWM
+# PWM, does not support pwmio
 PWM1 = Pin(32)
 PWM2 = Pin(33)
 
