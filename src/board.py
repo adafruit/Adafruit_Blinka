@@ -441,7 +441,6 @@ elif board_id is None:
     )
 
 else:
-    
     raise NotImplementedError(f"Board not supported {board_id}.")
 
 if "SCL" in locals() and "SDA" in locals():

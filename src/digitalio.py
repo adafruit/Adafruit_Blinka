@@ -29,6 +29,8 @@ elif detector.chip.AM33XX:
     from adafruit_blinka.microcontroller.am335x.pin import Pin
 elif detector.chip.AM65XX:
     from adafruit_blinka.microcontroller.am65xx.pin import Pin
+elif detector.chip.JH7110:
+    from adafruit_blinka.microcontroller.starfive.JH7110.pin import Pin
 elif detector.chip.JH71X0:
     from adafruit_blinka.microcontroller.starfive.JH71x0.pin import Pin
 elif detector.chip.DRA74X:
