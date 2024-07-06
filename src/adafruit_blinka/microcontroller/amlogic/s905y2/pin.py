@@ -74,6 +74,4 @@ uartPorts = (
     (4, UARTC_TX, UARTC_RX),
 )
 
-pwmOuts = (
-    ((2, 0), GPIOAO_11),
-)
+pwmOuts = (((2, 0), GPIOAO_11),)
