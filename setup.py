@@ -93,7 +93,6 @@ setup(
         "Adafruit-PureIO>=1.1.7",
         "binho-host-adapter>=0.1.6",
         "pyftdi>=0.40.0",
-        "numpy>=1.21.5",
         "adafruit-circuitpython-typing",
         "sysv_ipc>=1.1.0;sys_platform=='linux' and platform_machine!='mips'",
     ]
