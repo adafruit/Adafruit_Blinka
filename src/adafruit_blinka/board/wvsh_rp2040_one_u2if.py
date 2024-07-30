@@ -58,4 +58,4 @@ MISO = pin.GP8
 
 # access u2if via pin instance to open for specifc VID/PID
 # pylint:disable = protected-access
-pin.GP0._u2if_open_hid(0x2E9A, 0x111F)
+pin.GP0._u2if_open_hid(0x2E8A, 0x111F)
