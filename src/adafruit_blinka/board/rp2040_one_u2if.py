@@ -12,9 +12,9 @@ D2              D3              D10             D11
 D12             D13             D14             D15
 D17             D18             D19             D20
 D21             D22             D23             D24
-D25             D9              I2C             MISO 
-MOSI            NEOPIXEL        RX              SCK  
-SCL             SDA             SPI             TX        
+D25             D9              I2C             MISO
+MOSI            NEOPIXEL        RX              SCK
+SCL             SDA             SPI             TX
 UART
 """
 
