@@ -404,8 +404,8 @@ elif board_id == ap_board.MILKV_DUO:
 elif board_id == ap_board.WALNUT_PI_1B:
     from adafruit_blinka.board.walnutpi.walnutpi1b import *
 
-elif board_id == ap_board.WAVESHARE_RP2040_ONE_U2IF:
-    from adafruit_blinka.board.wvsh_rp2040_one_u2if import *
+elif board_id == ap_board.RP2040_ONE_U2IF:
+    from adafruit_blinka.board.rp2040_one_u2if import *
 
 elif board_id == ap_board.OS_AGNOSTIC_BOARD:
     from adafruit_blinka.board.generic_agnostic_board import *
