@@ -4,7 +4,7 @@
 """
 Pin definitions for the Waveshare RP2040 One with u2if firmware.
 
-Adafruit CircuitPython 6.2.0 on 2021-04-05; Waveshare RP2040 One with rp2040
+Adafruit CircuitPython; Waveshare RP2040 One with rp2040
 >>> import board
 >>> board.
 A0              A1              A2              A3
@@ -58,4 +58,4 @@ MISO = pin.GP8
 
 # access u2if via pin instance to open for specifc VID/PID
 # pylint:disable = protected-access
-pin.GP0._u2if_open_hid(0x2E8A, 0x111F)
+pin.GP0._u2if_open_hid(0x2E8A, 0x103A)
