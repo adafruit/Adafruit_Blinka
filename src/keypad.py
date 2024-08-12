@@ -67,7 +67,7 @@ class Event:
         )
 
 
-class _EventQueue:
+class EventQueue:
     """
     A queue of `Event` objects, filled by a `keypad` scanner such as `Keys` or `KeyMatrix`.
 
