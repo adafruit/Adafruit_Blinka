@@ -67,11 +67,11 @@ class Event:
         )
 
 
-class _EventQueue:
+class EventQueue:
     """
     A queue of `Event` objects, filled by a `keypad` scanner such as `Keys` or `KeyMatrix`.
 
-    You cannot create an instance of `_EventQueue` directly. Each scanner creates an
+    You cannot create an instance of `EventQueue` directly. Each scanner creates an
     instance when it is created.
     """
 
@@ -155,7 +155,7 @@ class _KeysBase:
     def __init__(self, interval, max_events, scanning_function):
         self._interval = interval
         self._last_scan = time.monotonic()
-        self._events = _EventQueue(max_events)
+        self._events = EventQueue(max_events)
         self._scanning_function = scanning_function
         self._scan_thread = threading.Thread(target=self._scanning_loop, daemon=True)
         self._scan_thread.start()
