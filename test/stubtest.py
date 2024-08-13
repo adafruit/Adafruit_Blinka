@@ -5,21 +5,33 @@ of running it directly, so that we can set a specific target board and whatnot. 
 makes it easier to iterate the whole src/ folder and run the tool on each and every file.
 """
 
+import os
 import sys
 from pathlib import Path
 
 from mypy import stubtest
 
 SRC = Path(__file__).parent.parent / "src"
-sys.argv = ["stubtest"] + [path.stem for path in SRC.glob("*.py")]
-
+sys.argv = [
+    "stubtest",
+    # run on all files
+    *(path.stem for path in SRC.glob("*.py")),
+    # shorter output (1 line instead of 5?) per error
+    "--concise",
+    # do not error about things on Blinka that arent on stubs
+    "--ignore-missing-stub",
+]
 
 def main() -> int:
     """Run tests and return 0 on success, 1 in error."""
-    # TODO(elpekenin): actually implement this
-    # randomly added names, is there a list anywhere that is easy to import/fetch?
-    for target in ["micropython", "rpi", "beagle", "linux"]:
-        _ = target  # do something with it (?)
+    for target in [
+        "BLINKA_OS_AGNOSTIC",
+        # add more things here ??
+    ]:
+        msg = f"Running for: {target}"
+        print(msg, "=" * len(msg), sep="\n")
+
+        os.environ["BLINKA_FORCECHIP"] = target
 
         # potentially some unittest.mock.patch or the like, to get code running
 
