@@ -51,6 +51,8 @@ elif chip_id == ap_chip.H5:
         from adafruit_blinka.microcontroller.allwinner.h5.pin import *
 elif chip_id == ap_chip.H6:
     from adafruit_blinka.microcontroller.allwinner.h6.pin import *
+elif chip_id == ap_chip.H618:
+    from adafruit_blinka.microcontroller.allwinner.h618.pin import *
 elif chip_id == ap_chip.H616:
     if board_id == ap_boards.REPKA_PI_4_H6:
         from adafruit_blinka.board.repkapi.repka_pi_4 import *

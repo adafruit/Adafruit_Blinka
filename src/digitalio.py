@@ -111,6 +111,8 @@ elif detector.chip.H5:
     from adafruit_blinka.microcontroller.allwinner.h5.pin import Pin
 elif detector.chip.H6:
     from adafruit_blinka.microcontroller.allwinner.h6.pin import Pin
+elif detector.chip.H618:
+    from adafruit_blinka.microcontroller.allwinner.h618.pin import Pin
 elif detector.chip.H616:
     from adafruit_blinka.microcontroller.allwinner.h616.pin import Pin
 elif detector.chip.D1_RISCV:
