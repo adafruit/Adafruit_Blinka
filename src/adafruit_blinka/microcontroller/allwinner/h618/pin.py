@@ -4,12 +4,28 @@
 """Allwinner H618 Pin Names"""
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
-# gpiochip select
-__chip_num = 0
-with open("/sys/class/gpio/gpiochip0/label", "r") as f:
-    label = f.read().strip()
-    if label == "300b000.pinctrl":
-        __chip_num = 1
+def find_gpiochip_number(target_label):
+    try:
+        with open('/sys/kernel/debug/gpio', 'r') as f:
+            lines = f.readlines()
+    except FileNotFoundError:
+        print("The file /sys/kernel/debug/gpio does not exist.")
+        return None
+
+    gpiochip_number = None
+    for line in lines:
+        if target_label in line:
+            parts = line.split()
+            for part in parts:
+                if part.startswith('gpiochip'):
+                    gpiochip_number = part[len('gpiochip'):]
+                    break
+            break
+
+    return gpiochip_number
+
+__chip_num = 1
+__chip_num = gpiochip_number = find_gpiochip_number("300b000.pinctrl")
 
 PC0 = Pin((__chip_num, 64))
 SPI0_SCLK = PC0
