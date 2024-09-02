@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: MIT
 """Allwinner H618 Pin Names"""
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
+import re
 
 def find_gpiochip_number(target_label):
     try:
@@ -15,12 +16,10 @@ def find_gpiochip_number(target_label):
     gpiochip_number = None
     for line in lines:
         if target_label in line:
-            parts = line.split()
-            for part in parts:
-                if part.startswith('gpiochip'):
-                    gpiochip_number = part[len('gpiochip'):]
-                    break
-            break
+            match = re.search(r'gpiochip(\d+)', line)
+            if match:
+                gpiochip_number = match.group(1)
+                break
 
     return gpiochip_number
 
