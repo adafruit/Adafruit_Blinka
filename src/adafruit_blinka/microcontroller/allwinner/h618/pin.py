@@ -83,6 +83,7 @@ TWI3_SCL = PG17
 PG18 = Pin((__chip_num, 210))
 TWI3_SDA = PG18
 PG19 = Pin((__chip_num, 211))
+PWM1 = PG19
 
 PH0 = Pin((__chip_num, 224))
 PH1 = Pin((__chip_num, 225))
@@ -124,6 +125,7 @@ PI10 = Pin((__chip_num, 266))
 UART3_RX = PI10
 PI11 = Pin((__chip_num, 267))
 PI12 = Pin((__chip_num, 268))
+PWM2 = PI12
 PI13 = Pin((__chip_num, 269))
 UART4_TX = PI13
 PI14 = Pin((__chip_num, 270))
@@ -150,3 +152,9 @@ uartPorts = (
     (4, UART4_TX, UART4_RX),
     (5, UART5_TX, UART5_RX),
 )
+
+# SysFS pwm outputs, pwm channel and pin in first tuple
+pwmOuts = [
+    ((0, 1), PWM1),
+    ((0, 2), PWM2),
+]
