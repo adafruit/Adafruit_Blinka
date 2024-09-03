@@ -23,8 +23,10 @@ def find_gpiochip_number(target_label):
 
     return gpiochip_number
 
-__chip_num = 1
-__chip_num = gpiochip_number = find_gpiochip_number("300b000.pinctrl")
+if find_gpiochip_number("300b000.pinctrl"):
+    __chip_num = 1
+else:
+    __chip_num = 0
 
 PC0 = Pin((__chip_num, 64))
 SPI0_SCLK = PC0
