@@ -157,6 +157,8 @@ elif chip_id == ap_chip.RV1106:
     from adafruit_blinka.microcontroller.rockchip.rv1106 import *
 elif chip_id == ap_chip.TH1520:
     from adafruit_blinka.microcontroller.thead.th1520 import *
+elif chip_id == ap_chip.K1:
+    from adafruit_blinka.microcontroller.spacemit.k1 import *
 elif chip_id == ap_chip.GENERIC_X86:
     print("WARNING: GENERIC_X86 is not fully supported. Some features may not work.")
 elif chip_id == ap_chip.OS_AGNOSTIC:
