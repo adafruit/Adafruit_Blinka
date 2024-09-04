@@ -6,6 +6,7 @@ import re
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
 def find_gpiochip_number(target_label):
+    """Get correct gpiochip number, legacy kernel and mainline kernel are different"""
     try:
         with open('/sys/kernel/debug/gpio', 'r') as f:
             lines = f.readlines()
