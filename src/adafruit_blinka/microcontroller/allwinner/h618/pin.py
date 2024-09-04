@@ -2,8 +2,8 @@
 #
 # SPDX-License-Identifier: MIT
 """Allwinner H618 Pin Names"""
-from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 import re
+from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
 def find_gpiochip_number(target_label):
     try:
