@@ -5,7 +5,7 @@
 from adafruit_blinka.agnostic import detector
 from adafruit_blinka.microcontroller.alias import get_pwm_chipid
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
-    
+
 __chip_num = 0
 
 GPIO_0 = Pin((__chip_num, 0))
@@ -141,9 +141,7 @@ GPIO_127 = Pin((__chip_num, 127))
 I2C4_SCL = GPIO_51
 I2C4_SDA = GPIO_52
 
-i2cPorts = (
-    (4, I2C4_SCL, I2C4_SDA),
-)
+i2cPorts = ((4, I2C4_SCL, I2C4_SDA),)
 
 # SPI
 SPI3_MISO = GPIO_78
@@ -152,18 +150,14 @@ SPI3_SCLK = GPIO_75
 SPI3_CS0 = GPIO_76
 
 # ordered as spiId, sckId, mosiId, misoId
-spiPorts = (
-    (3, SPI3_SCLK, SPI3_MOSI, SPI3_MISO),
-)
+spiPorts = ((3, SPI3_SCLK, SPI3_MOSI, SPI3_MISO),)
 
 # UART
 UART0_TX = GPIO_47
 UART0_RX = GPIO_48
 
 # ordered as uartId, txId, rxId
-uartPorts = (
-    (0, UART0_TX, UART0_RX),
-)
+uartPorts = ((0, UART0_TX, UART0_RX),)
 
 # SysFS pwm outputs, pwm channel and pin in first tuple
 pwmOuts = []

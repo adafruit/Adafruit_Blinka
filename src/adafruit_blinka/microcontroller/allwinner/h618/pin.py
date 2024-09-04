@@ -5,10 +5,11 @@
 import re
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
+
 def find_gpiochip_number(target_label):
     """Get correct gpiochip number, legacy kernel and mainline kernel are different"""
     try:
-        with open('/sys/kernel/debug/gpio', 'r') as f:
+        with open("/sys/kernel/debug/gpio", "r") as f:
             lines = f.readlines()
     except FileNotFoundError:
         print("The file /sys/kernel/debug/gpio does not exist.")
@@ -17,12 +18,13 @@ def find_gpiochip_number(target_label):
     gpiochip_number = None
     for line in lines:
         if target_label in line:
-            match = re.search(r'gpiochip(\d+)', line)
+            match = re.search(r"gpiochip(\d+)", line)
             if match:
                 gpiochip_number = match.group(1)
                 break
 
     return gpiochip_number
+
 
 if find_gpiochip_number("300b000.pinctrl"):
     __chip_num = 1
