@@ -261,7 +261,9 @@ class RP2040_u2if:
         for i in range(read_size):
             buffer[start + i] = resp[i + 2]
 
-    def _i2c_write_then_read(self, address, buffer_w, buffer_r, start_w = 0, end_w=None, start_r=0, end_r=None):
+    def _i2c_write_then_read(
+        self, address, buffer_w, buffer_r, start_w=0, end_w=None, start_r=0, end_r=None
+    ):
         """Write data to an address, then read data back and into the buffer"""
         if self._i2c_index is None:
             raise RuntimeError("I2C bus not initialized.")
@@ -269,21 +271,27 @@ class RP2040_u2if:
         end_w = end_w if end_w else len(buffer_w)
         end_r = end_r if end_r else len(buffer_r)
 
-        write_then_read_cmd = self.I2C0_WRITE_THEN_READ if self._i2c_index == 0 else self.I2C1_WRITE_THEN_READ
+        write_then_read_cmd = (
+            self.I2C0_WRITE_THEN_READ
+            if self._i2c_index == 0
+            else self.I2C1_WRITE_THEN_READ
+        )
 
         stop_flag = 0x01  # always stop
 
         write_size = end_w - start_w
         read_size = end_r - start_r
 
-        resp = self._hid_xfer(bytes([write_then_read_cmd, address, stop_flag, write_size, read_size])+buffer_w, True)
+        resp = self._hid_xfer(
+            bytes([write_then_read_cmd, address, stop_flag, write_size, read_size])
+            + buffer_w,
+            True,
+        )
         if resp[1] != self.RESP_OK:
             raise RuntimeError("I2C write error")
         # move into buffer
         for i in range(read_size):
             buffer_r[start_r + i] = resp[i + 2]
-
-        
 
     def i2c_writeto(self, address, buffer, *, start=0, end=None):
         """Write data from the buffer to an address"""
@@ -309,7 +317,15 @@ class RP2040_u2if:
         """
         # self._i2c_write(address, out_buffer, out_start, out_end, False)
         # self._i2c_read(address, in_buffer, in_start, in_end)
-        self._i2c_write_then_read(address, out_buffer, in_buffer, start_w=out_start, end_w=out_end, start_r=in_start, end_r=in_end)
+        self._i2c_write_then_read(
+            address,
+            out_buffer,
+            in_buffer,
+            start_w=out_start,
+            end_w=out_end,
+            start_r=in_start,
+            end_r=in_end,
+        )
 
     def i2c_scan(self, *, start=0, end=0x79):
         """Perform an I2C Device Scan"""
