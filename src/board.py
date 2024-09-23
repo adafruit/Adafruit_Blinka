@@ -434,6 +434,9 @@ elif board_id == ap_board.LUCKFOX_PICO_MAX:
 elif board_id == ap_board.VIVID_UNIT:
     from adafruit_blinka.board.vivid_unit import *
 
+elif board_id == ap_board.INDIEDROID_NOVA:
+    from adafruit_blinka.board.ameridroid.indiedroid_nova import *
+
 elif "sphinx" in sys.modules:
     pass
 
