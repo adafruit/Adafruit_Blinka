@@ -178,7 +178,7 @@ PWM1 = GPIO0_C7
 # ordered as i2cId, SCL, SDA
 i2cPorts = [
     (1, I2C1_SCL, I2C1_SDA),
-    # (2, I2C2_SCL_M0, I2C2_SDA_M0),
+    (2, I2C2_SCL_M0, I2C2_SDA_M0),
     (2, I2C2_SCL_M1, I2C2_SDA_M1),
     (3, I2C3_SCL_M0, I2C3_SDA_M0),
     (4, I2C4_SCL_M0, I2C4_SDA_M0),
