@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
+# SPDX-FileCopyrightText: 2024 cst_zf for Adafruit Industries
 #
 # SPDX-License-Identifier: MIT
 """Pin definitions for the Orangepi 3B."""
