@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2024 cst_zf for Adafruit Industries
+# SPDX-FileCopyrightText: 2024 cst_zf
 #
 # SPDX-License-Identifier: MIT
 """Pin definitions for the Orangepi 3B."""
