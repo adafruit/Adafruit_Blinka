@@ -44,9 +44,14 @@ class I2C:
         """Try to read a byte from each address, if you get an OSError
         it means the device isnt there"""
         found = []
-        for addr in range(0, 0x80):
+        # 0x00 - 0x07 and 0x78 - 0x7F reserved
+        # see https://www.i2c-bus.org/addressing
+        for addr in range(0x08, 0x78):
             try:
-                self._i2c_bus.read_byte(addr)
+                if (addr >= 0x30 and addr <= 0x37) or (addr >= 0x50 and addr <= 0x5F):
+                    self._i2c_bus.read_byte(addr)
+                else:
+                    self._i2c_bus.write_quick(addr)
             except OSError:
                 continue
             found.append(addr)
