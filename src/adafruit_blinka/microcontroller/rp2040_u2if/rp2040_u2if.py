@@ -83,6 +83,8 @@ class RP2040_u2if:
         self._neopixel_initialized = False
         self._uart_rx_buffer = None
 
+        self.FLAG_I2C_NO_WRITE_THEN_READ_AVAILABLE = False
+
     def _hid_xfer(self, report, response=True):
         """Perform HID Transfer"""
         # first byte is report ID, which =0
@@ -212,8 +214,6 @@ class RP2040_u2if:
         )
         if resp[1] != self.RESP_OK:
             raise RuntimeError("I2C init error.")
-
-        self.FLAG_I2C_NO_WRITE_THEN_READ_AVAILABLE = False
 
     def i2c_set_port(self, index):
         """Set I2C port."""
