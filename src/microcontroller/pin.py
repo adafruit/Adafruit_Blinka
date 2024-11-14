@@ -51,6 +51,8 @@ elif chip_id == ap_chip.H5:
         from adafruit_blinka.microcontroller.allwinner.h5.pin import *
 elif chip_id == ap_chip.H6:
     from adafruit_blinka.microcontroller.allwinner.h6.pin import *
+elif chip_id == ap_chip.H618:
+    from adafruit_blinka.microcontroller.allwinner.h618.pin import *
 elif chip_id == ap_chip.H616:
     if board_id == ap_boards.REPKA_PI_4_H6:
         from adafruit_blinka.board.repkapi.repka_pi_4 import *
@@ -145,6 +147,8 @@ elif chip_id == ap_chip.CV1800B:
     from adafruit_blinka.microcontroller.cv1800b.pin import *
 elif chip_id == ap_chip.TH1520:
     from adafruit_blinka.microcontroller.thead.th1520.pin import *
+elif chip_id == ap_chip.K1:
+    from adafruit_blinka.microcontroller.spacemit.k1.pin import *
 elif chip_id == ap_chip.RV1103:
     from adafruit_blinka.microcontroller.rockchip.rv1103.pin import *
 elif chip_id == ap_chip.RV1106:

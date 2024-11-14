@@ -93,6 +93,15 @@ GPIO3_D2 = Pin((3, 26))
 GPIO3_D3 = Pin((3, 27))
 GPIO3_D4 = Pin((3, 28))
 GPIO3_D5 = Pin((3, 29))
+GPIO3_D6 = Pin((3, 30))
+GPIO3_D7 = Pin((3, 31))
+
+# GPIO4
+GPIO4_A0 = Pin((4, 0))
+GPIO4_A1 = Pin((4, 1))
+GPIO4_A2 = Pin((4, 2))
+GPIO4_A3 = Pin((4, 3))
+
 GPIO4_A4 = Pin((4, 4))
 GPIO4_A5 = Pin((4, 5))
 GPIO4_A6 = Pin((4, 6))
@@ -170,6 +179,7 @@ PWM1 = GPIO0_C7
 i2cPorts = [
     (1, I2C1_SCL, I2C1_SDA),
     (2, I2C2_SCL_M0, I2C2_SDA_M0),
+    (2, I2C2_SCL_M1, I2C2_SDA_M1),
     (3, I2C3_SCL_M0, I2C3_SDA_M0),
     (4, I2C4_SCL_M0, I2C4_SDA_M0),
     (5, I2C5_SCL_M0, I2C5_SDA_M0),
