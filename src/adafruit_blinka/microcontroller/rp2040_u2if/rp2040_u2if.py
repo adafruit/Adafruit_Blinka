@@ -213,6 +213,8 @@ class RP2040_u2if:
         if resp[1] != self.RESP_OK:
             raise RuntimeError("I2C init error.")
 
+        self.FLAG_I2C_NO_WRITE_THEN_READ_AVAILABLE = False
+
     def i2c_set_port(self, index):
         """Set I2C port."""
         if index not in (0, 1):
@@ -315,17 +317,29 @@ class RP2040_u2if:
         """Write data from buffer_out to an address and then
         read data from an address and into buffer_in
         """
-        # self._i2c_write(address, out_buffer, out_start, out_end, False)
-        # self._i2c_read(address, in_buffer, in_start, in_end)
-        self._i2c_write_then_read(
-            address,
-            out_buffer,
-            in_buffer,
-            start_w=out_start,
-            end_w=out_end,
-            start_r=in_start,
-            end_r=in_end,
-        )
+        if self._i2c_index is None:
+            raise RuntimeError("I2C bus not initialized.")
+
+        if not self.FLAG_I2C_NO_WRITE_THEN_READ_AVAILABLE:
+            try:
+                self._i2c_write_then_read(
+                    address,
+                    out_buffer,
+                    in_buffer,
+                    start_w=out_start,
+                    end_w=out_end,
+                    start_r=in_start,
+                    end_r=in_end,
+                )
+                return
+            except RuntimeError:
+                # print("DEBUG: SENDING I2C WRITE THEN READ FAILED. SETTING FLAG.")
+                self.FLAG_I2C_NO_WRITE_THEN_READ_AVAILABLE = True
+        # print(
+        #     "DEBUG: NO I2C WRITE THEN READ AVAILABLE FLAG SET. SENDING SEPARATELY."
+        # )
+        self._i2c_write(address, out_buffer, out_start, out_end, False)
+        self._i2c_read(address, in_buffer, in_start, in_end)
 
     def i2c_scan(self, *, start=0, end=0x79):
         """Perform an I2C Device Scan"""
