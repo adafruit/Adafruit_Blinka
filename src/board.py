@@ -134,6 +134,9 @@ elif board_id == ap_board.ORANGE_PI_ZERO_2:
 elif board_id == ap_board.ORANGE_PI_3:
     from adafruit_blinka.board.orangepi.orangepi3 import *
 
+elif board_id == ap_board.ORANGE_PI_3B:
+    from adafruit_blinka.board.orangepi.orangepi3b import *
+
 elif board_id == ap_board.ORANGE_PI_4:
     from adafruit_blinka.board.orangepi.orangepi4 import *
 
@@ -152,8 +155,17 @@ elif board_id == ap_board.BANANA_PI_M2_ZERO:
 elif board_id == ap_board.BANANA_PI_M2_PLUS:
     from adafruit_blinka.board.bananapi.bpim2plus import *
 
+elif board_id == ap_board.BANANA_PI_M4_BERRY:
+    from adafruit_blinka.board.bananapi.bpim4berry import *
+
+elif board_id == ap_board.BANANA_PI_M4_ZERO:
+    from adafruit_blinka.board.bananapi.bpim4zero import *
+
 elif board_id == ap_board.BANANA_PI_M5:
     from adafruit_blinka.board.bananapi.bpim5 import *
+
+elif board_id == ap_board.BANANA_PI_F3:
+    from adafruit_blinka.board.bananapi.bpif3 import *
 
 elif board_id == ap_board.LEMAKER_BANANA_PRO:
     from adafruit_blinka.board.lemaker.bananapro import *
@@ -424,6 +436,9 @@ elif board_id == ap_board.LUCKFOX_PICO_MAX:
 
 elif board_id == ap_board.VIVID_UNIT:
     from adafruit_blinka.board.vivid_unit import *
+
+elif board_id == ap_board.INDIEDROID_NOVA:
+    from adafruit_blinka.board.ameridroid.indiedroid_nova import *
 
 elif "sphinx" in sys.modules:
     pass
