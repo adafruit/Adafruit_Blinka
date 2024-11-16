@@ -5,6 +5,7 @@
 from pathlib import Path
 import lgpio
 
+
 def _get_gpiochip():
     """
     Determines the handle of the GPIO chip device to access.
@@ -12,12 +13,14 @@ def _get_gpiochip():
     iterate through sysfs  to find a GPIO chip device with a driver known to be
     used for userspace GPIO access.
     """
-    for dev in Path('/sys/bus/gpio/devices').glob('gpiochip*'):
-        drivers = set((dev / 'of_node/compatible').read_text().split('\0'))
+    for dev in Path("/sys/bus/gpio/devices").glob("gpiochip*"):
+        drivers = set((dev / "of_node/compatible").read_text().split("\0"))
         #   check if driver names are intended for userspace control
-        if drivers & {'raspberrypi,rp1-gpio',
-                      'raspberrypi,bcm2835-gpio',
-                      'raspberrypi,bcm2711-gpio'}:
+        if drivers & {
+            "raspberrypi,rp1-gpio",
+            "raspberrypi,bcm2835-gpio",
+            "raspberrypi,bcm2711-gpio",
+        }:
             return lgpio.gpiochip_open(int(dev.name[-1]))
     # return chip0 as a fallback
     return lgpio.gpiochip_open(0)
@@ -60,7 +63,7 @@ class Pin:
     lgpio.exceptions = True
 
     def __init__(self, bcm_number):
-        self.id = bcm_number              # pylint: disable=invalid-name
+        self.id = bcm_number  # pylint: disable=invalid-name
 
     def __repr__(self):
         return str(self.id)
@@ -76,8 +79,7 @@ class Pin:
                 self._set_gpio_mode_in()
             elif mode == self.OUT:
                 self._mode = Pin.OUT
-                Pin._check_result(lgpio.gpio_claim_output(CHIP, self.id,
-                                  Pin.LOW))
+                Pin._check_result(lgpio.gpio_claim_output(CHIP, self.id, Pin.LOW))
             else:
                 raise RuntimeError(f"Invalid mode for pin: {self.id}")
         if pull is not None:
