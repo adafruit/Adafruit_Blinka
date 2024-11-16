@@ -103,8 +103,8 @@ class PWMOut:            # pylint: disable=invalid-name
             raise TypeError("Invalid duty cycle type, should be int or float.")
 
         if not 0 <= duty_cycle <= 65535:
-            raise ValueError("Invalid duty cycle value, should be between "
-                             "0 and 65535")
+            raise ValueError(
+                "Invalid duty cycle value, should be between 0 and 65535")
 
         # convert from 16-bit
         duty_cycle /= 65535.0
