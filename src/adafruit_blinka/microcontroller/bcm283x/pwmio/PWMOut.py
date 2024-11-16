@@ -6,7 +6,8 @@
 """ PWMOut Class for lgpio lg library tx_pwm library """
 
 import lgpio
-import board    # need board to get access to the CHIP object in the pin module
+import board  # need board to get access to the CHIP object in the pin module
+
 
 # pylint: disable=unnecessary-pass
 class PWMError(IOError):
@@ -18,16 +19,16 @@ class PWMError(IOError):
 # pylint: enable=unnecessary-pass
 
 
-class PWMOut:            # pylint: disable=invalid-name
+class PWMOut:  # pylint: disable=invalid-name
     """Pulse Width Modulation Output Class"""
 
-    def __init__(self, pin, *, frequency=500, duty_cycle=0,
-                 variable_frequency=False):
+    def __init__(self, pin, *, frequency=500, duty_cycle=0, variable_frequency=False):
         if variable_frequency:
             print("Variable Frequency is not supported, ignoring...")
         self._pin = pin
-        result = lgpio.gpio_claim_output(board.pin.CHIP, self._pin.id,
-                                         lFlags=lgpio.SET_PULL_NONE)
+        result = lgpio.gpio_claim_output(
+            board.pin.CHIP, self._pin.id, lFlags=lgpio.SET_PULL_NONE
+        )
         if result < 0:
             raise RuntimeError(lgpio.error_text(result))
         self._enabled = False
@@ -52,12 +53,11 @@ class PWMOut:            # pylint: disable=invalid-name
         """Deinit the PWM."""
         if not self._deinited:
             if self.enabled:
-                self._enabled = False       # turn off the pwm
+                self._enabled = False  # turn off the pwm
             self._deinited = True
 
-
     def _is_deinited(self):
-        """ raise Value error if the object has been de-inited """
+        """raise Value error if the object has been de-inited"""
         if self._deinited:
             raise ValueError(
                 "Object has been deinitialize and can no longer "
@@ -103,15 +103,14 @@ class PWMOut:            # pylint: disable=invalid-name
             raise TypeError("Invalid duty cycle type, should be int or float.")
 
         if not 0 <= duty_cycle <= 65535:
-            raise ValueError(
-                "Invalid duty cycle value, should be between 0 and 65535")
+            raise ValueError("Invalid duty cycle value, should be between 0 and 65535")
 
         # convert from 16-bit
         duty_cycle /= 65535.0
 
         self._duty_cycle = duty_cycle
         if self._enabled:
-            self.enabled = True        # turn on with new values
+            self.enabled = True  # turn on with new values
 
     @property
     def frequency(self):
@@ -133,7 +132,7 @@ class PWMOut:            # pylint: disable=invalid-name
 
         self._frequency = frequency
         if self.enabled:
-            self.enabled = True        # turn on with new values
+            self.enabled = True  # turn on with new values
 
     @property
     def enabled(self):
@@ -160,8 +159,9 @@ class PWMOut:            # pylint: disable=invalid-name
             raise RuntimeError(lgpio.error_text(result))
         return result
 
-
     # String representation
     def __str__(self):
-        return (f"pin {self._pin} (freq={self.frequency:f} Hz, duty_cycle="
-                f"{self.duty_cycle}({round(self.duty_cycle / 655.35)}%)")
+        return (
+            f"pin {self._pin} (freq={self.frequency:f} Hz, duty_cycle="
+            f"{self.duty_cycle}({round(self.duty_cycle / 655.35)}%)"
+        )
