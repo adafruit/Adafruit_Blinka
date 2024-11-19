@@ -109,7 +109,7 @@ class RP2040_u2if:
     # ----------------------------------------------------------------
     # MISC
     # ----------------------------------------------------------------
-    def open(self, vid, pid):
+    def open(self, vid, pid, serial=None):
         """Open HID interface for given USB VID and PID."""
 
         if self._opened:
@@ -117,7 +117,10 @@ class RP2040_u2if:
         self._vid = vid
         self._pid = pid
         self._hid = hid.device()
-        self._hid.open(self._vid, self._pid)
+        if not serial:
+            serial =os.environ["CURRENT_BOARD_SERIAL"]
+        self._serial =serial
+        self._hid.open(self._vid, self._pid, self._serial)
         if RP2040_U2IF_RESET_DELAY >= 0:
             self._reset()
         self._opened = True
