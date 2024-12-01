@@ -2,11 +2,12 @@
 #
 # SPDX-License-Identifier: MIT
 """Custom PWMOut Wrapper for Hobot.GPIO PWM Class"""
-import Hobot.GPIO as GPIO
+from Hobot import GPIO
 
 GPIO.setmode(GPIO.BCM)  # Use BCM pins D4 = GPIO #4
 GPIO.setwarnings(False)  # shh!
 GPIO.cleanup()
+
 
 # pylint: disable=unnecessary-pass
 class PWMError(IOError):
@@ -36,17 +37,15 @@ class PWMOut:
         self.deinit()
 
     def _open(self, pin, duty=0, freq=500, variable_frequency=False):
-        if (pin == (0, 25)):
+        if pin == (0, 25):
             gpio_pin = 12
-        elif (pin == (0, 4)):
+        elif pin == (0, 4):
             gpio_pin = 13
         else:
-            raise ValueError(
-                "PWM is only available on D12 or D13."
-            )
+            raise ValueError("PWM is only available on D12 or D13.")
         self._pin = gpio_pin
         GPIO.setmode(GPIO.BCM)
-#        GPIO.setup(self._pin, GPIO.OUT)
+        #        GPIO.setup(self._pin, GPIO.OUT)
         self._pwmpin = GPIO.PWM(self._pin, freq)
 
         if variable_frequency:

@@ -43,15 +43,11 @@ SCK = D11
 TXD = D14
 RXD = D15
 
-spiPorts = (
-    (1, SCLK, MOSI, MISO),
-)
+spiPorts = ((1, SCLK, MOSI, MISO),)
 
 uartPorts = ((0, TXD, RXD),)
 
-i2cPorts = (
-    (0, SCL, SDA),
-)
+i2cPorts = ((0, SCL, SDA),)
 
 pwmOuts = (
     ((0, 0), D12),
