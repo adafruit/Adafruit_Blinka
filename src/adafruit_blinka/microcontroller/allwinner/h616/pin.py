@@ -90,11 +90,17 @@ PI2 = Pin((__chip_num, 258))
 PI3 = Pin((__chip_num, 259))
 PI4 = Pin((__chip_num, 260))
 PI5 = Pin((__chip_num, 261))
+TWI0_SCL = PI5
 PI6 = Pin((__chip_num, 262))
+TWI0_SDA = PI6
 PI7 = Pin((__chip_num, 263))
+TWI1_SCL = PI7
 PI8 = Pin((__chip_num, 264))
+TWI1_SDA = PI8
 PI9 = Pin((__chip_num, 265))
+TWI2_SCL = PI9
 PI10 = Pin((__chip_num, 266))
+TWI2_SDA = PI10
 PI11 = Pin((__chip_num, 267))
 PI12 = Pin((__chip_num, 268))
 PI13 = Pin((__chip_num, 269))
@@ -102,7 +108,7 @@ PI14 = Pin((__chip_num, 270))
 PI15 = Pin((__chip_num, 271))
 PI16 = Pin((__chip_num, 272))
 
-i2cPorts = ((3, TWI3_SCL, TWI3_SDA),)
+i2cPorts = ((0, TWI0_SCL,TWI0_SDA),(1, TWI1_SCL, TWI1_SDA),(2, TWI2_SCL, TWI2_SDA),(3, TWI3_SCL, TWI3_SDA),)
 # ordered as spiId, sckId, mosiId, misoId
 spiPorts = (
     (0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO),
