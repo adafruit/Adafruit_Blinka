@@ -10,7 +10,7 @@ Currently supported on Raspberry Pi only.
 
 * Author(s): ladyada
 """
-# pylint: disable=too-many-boolean-expressions
+# pylint: disable=too-many-boolean-expressions, ungrouped-imports
 import sys
 
 from adafruit_blinka.agnostic import detector, board_id
