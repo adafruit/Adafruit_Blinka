@@ -13,10 +13,13 @@ Currently supported on Raspberry Pi only.
 # pylint: disable=too-many-boolean-expressions
 import sys
 
-from adafruit_blinka.agnostic import detector
+from adafruit_blinka.agnostic import detector, board_id
 
 if detector.board.any_raspberry_pi:
-    from adafruit_blinka.microcontroller.bcm283x import neopixel as _neopixel
+    if board_id == "RASPBERRY_PI_5":
+        import adafruit_raspberry_pi5_neopixel_write as _neopixel
+    else:
+        from adafruit_blinka.microcontroller.bcm283x import neopixel as _neopixel
 elif detector.board.pico_u2if:
     from adafruit_blinka.microcontroller.rp2040_u2if import neopixel as _neopixel
 elif detector.board.OS_AGNOSTIC_BOARD:
