@@ -153,6 +153,8 @@ elif chip_id == ap_chip.RV1103:
     from adafruit_blinka.microcontroller.rockchip.rv1103.pin import *
 elif chip_id == ap_chip.RV1106:
     from adafruit_blinka.microcontroller.rockchip.rv1106.pin import *
+elif chip_id == ap_chip.SUNRISE_X3:
+    from adafruit_blinka.microcontroller.horizon.sunrise_x3.pin import *
 elif "sphinx" in sys.modules:
     # pylint: disable=unused-import
     from adafruit_blinka.microcontroller.generic_micropython import Pin
