@@ -37,7 +37,11 @@ if os.path.exists("/proc/device-tree/compatible"):
         board_reqs = ["RPi.GPIO", "rpi_ws281x>=4.0.0"]
     # Pi 5
     if b"brcm,bcm2712" in compat:
-        board_reqs = ["rpi_ws281x>=4.0.0", "rpi-lgpio"]
+        board_reqs = [
+            "rpi_ws281x>=4.0.0",
+            "rpi-lgpio",
+            "Adafruit-Blinka-Raspberry-Pi5-Neopixel",
+        ]
     if (
         b"ti,am335x" in compat
     ):  # BeagleBone Black, Green, PocketBeagle, BeagleBone AI, etc.
