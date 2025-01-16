@@ -13,7 +13,7 @@ Currently supported on Raspberry Pi only.
 # pylint: disable=too-many-boolean-expressions, ungrouped-imports
 import sys
 
-from adafruit_blinka.agnostic import detector, board_id
+from adafruit_blinka.agnostic import detector
 
 if detector.board.any_raspberry_pi:
     if detector.board.any_raspberry_pi_5_board:
