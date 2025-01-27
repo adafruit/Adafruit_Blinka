@@ -24,10 +24,18 @@ board_reqs = []
 if os.path.exists("/proc/device-tree/compatible"):
     with open("/proc/device-tree/compatible", "rb") as f:
         compat = f.read()
+    # Jetson Nano, TX2, Xavier, etc
     if b"nvidia,tegra" in compat:
         board_reqs = ["Jetson.GPIO"]
+    # Pi 5
+    elif b"brcm,bcm2712" in compat:
+        board_reqs = [
+            "rpi_ws281x>=4.0.0",
+            "rpi-lgpio",
+            "Adafruit-Blinka-Raspberry-Pi5-Neopixel",
+        ]
     # Pi 4 and Earlier
-    if (
+    elif (
         b"brcm,bcm2835" in compat
         or b"brcm,bcm2836" in compat
         or b"brcm,bcm2837" in compat
@@ -35,16 +43,10 @@ if os.path.exists("/proc/device-tree/compatible"):
         or b"brcm,bcm2711" in compat
     ):
         board_reqs = ["RPi.GPIO", "rpi_ws281x>=4.0.0"]
-    # Pi 5
-    if b"brcm,bcm2712" in compat:
-        board_reqs = [
-            "rpi_ws281x>=4.0.0",
-            "rpi-lgpio",
-            "Adafruit-Blinka-Raspberry-Pi5-Neopixel",
-        ]
-    if (
+    # BeagleBone Black, Green, PocketBeagle, BeagleBone AI, etc.
+    elif (
         b"ti,am335x" in compat
-    ):  # BeagleBone Black, Green, PocketBeagle, BeagleBone AI, etc.
+    ):
         board_reqs = ["Adafruit_BBIO"]
 
 setup(
