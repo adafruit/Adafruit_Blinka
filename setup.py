@@ -44,9 +44,7 @@ if os.path.exists("/proc/device-tree/compatible"):
     ):
         board_reqs = ["RPi.GPIO", "rpi_ws281x>=4.0.0"]
     # BeagleBone Black, Green, PocketBeagle, BeagleBone AI, etc.
-    elif (
-        b"ti,am335x" in compat
-    ):
+    elif b"ti,am335x" in compat:
         board_reqs = ["Adafruit_BBIO"]
 
 setup(
