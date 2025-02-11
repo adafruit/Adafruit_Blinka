@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2025 Melissa LeBlanc-Williams for Adafruit Industries
 #
 # SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: BSD-3-Clause
 """
 `rotaryio` - Support for reading rotation sensors
 ===========================================================
@@ -12,16 +13,20 @@ Raspberry Pi PIO implementation
 """
 
 from __future__ import annotations
-import microcontroller
 import array
+import microcontroller
+
 try:
     import adafruit_pioasm
     from adafruit_rp1pio import StateMachine
-except ImportError:
-    raise("adafruit_pioasm and adafruit_rp1pio are required for this module")
+except ImportError as exc:
+    raise ImportError(
+        "adafruit_pioasm and adafruit_rp1pio are required for this module"
+    ) from exc
 
 _n_read = 17
-_program = adafruit_pioasm.Program("""
+_program = adafruit_pioasm.Program(
+    """
 ;
 ; Copyright (c) 2023 Raspberry Pi (Trading) Ltd.
 ;
@@ -108,9 +113,11 @@ increment:
 increment_cont:
     mov y, ~y
 .wrap    ; the .wrap here avoids one jump instruction and saves a cycle too
-""")
+"""
+)
 
 _zero_y = adafruit_pioasm.assemble("set y 0")
+
 
 class IncrementalEncoder:
     """
@@ -131,8 +138,8 @@ class IncrementalEncoder:
         Always operates in "x4" mode (one count per quadrature edge)
 
         Assumes but does not check that pin_b is one above pin_a."""
-        #if pin_b is not None and pin_b.id != pin_a.id + 1:
-        #    raise ValueError("pin_b must be None or one higher than pin_a")
+        if pin_b is not None and pin_b.id != pin_a.id + 1:
+            raise ValueError("pin_b must be None or one higher than pin_a")
 
         try:
             self._sm = StateMachine(
@@ -145,16 +152,17 @@ class IncrementalEncoder:
                 auto_push=True,
                 push_threshold=32,
                 in_shift_right=False,
-                **_program.pio_kwargs
+                **_program.pio_kwargs,
             )
         except RuntimeError as e:
             if "(error -13)" in e.args[0]:
                 raise RuntimeError(
                     "This feature requires a rules file to allow access to PIO. See "
-                    "https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/using-neopixels-on-the-pi-5#updating-permissions-3189429"
+                    "https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/"
+                    "using-neopixels-on-the-pi-5#updating-permissions-3189429"
                 ) from e
             raise
-        self._buffer = array.array('i',[0] * _n_read)
+        self._buffer = array.array("i", [0] * _n_read)
         self.divisor = divisor
         self._position = 0
 
@@ -175,24 +183,10 @@ class IncrementalEncoder:
 
     @property
     def position(self):
-        self._sm.readinto(self._buffer) # read N stale values + 1 fresh value
+        """The current position in terms of pulses. The number of pulses per rotation is defined
+        by the specific hardware and by the divisor."""
+        self._sm.readinto(self._buffer)  # read N stale values + 1 fresh value
         raw_position = self._buffer[-1]
         delta = int((raw_position - self._position * self.divisor) / self.divisor)
         self._position += delta
         return self._position
-
-'''
-if __name__ == '__main__':
-    import board
-    # D17/D18 on header pins 11/12
-    # GND on header pin 6/9
-    # +5V on header pins 2/4
-    q = IncrementalEncoder(board.D17)
-    old_position = q.position
-    while True:
-        position = q.position
-        if position != old_position:
-            delta = position - old_position
-            print(f"{position:8d} {delta=}")
-        old_position = position
-'''
