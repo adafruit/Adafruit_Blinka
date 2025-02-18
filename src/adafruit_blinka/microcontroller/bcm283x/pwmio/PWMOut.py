@@ -1,11 +1,12 @@
+# pylint: disable=invalid-name
 # SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
 #
 # SPDX-License-Identifier: MIT
-"""Custom PWMOut Wrapper for Rpi.GPIO PWM Class"""
-from RPi import GPIO
+# pylint: enable=invalid-name
+""" PWMOut Class for lgpio lg library tx_pwm library """
 
-GPIO.setmode(GPIO.BCM)  # Use BCM pins D4 = GPIO #4
-GPIO.setwarnings(False)  # shh!
+import lgpio
+import board  # need board to get access to the CHIP object in the pin module
 
 
 # pylint: disable=unnecessary-pass
@@ -18,13 +19,26 @@ class PWMError(IOError):
 # pylint: enable=unnecessary-pass
 
 
-class PWMOut:
+class PWMOut:  # pylint: disable=invalid-name
     """Pulse Width Modulation Output Class"""
 
     def __init__(self, pin, *, frequency=500, duty_cycle=0, variable_frequency=False):
-        self._pwmpin = None
+        if variable_frequency:
+            print("Variable Frequency is not supported, ignoring...")
+        self._pin = pin
+        result = lgpio.gpio_claim_output(
+            board.pin.CHIP, self._pin.id, lFlags=lgpio.SET_PULL_NONE
+        )
+        if result < 0:
+            raise RuntimeError(lgpio.error_text(result))
+        self._enabled = False
+        self._deinited = False
         self._period = 0
-        self._open(pin, duty_cycle, frequency, variable_frequency)
+        # set frequency
+        self._frequency = frequency
+        # set duty
+        self.duty_cycle = duty_cycle
+        self.enabled = True
 
     def __del__(self):
         self.deinit()
@@ -32,33 +46,19 @@ class PWMOut:
     def __enter__(self):
         return self
 
-    def __exit__(self, t, value, traceback):
+    def __exit__(self, exc_type, exc_val, exc_tb):
         self.deinit()
-
-    def _open(self, pin, duty=0, freq=500, variable_frequency=False):
-        self._pin = pin
-        GPIO.setup(pin.id, GPIO.OUT)
-        self._pwmpin = GPIO.PWM(pin.id, freq)
-
-        if variable_frequency:
-            print("Variable Frequency is not supported, continuing without it...")
-
-        # set frequency
-        self.frequency = freq
-        # set duty
-        self.duty_cycle = duty
-
-        self.enabled = True
 
     def deinit(self):
         """Deinit the PWM."""
-        if self._pwmpin is not None:
-            self._pwmpin.stop()
-            GPIO.cleanup(self._pin.id)
-            self._pwmpin = None
+        if not self._deinited:
+            if self.enabled:
+                self._enabled = False  # turn off the pwm
+            self._deinited = True
 
     def _is_deinited(self):
-        if self._pwmpin is None:
+        """raise Value error if the object has been de-inited"""
+        if self._deinited:
             raise ValueError(
                 "Object has been deinitialize and can no longer "
                 "be used. Create a new object."
@@ -109,7 +109,8 @@ class PWMOut:
         duty_cycle /= 65535.0
 
         self._duty_cycle = duty_cycle
-        self._pwmpin.ChangeDutyCycle(round(self._duty_cycle * 100))
+        if self._enabled:
+            self.enabled = True  # turn on with new values
 
     @property
     def frequency(self):
@@ -129,8 +130,9 @@ class PWMOut:
         if not isinstance(frequency, (int, float)):
             raise TypeError("Invalid frequency type, should be int or float.")
 
-        self._pwmpin.ChangeFrequency(round(frequency))
         self._frequency = frequency
+        if self.enabled:
+            self.enabled = True  # turn on with new values
 
     @property
     def enabled(self):
@@ -147,19 +149,19 @@ class PWMOut:
     @enabled.setter
     def enabled(self, value):
         if not isinstance(value, bool):
-            raise TypeError("Invalid enabled type, should be string.")
+            raise TypeError("Invalid enabled type, should be bool.")
 
-        if value:
-            self._pwmpin.start(round(self._duty_cycle * 100))
-        else:
-            self._pwmpin.stop()
-
+        frequency = self._frequency if value else 0
+        duty_cycle = round(self._duty_cycle * 100)
         self._enabled = value
+        result = lgpio.tx_pwm(board.pin.CHIP, self._pin.id, frequency, duty_cycle)
+        if result < 0:
+            raise RuntimeError(lgpio.error_text(result))
+        return result
 
     # String representation
     def __str__(self):
-        return "pin %s (freq=%f Hz, duty_cycle=%f%%)" % (
-            self._pin,
-            self.frequency,
-            self.duty_cycle,
+        return (
+            f"pin {self._pin} (freq={self.frequency:f} Hz, duty_cycle="
+            f"{self.duty_cycle}({round(self.duty_cycle / 655.35)}%)"
         )
