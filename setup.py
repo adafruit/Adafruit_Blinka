@@ -99,6 +99,7 @@ setup(
         "pyftdi>=0.40.0",
         "adafruit-circuitpython-typing",
         "sysv_ipc>=1.1.0;sys_platform=='linux' and platform_machine!='mips'",
+        "toml>=0.10.2;python_version<'3.11'",
     ]
     + board_reqs,
     license="MIT",
