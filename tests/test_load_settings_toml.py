@@ -79,7 +79,7 @@ class TestLoadSettingsToml:
         with pytest.raises(
             FileNotFoundError, match="settings.toml not cound in current directory."
         ):
-            load_settings_toml(return_toml=True)
+            load_settings_toml()
 
     @mock.patch("adafruit_blinka.os.path.isfile", mock.Mock(return_value=True))
     @mock.patch("builtins.open", mock.mock_open(read_data=INVALID_TOML))
@@ -87,7 +87,7 @@ class TestLoadSettingsToml:
         with pytest.raises(
             tomllib.TOMLDecodeError, match="Error with settings.toml file."
         ):
-            load_settings_toml(return_toml=True)
+            load_settings_toml()
 
     @mock.patch("adafruit_blinka.os.path.isfile", mock.Mock(return_value=True))
     @mock.patch(
@@ -97,7 +97,7 @@ class TestLoadSettingsToml:
         with pytest.raises(
             ValueError, match="The types: 'dict' are not supported in settings.toml."
         ):
-            load_settings_toml(return_toml=True)
+            load_settings_toml()
 
     @mock.patch("adafruit_blinka.os.path.isfile", mock.Mock(return_value=True))
     @mock.patch(
@@ -107,7 +107,7 @@ class TestLoadSettingsToml:
         with pytest.raises(
             ValueError, match="The types: 'list' are not supported in settings.toml."
         ):
-            load_settings_toml(return_toml=True)
+            load_settings_toml()
 
     @mock.patch("adafruit_blinka.os.path.isfile", mock.Mock(return_value=True))
     @mock.patch(
@@ -118,7 +118,7 @@ class TestLoadSettingsToml:
             ValueError,
             match="The types: 'dict, list' are not supported in settings.toml.",
         ):
-            load_settings_toml(return_toml=True)
+            load_settings_toml()
 
     @mock.patch("adafruit_blinka.os.path.isfile", mock.Mock(return_value=True))
     @mock.patch(
@@ -129,7 +129,7 @@ class TestLoadSettingsToml:
         with pytest.raises(
             ValueError, match="The types: 'dict' are not supported in settings.toml."
         ):
-            load_settings_toml(return_toml=True)
+            load_settings_toml()
 
     @mock.patch("adafruit_blinka.os.path.isfile", mock.Mock(return_value=True))
     @mock.patch("builtins.open", mock.mock_open(read_data=VALID_TOML))
@@ -138,19 +138,7 @@ class TestLoadSettingsToml:
         for key in CONVERTED_TOML:
             assert os.getenv(key) is None
 
-        assert load_settings_toml() is None
-
-        for key, value in CONVERTED_TOML.items():
-            assert os.getenv(key) == str(value)
-
-    @mock.patch("adafruit_blinka.os.path.isfile", mock.Mock(return_value=True))
-    @mock.patch("builtins.open", mock.mock_open(read_data=VALID_TOML))
-    @mock.patch.dict(os.environ, {}, clear=True)
-    def test_returns_data_when_asked(self):
-        for key in CONVERTED_TOML:
-            assert os.getenv(key) is None
-
-        assert load_settings_toml(return_toml=True) == CONVERTED_TOML
+        assert load_settings_toml() == CONVERTED_TOML
 
         for key, value in CONVERTED_TOML.items():
             assert os.getenv(key) == str(value)

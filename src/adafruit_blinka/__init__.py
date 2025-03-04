@@ -81,7 +81,7 @@ class Lockable(ContextManaged):
             self._locked = False
 
 
-def load_settings_toml(*, return_toml=False):
+def load_settings_toml():
     """Load values from settings.toml into os.environ, so that os.getenv returns them."""
     if not os.path.isfile("settings.toml"):
         raise FileNotFoundError("settings.toml not cound in current directory.")
@@ -111,9 +111,7 @@ def load_settings_toml(*, return_toml=False):
         os.environ[key] = str(value)
         print(f" - {key} added")
 
-    if return_toml:
-        return settings
-    return None
+    return settings
 
 
 def patch_system():
