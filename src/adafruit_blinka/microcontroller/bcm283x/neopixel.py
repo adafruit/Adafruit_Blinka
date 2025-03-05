@@ -6,10 +6,16 @@ import time
 import atexit
 import _rpi_ws281x as ws
 
+try:
+    # Used only for typing
+    from typing import Optional
+    from digitalio import DigitalInOut
+except ImportError:
+    pass
+
 # LED configuration.
 # pylint: disable=redefined-outer-name,too-many-branches,too-many-statements
 # pylint: disable=global-statement,protected-access
-LED_CHANNEL = 0
 LED_FREQ_HZ = 800000  # Frequency of the LED signal.  We only support 800KHz
 LED_DMA_NUM = 10  # DMA channel to use, can be 0-14.
 LED_BRIGHTNESS = 255  # We manage the brightness in the neopixel library
@@ -19,10 +25,10 @@ LED_STRIP = None  # We manage the color order within the neopixel library
 # a 'static' object that we will use to manage our PWM DMA channel
 # we only support one LED strip per raspi
 _led_strip = None
-_buf = None
+_buf: Optional[bytearray] = None
 
 
-def neopixel_write(gpio, buf):
+def neopixel_write(gpio: DigitalInOut, buf: bytearray) -> None:
     """NeoPixel Writing Function"""
     global _led_strip  # we'll have one strip we init if its not at first
     global _buf  # we save a reference to the buf, and if it changes we will cleanup and re-init.
@@ -46,7 +52,7 @@ def neopixel_write(gpio, buf):
             ws.ws2811_channel_t_invert_set(channel, 0)
             ws.ws2811_channel_t_brightness_set(channel, 0)
 
-        channel = ws.ws2811_channel_get(_led_strip, LED_CHANNEL)
+        channel = ws.ws2811_channel_get(_led_strip, _neopixel_detect_channel(gpio))
 
         # Initialize the channel in use
         count = 0
@@ -84,7 +90,7 @@ def neopixel_write(gpio, buf):
             )
         atexit.register(neopixel_cleanup)
 
-    channel = ws.ws2811_channel_get(_led_strip, LED_CHANNEL)
+    channel = ws.ws2811_channel_get(_led_strip, _neopixel_detect_channel(gpio))
     if gpio._pin.id != ws.ws2811_channel_t_gpionum_get(channel):
         raise RuntimeError("Raspberry Pi neopixel support is for one strip only!")
 
@@ -124,3 +130,10 @@ def neopixel_cleanup():
         # strictly necessary at the end of the program execution here, but is good practice.
         ws.delete_ws2811_t(_led_strip)
         _led_strip = None
+
+
+def _neopixel_detect_channel(gpio: DigitalInOut) -> int:
+    """Detect the channel for a given GPIO, added for support PWM1 pins"""
+    if gpio._pin.id in (13, 19, 41, 45):
+        return 1
+    return 0
