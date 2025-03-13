@@ -3,11 +3,7 @@
 # SPDX-License-Identifier: MIT
 """Broadcom BCM2711 pin names"""
 
-# pylint: disable=unused-import
-# importing CHIP to make the lgpio CHIP handle available
-from adafruit_blinka.microcontroller.bcm283x.pin import Pin, CHIP
-
-# pylint: enable=unused-import
+from adafruit_blinka.microcontroller.bcm283x.pin import Pin
 
 D0 = Pin(0)
 D1 = Pin(1)

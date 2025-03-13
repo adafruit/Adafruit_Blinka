@@ -1,34 +1,25 @@
-# pylint: disable=invalid-name
 # SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
 #
 # SPDX-License-Identifier: MIT
-# pylint: enable=invalid-name
+
 """ PWMOut Class for lgpio lg library tx_pwm library """
 
 import lgpio
-import board  # need board to get access to the CHIP object in the pin module
+from adafruit_blinka.microcontroller.bcm283x.pin import CHIP
 
 
-# pylint: disable=unnecessary-pass
 class PWMError(IOError):
     """Base class for PWM errors."""
 
-    pass
 
-
-# pylint: enable=unnecessary-pass
-
-
-class PWMOut:  # pylint: disable=invalid-name
+class PWMOut:
     """Pulse Width Modulation Output Class"""
 
     def __init__(self, pin, *, frequency=500, duty_cycle=0, variable_frequency=False):
         if variable_frequency:
             print("Variable Frequency is not supported, ignoring...")
         self._pin = pin
-        result = lgpio.gpio_claim_output(
-            board.pin.CHIP, self._pin.id, lFlags=lgpio.SET_PULL_NONE
-        )
+        result = lgpio.gpio_claim_output(CHIP, self._pin.id, lFlags=lgpio.SET_PULL_NONE)
         if result < 0:
             raise RuntimeError(lgpio.error_text(result))
         self._enabled = False
@@ -46,7 +37,7 @@ class PWMOut:  # pylint: disable=invalid-name
     def __enter__(self):
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, _exc_type, _exc_val, _exc_tb):
         self.deinit()
 
     def deinit(self):
@@ -154,7 +145,7 @@ class PWMOut:  # pylint: disable=invalid-name
         frequency = self._frequency if value else 0
         duty_cycle = round(self._duty_cycle * 100)
         self._enabled = value
-        result = lgpio.tx_pwm(board.pin.CHIP, self._pin.id, frequency, duty_cycle)
+        result = lgpio.tx_pwm(CHIP, self._pin.id, frequency, duty_cycle)
         if result < 0:
             raise RuntimeError(lgpio.error_text(result))
         return result

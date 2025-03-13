@@ -63,7 +63,7 @@ class Pin:
     lgpio.exceptions = True
 
     def __init__(self, bcm_number):
-        self.id = bcm_number  # pylint: disable=invalid-name
+        self.id = bcm_number
 
     def __repr__(self):
         return str(self.id)
