@@ -1,10 +1,10 @@
 # SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
 #
 # SPDX-License-Identifier: MIT
-"""Broadcom BCM2711 pin names"""
+"""Broadcom BCM2712 pin names"""
 
-# Use RPi.GPIO pins for Raspberry Pi 4
-from adafruit_blinka.microcontroller.generic_linux.rpi_gpio_pin import Pin
+# Use lgpio pins for Raspberry Pi 5
+from adafruit_blinka.microcontroller.generic_linux.lgpio_pin import Pin
 
 D0 = Pin(0)
 D1 = Pin(1)

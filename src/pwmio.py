@@ -16,8 +16,11 @@ from adafruit_blinka.agnostic import detector
 
 # pylint: disable=unused-import
 
-if detector.board.any_raspberry_pi:
-    from adafruit_blinka.microcontroller.bcm283x.pwmio.PWMOut import PWMOut
+if detector.board.any_raspberry_pi_5_board:
+    from adafruit_blinka.microcontroller.generic_linux.lgpio_pwmout import PWMOut
+elif detector.board.any_raspberry_pi:
+    # Pi 4 or lower
+    from adafruit_blinka.microcontroller.generic_linux.rpi_gpio_pwmout import PWMOut
 elif detector.board.any_bananapi:
     from adafruit_blinka.microcontroller.generic_linux.sysfs_pwmout import PWMOut
 elif detector.board.any_coral_board:
