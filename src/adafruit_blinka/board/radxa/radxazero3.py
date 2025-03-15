@@ -63,3 +63,7 @@ TXD = D0_D1
 RXD = D0_D0
 TX = D0_D1
 RX = D0_D0
+
+# PWM
+PWM8 = D3_B1
+PWM9 = D3_B2
