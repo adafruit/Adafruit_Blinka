@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
 #
 # SPDX-License-Identifier: MIT
+
 """Allwinner H616 Pin Names"""
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
@@ -9,8 +10,6 @@ with open("/sys/class/gpio/gpiochip0/label", "r") as f:
     label = f.read().strip()
     if label == "300b000.pinctrl":
         __chip_num = 0
-
-
 PC0 = Pin((__chip_num, 64))
 SPI0_SCLK = PC0
 PC1 = Pin((__chip_num, 65))
@@ -90,11 +89,17 @@ PI2 = Pin((__chip_num, 258))
 PI3 = Pin((__chip_num, 259))
 PI4 = Pin((__chip_num, 260))
 PI5 = Pin((__chip_num, 261))
+TWI0_SCL = PI5
 PI6 = Pin((__chip_num, 262))
+TWI0_SDA = PI6
 PI7 = Pin((__chip_num, 263))
+TWI1_SCL = PI7
 PI8 = Pin((__chip_num, 264))
+TWI1_SDA = PI8
 PI9 = Pin((__chip_num, 265))
+TWI2_SCL = PI9
 PI10 = Pin((__chip_num, 266))
+TWI2_SDA = PI10
 PI11 = Pin((__chip_num, 267))
 PI12 = Pin((__chip_num, 268))
 PI13 = Pin((__chip_num, 269))
@@ -102,13 +107,20 @@ PI14 = Pin((__chip_num, 270))
 PI15 = Pin((__chip_num, 271))
 PI16 = Pin((__chip_num, 272))
 
-i2cPorts = ((3, TWI3_SCL, TWI3_SDA),)
+i2cPorts = (
+    (0, TWI0_SCL, TWI0_SDA),
+    (1, TWI1_SCL, TWI1_SDA),
+    (2, TWI2_SCL, TWI2_SDA),
+    (3, TWI3_SCL, TWI3_SDA),
+)
 # ordered as spiId, sckId, mosiId, misoId
+
 spiPorts = (
     (0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO),
     (1, SPI1_SCLK, SPI1_MOSI, SPI1_MISO),
 )
 # ordered as uartId, txId, rxId
+
 uartPorts = (
     (2, UART2_TX, UART2_RX),
     (5, UART5_TX, UART5_RX),
