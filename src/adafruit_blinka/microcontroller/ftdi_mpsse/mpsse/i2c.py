@@ -5,7 +5,7 @@
 from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.pin import Pin
 from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.url import (
     get_ft232h_url,
-    get_ft2232h_url,
+    get_ftx232h_url,
 )
 
 
@@ -32,7 +32,7 @@ class I2C:
         if i2c_id is None:
             self._i2c.configure(get_ft232h_url(), frequency=frequency)
         else:
-            self._i2c.configure(get_ft2232h_url(i2c_id), frequency=frequency)
+            self._i2c.configure(get_ftx232h_url(i2c_id), frequency=frequency)
         Pin.mpsse_gpio = self._i2c.get_gpio()
 
     def scan(self):
