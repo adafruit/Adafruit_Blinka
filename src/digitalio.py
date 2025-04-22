@@ -15,14 +15,10 @@ from adafruit_blinka.agnostic import board_id, detector
 
 # By Chip Class
 if detector.chip.BCM2XXX:
-    if board_id in (
-        "RASPBERRY_PI_4B",
-        "RASPBERRY_PI_400",
-        "RASPBERRY_PI_CM4",
-        "RASPBERRY_PI_CM4S",
-        "RASPBERRY_PI_5",
-    ):
-        from adafruit_blinka.microcontroller.bcm2711.pin import *
+    if detector.board.any_raspberry_pi_5_board:
+        from adafruit_blinka.microcontroller.bcm2712.pin import Pin
+    elif detector.board.any_raspberry_pi_4_board:
+        from adafruit_blinka.microcontroller.bcm2711.pin import Pin
     else:
         from adafruit_blinka.microcontroller.bcm283x.pin import Pin
 elif detector.chip.AM33XX:

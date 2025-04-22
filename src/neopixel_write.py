@@ -10,13 +10,16 @@ Currently supported on Raspberry Pi only.
 
 * Author(s): ladyada
 """
-# pylint: disable=too-many-boolean-expressions
+# pylint: disable=too-many-boolean-expressions, ungrouped-imports
 import sys
 
 from adafruit_blinka.agnostic import detector
 
 if detector.board.any_raspberry_pi:
-    from adafruit_blinka.microcontroller.bcm283x import neopixel as _neopixel
+    if detector.board.any_raspberry_pi_5_board:
+        import adafruit_raspberry_pi5_neopixel_write as _neopixel
+    else:
+        from adafruit_blinka.microcontroller.bcm283x import neopixel as _neopixel
 elif detector.board.pico_u2if:
     from adafruit_blinka.microcontroller.rp2040_u2if import neopixel as _neopixel
 elif detector.board.OS_AGNOSTIC_BOARD:

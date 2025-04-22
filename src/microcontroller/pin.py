@@ -4,7 +4,7 @@
 """Pins named after their chip name."""
 import sys
 from adafruit_platformdetect.constants import chips as ap_chip, boards as ap_boards
-from adafruit_blinka.agnostic import board_id, chip_id
+from adafruit_blinka.agnostic import board_id, chip_id, detector
 
 # We intentionally are patching into this namespace so skip the wildcard check.
 # pylint: disable=unused-wildcard-import,wildcard-import,ungrouped-imports
@@ -16,13 +16,9 @@ elif chip_id == ap_chip.STM32F405:
 elif chip_id == ap_chip.RP2040:
     from adafruit_blinka.microcontroller.rp2040.pin import *
 elif chip_id == ap_chip.BCM2XXX:
-    if board_id in (
-        "RASPBERRY_PI_4B",
-        "RASPBERRY_PI_400",
-        "RASPBERRY_PI_CM4",
-        "RASPBERRY_PI_CM4S",
-        "RASPBERRY_PI_5",
-    ):
+    if detector.board.any_raspberry_pi_5_board:
+        from adafruit_blinka.microcontroller.bcm2712.pin import *
+    elif detector.board.any_raspberry_pi_4_board:
         from adafruit_blinka.microcontroller.bcm2711.pin import *
     else:
         from adafruit_blinka.microcontroller.bcm283x.pin import *
