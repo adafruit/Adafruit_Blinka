@@ -48,14 +48,8 @@ class Pin:
         """Initialize the Pin"""
         # Input,
         if not self._line_request:
-            self._line_request = self._chip.request_lines(
-                config={int(self._num): None},
-                consumer=self._CONSUMER,
-            )
-            # print("init line: ", self.id, self._line)
-
-        if mode is not None:
             line_config = gpiod.LineSettings()
+
             if mode == self.IN:
                 line_config.direction = gpiod.line.Direction.INPUT
                 if pull is not None:
@@ -68,24 +62,18 @@ class Pin:
                     else:
                         raise RuntimeError(f"Invalid pull for pin: {self.id}")
 
-                self._mode = self.IN
-                self._line_request.reconfigure_lines(
-                    {
-                        int(self._num): line_config,
-                    }
-                )
             elif mode == self.OUT:
                 if pull is not None:
                     raise RuntimeError("Cannot set pull resistor on output")
-                self._mode = self.OUT
                 line_config.direction = gpiod.line.Direction.OUTPUT
-                self._line_request.reconfigure_lines(
-                    {
-                        int(self._num): line_config,
-                    }
-                )
+
             else:
-                raise RuntimeError("Invalid mode for pin: %s" % self.id)
+                raise RuntimeError(f"Invalid mode for pin: {self.id}")
+
+            self._line_request = self._chip.request_lines(
+                {int(self._num): line_config},
+                consumer=self._CONSUMER,
+            )
 
     def value(self, val=None):
         """Set or return the Pin Value"""
