@@ -467,6 +467,9 @@ elif board_id == ap_board.INDIEDROID_NOVA:
 elif board_id == ap_board.RDK_X3:
     from adafruit_blinka.board.horizon.rdkx3 import *
 
+elif board_id == ap_board.PARTICLE_TACHYON:
+    from adafruit_blinka.board.particle.tachyon import *
+
 elif "sphinx" in sys.modules:
     pass
 

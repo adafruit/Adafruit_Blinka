@@ -151,6 +151,8 @@ elif detector.chip.RV1103:
     from adafruit_blinka.microcontroller.rockchip.rv1103.pin import Pin
 elif detector.chip.RV1106:
     from adafruit_blinka.microcontroller.rockchip.rv1106.pin import Pin
+elif detector.chip.QCM6490:
+    from adafruit_blinka.microcontroller.quectel.qcm6490.pin import Pin
 elif detector.chip.OS_AGNOSTIC:
     from adafruit_blinka.microcontroller.generic_agnostic_board.pin import Pin
 
