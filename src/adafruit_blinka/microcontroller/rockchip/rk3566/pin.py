@@ -242,6 +242,16 @@ if board in ("ODROID_M1S"):
         globals()[alias + "_RX"] = GPIO2_A3
         uartPorts.append((int(alias[-1]), GPIO2_A4, GPIO2_A3))
 
+if board in ("RADXA_ZERO3"):
+    alias = get_pwm_chipid("fe6f0000.pwm")
+    if alias is not None:
+        globals()["PWM" + alias] = GPIO3_B1
+        pwmOuts.append(((int(alias[-1]), 0), GPIO3_B1))
+    alias = get_pwm_chipid("fe6f0010.pwm")
+    if alias is not None:
+        globals()["PWM" + alias] = GPIO3_B2
+        pwmOuts.append(((int(alias[-1]), 0), GPIO3_B2))
+
 analogIns = tuple(analogIns)
 i2cPorts = tuple(i2cPorts)
 pwmOuts = tuple(pwmOuts)
