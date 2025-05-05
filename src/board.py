@@ -239,6 +239,9 @@ elif board_id == ap_board.FTDI_FT232H:
 elif board_id == ap_board.FTDI_FT2232H:
     from adafruit_blinka.board.ftdi_ft2232h import *
 
+elif board_id == ap_board.FTDI_FT4232H:
+    from adafruit_blinka.board.ftdi_ft4232h import *
+
 elif board_id == ap_board.BINHO_NOVA:
     from adafruit_blinka.board.binho_nova import *
 

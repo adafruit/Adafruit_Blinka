@@ -5,7 +5,7 @@
 
 from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.url import (
     get_ft232h_url,
-    get_ft2232h_url,
+    get_ftx232h_url,
 )
 
 
@@ -35,7 +35,7 @@ class Pin:
             if interface_id is None:
                 i2c.configure(get_ft232h_url())
             else:
-                i2c.configure(get_ft2232h_url(interface_id))
+                i2c.configure(get_ftx232h_url(interface_id))
             Pin.mpsse_gpio = i2c.get_gpio()
         # check if pin is valid
         if pin_id:
