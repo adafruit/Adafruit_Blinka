@@ -446,6 +446,9 @@ elif board_id == ap_board.VIVID_UNIT:
 elif board_id == ap_board.INDIEDROID_NOVA:
     from adafruit_blinka.board.ameridroid.indiedroid_nova import *
 
+elif board_id == ap_board.RDK_X3:
+    from adafruit_blinka.board.horizon.rdkx3 import *
+
 elif "sphinx" in sys.modules:
     pass
 

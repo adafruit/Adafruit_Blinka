@@ -53,6 +53,8 @@ elif detector.board.any_luckfox_pico_board:
     from adafruit_blinka.microcontroller.generic_linux.sysfs_pwmout import PWMOut
 elif detector.board.any_starfive_id:
     from adafruit_blinka.microcontroller.starfive.JH7110.pwmio import PWMOut
+elif detector.board.any_horizon_board:
+    from adafruit_blinka.microcontroller.horizon.pwmio.PWMOut import PWMOut
 elif detector.board.OS_AGNOSTIC_BOARD:
     from adafruit_blinka.microcontroller.generic_agnostic_board.PWMOut import PWMOut
 elif (
