@@ -65,6 +65,8 @@ elif chip_id == ap_chip.H618:
     from adafruit_blinka.microcontroller.allwinner.h618 import *
 elif chip_id == ap_chip.H616:
     from adafruit_blinka.microcontroller.allwinner.h616 import *
+elif chip_id == ap_chip.T527:
+    from adafruit_blinka.microcontroller.allwinner.t527 import *
 elif chip_id == ap_chip.SAMA5:
     from adafruit_blinka.microcontroller.sama5 import *
 elif chip_id == ap_chip.T210:
