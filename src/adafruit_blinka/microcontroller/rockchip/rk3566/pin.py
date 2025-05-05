@@ -241,7 +241,7 @@ if board in ("ODROID_M1S"):
         globals()[alias + "_TX"] = GPIO2_A4
         globals()[alias + "_RX"] = GPIO2_A3
         uartPorts.append((int(alias[-1]), GPIO2_A4, GPIO2_A3))
-        
+
 if board in ("RADXA_ZERO3"):
     alias = get_pwm_chipid("fe6f0000.pwm")
     if alias is not None:
