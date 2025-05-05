@@ -139,6 +139,8 @@ elif chip_id == ap_chip.FT232H:
     from adafruit_blinka.microcontroller.ftdi_mpsse.ft232h import *
 elif chip_id == ap_chip.FT2232H:
     from adafruit_blinka.microcontroller.ftdi_mpsse.ft2232h import *
+elif chip_id == ap_chip.FT4232H:
+    from adafruit_blinka.microcontroller.ftdi_mpsse.ft4232h import *
 elif chip_id == ap_chip.PENTIUM_N3710:
     from adafruit_blinka.microcontroller.pentium.n3710 import *
 elif chip_id == ap_chip.ATOM_J4105:

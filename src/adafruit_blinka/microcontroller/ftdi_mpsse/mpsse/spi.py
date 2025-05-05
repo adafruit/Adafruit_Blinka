@@ -5,7 +5,7 @@
 from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.pin import Pin
 from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.url import (
     get_ft232h_url,
-    get_ft2232h_url,
+    get_ftx232h_url,
 )
 
 
@@ -25,7 +25,7 @@ class SPI:
         if spi_id is None:
             self._spi.configure(get_ft232h_url())
         else:
-            self._spi.configure(get_ft2232h_url(spi_id + 1))
+            self._spi.configure(get_ftx232h_url(spi_id + 1))
         self._port = self._spi.get_port(0)
         self._port.set_frequency(100000)
         self._port._cpol = 0

@@ -151,6 +151,8 @@ class I2C(Lockable):
                 frequency = None  # Set to None if default to avoid triggering warning
         elif detector.board.ftdi_ft2232h:
             from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.i2c import I2C as _I2C
+        elif detector.board.ftdi_ft4232h:
+            from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.i2c import I2C as _I2C
         else:
             from adafruit_blinka.microcontroller.generic_micropython.i2c import (
                 I2C as _I2C,
@@ -358,6 +360,8 @@ class SPI(Lockable):
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif detector.board.ftdi_ft2232h:
             from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.spi import SPI as _SPI
+        elif detector.board.ftdi_ft4232h:
+            from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.spi import SPI as _SPI
         elif detector.board.OS_AGNOSTIC_BOARD:
             from adafruit_blinka.microcontroller.generic_agnostic_board.spi import (
                 SPI as _SPI,
@@ -393,6 +397,10 @@ class SPI(Lockable):
                 SPI as _SPI,
             )
         elif detector.board.ftdi_ft2232h:
+            from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.spi import (
+                SPI as _SPI,
+            )
+        elif detector.board.ftdi_ft4232h:
             from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.spi import (
                 SPI as _SPI,
             )
