@@ -119,6 +119,10 @@ elif detector.chip.TH1520:
     from adafruit_blinka.microcontroller.thead.th1520.pin import Pin
 elif detector.chip.K1:
     from adafruit_blinka.microcontroller.spacemit.k1.pin import Pin
+elif detector.chip.RZV2N:
+    from adafruit_blinka.microcontroller.renesas.rzv2n.pin import Pin
+elif detector.chip.RZV2H:
+    from adafruit_blinka.microcontroller.renesas.rzv2h.pin import Pin
 elif detector.chip.SUNRISE_X3:
     from adafruit_blinka.microcontroller.horizon.sunrise_x3.pin import Pin
 # Special Case Boards
