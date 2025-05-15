@@ -163,6 +163,10 @@ elif chip_id == ap_chip.TH1520:
     from adafruit_blinka.microcontroller.thead.th1520 import *
 elif chip_id == ap_chip.K1:
     from adafruit_blinka.microcontroller.spacemit.k1 import *
+elif chip_id == ap_chip.RZV2N:
+    from adafruit_blinka.microcontroller.renesas.rzv2n import *
+elif chip_id == ap_chip.RZV2H:
+    from adafruit_blinka.microcontroller.renesas.rzv2h import *
 elif chip_id == ap_chip.SUNRISE_X3:
     from adafruit_blinka.microcontroller.horizon.sunrise_x3 import *
 elif chip_id == ap_chip.GENERIC_X86:
