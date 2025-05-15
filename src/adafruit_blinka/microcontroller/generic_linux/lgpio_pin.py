@@ -15,14 +15,15 @@ def _get_gpiochip():
     used for userspace GPIO access.
     """
     for dev in Path("/sys/bus/gpio/devices").glob("gpiochip*"):
-        drivers = set((dev / "of_node/compatible").read_text().split("\0"))
-        #   check if driver names are intended for userspace control
-        if drivers & {
-            "raspberrypi,rp1-gpio",
-            "raspberrypi,bcm2835-gpio",
-            "raspberrypi,bcm2711-gpio",
-        }:
-            return lgpio.gpiochip_open(int(dev.name[-1]))
+        if Path(dev / "of_node/compatible").is_file():
+            drivers = set((dev / "of_node/compatible").read_text().split("\0"))
+            #   check if driver names are intended for userspace control
+            if drivers & {
+                "raspberrypi,rp1-gpio",
+                "raspberrypi,bcm2835-gpio",
+                "raspberrypi,bcm2711-gpio",
+            }:
+                return lgpio.gpiochip_open(int(dev.name[-1]))
     # return chip0 as a fallback
     return lgpio.gpiochip_open(0)
 
