@@ -54,6 +54,7 @@ setup(
         "git_describe_command": "git describe --tags --long",
         "local_scheme": "no-local-version",
     },
+    version="8.56.1",
     setup_requires=["setuptools_scm"],
     description="CircuitPython APIs for non-CircuitPython versions of Python such as CPython on Linux and MicroPython.",
     long_description=long_description,
