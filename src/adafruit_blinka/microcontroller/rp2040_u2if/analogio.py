@@ -70,3 +70,12 @@ class AnalogIn_ItsyBitsy(AnalogIn):
         if pin.id not in (26, 27, 28):
             raise ValueError("Pin does not support ADC.")
         super().__init__(pin)
+
+
+class AnalogIn_Radxa_X4(AnalogIn):
+    """AnalogIn Base Class for Radxa X4 u2if"""
+
+    def __init__(self, pin):
+        if pin.id not in (26, 27, 28, 29):
+            raise ValueError("Pin does not support ADC.")
+        super().__init__(pin)
