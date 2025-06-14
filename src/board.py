@@ -440,6 +440,9 @@ elif board_id == ap_board.WALNUT_PI_1B:
 elif board_id == ap_board.RP2040_ONE_U2IF:
     from adafruit_blinka.board.rp2040_one_u2if import *
 
+elif board_id == ap_board.RADXA_X4_U2IF:
+    from adafruit_blinka.board.radxa_x4_u2if import *
+
 elif board_id == ap_board.OS_AGNOSTIC_BOARD:
     from adafruit_blinka.board.generic_agnostic_board import *
 
