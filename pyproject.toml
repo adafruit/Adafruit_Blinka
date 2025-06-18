@@ -48,8 +48,7 @@ py-modules = [
 ]
 
 [tool.setuptools.package-data]
-adafruit_blinka.microcontroller.bcm283x.pulseio = ["libgpiod_pulsein", "libgpiod_pulsein64"]
-adafruit_blinka.microcontroller.amlogic.meson_g12_common.pulseio = ["libgpiod_pulsein"]
+libgpiod_pulsein = ["libgpiod_pulsein", "libgpiod_pulsein64"]
 micropython-stubs = ["*.pyi"]
 
  [tool.setuptools.dynamic]
