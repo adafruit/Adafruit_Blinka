@@ -47,8 +47,14 @@ py-modules = [
     "usb_hid",
 ]
 
+[tool.setuptools.packages.find]
+where = ["src"]
+include = [
+    "adafruit_blinka.microcontroller.bcm283x.libgpiod_pulsein*",
+    "adafruit_blinka.microcontroller.amlogic.meson_g12_common.pulseio.libgpiod_pulsein*",
+]
+
 [tool.setuptools.package-data]
-libgpiod_pulsein = ["libgpiod_pulsein", "libgpiod_pulsein64"]
 micropython-stubs = ["*.pyi"]
 
  [tool.setuptools.dynamic]
