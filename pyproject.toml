@@ -52,10 +52,8 @@ where = ["src"]
 include = [
     "adafruit_blinka.microcontroller.bcm283x.libgpiod_pulsein*",
     "adafruit_blinka.microcontroller.amlogic.meson_g12_common.pulseio.libgpiod_pulsein*",
+    "*.pyi"
 ]
 
-[tool.setuptools.package-data]
-micropython-stubs = ["*.pyi"]
-
- [tool.setuptools.dynamic]
+[tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}
