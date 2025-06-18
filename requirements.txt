@@ -10,4 +10,3 @@ adafruit-circuitpython-typing
 toml>=0.10.2; python_version<'3.11'
 lgpio>=0.2.2.0
 Adafruit-Blinka-Raspberry-Pi5-Neopixel; platform_machine=='aarch64'
-Adafruit_BBIO>=1.2.0
