@@ -66,6 +66,10 @@ elif detector.board.itsybitsy_u2if:
     from adafruit_blinka.microcontroller.rp2040_u2if.analogio import (
         AnalogIn_ItsyBitsy as AnalogIn,
     )
+elif detector.board.radxa_x4_u2if:
+    from adafruit_blinka.microcontroller.rp2040_u2if.analogio import (
+        AnalogIn_Radxa_X4 as AnalogIn,
+    )
 elif detector.board.OS_AGNOSTIC_BOARD:
     from adafruit_blinka.microcontroller.generic_agnostic_board.analogio import AnalogIn
     from adafruit_blinka.microcontroller.generic_agnostic_board.analogio import (

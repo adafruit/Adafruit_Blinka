@@ -178,3 +178,17 @@ class SPI_KB2040(SPI):
         if index is None:
             raise ValueError("No SPI port on specified pin.")
         super().__init__(index, baudrate=baudrate)
+
+
+class SPI_Radxa_X4(SPI):
+    """SPI Class for Radxa X4 u2if"""
+
+    def __init__(self, clock, *, baudrate=100000):
+        index = None
+        if clock.id == 6:
+            index = 0
+        if clock.id == 10:
+            index = 1
+        if index is None:
+            raise ValueError("No SPI port on specified pin.")
+        super().__init__(index, baudrate=baudrate)
