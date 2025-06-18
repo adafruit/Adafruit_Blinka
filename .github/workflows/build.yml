@@ -52,6 +52,7 @@ jobs:
       run: |
         echo "pyproject-toml=$( find . -wholename './pyproject.toml' )" >> $GITHUB_OUTPUT
     - name: Build Python package
+      if: contains(steps.need-pypi.outputs.pyproject-toml, 'pyproject.toml')
       run: |
         pip install --upgrade build twine
         for file in $(find -not -path "./.*" -not -path "./docs*" \( -name "*.py" -o -name "*.toml" \) ); do
