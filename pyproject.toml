@@ -1,0 +1,56 @@
+# SPDX-FileCopyrightText: 2022 Alec Delaney for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
+
+[build-system]
+requires = [
+    "setuptools",
+    "wheel",
+    "setuptools-scm",
+]
+
+[project]
+name = "Adafruit-Blinka"
+description = "CircuitPython APIs for non-CircuitPython versions of Python such as CPython on Linux and MicroPython."
+version = "0.0.0+auto.0"
+readme = "README.rst"
+authors = [
+    {name = "Adafruit Industries", email = "circuitpython@adafruit.com"}
+]
+urls = {Homepage = "https://github.com/adafruit/Adafruit_Blinka"}
+license = {text = "MIT"}
+classifiers=[
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: System :: Hardware",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+]
+dynamic = ["dependencies"]
+
+[tool.setuptools]
+py-modules = [
+    "analogio",
+    "bitbangio",
+    "board",
+    "busio",
+    "digitalio",
+    "keypad",
+    "micropython",
+    "neopixel_write",
+    "onewireio",
+    "pulseio",
+    "pwmio",
+    "rainbowio",
+    "usb_hid",
+]
+
+[tool.setuptools.package-data]
+"adafruit_blinka.microcontroller.bcm283x.pulseio" = ["libgpiod_pulsein", "libgpiod_pulsein64"]
+"adafruit_blinka.microcontroller.amlogic.meson_g12_common.pulseio" = ["libgpiod_pulsein"]
+"micropython-stubs" = ["*.pyi"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
