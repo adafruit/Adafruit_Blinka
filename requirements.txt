@@ -8,5 +8,5 @@ pyftdi>=0.40.0
 binho-host-adapter>=0.1.6
 adafruit-circuitpython-typing
 toml>=0.10.2; python_version<'3.11'
-lgpio>=0.2.2.0; sys_platform=='linux'
+lgpio>=0.2.2.0; sys_platform=='linux' and python_version<'3.13'
 Adafruit-Blinka-Raspberry-Pi5-Neopixel; platform_machine=='aarch64'
