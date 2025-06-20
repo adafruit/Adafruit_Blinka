@@ -53,6 +53,7 @@ include = [
     "adafruit_blinka",
     "adafruit_blinka.microcontroller.bcm283x.libgpiod_pulsein*",
     "adafruit_blinka.microcontroller.amlogic.meson_g12_common.pulseio.libgpiod_pulsein*",
+    "microcontroller",
     "*.pyi"
 ]
 
