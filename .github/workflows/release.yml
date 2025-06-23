@@ -2,32 +2,30 @@
 #
 # SPDX-License-Identifier: Unlicense
 name: Release Actions
-
 on:
   release:
     types: [published]
-
 jobs:
   upload-pypi:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Check For pyproject.toml
+    - name: Check For setup.py
       id: need-pypi
       run: |
-        echo "pyproject-toml=$( find . -wholename './pyproject.toml' )" >> $GITHUB_OUTPUT
+        echo "setup-py=$( find . -wholename './setup.py' )" >> $GITHUB_OUTPUT
     - name: Set up Python
-      if: contains(steps.need-pypi.outputs.pyproject-toml, 'pyproject.toml')
+      if: contains(steps.need-pypi.outputs.setup-py, 'setup.py')
       uses: actions/setup-python@v4
       with:
-        python-version: '3.11'
+        python-version: '3.x'
     - name: Install dependencies
-      if: contains(steps.need-pypi.outputs.pyproject-toml, 'pyproject.toml')
+      if: contains(steps.need-pypi.outputs.setup-py, 'setup.py')
       run: |
         python -m pip install --upgrade pip
         pip install --upgrade build twine
     - name: Build and publish
-      if: contains(steps.need-pypi.outputs.pyproject-toml, 'pyproject.toml')
+      if: contains(steps.need-pypi.outputs.setup-py, 'setup.py')
       env:
         TWINE_USERNAME: ${{ secrets.pypi_username }}
         TWINE_PASSWORD: ${{ secrets.pypi_password }}
