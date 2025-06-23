@@ -10,11 +10,6 @@
 
 import os
 
-try:
-    import tomllib
-except ImportError:
-    import toml as tomllib
-
 
 class Enum:
     """
@@ -82,9 +77,16 @@ class Lockable(ContextManaged):
 
 
 def load_settings_toml():
-    """Load values from settings.toml into os.environ, so that os.getenv returns them."""
+    """Load values from settings.toml into os.environ, so that os.getenv returns them.
+    Note: This does not work in MicroPython because of the tomllib module not being available.
+    """
+    try:
+        import tomllib
+    except ImportError:
+        import toml as tomllib
+
     if not os.path.isfile("settings.toml"):
-        raise FileNotFoundError("settings.toml not cound in current directory.")
+        raise FileNotFoundError("settings.toml not found in current directory.")
 
     print("settings.toml found. Updating environment variables:")
     with open("settings.toml", "rb") as toml_file:
