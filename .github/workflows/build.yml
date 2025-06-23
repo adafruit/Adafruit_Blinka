@@ -16,10 +16,10 @@ jobs:
     - name: Translate Repo Name For Build Tools filename_prefix
       id: repo-name
       run: echo "repo-name=Adafruit-Blinka" >> $GITHUB_OUTPUT
-    - name: Set up Python 3.11
+    - name: Set up Python 3.8
       uses: actions/setup-python@v4
       with:
-        python-version: 3.11
+        python-version: 3.8
     - name: Versions
       run: |
         python3 --version
@@ -47,12 +47,7 @@ jobs:
     - name: Build docs
       working-directory: docs
       run: sphinx-build -E -W -b html . _build/html
-    - name: Check For pyproject.toml
-      id: need-pypi
-      run: |
-        echo "pyproject-toml=$( find . -wholename './pyproject.toml' )" >> $GITHUB_OUTPUT
     - name: Build Python package
-      if: contains(steps.need-pypi.outputs.pyproject-toml, 'pyproject.toml')
       run: |
         pip install --upgrade build twine
         for file in $(find -not -path "./.*" -not -path "./docs*" \( -name "*.py" -o -name "*.toml" \) ); do
