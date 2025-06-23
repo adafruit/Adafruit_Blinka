@@ -31,7 +31,7 @@ if os.path.exists("/proc/device-tree/compatible"):
     elif b"brcm,bcm2712" in compat:
         board_reqs = [
             "rpi_ws281x>=4.0.0",
-            "lgpio",
+            "lgpio;python_version<'3.11'",
             "Adafruit-Blinka-Raspberry-Pi5-Neopixel",
         ]
     # Pi 4 and Earlier
