@@ -10,6 +10,7 @@
 
 import io
 import os
+import glob
 
 from setuptools import setup, find_packages
 
@@ -19,6 +20,12 @@ here = os.path.abspath(os.path.dirname(__file__))
 # Note: this will only work if 'README.md' is present in your MANIFEST.in file!
 with io.open(os.path.join(here, "README.rst"), encoding="utf-8") as f:
     long_description = "\n" + f.read()
+
+if not glob.glob("//usr//include//python3.*//Python.h"):
+    raise RuntimeError(
+        "This package requires a Python development environment. "
+        "Please install the python3-dev package for your distribution."
+    )
 
 board_reqs = []
 if os.path.exists("/proc/device-tree/compatible"):
