@@ -177,9 +177,8 @@ class I2C(Lockable):
                 pass
         else:
             raise ValueError(
-                "No Hardware I2C on (scl,sda)={}\nValid I2C ports: {}".format(
-                    (scl, sda), i2cPorts
-                )
+                f"No Hardware I2C on (scl,sda)={(scl, sda)}\n"
+                f"Valid I2C ports: {i2cPorts}.\nMake sure I2C is enabled."
             )
         if threading is not None:
             self._lock = threading.RLock()
@@ -398,9 +397,8 @@ class SPI(Lockable):
                 break
         else:
             raise ValueError(
-                "No Hardware SPI on (SCLK, MOSI, MISO)={}\nValid SPI ports:{}".format(
-                    (clock, MOSI, MISO), spiPorts
-                )
+                f"No Hardware SPI on (SCLK, MOSI, MISO)={(clock, MOSI, MISO)}\n"
+                f"Valid SPI ports: {spiPorts}.\nMake sure SPI is enabled."
             )
 
     def configure(self, baudrate=100000, polarity=0, phase=0, bits=8):
