@@ -6,6 +6,7 @@ import glob
 import gpiod
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
+
 def find_gpiochip_number(target_label):
     """Return the GPIO chip number for the target label, or 0 if not found."""
     for dev in glob.glob("/dev/gpiochip*"):
@@ -14,6 +15,7 @@ def find_gpiochip_number(target_label):
             if info.label == target_label:
                 return int(dev[-1])
     return 0
+
 
 __chip_num = find_gpiochip_number("300b000.pinctrl")
 
