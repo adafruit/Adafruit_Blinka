@@ -11,8 +11,9 @@
 from typing import Callable, TypeVar, Any, NoReturn
 
 Fun = TypeVar("Fun", bound=Callable[..., Any])
+T = TypeVar("T")
 
-def const(x: int) -> int:
+def const(x: T) -> T:
     "Emulate making a constant"
 
 def native(f: Fun) -> Fun:
