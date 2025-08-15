@@ -167,7 +167,7 @@ spiPorts = (
 )
 
 # ordered as uartId, txId, rxId
-uartPorts = ((14, UART10_TXD, UART10_RXD),)
+uartPorts = ((10, UART10_TXD, UART10_RXD),)
 
 # ordered as pwmChipId, pwmChannelId, pwmId
 pwmOuts = (((0, 0), PWM1),)
