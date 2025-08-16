@@ -169,6 +169,8 @@ elif chip_id == ap_chip.RZV2H:
     from adafruit_blinka.microcontroller.renesas.rzv2h import *
 elif chip_id == ap_chip.SUNRISE_X3:
     from adafruit_blinka.microcontroller.horizon.sunrise_x3 import *
+elif chip_id == ap_chip.QCM6490:
+    from adafruit_blinka.microcontroller.quectel.qcm6490 import *
 elif chip_id == ap_chip.GENERIC_X86:
     print("WARNING: GENERIC_X86 is not fully supported. Some features may not work.")
 elif chip_id == ap_chip.OS_AGNOSTIC:
