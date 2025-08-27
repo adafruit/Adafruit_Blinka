@@ -29,6 +29,8 @@ class Pin:
         chip_id = 0
         if isinstance(pin_id, tuple):
             chip_id, self._num = pin_id
+        else:
+            self._num = int(pin_id)
         if isinstance(chip_id, int):
             chip_id = f"/dev/gpiochip{chip_id}"
         self._chip = gpiod.Chip(chip_id)
