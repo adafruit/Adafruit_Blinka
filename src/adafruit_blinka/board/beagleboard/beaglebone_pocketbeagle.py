@@ -7,6 +7,7 @@ Pin definitions for the Beaglebone PocketBeagle.
 based on
 https://github.com/beagleboard/pocketbeagle/wiki/System-Reference-Manual#figure-42-expansion-header-popular-functions---color-coded
 """
+
 from adafruit_blinka.microcontroller.am335x import pin
 
 # initial pins, to mimic bonescript demo
@@ -97,36 +98,36 @@ LED_USR3 = pin.USR3
 # https://raw.githubusercontent.com/wiki/beagleboard/pocketbeagle/images/PocketBeagle_pinout.png
 
 # I2C1 pins
-SDA_1 = pin.I2C1_SDA  # P2_11 data signal
-SCL_1 = pin.I2C1_SCL  # P2_9 clock signal
+SDA_1 = pin.P2_11  # P2_11 data signal
+SCL_1 = pin.P2_9  # P2_9 clock signal
 # for example compatibility we create a alias
 SDA = SDA_1
 SCL = SCL_1
 
 # I2C2 pins
-SDA_2 = pin.I2C2_SDA  # P1_26 data signal
-SCL_2 = pin.I2C2_SCL  # P1_28 clock signal
+SDA_2 = pin.P1_26  # P1_26 data signal
+SCL_2 = pin.P1_28  # P1_28 clock signal
 
 # SPI0 pins
-CE0 = pin.SPI0_CS0  # P1_6 - enables peripheral device
-SCLK = pin.SPI0_SCLK  # P1_12 - outputs data to peripheral device
-MOSI = pin.SPI0_D1  # P1_10 - receives data from peripheral device
-MISO = pin.SPI0_D0  # P1_8 - outputs clock signal
+CE0 = pin.P1_6  # P1_6 - enables peripheral device
+SCLK = pin.P1_12  # P1_12 - outputs data to peripheral device
+MOSI = pin.P1_10  # P1_10 - receives data from peripheral device
+MISO = pin.P1_8  # P1_8 - outputs clock signal
 # CircuitPython naming convention for SPI Clock
 SCK = SCLK
 
 # SPI1 pins
-CE0_1 = pin.SPI1_CS1  # P2_31 - enables peripheral device
-SCLK_1 = pin.SPI1_SCLK  # P2_25 - outputs data to peripheral device
-MOSI_1 = pin.SPI1_D1  # P2_27 - receives data from peripheral device
-MISO_1 = pin.SPI1_D0  # P2_29 - outputs clock signal
+CE0_1 = pin.P2_31  # P2_31 - enables peripheral device
+SCLK_1 = pin.P2_25  # P2_25 - outputs data to peripheral device
+MOSI_1 = pin.P2_27  # P2_27 - receives data from peripheral device
+MISO_1 = pin.P2_29  # P2_29 - outputs clock signal
 # CircuitPython naming convention for SPI Clock
 SCK_1 = SCLK_1
 
 
 # UART0
-TX_0 = pin.UART0_TXD  # P1_30
-RX_0 = pin.UART0_RXD  # P1_32
+TX_0 = pin.P1_30  # P1_30
+RX_0 = pin.P1_32  # P1_32
 # create alias for most of the examples
 TX = TX_0
 RX = RX_0
@@ -137,5 +138,5 @@ RX = RX_0
 # RX_2 = pin.UART2_RXD    # P1_10
 
 # UART4
-TX_4 = pin.UART4_TXD  # P2_7
-RX_4 = pin.UART4_RXD  # P2_5
+TX_4 = pin.P2_7  # P2_7
+RX_4 = pin.P2_5  # P2_5
