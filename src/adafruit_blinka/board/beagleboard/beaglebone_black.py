@@ -2,19 +2,20 @@
 #
 # SPDX-License-Identifier: MIT
 """Pin definitions for the Beaglebone Black."""
+
 from adafruit_blinka.microcontroller.am335x import pin
 
 # initial pins, to mimic bonescript demo
 # BeagleBone Black
 # P8_1 = DGND        # DGND
 # P8_2 = DGND        # DGND
-P8_3 = pin.P8_3  # GPIO1_6 - GPIO_38
-P8_4 = pin.P8_4  # GPIO1_7 - GPIO_39
-P8_5 = pin.P8_5  # GPIO1_2 - GPIO_34
-P8_6 = pin.P8_6  # GPIO1_3 - GPIO_35
-P8_7 = pin.P8_7  # TIMER4 - GPIO_66
-P8_8 = pin.P8_8  # TIMER7 - GPIO_67
-P8_9 = pin.P8_9  # TIMER5 - GPIO_69
+P8_3 = pin.P8_03  # GPIO1_6 - GPIO_38
+P8_4 = pin.P8_04  # GPIO1_7 - GPIO_39
+P8_5 = pin.P8_05  # GPIO1_2 - GPIO_34
+P8_6 = pin.P8_06  # GPIO1_3 - GPIO_35
+P8_7 = pin.P8_07  # TIMER4 - GPIO_66
+P8_8 = pin.P8_08  # TIMER7 - GPIO_67
+P8_9 = pin.P8_09  # TIMER5 - GPIO_69
 P8_10 = pin.P8_10  # TIMER6 - GPIO_68
 P8_11 = pin.P8_11  # GPIO1_13 - GPIO_45
 P8_12 = pin.P8_12  # GPIO1_12 - GPIO_44

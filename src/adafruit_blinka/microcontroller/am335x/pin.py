@@ -89,13 +89,13 @@ P2_36 = Pin((0, 0))  # AIN7
 # BeagleBone Black
 # P8_1 = DGND           # DGND - GPIO_0
 # P8_2 = DGND           # DGND - GPIO_0
-P8_03 = Pin((1, 6))  # GPIO1_6 - GPIO_38
-P8_04 = Pin((1, 7))  # GPIO1_7 - GPIO_39
-P8_05 = Pin((1, 2))  # GPIO1_2 - GPIO_34
-P8_06 = Pin((1, 3))  # GPIO1_3 - GPIO_35
-P8_07 = Pin((2, 2))  # TIMER4 - GPIO_66
-P8_08 = Pin((2, 3))  # TIMER7 - GPIO_67
-P8_09 = Pin((2, 5))  # TIMER5 - GPIO_69
+P8_3 = Pin((1, 6))  # GPIO1_6 - GPIO_38
+P8_4 = Pin((1, 7))  # GPIO1_7 - GPIO_39
+P8_5 = Pin((1, 2))  # GPIO1_2 - GPIO_34
+P8_6 = Pin((1, 3))  # GPIO1_3 - GPIO_35
+P8_7 = Pin((2, 2))  # TIMER4 - GPIO_66
+P8_8 = Pin((2, 3))  # TIMER7 - GPIO_67
+P8_9 = Pin((2, 5))  # TIMER5 - GPIO_69
 P8_10 = Pin((2, 4))  # TIMER6 - GPIO_68
 P8_11 = Pin((1, 13))  # GPIO1_13 - GPIO_45
 P8_12 = Pin((1, 12))  # GPIO1_12 - GPIO_44
@@ -212,10 +212,10 @@ EHRPWM2A = P8_19
 EHRPWM2B = P8_13
 # ECAPPWM0 = Pin("ECAPPWM0")
 # ECAPPWM2 = Pin("ECAPPWM2")
-TIMER4 = P8_07
-TIMER5 = P8_09
+TIMER4 = P8_7
+TIMER5 = P8_9
 TIMER6 = P8_10
-TIMER7 = P8_08
+TIMER7 = P8_8
 
 
 # I2C1
