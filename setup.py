@@ -56,9 +56,6 @@ if os.path.exists("/proc/device-tree/compatible"):
             "Adafruit-Blinka-Raspberry-Pi5-Neopixel",
         ]
         raspberry_pi = True
-    # BeagleBone Black, Green, PocketBeagle, BeagleBone AI, etc.
-    elif b"ti,am335x" in compat:
-        board_reqs = ["Adafruit_BBIO"]
 
 setup(
     name="Adafruit-Blinka",
