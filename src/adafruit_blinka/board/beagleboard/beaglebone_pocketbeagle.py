@@ -98,39 +98,63 @@ LED_USR3 = pin.USR3
 # https://raw.githubusercontent.com/wiki/beagleboard/pocketbeagle/images/PocketBeagle_pinout.png
 
 # I2C1 pins
-SDA_1 = pin.P2_11  # P2_11 data signal
-SCL_1 = pin.P2_9  # P2_9 clock signal
+SDA_1 = pin.P2_11  # data signal
+SCL_1 = pin.P2_9  # clock signal
 # for example compatibility we create a alias
 SDA = SDA_1
 SCL = SCL_1
 
+# I2C1 standard aliases for peripheral interface compatibility
+I2C1_SDA = SDA_1
+I2C1_SCL = SCL_1
+
 # I2C2 pins
-SDA_2 = pin.P1_26  # P1_26 data signal
-SCL_2 = pin.P1_28  # P1_28 clock signal
+SDA_2 = pin.P1_26  # data signal
+SCL_2 = pin.P1_28  # clock signal
+
+# I2C2 standard aliases for peripheral interface compatibility
+I2C2_SDA = SDA_2
+I2C2_SCL = SCL_2
 
 # SPI0 pins
-CE0 = pin.P1_6  # P1_6 - enables peripheral device
-SCLK = pin.P1_12  # P1_12 - outputs data to peripheral device
-MOSI = pin.P1_10  # P1_10 - receives data from peripheral device
-MISO = pin.P1_8  # P1_8 - outputs clock signal
+CE0 = pin.P1_6  # chip select (enables peripheral device)
+SCLK = pin.P1_8  # serial clock signal
+MOSI = pin.P1_12  # master out, slave in (data to peripheral)
+MISO = pin.P1_10  # master in, slave out (data from peripheral)
 # CircuitPython naming convention for SPI Clock
 SCK = SCLK
 
+# SPI0 standard aliases for peripheral interface compatibility
+SPI0_CS0 = CE0
+SPI0_SCLK = SCLK
+SPI0_D1 = MOSI  # D1 = Data Out = MOSI
+SPI0_D0 = MISO  # D0 = Data In = MISO
+
 # SPI1 pins
-CE0_1 = pin.P2_31  # P2_31 - enables peripheral device
-SCLK_1 = pin.P2_25  # P2_25 - outputs data to peripheral device
-MOSI_1 = pin.P2_27  # P2_27 - receives data from peripheral device
-MISO_1 = pin.P2_29  # P2_29 - outputs clock signal
+CE0_1 = pin.P2_31  # chip select (enables peripheral device)
+SCLK_1 = pin.P2_29  # serial clock signal
+MOSI_1 = pin.P2_25  # master out, slave in (data to peripheral)
+MISO_1 = pin.P2_27  # master in, slave out (data from peripheral)
 # CircuitPython naming convention for SPI Clock
 SCK_1 = SCLK_1
 
+# SPI1 standard aliases for peripheral interface compatibility
+SPI1_CS0 = CE0_1
+SPI1_SCLK = SCLK_1
+SPI1_D1 = MOSI_1  # D1 = Data Out = MOSI
+SPI1_D0 = MISO_1  # D0 = Data In = MISO
+
 
 # UART0
-TX_0 = pin.P1_30  # P1_30
-RX_0 = pin.P1_32  # P1_32
+TX_0 = pin.P1_30
+RX_0 = pin.P1_32
 # create alias for most of the examples
 TX = TX_0
 RX = RX_0
+
+# UART0 standard aliases for peripheral interface compatibility
+UART0_TXD = TX_0
+UART0_RXD = RX_0
 
 # UART2
 # pins already in use by SPI0
@@ -138,5 +162,28 @@ RX = RX_0
 # RX_2 = pin.UART2_RXD    # P1_10
 
 # UART4
-TX_4 = pin.P2_7  # P2_7
-RX_4 = pin.P2_5  # P2_5
+TX_4 = pin.P2_7
+RX_4 = pin.P2_5
+
+# UART4 standard aliases for peripheral interface compatibility
+UART4_TXD = TX_4
+UART4_RXD = RX_4
+
+# Peripheral port configurations for PocketBeagle
+# ordered as spiId, sckId, mosiId, misoId
+spiPorts = (
+    (0, SPI0_SCLK, SPI0_D1, SPI0_D0),
+    (1, SPI1_SCLK, SPI1_D1, SPI1_D0),
+)
+
+# ordered as i2cId, SCL, SDA
+i2cPorts = (
+    (1, I2C1_SCL, I2C1_SDA),
+    (2, I2C2_SCL, I2C2_SDA),
+)
+
+# ordered as uartId, txId, rxId
+uartPorts = (
+    (0, UART0_TXD, UART0_RXD),
+    (4, UART4_TXD, UART4_RXD),
+)

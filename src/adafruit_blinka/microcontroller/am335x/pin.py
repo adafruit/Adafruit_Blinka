@@ -6,9 +6,6 @@
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
 
-# names in comments copied from
-# https://github.com/adafruit/adafruit-beaglebone-io-python/blob/master/source/common.c#L73
-
 # PocketBeagle
 # P1_1 = SYS VIN        # VIN_AC
 P1_2 = Pin((2, 23))  # GPIO2_23 - GPIO_87
@@ -192,106 +189,6 @@ USR3 = Pin((1, 24))  # USR3 - GPIO_56
 
 ##########################################
 # specials
-
-# analog input
-# AIN0 = Pin("AIN0")
-# AIN1 = Pin("AIN1")
-# AIN2 = Pin("AIN2")
-# AIN3 = Pin("AIN3")
-# AIN4 = Pin("AIN4")
-# AIN5 = Pin("AIN5")
-# AIN6 = Pin("AIN6")
-# AIN7 = Pin("AIN7")
-
-# PWM
-# EHRPWM0A = Pin("EHRPWM0A")
-# EHRPWM0B = Pin("EHRPWM0B")
-EHRPWM1A = P9_14
-EHRPWM1B = P9_16
-EHRPWM2A = P8_19
-EHRPWM2B = P8_13
-# ECAPPWM0 = Pin("ECAPPWM0")
-# ECAPPWM2 = Pin("ECAPPWM2")
-TIMER4 = P8_7
-TIMER5 = P8_9
-TIMER6 = P8_10
-TIMER7 = P8_8
-
-
-# I2C1
-I2C1_SDA = P2_11
-I2C1_SCL = P2_9
-
-# I2C2
-I2C2_SDA = P1_26
-I2C2_SCL = P1_28
-
-# SPI0
-SPI0_CS0 = P9_17
-SPI0_SCLK = P9_22
-SPI0_D1 = P9_18
-SPI0_D0 = P9_22
-
-# SPI1
-SPI1_CS0 = P9_28
-SPI1_CS1 = P2_31
-SPI1_SCLK = P2_29
-SPI1_D1 = P2_25
-SPI1_D0 = P2_27
-
-# UART0
-UART0_TXD = P1_30
-UART0_RXD = P1_32
-
-# UART1
-UART1_TXD = P9_24
-UART1_RXD = P9_26
-# UART1_RTSn = Pin("UART1_RTSn")
-# UART1_CTSn = Pin("UART1_CTSn")
-
-# UART2
-UART2_TXD = P9_21
-UART2_RXD = P9_22
-
-# UART3
-# UART3_TXD = Pin("UART3_TXD")
-# UART3_RXD = Pin("UART3_RXD")
-UART3_RTSn = P8_34
-UART3_CTSn = P8_36
-
-# UART4
-UART4_TXD = P9_13
-UART4_RXD = P9_11
-UART4_RTSn = P8_33
-UART4_CTSn = P8_35
-
-# UART5
-UART5_TXD = P8_37
-UART5_RXD = P8_38
-UART5_RTSn = P8_32
-UART5_CTSn = P8_31
-
-
-# ordered as spiId, sckId, mosiId, misoId
-spiPorts = (
-    (0, SPI0_SCLK, SPI0_D1, SPI0_D0),
-    (1, SPI1_SCLK, SPI1_D1, SPI1_D0),
-)
-
-# ordered as uartId, txId, rxId
-uartPorts = (
-    # (0, UART0_TXD, UART0_RXD),
-    # (1, UART1_TXD, UART1_RXD),
-    # (2, UART2_TXD, UART2_RXD),
-    # (4, UART4_TXD, UART4_RXD),
-    # (5, UART5_TXD, UART5_RXD),
-)
-
-# ordered as i2cId, SCL, SDA
-i2cPorts = (
-    (1, I2C1_SCL, I2C1_SDA),
-    (2, I2C2_SCL, I2C2_SDA),
-)
 
 PWM1 = P1_36
 PWM2 = P1_33

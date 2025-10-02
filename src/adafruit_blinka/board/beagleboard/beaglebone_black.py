@@ -124,8 +124,8 @@ LED_USR3 = pin.USR3
 # SCLK_1 = pin.D21
 # SCK_1 = pin.D21
 
-SDA = pin.I2C2_SDA  # P9_19
-SCL = pin.I2C2_SCL  # P9_20
+SDA = pin.P9_20  # I2C2_SDA
+SCL = pin.P9_19  # I2C2_SCL
 
 # Refer to header default pin modes
 # http://beagleboard.org/static/images/cape-headers.png
@@ -142,12 +142,18 @@ SCL = pin.I2C2_SCL  # P9_20
 # config-pin p9.21 spi
 # config-pin p9.22 spi_sclk
 #
-CE0 = pin.SPI0_CS0  # P9_17
-MOSI = pin.SPI0_D1  # P9_18
-MISO = pin.SPI0_D0  # P9_21
-SCLK = pin.SPI0_SCLK  # P9_22
+CE0 = pin.P9_17  # SPI0_CS0
+MOSI = pin.P9_18  # SPI0_D1 (data out)
+MISO = pin.P9_21  # SPI0_D0 (data in)
+SCLK = pin.P9_22  # SPI0_SCLK
 # CircuitPython naming convention for SPI Clock
 SCK = SCLK
+
+# SPI0 standard aliases for peripheral interface compatibility
+SPI0_CS0 = CE0
+SPI0_D1 = MOSI  # D1 = Data Out = MOSI
+SPI0_D0 = MISO  # D0 = Data In = MISO
+SPI0_SCLK = SCLK
 
 # Pins for SPI1
 # refer to:
@@ -172,9 +178,47 @@ SCK = SCLK
 # config-pin p9.29 spi1
 # config-pin p9.30 spi1
 # config-pin p9.31 spi_sclk
-CE1 = pin.SPI1_CS0  # P9_28
-MOSI_1 = pin.SPI1_D0  # P9_29
-MISO_1 = pin.SPI1_D1  # P9_30
-SCLK_1 = pin.SPI1_SCLK  # P9_31
+CE1 = pin.P9_28  # SPI1_CS0
+MISO_1 = pin.P9_29  # SPI1_D0 (data in)
+MOSI_1 = pin.P9_30  # SPI1_D1 (data out)
+SCLK_1 = pin.P9_31  # SPI1_SCLK
 # CircuitPython naming convention for SPI Clock
 SCK_1 = SCLK_1
+
+# SPI1 standard aliases for peripheral interface compatibility
+SPI1_CS0 = CE1
+SPI1_D0 = MISO_1  # D0 = Data In = MISO
+SPI1_D1 = MOSI_1  # D1 = Data Out = MOSI
+SPI1_SCLK = SCLK_1
+
+# I2C standard aliases for peripheral interface compatibility
+I2C2_SDA = SDA
+I2C2_SCL = SCL
+
+# UART aliases - BeagleBone Black common UART pins
+# Note: UART0 conflicts with console on most images
+UART1_TXD = pin.P9_24
+UART1_RXD = pin.P9_26
+UART2_TXD = pin.P9_21  # conflicts with SPI0_MISO
+UART2_RXD = pin.P9_22  # conflicts with SPI0_SCLK
+UART4_TXD = pin.P9_13
+UART4_RXD = pin.P9_11
+
+# Peripheral port configurations for BeagleBone Black
+# ordered as spiId, sckId, mosiId, misoId
+spiPorts = (
+    (0, SPI0_SCLK, SPI0_D1, SPI0_D0),
+    (1, SPI1_SCLK, SPI1_D1, SPI1_D0),
+)
+
+# ordered as i2cId, SCL, SDA  
+i2cPorts = (
+    (2, I2C2_SCL, I2C2_SDA),
+)
+
+# ordered as uartId, txId, rxId
+uartPorts = (
+    (1, UART1_TXD, UART1_RXD),
+    (2, UART2_TXD, UART2_RXD),
+    (4, UART4_TXD, UART4_RXD),
+)
