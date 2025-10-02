@@ -115,4 +115,4 @@ i2cPorts = (
 )
 
 # ordered as spiId, sckId, mosiId, misoId
-spiPorts = ((K02, J07, K01, K00),)
+spiPorts = ((0, J07, K01, K00),)

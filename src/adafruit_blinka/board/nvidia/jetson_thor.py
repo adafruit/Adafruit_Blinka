@@ -33,9 +33,7 @@ D25 = pin.U00
 D26 = pin.AE01
 D27 = pin.M00
 
-CE1 = D7
-CE0 = D8
-MISO = D9
-MOSI = D10
-SCLK = D11
-SCK = D11
+MISO = pin.K00
+MOSI = pin.K01
+SCLK = pin.J07
+SCK = pin.J07
