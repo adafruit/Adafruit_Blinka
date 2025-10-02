@@ -211,8 +211,10 @@ spiPorts = (
     (1, SPI1_SCLK, SPI1_D1, SPI1_D0),
 )
 
-# ordered as i2cId, SCL, SDA
-i2cPorts = ((2, I2C2_SCL, I2C2_SDA),)
+# ordered as i2cId, SCL, SDA  
+i2cPorts = (
+    (2, I2C2_SCL, I2C2_SDA),
+)
 
 # ordered as uartId, txId, rxId
 uartPorts = (
