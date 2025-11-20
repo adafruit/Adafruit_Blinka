@@ -464,6 +464,9 @@ elif board_id == ap_board.LUCKFOX_PICO_PLUS:
 elif board_id == ap_board.LUCKFOX_PICO_MAX:
     from adafruit_blinka.board.luckfox.luckfoxpico_max import *
 
+elif board_id == ap_board.LUCKFOX_PICO_ULTRA:
+    from adafruit_blinka.board.luckfox.luckfoxpico_ultra import *
+
 elif board_id == ap_board.VIVID_UNIT:
     from adafruit_blinka.board.vivid_unit import *
 
