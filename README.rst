@@ -9,8 +9,8 @@ Introduction
     :target: https://adafru.it/discord
     :alt: Discord
 
-.. image:: https://github.com/adafruit/Adafruit_Blinka.svg/workflows/Build%20CI/badge.svg
-    :target: https://github.com/adafruit/Adafruit_Blinka/actions
+.. image:: https://github.com/adafruit/Adafruit_Blinka/actions/workflows/build.yml/badge.svg
+    :target: https://github.com/adafruit/Adafruit_Blinka/actions/workflows/build.yml
     :alt: Build Status
 
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
