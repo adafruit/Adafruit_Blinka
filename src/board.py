@@ -209,6 +209,9 @@ elif board_id == ap_board.JETSON_AGX_ORIN:
 elif board_id in (ap_board.JETSON_ORIN_NX, ap_board.JETSON_ORIN_NANO):
     from adafruit_blinka.board.nvidia.jetson_orin_nx import *
 
+elif board_id == ap_board.JETSON_THOR:
+    from adafruit_blinka.board.nvidia.jetson_thor import *
+
 elif board_id == ap_board.CLARA_AGX_XAVIER:
     from adafruit_blinka.board.nvidia.clara_agx_xavier import *
 
@@ -460,6 +463,9 @@ elif board_id == ap_board.LUCKFOX_PICO_PLUS:
 
 elif board_id == ap_board.LUCKFOX_PICO_MAX:
     from adafruit_blinka.board.luckfox.luckfoxpico_max import *
+
+elif board_id == ap_board.LUCKFOX_PICO_ULTRA:
+    from adafruit_blinka.board.luckfox.luckfoxpico_ultra import *
 
 elif board_id == ap_board.VIVID_UNIT:
     from adafruit_blinka.board.vivid_unit import *
