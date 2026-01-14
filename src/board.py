@@ -152,6 +152,9 @@ elif board_id == ap_board.ORANGE_PI_5_PRO:
 elif board_id == ap_board.ORANGE_PI_5_PLUS:
     from adafruit_blinka.board.orangepi.orangepi5plus import *
 
+elif board_id == ap_board.ORANGE_PI_5_ULTRA:
+    from adafruit_blinka.board.orangepi.orangepi5ultra import *
+
 elif board_id == ap_board.BANANA_PI_M2_ZERO:
     from adafruit_blinka.board.bananapi.bpim2zero import *
 
