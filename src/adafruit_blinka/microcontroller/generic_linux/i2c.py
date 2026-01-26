@@ -41,7 +41,13 @@ class I2C:
     # pylint: enable=unused-argument
 
     def scan(self):
-        """Probe each address; return those that ACK."""
+        """Scan I2C bus for devices.
+
+        On Linux, some devices will NACK SMBus 'read_byte' probes but respond fine
+        to real I2C transactions. Prefer SMBus 'quick' probe when supported, and
+        fall back to 'read_byte'. Skip reserved address ranges by scanning only
+        0x08..0x77.
+        """
         found = []
         for addr in range(0x08, 0x78):
             try:
