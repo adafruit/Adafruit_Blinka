@@ -41,14 +41,22 @@ class I2C:
     # pylint: enable=unused-argument
 
     def scan(self):
-        """Try to read a byte from each address, if you get an OSError
-        it means the device isnt there"""
+        """Scan I2C bus for devices.
+
+        On Linux, some devices will NACK SMBus 'read_byte' probes but respond fine
+        to real I2C transactions. Prefer SMBus 'quick' probe when supported, and
+        fall back to 'read_byte'. Skip reserved address ranges by scanning only
+        0x08..0x77.
+        """
         found = []
-        for addr in range(0, 0x80):
+        for addr in range(0x08, 0x78):
             try:
-                self._i2c_bus.read_byte(addr)
+                self._i2c_bus.write_quick(addr)
             except OSError:
-                continue
+                try:
+                    self._i2c_bus.read_byte(addr)
+                except OSError:
+                    continue
             found.append(addr)
         return found
 
