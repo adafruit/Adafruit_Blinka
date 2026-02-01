@@ -1,15 +1,24 @@
 # SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
 #
 # SPDX-License-Identifier: MIT
-
 """Allwinner H616 Pin Names"""
+import glob
+import gpiod
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
-__chip_num = 1
-with open("/sys/class/gpio/gpiochip0/label", "r") as f:
-    label = f.read().strip()
-    if label == "300b000.pinctrl":
-        __chip_num = 0
+
+def find_gpiochip_number(target_label):
+    """Return the GPIO chip number for the target label, or 0 if not found."""
+    for dev in glob.glob("/dev/gpiochip*"):
+        with gpiod.Chip(dev) as chip:
+            info = chip.get_info()
+            if info.label == target_label:
+                return int(dev[-1])
+    return 0
+
+
+__chip_num = find_gpiochip_number("300b000.pinctrl")
+
 PC0 = Pin((__chip_num, 64))
 SPI0_SCLK = PC0
 PC1 = Pin((__chip_num, 65))
