@@ -29,7 +29,7 @@ from adafruit_blinka.agnostic import board_id, detector
 
 
 def import_board_module(module_name: str):
-    """Import a board module by name in the same way "from board import *" works"""
+    r"""Import a board module by name in the same way "from board import *" works"""
     module = import_module(module_name)
     globals().update(
         {name: getattr(module, name) for name in module.__all__}
