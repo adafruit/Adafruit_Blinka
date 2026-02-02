@@ -7,7 +7,7 @@
 
 See `CircuitPython:board` in CircuitPython for more details.
 
-* Author(s): cefn
+* Author(s): cefn, Melissa LeBlanc-Williams
 """
 
 __version__ = "0.0.0+auto.0"
@@ -42,6 +42,7 @@ def import_board_module(module_name: str):
     )
 
 
+SCL = SDA = SCLK = MOSI = MISO = None
 current_folder = Path(__file__).parent.absolute()
 with open(current_folder / "board_imports.json") as f:
     board_imports = json.load(f)
@@ -81,7 +82,7 @@ with open(current_folder / "board_imports.json") as f:
         else:
             raise NotImplementedError(f"Board not supported {board_id}.")
 
-if "SCL" in locals() and "SDA" in locals():
+if SCL is not None and SDA is not None:
 
     def I2C():
         """The singleton I2C interface"""
@@ -90,7 +91,7 @@ if "SCL" in locals() and "SDA" in locals():
         return busio.I2C(SCL, SDA)
 
 
-if "SCLK" in locals() and "MOSI" in locals() and "MISO" in locals():
+if SCLK is not None and MOSI is not None and MISO is not None:
 
     def SPI():
         """The singleton SPI interface"""
