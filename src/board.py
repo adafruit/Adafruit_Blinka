@@ -26,60 +26,72 @@ from adafruit_blinka.agnostic import board_id, detector
 
 # Go through the board_list and import the first one that matches
 # if the key start with any_ then use detector.board.any_...
-current_folder = Path(__file__).parent.absolute()
-board_imports = json.load(open(current_folder / "board_imports.json"))
+
 
 def import_board_module(module_name: str):
     """Import a board module by name in the same way "from board import *" works"""
     module = import_module(module_name)
     globals().update(
-        {name: getattr(module, name) for name in module.__all__} if hasattr(module, '__all__')
-        else
-        {key: value for (key, value) in module.__dict__.items() if not key.startswith('_')
-    })
+        {name: getattr(module, name) for name in module.__all__}
+        if hasattr(module, "__all__")
+        else {
+            key: value
+            for (key, value) in module.__dict__.items()
+            if not key.startswith("_")
+        }
+    )
 
-for board_key, board_module in board_imports.items():
-    if board_key.startswith("any_"):
-        if getattr(detector.board, board_key):
-            import_board_module(board_module)
-            break
+
+current_folder = Path(__file__).parent.absolute()
+with open(current_folder / "board_imports.json") as f:
+    board_imports = json.load(f)
+
+    for board_key, board_module in board_imports.items():
+        if board_key.startswith("any_"):
+            if getattr(detector.board, board_key):
+                import_board_module(board_module)
+                break
+        else:
+            if board_id == getattr(ap_board, board_key):
+                import_board_module(board_module)
+                break
     else:
-        if board_id == getattr(ap_board, board_key):
-            import_board_module(board_module)
-            break
-else:
-    if "sphinx" in sys.modules:
-        pass
+        if "sphinx" in sys.modules:
+            pass
 
-    elif board_id is None:
-        import platform
-        import pkg_resources
+        elif board_id is None:
+            import platform
+            import pkg_resources
 
-        package = str(pkg_resources.get_distribution("adafruit_platformdetect")).split()
-        raise NotImplementedError(
-            f"""
-            {package[0]} version {package[1]} was unable to identify the board and/or
-            microcontroller running the {platform.system()} platform. Please be sure you
-            have the latest packages by running:
-            'pip3 install --upgrade adafruit-blinka adafruit-platformdetect'
+            package = str(
+                pkg_resources.get_distribution("adafruit_platformdetect")
+            ).split()
+            raise NotImplementedError(
+                f"""
+                {package[0]} version {package[1]} was unable to identify the board and/or
+                microcontroller running the {platform.system()} platform. Please be sure you
+                have the latest packages by running:
+                'pip3 install --upgrade adafruit-blinka adafruit-platformdetect'
 
-            If you are running the latest package, your board may not yet be supported. Please
-            open a New Issue on GitHub at https://github.com/adafruit/Adafruit_Blinka/issues and
-            select New Board Request.
-            """
-        )
-
-    else:
-        raise NotImplementedError(f"Board not supported {board_id}.")
+                If you are running the latest package, your board may not yet be supported. Please
+                open a New Issue on GitHub at https://github.com/adafruit/Adafruit_Blinka/issues and
+                select New Board Request.
+                """
+            )
+        else:
+            raise NotImplementedError(f"Board not supported {board_id}.")
 
 if "SCL" in locals() and "SDA" in locals():
+
     def I2C():
         """The singleton I2C interface"""
         import busio
 
         return busio.I2C(SCL, SDA)
 
+
 if "SCLK" in locals() and "MOSI" in locals() and "MISO" in locals():
+
     def SPI():
         """The singleton SPI interface"""
         import busio
