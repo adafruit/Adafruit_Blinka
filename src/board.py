@@ -38,7 +38,7 @@ elif board_id == ap_board.NODEMCU:
 elif board_id == ap_board.PYBOARD:
     from adafruit_blinka.board.pyboard import *
 
-elif board_id == ap_board.RASPBERRY_PI_PICO:
+elif detector.board.any_raspberry_pi_pico_id:
     from adafruit_blinka.board.raspberrypi.pico import *
 
 elif detector.board.any_raspberry_pi_5_board:

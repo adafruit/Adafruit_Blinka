@@ -13,7 +13,7 @@ if chip_id == ap_chip.ESP8266:
     from adafruit_blinka.microcontroller.esp8266.pin import *
 elif chip_id == ap_chip.STM32F405:
     from adafruit_blinka.microcontroller.stm32.stm32f405.pin import *
-elif chip_id == ap_chip.RP2040:
+elif chip_id in (ap_chip.RP2040, ap_chip.RP2350):
     from adafruit_blinka.microcontroller.rp2040.pin import *
 elif chip_id == ap_chip.BCM2XXX:
     if detector.board.any_raspberry_pi_5_board:
