@@ -40,8 +40,6 @@ with open(get_import_file("microcontroller_imports.json", __file__)) as f:
             if getattr(detector.chip, chip_key):
                 import_mod(chip_module, "Pin")
                 break
-    else:
-        raise AttributeError("Chip Not Found")
 
 
 class DriveMode(Enum):
