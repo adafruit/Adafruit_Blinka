@@ -68,6 +68,7 @@
     "STM32F405": "machine",
     "RP2040": "machine",
     "RP2350": "machine",
+    "ESP8266": "adafruit_blinka.microcontroller.esp8266.pin",
     "CV1800B": "adafruit_blinka.microcontroller.cv1800b.pin",
     "RV1103": "adafruit_blinka.microcontroller.rockchip.rv1103.pin",
     "RV1106": "adafruit_blinka.microcontroller.rockchip.rv1106.pin",
