@@ -146,9 +146,9 @@ elif detector.chip.RP2040_U2IF:
     from adafruit_blinka.microcontroller.rp2040_u2if.pin import Pin
 # MicroPython Chips
 elif detector.chip.STM32F405:
-    from machine import Pin
+    from adafruit_blinka.microcontroller.stm32.stm32f405 import Pin
 elif detector.chip.RP2040 or detector.chip.RP2350:
-    from machine import Pin
+    from adafruit_blinka.microcontroller.rp2040.pin import Pin
 elif detector.chip.CV1800B:
     from adafruit_blinka.microcontroller.cv1800b.pin import Pin
 elif detector.chip.RV1103:
