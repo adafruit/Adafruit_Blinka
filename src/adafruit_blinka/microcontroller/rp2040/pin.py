@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 """RP2040 pins"""
 
-from ..generic_micropython import Pin
+from machine import Pin
 
 GP0 = Pin(0)
 GP1 = Pin(1)
