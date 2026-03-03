@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2021 Melissa LeBlanc-Williams for Adafruit Industries
 #
 # SPDX-License-Identifier: MIT
-"""Genereic Pin class for use with MicroPython boards"""
+"""Generic Pin class for use with MicroPython boards"""
 from adafruit_blinka import Enum
 
 
@@ -24,10 +24,10 @@ class Pin(Enum):
 
         for key in dir(board):
             if getattr(board, key) is self:
-                return "board.{}".format(key)
+                return f"board.{key}"
         # pylint: enable=import-outside-toplevel, cyclic-import
 
         for key in dir(microcontroller.pin):
             if getattr(microcontroller.pin, key) is self:
-                return "microcontroller.pin.{}".format(key)
+                return f"microcontroller.pin.{key}"
         return repr(self)

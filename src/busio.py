@@ -140,7 +140,7 @@ class I2C(Lockable):
 
             self._i2c = _I2C(scl, sda, frequency=frequency)
             return
-        if detector.chip.id == ap_chip.RP2040:
+        if detector.chip.id in (ap_chip.RP2040, ap_chip.RP2350):
             from adafruit_blinka.microcontroller.rp2040.i2c import I2C as _I2C
 
             self._i2c = _I2C(scl, sda, frequency=frequency)
@@ -358,7 +358,7 @@ class SPI(Lockable):
             self._spi = _SPI(clock)  # this is really all that's needed
             self._pins = (clock, clock, clock)  # will determine MOSI/MISO from clock
             return
-        if detector.chip.id == ap_chip.RP2040:
+        if detector.chip.id in (ap_chip.RP2040, ap_chip.RP2350):
             from adafruit_blinka.microcontroller.rp2040.spi import SPI as _SPI
 
             self._spi = _SPI(clock, MOSI, MISO)  # Pins configured on instantiation
@@ -459,7 +459,7 @@ class SPI(Lockable):
             from adafruit_blinka.microcontroller.rp2040_u2if.spi import (
                 SPI_Radxa_X4 as _SPI,
             )
-        elif detector.chip.id == ap_chip.RP2040:
+        elif detector.chip.id in (ap_chip.RP2040, ap_chip.RP2350):
             from adafruit_blinka.microcontroller.rp2040.spi import SPI as _SPI
         elif detector.board.any_siemens_iot2000:
             from adafruit_blinka.microcontroller.am65xx.spi import SPI as _SPI
@@ -553,7 +553,7 @@ class UART(Lockable):
             from adafruit_blinka.microcontroller.nova.uart import UART as _UART
         elif detector.board.greatfet_one:
             from adafruit_blinka.microcontroller.nxp_lpc4330.uart import UART as _UART
-        elif detector.chip.id == ap_chip.RP2040:
+        elif detector.chip.id in (ap_chip.RP2040, ap_chip.RP2350):
             from adafruit_blinka.microcontroller.rp2040.uart import UART as _UART
         else:
             from machine import UART as _UART
@@ -577,7 +577,7 @@ class UART(Lockable):
         else:
             raise ValueError("Invalid parity")
 
-        if detector.chip.id == ap_chip.RP2040:
+        if detector.chip.id in (ap_chip.RP2040, ap_chip.RP2350):
             self._uart = _UART(
                 tx,
                 rx,

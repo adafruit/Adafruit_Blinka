@@ -10,6 +10,11 @@ PA1 = Pin((1, 1))
 UART2_RX = PA1
 PA2 = Pin((1, 2))
 PA3 = Pin((1, 3))
+SPI0_CS1 = PA3
+PA4 = Pin((1, 4))
+UART0_TX = PA4
+PA5 = Pin((1, 5))
+UART0_RX = PA5
 PA6 = Pin((1, 6))
 PA7 = Pin((1, 7))
 PA8 = Pin((1, 8))
@@ -21,6 +26,7 @@ PA12 = Pin((1, 12))
 TWI0_SDA = PA12
 PA13 = Pin((1, 13))
 UART3_TX = PA13
+SPI1_CS0 = PA13
 PA14 = Pin((1, 14))
 UART3_RX = PA14
 SPI1_SCLK = PA14
@@ -30,7 +36,10 @@ PA16 = Pin((1, 16))
 SPI1_MISO = PA16
 PA17 = Pin((1, 17))
 PA18 = Pin((1, 18))
+TWI1_SCL = PA18
 PA19 = Pin((1, 19))
+TWI1_SDA = PA19
+
 PA20 = Pin((1, 20))
 PA21 = Pin((1, 21))
 
@@ -63,12 +72,27 @@ PG13 = Pin((1, 205))
 
 PL0 = Pin((0, 0))
 PL1 = Pin((0, 1))
+PL2 = Pin((1, 354))
+S_UART_TX = PL2
+PL3 = Pin((1, 355))
+S_UART_RX = PL3
+PL11 = Pin((1, 363))
 
-i2cPorts = ((0, TWI0_SCL, TWI0_SDA),)
+i2cPorts = (
+    (0, TWI0_SCL, TWI0_SDA),
+    (1, TWI1_SCL, TWI1_SDA),
+)
 # ordered as spiId, sckId, mosiId, misoId
 spiPorts = (
     (0, SPI0_SCLK, SPI0_MOSI, SPI0_MISO),
     (1, SPI1_SCLK, SPI1_MOSI, SPI1_MISO),
 )
+
 # ordered as uartId, txId, rxId
-uartPorts = ((3, UART3_TX, UART3_RX),)
+uartPorts = (
+    (0, UART0_TX, UART0_RX),
+    (1, UART1_TX, UART1_RX),
+    (2, UART2_TX, UART2_RX),
+    (3, UART3_TX, UART3_RX),
+    (4, S_UART_TX, S_UART_RX),
+)
