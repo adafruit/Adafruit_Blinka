@@ -20,24 +20,20 @@ with open(get_import_file("microcontroller_imports.json", __file__)) as f:
     microcontroller_imports = json.load(f)
 
     for chip_key, chip_module in microcontroller_imports.items():
-        if getattr(detector.board, chip_key) and isinstance(chip_module, dict):
-            # Loop through the children and import the first one that matches
-            for board_key, board_module in chip_module.items():
-                if board_key.startswith("any_") and getattr(detector.board, board_key):
-                    # import Pin from the microcontroller module
-                    import_mod(f"{board_module}.pin", "Pin")
-                    break
-                if board_key == getattr(detector.board, board_key):
-                    import_mod(f"{board_module}.pin", "Pin")
-                    break
+        if getattr(detector.chip, chip_key):
+            if isinstance(chip_module, dict):
+                # Loop through the children and import the first one that matches
+                for board_key, board_chip_module in chip_module.items():
+                    if board_key.startswith("any_") and getattr(detector.board, board_key):
+                        # import Pin from the microcontroller module
+                        import_mod(f"{board_chip_module}.pin", "Pin")
+                        break
+                    if board_key == getattr(detector.board, board_key):
+                        import_mod(f"{board_chip_module}.pin", "Pin")
+                        break
+                else:
+                    import_mod(f"{chip_module['default']}.pin", "Pin")
             else:
-                import_mod(f"{chip_module['default']}.pin", "Pin")
-        else:
-            if chip_key.startswith("board.") and getattr(detector.board, chip_key[6:]):
-                # Case 2
-                import_mod(f"{chip_module}.pin", "Pin")
-                break
-            if getattr(detector.chip, chip_key):
                 import_mod(f"{chip_module}.pin", "Pin")
                 break
 
