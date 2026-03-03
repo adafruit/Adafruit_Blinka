@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 """STM32F405 pins"""
 
-from ...generic_micropython import Pin
+from machine import Pin
 
 A0 = Pin("A0")
 A1 = Pin("A1")
