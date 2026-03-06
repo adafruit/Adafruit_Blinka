@@ -12,7 +12,6 @@
 try:
     from importlib import import_module
 except ImportError as e:
-    print("importlib not available, using alternate import_module function")
 
     def import_module(module_name: str, package: str = None):
         """importlib not available, define an alternate import_module function"""
