@@ -23,19 +23,6 @@ def delay_us(delay):
     time.sleep(delay / 1e6)
 
 
-def update_globals(module):
-    """Update globals to patch into current namespace"""
-    globals().update(
-        {name: getattr(module, name) for name in module.__all__}
-        if hasattr(module, "__all__")
-        else {
-            key: value
-            for (key, value) in module.__dict__.items()
-            if not key.startswith("_")
-        }
-    )
-
-
 # We intentionally are patching into this namespace so skip the wildcard check.
 # pylint: disable=unused-wildcard-import,wildcard-import,ungrouped-imports
 
@@ -51,15 +38,15 @@ with open(get_import_file("../microcontroller_imports.json", __file__)) as f:
                         detector.board, board_key
                     ):
                         # import Pin from the microcontroller module
-                        import_mod(update_globals, f"{board_chip_module}.pin", "*")
+                        import_mod(globals(), f"{board_chip_module}.pin", "*")
                         break
                     if board_key == getattr(detector.board, board_key):
-                        import_mod(update_globals, f"{board_chip_module}.pin", "*")
+                        import_mod(globals(), f"{board_chip_module}.pin", "*")
                         break
                 else:
-                    import_mod(update_globals, f"{chip_module['default']}.pin", "*")
+                    import_mod(globals(), f"{chip_module['default']}.pin", "*")
             else:
-                import_mod(update_globals, f"{chip_module}.pin", "*")
+                import_mod(globals(), f"{chip_module}.pin", "*")
                 break
     else:
         if chip_id == ap_chip.GENERIC_X86:

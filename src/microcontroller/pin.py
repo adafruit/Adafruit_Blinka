@@ -12,19 +12,6 @@ from adafruit_blinka.importing import import_mod, get_import_file
 # pylint: disable=unused-wildcard-import,wildcard-import,ungrouped-imports
 
 
-def update_globals(module):
-    """Update globals to patch into current namespace"""
-    globals().update(
-        {name: getattr(module, name) for name in module.__all__}
-        if hasattr(module, "__all__")
-        else {
-            key: value
-            for (key, value) in module.__dict__.items()
-            if not key.startswith("_")
-        }
-    )
-
-
 with open(get_import_file("../microcontroller_imports.json", __file__)) as f:
     microcontroller_imports = json.load(f)
 
@@ -37,15 +24,15 @@ with open(get_import_file("../microcontroller_imports.json", __file__)) as f:
                         detector.board, board_key
                     ):
                         # import Pin from the microcontroller module
-                        import_mod(update_globals, f"{board_chip_module}.pin", "*")
+                        import_mod(globals(), f"{board_chip_module}.pin", "*")
                         break
                     if board_key == getattr(detector.board, board_key):
-                        import_mod(update_globals, f"{board_chip_module}.pin", "*")
+                        import_mod(globals(), f"{board_chip_module}.pin", "*")
                         break
                 else:
-                    import_mod(update_globals, f"{chip_module['default']}.pin", "*")
+                    import_mod(globals(), f"{chip_module['default']}.pin", "*")
             else:
-                import_mod(update_globals, f"{chip_module}.pin", "*")
+                import_mod(globals(), f"{chip_module}.pin", "*")
                 break
     else:
         if "sphinx" in sys.modules:

@@ -37,9 +37,18 @@ def get_import_file(json_file_name, script_file_location):
         return f"{script_folder}/{json_file_name}"
 
 
-def import_mod(update_globals_cb, module_name: str, package_name: str = "*"):
+def import_mod(caller_globals, module_name: str, package_name: str = "*"):
     """Function to allow importing with * or specific package name."""
     if package_name == "*":
-        update_globals_cb(import_module(module_name))
+        module = import_module(module_name)
+        caller_globals.update(
+            {name: getattr(module, name) for name in module.__all__}
+            if hasattr(module, "__all__")
+            else {
+                key: value
+                for (key, value) in module.__dict__.items()
+                if not key.startswith("_")
+            }
+        )
     else:
         import_module(module_name, package=package_name)
