@@ -12,6 +12,7 @@
 try:
     from importlib import import_module
 except ImportError as e:
+    print("importlib not available, using alternate import_module function")
 
     def import_module(module_name: str, package: str = None):
         """importlib not available, define an alternate import_module function"""
@@ -21,33 +22,25 @@ except ImportError as e:
         return __import__(module_name, globals(), locals(), package_list)
 
 
-def get_import_file(json_file_name, current_file):
+def get_import_file(json_file_name, script_file_location):
     """Get the full path to the microcontroller imports file."""
     try:
         from pathlib import Path
 
-        current_folder = Path(current_file).parent.absolute()
-        return current_folder / json_file_name
+        script_folder = Path(script_file_location).parent.absolute()
+        return script_folder / json_file_name
     except ImportError:
-        if current_file.startswith("/"):
-            current_folder = "/".join(current_file.split("/")[:-1])
+        # MicroPython doesn't have pathlib, so we have to do it manually
+        if script_file_location.startswith("/"):
+            script_folder = "/".join(script_file_location.split("/")[:-1])
         else:
-            current_folder = "."
-        return f"{current_folder}/{json_file_name}"
+            script_folder = "."
+        return f"{script_folder}/{json_file_name}"
 
 
-def import_mod(module_name: str, package_name: str = "*"):
+def import_mod(update_globals_cb, module_name: str, package_name: str = "*"):
     """Function to allow importing with * or specific package name."""
     if package_name == "*":
-        module = import_module(module_name)
-        globals().update(
-            {name: getattr(module, name) for name in module.__all__}
-            if hasattr(module, "__all__")
-            else {
-                key: value
-                for (key, value) in module.__dict__.items()
-                if not key.startswith("_")
-            }
-        )
+        update_globals_cb(import_module(module_name))
     else:
         import_module(module_name, package=package_name)

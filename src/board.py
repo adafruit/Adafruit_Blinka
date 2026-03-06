@@ -20,6 +20,20 @@ import adafruit_platformdetect.constants.boards as ap_board
 from adafruit_blinka.agnostic import board_id, detector
 from adafruit_blinka.importing import import_mod, get_import_file
 
+
+def update_globals(module):
+    """Update globals to patch into current namespace"""
+    globals().update(
+        {name: getattr(module, name) for name in module.__all__}
+        if hasattr(module, "__all__")
+        else {
+            key: value
+            for (key, value) in module.__dict__.items()
+            if not key.startswith("_")
+        }
+    )
+
+
 # pylint: disable=wildcard-import,unused-wildcard-import,ungrouped-imports
 # pylint: disable=import-outside-toplevel
 
@@ -35,11 +49,11 @@ with open(get_import_file("board_imports.json", __file__)) as f:
     for board_key, board_module in board_imports.items():
         if board_key.startswith("any_"):
             if getattr(detector.board, board_key):
-                import_mod(board_module)
+                import_mod(update_globals, board_module)
                 break
         else:
             if board_id == getattr(ap_board, board_key):
-                import_mod(board_module)
+                import_mod(update_globals, board_module)
                 break
     else:
         if "sphinx" in sys.modules:

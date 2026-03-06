@@ -17,15 +17,29 @@ from adafruit_blinka.importing import import_mod, get_import_file
 from microcontroller import pin  # pylint: disable=unused-import
 from microcontroller.pin import Pin  # pylint: disable=unused-import
 
+
 def delay_us(delay):
     """Sleep for delay usecs."""
     time.sleep(delay / 1e6)
 
 
+def update_globals(module):
+    """Update globals to patch into current namespace"""
+    globals().update(
+        {name: getattr(module, name) for name in module.__all__}
+        if hasattr(module, "__all__")
+        else {
+            key: value
+            for (key, value) in module.__dict__.items()
+            if not key.startswith("_")
+        }
+    )
+
+
 # We intentionally are patching into this namespace so skip the wildcard check.
 # pylint: disable=unused-wildcard-import,wildcard-import,ungrouped-imports
 
-with open(get_import_file("microcontroller_imports.json", __file__)) as f:
+with open(get_import_file("../microcontroller_imports.json", __file__)) as f:
     microcontroller_imports = json.load(f)
 
     for chip_key, chip_module in microcontroller_imports.items():
@@ -33,29 +47,30 @@ with open(get_import_file("microcontroller_imports.json", __file__)) as f:
             if isinstance(chip_module, dict):
                 # Loop through the children and import the first one that matches
                 for board_key, board_chip_module in chip_module.items():
-                    if board_key.startswith("any_") and getattr(detector.board, board_key):
+                    if board_key.startswith("any_") and getattr(
+                        detector.board, board_key
+                    ):
                         # import Pin from the microcontroller module
-                        import_mod(f"{board_chip_module}.pin", "*")
+                        import_mod(update_globals, f"{board_chip_module}.pin", "*")
                         break
                     if board_key == getattr(detector.board, board_key):
-                        import_mod(f"{board_chip_module}.pin", "*")
+                        import_mod(update_globals, f"{board_chip_module}.pin", "*")
                         break
                 else:
-                    import_mod(f"{chip_module['default']}.pin", "*")
+                    import_mod(update_globals, f"{chip_module['default']}.pin", "*")
             else:
-                import_mod(f"{chip_module}.pin", "*")
+                import_mod(update_globals, f"{chip_module}.pin", "*")
                 break
     else:
-        if "sphinx" in sys.modules:
-            # pylint: disable=unused-import
-            from adafruit_blinka.microcontroller.generic_micropython import Pin
-        elif chip_id == ap_chip.GENERIC_X86:
-            print("WARNING: GENERIC_X86 is not fully supported. Some features may not work.")
-            from adafruit_blinka.microcontroller.generic_micropython import Pin
+        if chip_id == ap_chip.GENERIC_X86:
+            print(
+                "WARNING: GENERIC_X86 is not fully supported. Some features may not work."
+            )
         elif chip_id is None:
             print(
                 "WARNING: chip_id == None is not fully supported. Some features may not work."
             )
-            from adafruit_blinka.microcontroller.generic_micropython import Pin
+        elif "sphinx" in sys.modules:
+            pass
         else:
             raise NotImplementedError("Microcontroller not supported: ", chip_id)

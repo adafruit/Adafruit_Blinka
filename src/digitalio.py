@@ -16,6 +16,20 @@ from adafruit_blinka import Enum, ContextManaged
 
 Pin = None
 
+
+def update_globals(module):
+    """Update globals to patch into current namespace"""
+    globals().update(
+        {name: getattr(module, name) for name in module.__all__}
+        if hasattr(module, "__all__")
+        else {
+            key: value
+            for (key, value) in module.__dict__.items()
+            if not key.startswith("_")
+        }
+    )
+
+
 with open(get_import_file("microcontroller_imports.json", __file__)) as f:
     microcontroller_imports = json.load(f)
 
@@ -24,17 +38,19 @@ with open(get_import_file("microcontroller_imports.json", __file__)) as f:
             if isinstance(chip_module, dict):
                 # Loop through the children and import the first one that matches
                 for board_key, board_chip_module in chip_module.items():
-                    if board_key.startswith("any_") and getattr(detector.board, board_key):
+                    if board_key.startswith("any_") and getattr(
+                        detector.board, board_key
+                    ):
                         # import Pin from the microcontroller module
-                        import_mod(f"{board_chip_module}.pin", "Pin")
+                        import_mod(update_globals, f"{board_chip_module}.pin", "Pin")
                         break
                     if board_key == getattr(detector.board, board_key):
-                        import_mod(f"{board_chip_module}.pin", "Pin")
+                        import_mod(update_globals, f"{board_chip_module}.pin", "Pin")
                         break
                 else:
-                    import_mod(f"{chip_module['default']}.pin", "Pin")
+                    import_mod(update_globals, f"{chip_module['default']}.pin", "Pin")
             else:
-                import_mod(f"{chip_module}.pin", "Pin")
+                import_mod(update_globals, f"{chip_module}.pin", "Pin")
                 break
 
 
