@@ -36,9 +36,9 @@ with open(get_import_file("microcontroller_imports.json", __file__)) as f:
                         break
                 else:
                     import_mod(globals(), f"{chip_module['default']}.pin", "Pin")
-            else:
-                import_mod(globals(), f"{chip_module}.pin", "Pin")
                 break
+            import_mod(globals(), f"{chip_module}.pin", "Pin")
+            break
 
 
 class DriveMode(Enum):

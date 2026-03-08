@@ -45,9 +45,9 @@ with open(get_import_file("../microcontroller_imports.json", __file__)) as f:
                         break
                 else:
                     import_mod(globals(), f"{chip_module['default']}.pin", "*")
-            else:
-                import_mod(globals(), f"{chip_module}.pin", "*")
                 break
+            import_mod(globals(), f"{chip_module}.pin", "*")
+            break
     else:
         if chip_id == ap_chip.GENERIC_X86:
             print(

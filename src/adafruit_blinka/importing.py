@@ -51,4 +51,5 @@ def import_mod(caller_globals, module_name: str, package_name: str = "*"):
             }
         )
     else:
-        import_module(module_name, package=package_name)
+        module = import_module(module_name, package=package_name)
+        caller_globals[package_name] = getattr(module, package_name)
