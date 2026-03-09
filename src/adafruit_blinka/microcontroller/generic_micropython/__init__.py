@@ -2,10 +2,15 @@
 #
 # SPDX-License-Identifier: MIT
 """Generic Pin class for use with MicroPython boards"""
-from adafruit_blinka import Enum
+# from adafruit_blinka import Enum
+try:
+    from machine import Pin as MachinePin
+except ImportError:
+    # Fall back to a simple Pin class if machine.Pin is not available for CI testing
+    from adafruit_blinka import Enum as MachinePin
 
 
-class Pin(Enum):
+class Pin(MachinePin):
     """
     Identifies an IO pin on the microcontroller.
 

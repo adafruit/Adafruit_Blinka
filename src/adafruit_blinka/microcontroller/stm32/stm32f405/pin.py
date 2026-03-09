@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 """STM32F405 pins"""
 
-from machine import Pin
+from adafruit_blinka.microcontroller.generic_micropython import Pin
 
 A0 = Pin("A0")
 A1 = Pin("A1")
