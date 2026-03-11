@@ -10,35 +10,15 @@ See `CircuitPython:digitalio` in CircuitPython for more details.
 * Author(s): cefn, Melissa LeBlanc-Williams
 """
 import json
-from adafruit_blinka.agnostic import board_id, detector
-from adafruit_blinka.importing import import_mod, get_import_file
+from adafruit_blinka.agnostic import board_id
+from adafruit_blinka.importing import get_import_file, import_microcontroller
 from adafruit_blinka import Enum, ContextManaged
 
 Pin = None
 
-
 with open(get_import_file("microcontroller_imports.json", __file__)) as f:
     microcontroller_imports = json.load(f)
-
-    for chip_key, chip_module in microcontroller_imports.items():
-        if getattr(detector.chip, chip_key):
-            if isinstance(chip_module, dict):
-                # Loop through the children and import the first one that matches
-                for board_key, board_chip_module in chip_module.items():
-                    if board_key.startswith("any_") and getattr(
-                        detector.board, board_key
-                    ):
-                        # import Pin from the microcontroller module
-                        import_mod(globals(), f"{board_chip_module}.pin", "Pin")
-                        break
-                    if board_key == getattr(detector.board, board_key):
-                        import_mod(globals(), f"{board_chip_module}.pin", "Pin")
-                        break
-                else:
-                    import_mod(globals(), f"{chip_module['default']}.pin", "Pin")
-                break
-            import_mod(globals(), f"{chip_module}.pin", "Pin")
-            break
+    import_microcontroller(globals(), microcontroller_imports, "pin", "Pin")
 
 
 class DriveMode(Enum):
