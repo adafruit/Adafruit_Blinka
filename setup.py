@@ -95,6 +95,10 @@ setup(
         "usb_hid",
     ],
     package_data={
+        "": [
+            "board_imports.json",
+            "microcontroller_imports.json",
+        ],
         "adafruit_blinka.microcontroller.bcm283x.pulseio": [
             "libgpiod_pulsein",
             "libgpiod_pulsein64",
