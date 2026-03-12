@@ -85,7 +85,7 @@ class PWMOut:
         if variable_frequency:
             print("Variable Frequency is not supported, continuing without it...")
 
-        PWMOut._nova.setIOpinMode(self._pwmpin, Pin.PWM)
+        PWMOut._nova.setIOpinMode(self._pwmpin, Pin.PWM)  # pylint: disable=no-member
 
         # set frequency
         self.frequency = freq
@@ -149,7 +149,7 @@ class PWMOut:
     """
 
     def _get_duty_cycle(self):
-        duty_cycle = Pin._nova.getIOpinValue(self._pwmpin)
+        duty_cycle = Pin._nova.getIOpinValue(self._pwmpin)  # pylint: disable=no-member
 
         # Convert duty cycle to ratio from 0.0 to 1.0
         duty_cycle = duty_cycle / PWMOut.MAX_CYCLE_LEVEL
@@ -172,7 +172,7 @@ class PWMOut:
 
         # Set duty cycle
         # pylint: disable=protected-access
-        Pin._nova.setIOpinValue(self._pwmpin, duty_cycle)
+        Pin._nova.setIOpinValue(self._pwmpin, duty_cycle)  # pylint: disable=no-member
         # pylint: enable=protected-access
 
     duty_cycle = property(_get_duty_cycle, _set_duty_cycle)
