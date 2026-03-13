@@ -50,7 +50,7 @@ jobs:
     - name: Build Python package
       run: |
         pip install --upgrade build twine
-        for file in $(find -not -path "./.*" -not -path "./docs*" \( -name "*.py" -o -name "*.toml" -o -name "*.json" \) ); do
+        for file in $(find -not -path "./.*" -not -path "./docs*" \( -name "*.py" -o -name "*.toml" \) ); do
             sed -i -e "s/0.0.0+auto.0/1.2.3/" $file;
         done;
         python -m build
