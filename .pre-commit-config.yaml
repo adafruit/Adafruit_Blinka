@@ -43,15 +43,15 @@ repos:
         - --disable=missing-docstring,consider-using-f-string,duplicate-code
 -   repo: local
     hooks:
-    -   id: boards-json-validation
-        name: Perform boards.json import path validition
+    -   id: board-json-validation
+        name: Perform board_imports.json import path validition
         description: Check validity of import paths in boards_imports.json
         language: python
         files: src/board_imports.json$
         entry: python scripts/check_imports_paths.py
         args: ["--suffix", ".py"]
     -   id: microcontroller-json-validation
-        name: Perform microcontroller.json import path validation
+        name: Perform microcontroller_imports.json import path validation
         description: Check validity of import paths in microcontroller_imports.json
         language: python
         files: src/microcontroller_imports.json$
