@@ -1,7 +1,7 @@
 {
     "FEATHER_HUZZAH": "adafruit_blinka.board.feather_huzzah",
     "VISIONFIVE2": "adafruit_blinka.board.starfive.visionfive2",
-    "OLIMEX_LIME2": "adafruit_blinka.board.olimex.lime2",
+    "OLIMEX_LIME2": "adafruit_blinka.board.OLIMEX_LIME2",
     "NODEMCU": "adafruit_blinka.board.nodemcu",
     "PYBOARD": "adafruit_blinka.board.pyboard",
     "any_raspberry_pi_pico_id": "adafruit_blinka.board.raspberrypi.pico",
