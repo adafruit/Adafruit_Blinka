@@ -12,7 +12,7 @@ sphinx:
   configuration: docs/conf.py
 
 build:
-  os: "ubuntu-24.04"
+  os: "ubuntu-lts-latest"
   tools:
     python: "3"
   apt_packages:
