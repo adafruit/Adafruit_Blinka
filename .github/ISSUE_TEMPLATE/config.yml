@@ -4,7 +4,7 @@
 
 contact_links:
   - name: 📟 New Board Request
-    url: https://github.com/adafruit/Adafruit_Blinka/discussions/new?category=new-board-requests
+    url: https://github.com/adafruit/Adafruit_Blinka/discussions/new?category=new-board-requests&labels=New%20Board%20Request
     about: Request Support for a New Board
   - name: 🔗 Adafruit Forum
     url: https://forums.adafruit.com/
