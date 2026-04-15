@@ -628,3 +628,14 @@ class UART(Lockable):
     def write(self, buf):
         """Write to the UART from a buffer"""
         return self._uart.write(buf)
+
+    @property
+    def in_waiting(self):
+        """The number of bytes in the input buffer, available to be read"""
+        # Custom UART implementations (e.g. RP2040) that provide in_waiting directly
+        if hasattr(self._uart, "in_waiting"):
+            return self._uart.in_waiting
+        # MicroPython's machine.UART uses any() for the same purpose
+        if hasattr(self._uart, "any"):
+            return self._uart.any()
+        raise NotImplementedError("in_waiting not supported on this platform")
