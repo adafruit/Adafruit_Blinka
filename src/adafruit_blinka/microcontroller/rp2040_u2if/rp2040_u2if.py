@@ -270,8 +270,8 @@ class RP2040_u2if:
         if self._i2c_index is None:
             raise RuntimeError("I2C bus not initialized.")
 
-        end_w = end_w if end_w else len(buffer_w)
-        end_r = end_r if end_r else len(buffer_r)
+        end_w = end_w if end_w is not None else len(buffer_w)
+        end_r = end_r if end_r is not None else len(buffer_r)
 
         write_then_read_cmd = (
             self.I2C0_WRITE_THEN_READ
@@ -290,7 +290,7 @@ class RP2040_u2if:
             True,
         )
         if resp[1] != self.RESP_OK:
-            raise RuntimeError("I2C write error")
+            raise RuntimeError("I2C write_then_read error")
         # move into buffer
         for i in range(read_size):
             buffer_r[start_r + i] = resp[i + 2]
@@ -333,11 +333,9 @@ class RP2040_u2if:
                 )
                 return
             except RuntimeError:
-                # print("DEBUG: SENDING I2C WRITE THEN READ FAILED. SETTING FLAG.")
+                # Firmware may not support write_then_read; fall back
+                # to separate write + read for this and future calls.
                 self.FLAG_I2C_NO_WRITE_THEN_READ_AVAILABLE = True
-        # print(
-        #     "DEBUG: NO I2C WRITE THEN READ AVAILABLE FLAG SET. SENDING SEPARATELY."
-        # )
         self._i2c_write(address, out_buffer, out_start, out_end, False)
         self._i2c_read(address, in_buffer, in_start, in_end)
 
