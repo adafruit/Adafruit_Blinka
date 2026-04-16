@@ -35,3 +35,7 @@ See the `CircuitPython docs <https://circuitpython.readthedocs.io/>`_ for extens
 .. literalinclude:: ../examples/piblinka.py
     :caption: examples/piblinka.py
     :linenos:
+
+.. literalinclude:: ../examples/usb_hid_keyboard.py
+    :caption: examples/usb_hid_keyboard.py
+    :linenos:
