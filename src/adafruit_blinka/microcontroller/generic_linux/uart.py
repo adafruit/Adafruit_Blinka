@@ -24,6 +24,7 @@ class UART:
         "/dev/ttyAMA{}",
     )
 
+    # pylint: disable=too-many-arguments
     def __init__(
         self,
         port_id,
@@ -32,7 +33,7 @@ class UART:
         parity=None,
         stop=1,
         timeout=1,
-        receiver_buffer_size=64,
+        receiver_buffer_size=64,  # pylint: disable=unused-argument
     ):
         device = self._resolve_device(port_id)
 
