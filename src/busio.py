@@ -522,7 +522,7 @@ class SPI(Lockable):
 class UART(Lockable):
     """
     Busio UART Class for CircuitPython Compatibility. Used
-    for MicroPython and a few other non-Linux boards.
+    for MicroPython, Linux (via PySerial), and other boards.
     """
 
     class Parity(Enum):
@@ -541,15 +541,15 @@ class UART(Lockable):
         bits=8,
         parity=None,
         stop=1,
-        timeout=1000,
+        timeout=1,
         receiver_buffer_size=64,
         flow=None,
     ):
         if detector.board.any_embedded_linux:
-            raise RuntimeError(
-                "busio.UART not supported on this platform. Please use pyserial instead."
+            from adafruit_blinka.microcontroller.generic_linux.uart import (
+                UART as _UART,
             )
-        if detector.board.binho_nova:
+        elif detector.board.binho_nova:
             from adafruit_blinka.microcontroller.nova.uart import UART as _UART
         elif detector.board.greatfet_one:
             from adafruit_blinka.microcontroller.nxp_lpc4330.uart import UART as _UART
@@ -560,7 +560,8 @@ class UART(Lockable):
 
         from microcontroller.pin import uartPorts
 
-        self.baudrate = baudrate
+        self._baudrate = baudrate
+        self._timeout = timeout
 
         if flow is not None:  # default 0
             raise NotImplementedError(
@@ -577,7 +578,27 @@ class UART(Lockable):
         else:
             raise ValueError("Invalid parity")
 
-        if detector.chip.id in (ap_chip.RP2040, ap_chip.RP2350):
+        if detector.board.any_embedded_linux:
+            # check tx and rx have hardware support
+            for portId, portTx, portRx in uartPorts:
+                if portTx == tx and portRx == rx:
+                    self._uart = _UART(
+                        portId,
+                        baudrate=baudrate,
+                        bits=bits,
+                        parity=parity,
+                        stop=stop,
+                        timeout=timeout,
+                        receiver_buffer_size=receiver_buffer_size,
+                    )
+                    break
+            else:
+                raise ValueError(
+                    "No Hardware UART on (tx,rx)={}\nValid UART ports: {}".format(
+                        (tx, rx), uartPorts
+                    )
+                )
+        elif detector.chip.id in (ap_chip.RP2040, ap_chip.RP2350):
             self._uart = _UART(
                 tx,
                 rx,
@@ -609,9 +630,18 @@ class UART(Lockable):
 
     def deinit(self):
         """Deinitialization"""
-        if detector.board.binho_nova:
-            self._uart.deinit()
-        self._uart = None
+        if self._uart is not None:
+            if hasattr(self._uart, "deinit"):
+                self._uart.deinit()
+            self._uart = None
+
+    def __enter__(self):
+        """No-op used by Context Managers."""
+        return self
+
+    def __exit__(self, *args):
+        """Automatically deinitializes the hardware when exiting a context."""
+        self.deinit()
 
     def read(self, nbytes=None):
         """Read from the UART"""
@@ -630,6 +660,17 @@ class UART(Lockable):
         return self._uart.write(buf)
 
     @property
+    def baudrate(self):
+        """The current baudrate."""
+        return self._baudrate
+
+    @baudrate.setter
+    def baudrate(self, value):
+        self._baudrate = value
+        if hasattr(self, "_uart") and hasattr(self._uart, "baudrate"):
+            self._uart.baudrate = value
+
+    @property
     def in_waiting(self):
         """The number of bytes in the input buffer, available to be read"""
         # Custom UART implementations (e.g. RP2040) that provide in_waiting directly
@@ -639,3 +680,25 @@ class UART(Lockable):
         if hasattr(self._uart, "any"):
             return self._uart.any()
         raise NotImplementedError("in_waiting not supported on this platform")
+
+    @property
+    def timeout(self):
+        """The timeout in seconds (float)."""
+        if hasattr(self._uart, "timeout"):
+            return self._uart.timeout
+        return self._timeout
+
+    @timeout.setter
+    def timeout(self, value):
+        self._timeout = value
+        if hasattr(self._uart, "timeout"):
+            self._uart.timeout = value
+
+    def reset_input_buffer(self):
+        """Discard any unread data in the input buffer."""
+        if hasattr(self._uart, "reset_input_buffer"):
+            self._uart.reset_input_buffer()
+        else:
+            # Fallback: read and discard all available bytes
+            while self.in_waiting:
+                self._uart.read(self.in_waiting)
