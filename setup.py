@@ -17,10 +17,6 @@ from setuptools import setup, find_packages
 here = os.path.abspath(os.path.dirname(__file__))
 
 
-def yellow_text(text: str) -> str:
-    return f"\033[33m{text}\033[0m"
-
-
 # Import the README and use it as the long-description.
 # Note: this will only work if 'README.md' is present in your MANIFEST.in file!
 with io.open(os.path.join(here, "README.rst"), encoding="utf-8") as f:
@@ -33,7 +29,6 @@ if not glob.glob("//usr//include//python3.*//Python.h"):
     )
 
 board_reqs = []
-raspberry_pi = False
 if os.path.exists("/proc/device-tree/compatible"):
     with open("/proc/device-tree/compatible", "rb") as f:
         compat = f.read()
@@ -51,11 +46,10 @@ if os.path.exists("/proc/device-tree/compatible"):
     ):
         board_reqs = [
             "rpi_ws281x>=4.0.0",
-            "lgpio;python_version<'3.13'",
+            "lgpio>=0.2.2.0",
             "RPi.GPIO",
             "Adafruit-Blinka-Raspberry-Pi5-Neopixel",
         ]
-        raspberry_pi = True
     # BeagleBone Black, Green, PocketBeagle, BeagleBone AI, etc.
     elif b"ti,am335x" in compat:
         board_reqs = ["Adafruit_BBIO"]
@@ -130,10 +124,3 @@ setup(
         "Programming Language :: Python :: Implementation :: MicroPython",
     ],
 )
-
-if raspberry_pi and os.sys.version_info >= (3, 13):
-    print(
-        yellow_text(
-            "\n*** Raspberry Pi 5 and later: lgpio will need to be installed manually. See the lgpio homepage for more details: http://abyz.me.uk/lg/download.html ***"
-        )
-    )
