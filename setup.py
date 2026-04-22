@@ -44,9 +44,20 @@ if os.path.exists("/proc/device-tree/compatible"):
         or b"brcm,bcm2711" in compat
         or b"brcm,bcm2712" in compat
     ):
+        lgpio_req = "lgpio>=0.2.2.0"
+        try:
+            import lgpio
+        except ImportError:
+            print(
+                "\n*** lgpio is not installed. On Raspberry Pi OS, install it with:\n"
+                "    sudo apt-get install -y python3-lgpio\n"
+                "  Then recreate your virtual environment with --system-site-packages\n"
+                "  or install the wheel from:\n"
+                "    https://github.com/adafruit/lgpio-python-wheels\n"
+            )
         board_reqs = [
             "rpi_ws281x>=4.0.0",
-            "lgpio>=0.2.2.0",
+            lgpio_req,
             "RPi.GPIO",
             "Adafruit-Blinka-Raspberry-Pi5-Neopixel",
         ]
