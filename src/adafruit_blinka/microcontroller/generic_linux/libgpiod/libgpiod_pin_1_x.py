@@ -38,6 +38,9 @@ class Pin:
                 self._chip = gpiod.chip("gpiochip0", gpiod.chip.OPEN_BY_NAME)
         self._line = None
 
+    def __del__(self):
+        self.deinit()
+
     def __repr__(self):
         return str(self.id)
 
@@ -114,6 +117,15 @@ class Pin:
                     self._line.request(config)
             else:
                 raise RuntimeError("Invalid mode for pin: %s" % self.id)
+
+    def deinit(self):
+        """Release the pin and associated resources."""
+        if self._line:
+            self._line.release()
+            self._line = None
+        if self._chip:
+            self._chip.close()
+            self._chip = None
 
     def value(self, val=None):
         """Set or return the Pin Value"""
