@@ -79,7 +79,10 @@ class DigitalInOut(ContextManaged):
 
     def deinit(self):
         """Deinitialize the Digital Pin"""
-        del self._pin
+        if self._pin is not None:
+            if hasattr(self._pin, "deinit"):
+                self._pin.deinit()
+            self._pin = None
 
     @property
     def direction(self):
