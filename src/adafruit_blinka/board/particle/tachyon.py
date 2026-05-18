@@ -51,3 +51,11 @@ UART_TX = D14
 UART_RX = D15
 
 PWM1 = D13
+
+# Expose raw GPIO line-number names (GPIO_6, GPIO_24, GPIO_44, …) so that
+# scripts and demo files can use them directly instead of the D-number aliases.
+import re as _re  # pylint: disable=wrong-import-position
+for _name in dir(pin):
+    if _re.match(r"^GPIO_\d+$", _name):
+        globals()[_name] = getattr(pin, _name)
+del _re, _name
