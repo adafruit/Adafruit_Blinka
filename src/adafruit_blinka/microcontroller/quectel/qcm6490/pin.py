@@ -5,36 +5,63 @@
 
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
-# All 40-pin header GPIOs are on gpiochip4 (the main QCM6490 GPIO controller,
-# 176 lines).  gpiochip0 only has 12 lines, so any GPIO number above 11 fails
-# if we open chip 0.
+# The QCM6490's main 40-pin header GPIO bank (f100000.pinctrl, 176 lines) may
+# appear as different gpiochip numbers depending on the kernel/BSP version:
 #
-# libgpiod 2.x: Pin((chip, line)) is the standard way to specify a chip.
-# libgpiod 1.x: Pin((chip, line)) also works via OPEN_BY_NUMBER in
-#               libgpiod_pin_1_x.py, so tuples are safe for both versions.
-# Plain Pin(n) always opens gpiochip0 — do NOT use that form here.
-try:
-    import gpiod as _gpiod
-    _GPIOD_V1 = getattr(_gpiod, "__version__", "1.").startswith("1.")
-except ImportError:
-    _GPIOD_V1 = True
+#   Ubuntu 20.04 BSP : f100000.pinctrl == gpiochip0  → plain Pin(n) works
+#   Current BSP      : f100000.pinctrl == gpiochip4  → must use Pin((4, n))
+#
+# Both Blinka libgpiod layers (1.x and 2.x) support the (chip, line) tuple
+# form, so we use it unconditionally once we know the chip number.  We detect
+# the chip at import time by scanning /sys/class/gpio labels so the same file
+# works on both BSP generations without modification.
 
-GPIO_CHIP = 4   # gpiochip4 is the main QCM6490 GPIO bank
+def _find_qcm6490_chip():
+    """Return the gpiochip number whose label is 'f100000.pinctrl'.
+
+    Tries gpiod.ChipIter() (gpiod 1.x) first, then falls back to probing
+    /dev/gpiochipN directly (gpiod 2.x).  Returns 0 if the main bank is
+    not found — preserves Ubuntu 20.04 behaviour where f100000.pinctrl
+    was enumerated as gpiochip0.
+    """
+    _TARGET = "f100000.pinctrl"
+    try:
+        import gpiod as _gpiod
+        if hasattr(_gpiod, "ChipIter"):
+            # gpiod 1.x: iterate all chips cheaply
+            for _chip in _gpiod.ChipIter():
+                if _chip.label() == _TARGET:
+                    _num = int(_chip.name().replace("gpiochip", ""))
+                    _chip.close()
+                    return _num
+                _chip.close()
+            return 0
+        # gpiod 2.x: probe /dev/gpiochipN until the device is missing
+        for _n in range(16):
+            try:
+                _chip = _gpiod.Chip(f"/dev/gpiochip{_n}")
+                _label = _chip.get_info().label
+                _chip.close()
+                if _label == _TARGET:
+                    return _n
+            except Exception:
+                break
+    except Exception:
+        pass
+    return 0  # fallback: chip 0 (Ubuntu 20.04 layout)
+
+
+GPIO_CHIP = _find_qcm6490_chip()
 GPIO_BASE = 0   # kept for reference only
 
 
 def _pin(line):
     """Return the correct Pin for a QCM6490 GPIO line number.
 
-    Both gpiod 1.x (via OPEN_BY_NUMBER) and 2.x support the (chip, line)
-    tuple form, so the logic is the same for both versions.  The branch is
-    kept explicit so it is easy to diverge if a future gpiod version needs
-    different treatment.
+    Uses Pin((GPIO_CHIP, line)) so both gpiod 1.x (OPEN_BY_NUMBER) and
+    2.x (/dev/gpiochipN path) open the right chip regardless of whether
+    the main bank landed on chip 0 or chip 4.
     """
-    if _GPIOD_V1:
-        # 1.x: (chip_number, line_number) tuple — opens via OPEN_BY_NUMBER
-        return Pin((GPIO_CHIP, line))
-    # 2.x: (chip_number, line_number) tuple — opens /dev/gpiochip{chip}
     return Pin((GPIO_CHIP, line))
 
 
