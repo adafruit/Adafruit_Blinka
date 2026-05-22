@@ -16,6 +16,9 @@ from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 # the chip at import time by scanning /sys/class/gpio labels so the same file
 # works on both BSP generations without modification.
 
+_TARGET_LABEL = "f100000.pinctrl"
+
+
 def _find_qcm6490_chip():
     """Return the gpiochip number whose label is 'f100000.pinctrl'.
 
@@ -24,35 +27,40 @@ def _find_qcm6490_chip():
     not found — preserves Ubuntu 20.04 behaviour where f100000.pinctrl
     was enumerated as gpiochip0.
     """
-    _TARGET = "f100000.pinctrl"
     try:
         import gpiod as _gpiod
-        if hasattr(_gpiod, "ChipIter"):
-            # gpiod 1.x: iterate all chips cheaply
+    except ImportError:
+        return 0
+
+    if hasattr(_gpiod, "ChipIter"):
+        # gpiod 1.x: iterate all chips cheaply
+        try:
             for _chip in _gpiod.ChipIter():
-                if _chip.label() == _TARGET:
-                    _num = int(_chip.name().replace("gpiochip", ""))
+                try:
+                    if _chip.label() == _TARGET_LABEL:
+                        return int(_chip.name().replace("gpiochip", ""))
+                finally:
                     _chip.close()
-                    return _num
-                _chip.close()
+        except (AttributeError, OSError):
             return 0
-        # gpiod 2.x: probe /dev/gpiochipN until the device is missing
-        for _n in range(16):
+        return 0
+
+    # gpiod 2.x: probe /dev/gpiochipN until the device is missing
+    for _n in range(16):
+        try:
+            _chip = _gpiod.Chip(f"/dev/gpiochip{_n}")
             try:
-                _chip = _gpiod.Chip(f"/dev/gpiochip{_n}")
-                _label = _chip.get_info().label
-                _chip.close()
-                if _label == _TARGET:
+                if _chip.get_info().label == _TARGET_LABEL:
                     return _n
-            except Exception:
-                break
-    except Exception:
-        pass
+            finally:
+                _chip.close()
+        except (AttributeError, OSError):
+            break
     return 0  # fallback: chip 0 (Ubuntu 20.04 layout)
 
 
 GPIO_CHIP = _find_qcm6490_chip()
-GPIO_BASE = 0   # kept for reference only
+GPIO_BASE = 0  # kept for reference only
 
 
 def _pin(line):

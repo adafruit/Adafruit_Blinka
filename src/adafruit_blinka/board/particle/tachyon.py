@@ -3,6 +3,8 @@
 # SPDX-License-Identifier: MIT
 """Pin definitions for the Tachyon."""
 
+import re as _re
+
 from adafruit_blinka.microcontroller.quectel.qcm6490 import pin
 
 for it in pin.i2cPorts:
@@ -54,8 +56,13 @@ PWM1 = D13
 
 # Expose raw GPIO line-number names (GPIO_6, GPIO_24, GPIO_44, …) so that
 # scripts and demo files can use them directly instead of the D-number aliases.
-import re as _re  # pylint: disable=wrong-import-position
-for _name in dir(pin):
-    if _re.match(r"^GPIO_\d+$", _name):
-        globals()[_name] = getattr(pin, _name)
-del _re, _name
+
+
+def _export_gpio_names():
+    for name in dir(pin):
+        if _re.match(r"^GPIO_\d+$", name):
+            globals()[name] = getattr(pin, name)
+
+
+_export_gpio_names()
+del _export_gpio_names, _re
