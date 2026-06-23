@@ -1,0 +1,15 @@
+# SPDX-FileCopyrightText: 2026 Melissa LeBlanc-Williams for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
+
+[build-system]
+requires = [
+    "setuptools",
+    "wheel",
+    "setuptools-scm",
+]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+git_describe_command = "git describe --tags --long"
+local_scheme = "no-local-version"

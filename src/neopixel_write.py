@@ -14,34 +14,38 @@ Currently supported on Raspberry Pi only.
 import sys
 
 from adafruit_blinka.agnostic import detector
+from adafruit_blinka.importing import raise_for_missing_platform_dependency
 
-if detector.board.any_raspberry_pi:
-    if detector.board.any_raspberry_pi_5_board:
-        import adafruit_raspberry_pi5_neopixel_write as _neopixel
+try:
+    if detector.board.any_raspberry_pi:
+        if detector.board.any_raspberry_pi_5_board:
+            import adafruit_raspberry_pi5_neopixel_write as _neopixel
+        else:
+            from adafruit_blinka.microcontroller.bcm283x import neopixel as _neopixel
+    elif detector.board.pico_u2if:
+        from adafruit_blinka.microcontroller.rp2040_u2if import neopixel as _neopixel
+    elif detector.board.OS_AGNOSTIC_BOARD:
+        from adafruit_blinka.microcontroller.generic_agnostic_board import (
+            neopixel as _neopixel,
+        )
+    elif (
+        detector.board.feather_u2if
+        or detector.board.feather_can_u2if
+        or detector.board.feather_epd_u2if
+        or detector.board.feather_rfm_u2if
+        or detector.board.qtpy_u2if
+        or detector.board.itsybitsy_u2if
+        or detector.board.macropad_u2if
+        or detector.board.qt2040_trinkey_u2if
+        or detector.board.kb2040_u2if
+    ):
+        from adafruit_blinka.microcontroller.rp2040_u2if import neopixel as _neopixel
+    elif "sphinx" in sys.modules:
+        pass
     else:
-        from adafruit_blinka.microcontroller.bcm283x import neopixel as _neopixel
-elif detector.board.pico_u2if:
-    from adafruit_blinka.microcontroller.rp2040_u2if import neopixel as _neopixel
-elif detector.board.OS_AGNOSTIC_BOARD:
-    from adafruit_blinka.microcontroller.generic_agnostic_board import (
-        neopixel as _neopixel,
-    )
-elif (
-    detector.board.feather_u2if
-    or detector.board.feather_can_u2if
-    or detector.board.feather_epd_u2if
-    or detector.board.feather_rfm_u2if
-    or detector.board.qtpy_u2if
-    or detector.board.itsybitsy_u2if
-    or detector.board.macropad_u2if
-    or detector.board.qt2040_trinkey_u2if
-    or detector.board.kb2040_u2if
-):
-    from adafruit_blinka.microcontroller.rp2040_u2if import neopixel as _neopixel
-elif "sphinx" in sys.modules:
-    pass
-else:
-    raise NotImplementedError("Board not supported")
+        raise NotImplementedError("Board not supported")
+except ModuleNotFoundError as error:
+    raise_for_missing_platform_dependency(error)
 
 
 def neopixel_write(gpio, buf):
