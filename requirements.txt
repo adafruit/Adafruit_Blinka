@@ -8,6 +8,9 @@ toml>=0.10.2;python_version<'3.11'
 Jetson.GPIO;sys_platform=='linux' and platform_machine=='aarch64'
 rpi_ws281x>=4.0.0;sys_platform=='linux' and (platform_machine=='armv6l' or platform_machine=='armv7l' or platform_machine=='aarch64')
 lgpio>=0.2.2.0;sys_platform=='linux' and python_version<'3.13' and platform_machine=='aarch64'
+lgpio @ https://github.com/adafruit/lgpio-python-wheels/raw/main/wheels/lgpio-0.2.2.0-cp313-cp313-linux_aarch64.whl ; sys_platform=='linux' and platform_machine=='aarch64' and python_version=='3.13'
+lgpio @ https://github.com/adafruit/lgpio-python-wheels/raw/main/wheels/lgpio-0.2.2.0-cp314-cp314-linux_aarch64.whl ; sys_platform=='linux' and platform_machine=='aarch64' and python_version=='3.14'
+lgpio @ https://github.com/adafruit/lgpio-python-wheels/raw/main/wheels/lgpio-0.2.2.0-cp315-cp315-linux_aarch64.whl ; sys_platform=='linux' and platform_machine=='aarch64' and python_version=='3.15'
 RPi.GPIO;sys_platform=='linux' and (platform_machine=='armv6l' or platform_machine=='armv7l' or platform_machine=='aarch64')
 Adafruit-Blinka-Raspberry-Pi5-Neopixel;sys_platform=='linux' and platform_machine=='aarch64' and python_version>='3.11'
 Adafruit_BBIO>=1.2.4;sys_platform=='linux' and platform_machine=='armv7l'
