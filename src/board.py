@@ -53,9 +53,9 @@ with open(get_import_file("board_imports.json", __file__)) as f:
             package_version = version("adafruit_platformdetect")
             raise NotImplementedError(
                 f"""
-                adafruit-platformdetect version {package_version} was unable to identify the board and/or
-                microcontroller running the {platform.system()} platform. Please be sure you
-                have the latest packages by running:
+                adafruit-platformdetect version {package_version} was unable to identify the board
+                and/or microcontroller running the {platform.system()} platform.
+                Please be sure you have the latest packages by running:
                 'pip3 install --upgrade adafruit-blinka adafruit-platformdetect'
 
                 If you are running the latest package, your board may not yet be supported. Please
