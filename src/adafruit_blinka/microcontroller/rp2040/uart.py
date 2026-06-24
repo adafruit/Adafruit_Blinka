@@ -50,3 +50,8 @@ class UART:
     def write(self, buf):
         """Write to the UART from a buffer"""
         return self._uart.write(buf)
+
+    @property
+    def in_waiting(self):
+        """The number of bytes in the input buffer, available to be read"""
+        return self._uart.any()

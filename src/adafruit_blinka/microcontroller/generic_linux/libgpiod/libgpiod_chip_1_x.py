@@ -26,6 +26,11 @@ class Chip:
         else:
             self.num_lines = self.num_lines
 
+    def __del__(self):
+        if self._chip:
+            self._chip.close()
+            self._chip = None
+
     def __repr__(self):
         return self.id
 

@@ -37,8 +37,7 @@ class Pin:
         self._line_request = None
 
     def __del__(self):
-        if self._line_request:
-            self._line_request.release()
+        self.deinit()
 
     def __repr__(self):
         return str(self.id)
@@ -88,6 +87,15 @@ class Pin:
                 )
             else:
                 raise RuntimeError("Invalid mode for pin: %s" % self.id)
+
+    def deinit(self):
+        """Release the pin and associated resources."""
+        if self._line_request:
+            self._line_request.release()
+            self._line_request = None
+        if self._chip:
+            self._chip.close()
+            self._chip = None
 
     def value(self, val=None):
         """Set or return the Pin Value"""

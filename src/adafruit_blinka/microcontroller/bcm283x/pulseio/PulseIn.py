@@ -7,6 +7,7 @@ import subprocess
 import os
 import atexit
 import random
+import signal
 import struct
 import sysv_ipc
 
@@ -29,6 +30,18 @@ def final():
 
 
 atexit.register(final)
+
+
+def _signal_handler(signum, frame):  # pylint: disable=unused-argument
+    """Handle SIGTERM/SIGINT to ensure cleanup runs"""
+    final()
+    raise SystemExit(1)
+
+
+try:
+    signal.signal(signal.SIGTERM, _signal_handler)
+except (OSError, ValueError):
+    pass  # Not all environments allow signal handling
 
 
 # pylint: disable=c-extension-no-member
@@ -112,14 +125,26 @@ class PulseIn:
 
     # pylint: enable=redefined-builtin
 
+    def __del__(self):
+        self.deinit()
+
     def deinit(self):
         """Deinitialises the PulseIn and releases any hardware and software
         resources for reuse."""
         # Clean up after ourselves
-        self._process.terminate()
-        procs.remove(self._process)
-        self._mq.remove()
-        queues.remove(self._mq)
+        if self._process is not None:
+            self._process.terminate()
+            if self._process in procs:
+                procs.remove(self._process)
+            self._process = None
+        if self._mq is not None:
+            try:
+                self._mq.remove()
+            except sysv_ipc.ExistentialError:
+                pass  # Already removed
+            if self._mq in queues:
+                queues.remove(self._mq)
+            self._mq = None
 
     def __enter__(self):
         """No-op used by Context Managers."""
