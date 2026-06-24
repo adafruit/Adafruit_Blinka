@@ -155,5 +155,6 @@
     "VIVID_UNIT": "adafruit_blinka.board.vivid_unit",
     "INDIEDROID_NOVA": "adafruit_blinka.board.ameridroid.indiedroid_nova",
     "RDK_X3": "adafruit_blinka.board.horizon.rdkx3",
-    "PARTICLE_TACHYON": "adafruit_blinka.board.particle.tachyon"
+    "PARTICLE_TACHYON": "adafruit_blinka.board.particle.tachyon",
+    "BEAGLE_PLAY": "adafruit_blinka.board.beagleboard.beagle_play"
 }

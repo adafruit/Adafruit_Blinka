@@ -80,5 +80,6 @@
     "FT2232H": "adafruit_blinka.microcontroller.ftdi_mpsse.ft2232h",
     "FT4232H": "adafruit_blinka.microcontroller.ftdi_mpsse.ft4232h",
     "BINHO": "adafruit_blinka.microcontroller.nova",
-    "OS_AGNOSTIC": "adafruit_blinka.microcontroller.generic_agnostic_board"
+    "OS_AGNOSTIC": "adafruit_blinka.microcontroller.generic_agnostic_board",
+    "AM625X": "adafruit_blinka.microcontroller.ti.am625x"
 }
