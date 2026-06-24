@@ -10,7 +10,6 @@
 
 import io
 import os
-import glob
 
 from setuptools import setup, find_packages
 
@@ -21,12 +20,6 @@ here = os.path.abspath(os.path.dirname(__file__))
 # Note: this will only work if 'README.md' is present in your MANIFEST.in file!
 with io.open(os.path.join(here, "README.rst"), encoding="utf-8") as f:
     long_description = "\n" + f.read()
-
-if not glob.glob("//usr//include//python3.*//Python.h"):
-    raise RuntimeError(
-        "This package requires a Python development environment. "
-        "Please install the python3-dev package for your distribution."
-    )
 
 board_reqs = []
 if os.path.exists("/proc/device-tree/compatible"):
@@ -72,13 +65,12 @@ setup(
         "git_describe_command": "git describe --tags --long",
         "local_scheme": "no-local-version",
     },
-    setup_requires=["setuptools_scm"],
     description="CircuitPython APIs for non-CircuitPython versions of Python such as CPython on Linux and MicroPython.",
     long_description=long_description,
     long_description_content_type="text/x-rst",
     author="Adafruit Industries",
     author_email="circuitpython@adafruit.com",
-    python_requires=">=3.7.0",
+    python_requires=">=3.9.0",
     url="https://github.com/adafruit/Adafruit_Blinka",
     package_dir={"": "src"},
     packages=find_packages("src") + ["micropython-stubs"],
@@ -131,7 +123,8 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: Implementation :: MicroPython",
     ],
 )

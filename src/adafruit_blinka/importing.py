@@ -25,6 +25,39 @@ except ImportError as e:
 from adafruit_blinka.agnostic import detector
 
 
+PLATFORM_DEPENDENCY_INSTALLS = {
+    "Adafruit_BBIO": "pip install Adafruit_BBIO",
+    "Jetson": "pip install Jetson.GPIO",
+    "RPi": "pip install RPi.GPIO",
+    "_rpi_ws281x": "pip install rpi_ws281x",
+    "adafruit_raspberry_pi5_neopixel_write": (
+        "pip install Adafruit-Blinka-Raspberry-Pi5-Neopixel"
+    ),
+    "lgpio": (
+        "pip install lgpio --find-links "
+        "https://github.com/adafruit/lgpio-python-wheels/raw/main/wheels/"
+    ),
+}
+
+
+def raise_for_missing_platform_dependency(error: ModuleNotFoundError):
+    """Raise a helpful message for known optional platform dependencies."""
+    install_command = PLATFORM_DEPENDENCY_INSTALLS.get(error.name)
+    if install_command is None:
+        raise error
+
+    message = (
+        f"The platform library '{error.name}' was not found. "
+        f"To install, try typing: {install_command}"
+    )
+    if error.name == "lgpio":
+        message += (
+            "\nOn Raspberry Pi OS, you can also try: "
+            "sudo apt-get install -y python3-lgpio"
+        )
+    raise RuntimeError(message) from error
+
+
 def get_import_file(json_file_name, script_file_location):
     """Get the full path to the microcontroller imports file."""
     try:
@@ -43,20 +76,23 @@ def get_import_file(json_file_name, script_file_location):
 
 def import_mod(caller_globals, module_name: str, package_name: str = "*"):
     """Function to allow importing with * or specific package name."""
-    if package_name == "*":
-        module = import_module(module_name)
-        caller_globals.update(
-            {name: getattr(module, name) for name in module.__all__}
-            if hasattr(module, "__all__")
-            else {
-                key: value
-                for (key, value) in module.__dict__.items()
-                if not key.startswith("_")
-            }
-        )
-    else:
-        module = import_module(module_name, package=package_name)
-        caller_globals[package_name] = getattr(module, package_name)
+    try:
+        if package_name == "*":
+            module = import_module(module_name)
+            caller_globals.update(
+                {name: getattr(module, name) for name in module.__all__}
+                if hasattr(module, "__all__")
+                else {
+                    key: value
+                    for (key, value) in module.__dict__.items()
+                    if not key.startswith("_")
+                }
+            )
+        else:
+            module = import_module(module_name, package=package_name)
+            caller_globals[package_name] = getattr(module, package_name)
+    except ModuleNotFoundError as error:
+        raise_for_missing_platform_dependency(error)
 
 
 def import_microcontroller(
