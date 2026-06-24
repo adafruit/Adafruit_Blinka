@@ -8,6 +8,7 @@
 # Note: To use the 'upload' functionality of this file, you must:
 #   $ pip install twine
 
+import glob
 import io
 import os
 
