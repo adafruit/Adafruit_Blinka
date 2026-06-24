@@ -9,11 +9,11 @@ QWIIC_SCL = Pin((1, 17))  # MCU_I2C0_SCL
 QWIIC_SDA = Pin((1, 18))  # MCU_I2C0_SDA
 
 # gpiochip2 (600000.gpio) – main_gpio0
-USR0 = Pin((2, 3))   # USR0 LED
-USR1 = Pin((2, 4))   # USR1 LED
-USR2 = Pin((2, 5))   # USR2 LED
-USR3 = Pin((2, 6))   # USR3 LED
-USR4 = Pin((2, 9))   # USR4 LED
+USR0 = Pin((2, 3))  # USR0 LED
+USR1 = Pin((2, 4))  # USR1 LED
+USR2 = Pin((2, 5))  # USR2 LED
+USR3 = Pin((2, 6))  # USR3 LED
+USR4 = Pin((2, 9))  # USR4 LED
 USR_BUTTON = Pin((2, 18))
 
 # gpiochip3 (601000.gpio) – main_gpio1
@@ -32,7 +32,7 @@ MIKROBUS_GPIO1_9 = Pin((3, 9))
 MIKROBUS_GPIO1_10 = Pin((3, 10))
 MIKROBUS_GPIO1_11 = Pin((3, 11))
 MIKROBUS_GPIO1_12 = Pin((3, 12))
-MIKROBUS_W1 = Pin((3, 13))      # 1-Wire GPIO
+MIKROBUS_W1 = Pin((3, 13))  # 1-Wire GPIO
 MIKROBUS_GPIO1_14 = Pin((3, 14))
 MIKROBUS_GPIO1_24 = Pin((3, 24))
 MIKROBUS_GPIO1_25 = Pin((3, 25))
@@ -40,8 +40,8 @@ MIKROBUS_GPIO1_25 = Pin((3, 25))
 # ordered as (i2cId, SCL, SDA)
 i2cPorts = (
     (3, MIKROBUS_SCL, MIKROBUS_SDA),  # MIKROBUS I2C → /dev/play/mikrobus/i2c
-    (1, GROVE_SCL, GROVE_SDA),         # Grove I2C    → /dev/play/grove/i2c
-    (5, QWIIC_SCL, QWIIC_SDA),         # QWIIC        → /dev/play/qwiic/i2c
+    (1, GROVE_SCL, GROVE_SDA),  # Grove I2C    → /dev/play/grove/i2c
+    (5, QWIIC_SCL, QWIIC_SDA),  # QWIIC        → /dev/play/qwiic/i2c
 )
 
 # ordered as (spiId, sckId, mosiId, misoId)
