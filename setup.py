@@ -115,7 +115,7 @@ setup(
     },
     include_package_data=True,
     install_requires=[
-        "Adafruit-PlatformDetect>=3.70.1",
+        "Adafruit-PlatformDetect>=3.89.1",
         "Adafruit-PureIO>=1.1.7",
         "binho-host-adapter>=0.1.6",
         "pyftdi>=0.40.0",

@@ -25,7 +25,7 @@ MIKROBUS_SDA = Pin((3, 23))  # MIKROBUS_GPIO1_23 / main_i2c3_sda
 GROVE_SCL = Pin((3, 28))  # main_i2c1_scl
 GROVE_SDA = Pin((3, 29))  # main_i2c1_sda
 
-# MIKROBUS general-purpose GPIO lines
+# MIKROBUS general-purpose GPIO lines (gpiochip3)
 MIKROBUS_GPIO1_7 = Pin((3, 7))
 MIKROBUS_GPIO1_8 = Pin((3, 8))
 MIKROBUS_GPIO1_9 = Pin((3, 9))
@@ -34,8 +34,22 @@ MIKROBUS_GPIO1_11 = Pin((3, 11))
 MIKROBUS_GPIO1_12 = Pin((3, 12))
 MIKROBUS_W1 = Pin((3, 13))  # 1-Wire GPIO
 MIKROBUS_GPIO1_14 = Pin((3, 14))
+MIKROBUS_GPIO1_15 = Pin((3, 15))
+MIKROBUS_GPIO1_16 = Pin((3, 16))
+MIKROBUS_GPIO1_17 = Pin((3, 17))
+MIKROBUS_GPIO1_18 = Pin((3, 18))
+# line 19 is VDD_3V3_SD (regulator control – not a user GPIO)
+MIKROBUS_GPIO1_20 = Pin((3, 20))
+MIKROBUS_GPIO1_21 = Pin((3, 21))
+MIKROBUS_GPIO1_22 = MIKROBUS_SCL  # dual-use: I2C SCL or GPIO
+MIKROBUS_GPIO1_23 = MIKROBUS_SDA  # dual-use: I2C SDA or GPIO
+# lines 24/25 are dual-use: MIKROBUS UART TX/RX or GPIO
 MIKROBUS_GPIO1_24 = Pin((3, 24))
 MIKROBUS_GPIO1_25 = Pin((3, 25))
+
+# MIKROBUS UART TX/RX aliases (/dev/ttyS0)
+UART_TX = MIKROBUS_GPIO1_24
+UART_RX = MIKROBUS_GPIO1_25
 
 # ordered as (i2cId, SCL, SDA)
 i2cPorts = (
@@ -50,5 +64,5 @@ i2cPorts = (
 spiPorts = ()
 
 # ordered as (uartId, txId, rxId)
-# MIKROBUS UART = /dev/ttyS0 (main_uart0)
-uartPorts = ()
+# MIKROBUS UART → /dev/ttyS0
+uartPorts = ((0, UART_TX, UART_RX),)
