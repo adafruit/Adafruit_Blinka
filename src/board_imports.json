@@ -22,7 +22,6 @@
     "BEAGLEBONE_BLACK_WIRELESS": "adafruit_blinka.board.beagleboard.beaglebone_black",
     "BEAGLEBONE_POCKETBEAGLE": "adafruit_blinka.board.beagleboard.beaglebone_pocketbeagle",
     "BEAGLEBONE_AI": "adafruit_blinka.board.beagleboard.beaglebone_ai",
-    "BEAGLE_PLAY": "adafruit_blinka.board.beagleboard.beagle_play",
     "BEAGLEV_STARLIGHT": "adafruit_blinka.board.beagleboard.beaglev_starlight",
     "ORANGE_PI_PC": "adafruit_blinka.board.orangepi.orangepipc",
     "ORANGE_PI_PC2": "adafruit_blinka.board.orangepi.orangepipc2",
