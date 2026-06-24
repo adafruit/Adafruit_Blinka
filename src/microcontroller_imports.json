@@ -5,6 +5,7 @@
         "default": "adafruit_blinka.microcontroller.bcm283x"
     },
     "AM33XX": "adafruit_blinka.microcontroller.am335x",
+    "AM625X": "adafruit_blinka.microcontroller.ti.am625x",
     "AM65XX": "adafruit_blinka.microcontroller.am65xx",
     "JH7110": "adafruit_blinka.microcontroller.starfive.JH7110",
     "JH71X0": "adafruit_blinka.microcontroller.starfive.JH71x0",
