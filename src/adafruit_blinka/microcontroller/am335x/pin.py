@@ -2,13 +2,12 @@
 #
 # SPDX-License-Identifier: MIT
 """AM335x pin names"""
+from adafruit_blinka.importing import raise_for_missing_platform_dependency
+
 try:
     from Adafruit_BBIO import GPIO
-except ImportError as error:
-    raise RuntimeError(
-        "The library 'Adafruit_BBIO' was not found. To install, try typing: "
-        "pip install Adafruit_BBIO"
-    ) from error
+except ModuleNotFoundError as error:
+    raise_for_missing_platform_dependency(error)
 
 
 class Pin:

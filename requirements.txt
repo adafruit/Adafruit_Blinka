@@ -1,9 +1,14 @@
- # requirements.txt
- #
- # installs dependencies from ./setup.py, and the package itself,
- # in editable mode
- # -e .
-
- # (the -e above is optional). you could also just install the package
- # normally with just the line below (after uncommenting)
- .
+Adafruit-PlatformDetect>=3.89.0
+Adafruit-PureIO>=1.1.7
+binho-host-adapter>=0.1.6
+pyftdi>=0.40.0
+adafruit-circuitpython-typing
+sysv_ipc>=1.1.0;sys_platform=='linux' and platform_machine!='mips'
+toml>=0.10.2;python_version<'3.11'
+Jetson.GPIO;sys_platform=='linux' and platform_machine=='aarch64'
+rpi_ws281x>=4.0.0;sys_platform=='linux' and (platform_machine=='armv6l' or platform_machine=='armv7l' or platform_machine=='aarch64')
+lgpio>=0.2.2.0; sys_platform=='linux' and python_version<'3.13' and (platform_machine=='aarch64' or platform_machine=='armv7l')
+adafruit-lgpio>=0.2.2.0; sys_platform=='linux' and python_version>='3.13' and (platform_machine=='aarch64' or platform_machine=='armv7l')
+RPi.GPIO;sys_platform=='linux' and (platform_machine=='armv6l' or platform_machine=='armv7l' or platform_machine=='aarch64')
+Adafruit-Blinka-Raspberry-Pi5-Neopixel;sys_platform=='linux' and platform_machine=='aarch64' and python_version>='3.11'
+Adafruit_BBIO>=1.2.4;sys_platform=='linux' and platform_machine=='armv7l'
