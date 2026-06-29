@@ -39,15 +39,9 @@ if os.path.exists("/proc/device-tree/compatible"):
         or b"brcm,bcm2712" in compat
     ):
         _pyver = (sys.version_info.major, sys.version_info.minor)
-        _machine = os.uname().machine
-        # Pre-built URL wheels for Python 3.13-3.15 aarch64 (no PyPI wheel, swig not required)
-        _lgpio_url_versions = {(3, 13), (3, 14), (3, 15)}
-        if _pyver in _lgpio_url_versions and _machine == "aarch64":
-            _pytag = f"cp{_pyver[0]}{_pyver[1]}"
-            lgpio_req = (
-                "lgpio @ https://github.com/adafruit/lgpio-python-wheels/raw/main/"
-                f"wheels/lgpio-0.2.2.0-{_pytag}-{_pytag}-linux_aarch64.whl"
-            )
+        # adafruit-lgpio provides pre-built wheels for Python 3.13+ (aarch64 + armv7l)
+        if _pyver >= (3, 13):
+            lgpio_req = "adafruit-lgpio>=0.2.2.0"
         else:
             lgpio_req = "lgpio>=0.2.2.0"
         try:
@@ -57,8 +51,8 @@ if os.path.exists("/proc/device-tree/compatible"):
                 "\n*** lgpio is not installed. On Raspberry Pi OS, install it with:\n"
                 "    sudo apt-get install -y python3-lgpio\n"
                 "  Then recreate your virtual environment with --system-site-packages\n"
-                "  or install the wheel from:\n"
-                "    https://github.com/adafruit/lgpio-python-wheels\n"
+                "  or install adafruit-lgpio from PyPI:\n"
+                "    pip install adafruit-lgpio\n"
             )
         board_reqs = [
             "rpi_ws281x>=4.0.0",
