@@ -10,6 +10,7 @@
 
 import io
 import os
+import sys
 
 from setuptools import setup, find_packages
 
@@ -37,7 +38,18 @@ if os.path.exists("/proc/device-tree/compatible"):
         or b"brcm,bcm2711" in compat
         or b"brcm,bcm2712" in compat
     ):
-        lgpio_req = "lgpio>=0.2.2.0"
+        _pyver = (sys.version_info.major, sys.version_info.minor)
+        _machine = os.uname().machine
+        # Pre-built URL wheels for Python 3.13-3.15 aarch64 (no PyPI wheel, swig not required)
+        _lgpio_url_versions = {(3, 13), (3, 14), (3, 15)}
+        if _pyver in _lgpio_url_versions and _machine == "aarch64":
+            _pytag = f"cp{_pyver[0]}{_pyver[1]}"
+            lgpio_req = (
+                "lgpio @ https://github.com/adafruit/lgpio-python-wheels/raw/main/"
+                f"wheels/lgpio-0.2.2.0-{_pytag}-{_pytag}-linux_aarch64.whl"
+            )
+        else:
+            lgpio_req = "lgpio>=0.2.2.0"
         try:
             import lgpio
         except ImportError:
