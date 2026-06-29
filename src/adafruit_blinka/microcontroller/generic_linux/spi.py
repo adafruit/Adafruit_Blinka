@@ -113,9 +113,7 @@ class SPI:
     def write_readinto(
         self, buffer_out, buffer_in, out_start=0, out_end=None, in_start=0, in_end=None
     ):
-        """Perform a half-duplex write from buffer_out and then
-        read data into buffer_in
-        """
+        """Write to and read from SPI at the same time."""
         if buffer_out is None or buffer_in is None:
             return
         if len(buffer_out) < 1 or len(buffer_in) < 1:
@@ -132,7 +130,7 @@ class SPI:
             self._spi.max_speed_hz = self.baudrate
             self._spi.mode = self.mode
             self._spi.bits_per_word = self.bits
-            data = self._spi.transfer(list(buffer_out[out_start : out_end + 1]))
+            data = self._spi.transfer(list(buffer_out[out_start:out_end]))
             for i in range((in_end - in_start)):
                 buffer_in[i + in_start] = data[i]
             # self._spi.close()
