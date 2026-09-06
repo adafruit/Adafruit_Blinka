@@ -79,7 +79,7 @@ setup(
     python_requires=">=3.9.0",
     url="https://github.com/adafruit/Adafruit_Blinka",
     package_dir={"": "src"},
-    packages=find_packages("src") + ["micropython-stubs"],
+    packages=find_packages("src"),
     # py_modules lists top-level single file packages to include.
     # find_packages only finds packages in directories with __init__.py files.
     py_modules=[
@@ -89,7 +89,6 @@ setup(
         "busio",
         "digitalio",
         "keypad",
-        "micropython",
         "neopixel_write",
         "onewireio",
         "pulseio",
@@ -109,7 +108,7 @@ setup(
         "adafruit_blinka.microcontroller.amlogic.meson_g12_common.pulseio": [
             "libgpiod_pulsein",
         ],
-        "micropython-stubs": ["*.pyi"],
+        "micropython": ["py.typed"],
     },
     include_package_data=True,
     install_requires=[
