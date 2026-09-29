@@ -129,7 +129,12 @@ def test_import_requirement_uses_detected_python_version():
     assert requirement == "lgpio>=0.2.2.0"
 
 
-def test_requirement_available_rejects_old_distribution(monkeypatch):
+def test_missing_dependencies_include_old_distribution(monkeypatch):
+    monkeypatch.setattr(
+        platform_dependencies,
+        "get_platform_dependencies",
+        lambda *_args, **_kwargs: [("lgpio", "lgpio>=0.2.2.0")],
+    )
     monkeypatch.setattr(
         platform_dependencies.importlib.util, "find_spec", lambda _name: object()
     )
@@ -139,10 +144,17 @@ def test_requirement_available_rejects_old_distribution(monkeypatch):
         lambda _name: "0.2.1",
     )
 
-    assert not platform_dependencies._requirement_available("lgpio", "lgpio>=0.2.2.0")
+    assert platform_dependencies.get_missing_platform_dependencies(_detector()) == [
+        "lgpio>=0.2.2.0"
+    ]
 
 
-def test_requirement_available_accepts_minimum_distribution(monkeypatch):
+def test_missing_dependencies_accept_minimum_distribution(monkeypatch):
+    monkeypatch.setattr(
+        platform_dependencies,
+        "get_platform_dependencies",
+        lambda *_args, **_kwargs: [("lgpio", "lgpio>=0.2.2.0")],
+    )
     monkeypatch.setattr(
         platform_dependencies.importlib.util, "find_spec", lambda _name: object()
     )
@@ -152,7 +164,7 @@ def test_requirement_available_accepts_minimum_distribution(monkeypatch):
         lambda _name: "0.2.2.0",
     )
 
-    assert platform_dependencies._requirement_available("lgpio", "lgpio>=0.2.2.0")
+    assert platform_dependencies.get_missing_platform_dependencies(_detector()) == []
 
 
 def test_recovery_command_uses_running_python(monkeypatch):
