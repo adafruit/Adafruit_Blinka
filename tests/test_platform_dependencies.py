@@ -6,6 +6,9 @@
 
 from types import SimpleNamespace
 
+import pytest
+
+from adafruit_blinka import importing
 from adafruit_blinka import platform_dependencies
 
 
@@ -47,15 +50,54 @@ def test_raspberry_pi_5_uses_upstream_lgpio_before_python_313():
 
 
 def test_raspberry_pi_5_neopixel_requires_python_311():
+    detector = _detector(any_raspberry_pi_5_board=True, any_raspberry_pi=True)
     dependencies = platform_dependencies.get_platform_dependencies(
-        _detector(any_raspberry_pi_5_board=True, any_raspberry_pi=True),
-        python_version=(3, 10),
+        detector, python_version=(3, 10)
     )
 
     assert all(
         module_name != "adafruit_raspberry_pi5_neopixel_write"
         for module_name, _ in dependencies
     )
+    assert platform_dependencies.get_unsupported_platform_dependency_message(
+        detector,
+        "adafruit_raspberry_pi5_neopixel_write",
+        python_version=(3, 10),
+    ) == (
+        "Raspberry Pi 5 NeoPixel support requires Python 3.11 or newer; "
+        "the current interpreter is Python 3.10."
+    )
+
+
+def test_supported_raspberry_pi_5_neopixel_has_no_unsupported_message():
+    message = platform_dependencies.get_unsupported_platform_dependency_message(
+        _detector(any_raspberry_pi_5_board=True, any_raspberry_pi=True),
+        "adafruit_raspberry_pi5_neopixel_write",
+        python_version=(3, 11),
+    )
+
+    assert message is None
+
+
+def test_unsupported_dependency_does_not_fall_back_to_install(monkeypatch):
+    monkeypatch.setattr(
+        platform_dependencies,
+        "get_platform_requirement_for_import",
+        lambda *_args, **_kwargs: None,
+    )
+    monkeypatch.setattr(
+        platform_dependencies,
+        "get_unsupported_platform_dependency_message",
+        lambda *_args, **_kwargs: (
+            "Raspberry Pi 5 NeoPixel support requires Python 3.11 or newer."
+        ),
+    )
+
+    error = ModuleNotFoundError(name="adafruit_raspberry_pi5_neopixel_write")
+    with pytest.raises(RuntimeError, match="requires Python 3.11") as raised:
+        importing.raise_for_missing_platform_dependency(error)
+
+    assert "pip install" not in str(raised.value)
 
 
 def test_earlier_raspberry_pi_does_not_install_lgpio():

@@ -75,6 +75,26 @@ def get_platform_requirement_for_import(detector, import_name, python_version=No
     return None
 
 
+def get_unsupported_platform_dependency_message(
+    detector, import_name, python_version=None
+):
+    """Return guidance when a platform dependency cannot support this Python."""
+    if python_version is None:
+        python_version = sys.version_info[:2]
+
+    if (
+        detector.board.any_raspberry_pi_5_board
+        and import_name == "adafruit_raspberry_pi5_neopixel_write"
+        and python_version < (3, 11)
+    ):
+        return (
+            "Raspberry Pi 5 NeoPixel support requires Python 3.11 or newer; "
+            f"the current interpreter is Python {python_version[0]}.{python_version[1]}."
+        )
+
+    return None
+
+
 def format_install_command(requirements, executable="pip"):
     """Return a shell-safe command for installing pip requirements."""
     if executable == "pip":

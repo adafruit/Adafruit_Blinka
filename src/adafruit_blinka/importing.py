@@ -40,15 +40,23 @@ PLATFORM_DEPENDENCY_INSTALLS = {
 def raise_for_missing_platform_dependency(error: ModuleNotFoundError):
     """Raise a helpful message for known optional platform dependencies."""
     install_command = None
+    unsupported_message = None
     if sys.implementation.name == "cpython":
         from adafruit_blinka.platform_dependencies import (
             format_install_command,
             get_platform_requirement_for_import,
+            get_unsupported_platform_dependency_message,
         )
 
         requirement = get_platform_requirement_for_import(detector, error.name)
         if requirement is not None:
             install_command = format_install_command([requirement])
+        else:
+            unsupported_message = get_unsupported_platform_dependency_message(
+                detector, error.name
+            )
+    if unsupported_message is not None:
+        raise RuntimeError(unsupported_message) from error
     if install_command is None:
         install_command = PLATFORM_DEPENDENCY_INSTALLS.get(error.name)
     if install_command is None:
