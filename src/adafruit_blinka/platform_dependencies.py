@@ -5,10 +5,13 @@
 """Runtime installation helpers for platform-specific dependencies."""
 
 import importlib
+import importlib.metadata
 import importlib.util
 import shlex
 import subprocess
 import sys
+
+from packaging.requirements import Requirement
 
 
 def get_platform_dependencies(detector, python_version=None):
@@ -48,22 +51,34 @@ def get_platform_dependencies(detector, python_version=None):
     return []
 
 
-def _module_available(module_name):
-    """Return whether an import can be resolved without importing the module."""
+def _requirement_available(module_name, requirement):
+    """Return whether an import and its required distribution version are available."""
     try:
-        return importlib.util.find_spec(module_name) is not None
+        if importlib.util.find_spec(module_name) is None:
+            return False
     except (ImportError, ModuleNotFoundError):
         return False
 
+    parsed_requirement = Requirement(requirement)
+    if not parsed_requirement.specifier:
+        return True
+
+    try:
+        installed_version = importlib.metadata.version(parsed_requirement.name)
+    except importlib.metadata.PackageNotFoundError:
+        return False
+
+    return parsed_requirement.specifier.contains(installed_version, prereleases=True)
+
 
 def get_missing_platform_dependencies(detector, python_version=None):
-    """Return platform requirements whose import modules are unavailable."""
+    """Return platform requirements whose imports are unavailable or outdated."""
     return [
         requirement
         for module_name, requirement in get_platform_dependencies(
             detector, python_version
         )
-        if not _module_available(module_name)
+        if not _requirement_available(module_name, requirement)
     ]
 
 
@@ -107,7 +122,7 @@ def format_install_command(requirements, executable="pip"):
 def install_missing_platform_dependencies(
     detector, python_version=None, input_func=input
 ):
-    """Offer to install missing dependencies into the running Python environment."""
+    """Offer to install missing or outdated dependencies into the environment."""
     missing = get_missing_platform_dependencies(detector, python_version)
     if not missing:
         return False
@@ -119,7 +134,7 @@ def install_missing_platform_dependencies(
     ):
         return False
 
-    print("\nBlinka detected missing platform dependencies:")
+    print("\nBlinka detected missing or outdated platform dependencies:")
     for requirement in missing:
         print(f"  - {requirement}")
 

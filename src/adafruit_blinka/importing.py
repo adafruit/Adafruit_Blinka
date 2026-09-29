@@ -50,7 +50,9 @@ def raise_for_missing_platform_dependency(error: ModuleNotFoundError):
 
         requirement = get_platform_requirement_for_import(detector, error.name)
         if requirement is not None:
-            install_command = format_install_command([requirement])
+            install_command = format_install_command(
+                [requirement], executable=sys.executable
+            )
         else:
             unsupported_message = get_unsupported_platform_dependency_message(
                 detector, error.name

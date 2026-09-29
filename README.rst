@@ -50,10 +50,11 @@ The test suites in the test/src folder under **testing.universal** are by design
 intended to run on *either* CircuitPython *or* CPython/Micropython+compatibility layer to prove conformance.
 
 Platform-specific dependencies are detected when Blinka starts. When Blinka is
-running in an interactive terminal and a dependency is missing, it offers to
-install the packages needed by the detected board into the current Python
-environment. In non-interactive environments, the existing import error includes
-the command needed to install the missing platform package.
+running in an interactive terminal and a dependency is missing or below its
+required minimum version, it offers to install the packages needed by the detected
+board into the current Python environment. In non-interactive environments, the
+existing import error includes the command needed to install the missing platform
+package.
 
 ``lgpio`` is installed only for boards whose selected GPIO or PWM backend uses
 Blinka's ``lgpio_pin.py`` or ``lgpio_pwmout.py`` implementation. Currently that

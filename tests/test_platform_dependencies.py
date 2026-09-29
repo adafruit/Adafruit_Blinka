@@ -129,6 +129,49 @@ def test_import_requirement_uses_detected_python_version():
     assert requirement == "lgpio>=0.2.2.0"
 
 
+def test_requirement_available_rejects_old_distribution(monkeypatch):
+    monkeypatch.setattr(
+        platform_dependencies.importlib.util, "find_spec", lambda _name: object()
+    )
+    monkeypatch.setattr(
+        platform_dependencies.importlib.metadata,
+        "version",
+        lambda _name: "0.2.1",
+    )
+
+    assert not platform_dependencies._requirement_available("lgpio", "lgpio>=0.2.2.0")
+
+
+def test_requirement_available_accepts_minimum_distribution(monkeypatch):
+    monkeypatch.setattr(
+        platform_dependencies.importlib.util, "find_spec", lambda _name: object()
+    )
+    monkeypatch.setattr(
+        platform_dependencies.importlib.metadata,
+        "version",
+        lambda _name: "0.2.2.0",
+    )
+
+    assert platform_dependencies._requirement_available("lgpio", "lgpio>=0.2.2.0")
+
+
+def test_recovery_command_uses_running_python(monkeypatch):
+    monkeypatch.setattr(
+        platform_dependencies,
+        "get_platform_requirement_for_import",
+        lambda *_args, **_kwargs: "lgpio>=0.2.2.0",
+    )
+
+    error = ModuleNotFoundError(name="lgpio")
+    with pytest.raises(RuntimeError) as raised:
+        importing.raise_for_missing_platform_dependency(error)
+
+    expected = platform_dependencies.format_install_command(
+        ["lgpio>=0.2.2.0"], executable=importing.sys.executable
+    )
+    assert expected in str(raised.value)
+
+
 def test_installer_uses_running_python(monkeypatch):
     detector = _detector(chip_id="AM33XX", any_beaglebone=True)
     commands = []
