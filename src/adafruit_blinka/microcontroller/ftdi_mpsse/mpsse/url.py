@@ -25,9 +25,14 @@ def get_ft232h_url():
 
 def get_ftx232h_url(interface_id):
     """
-    Return the FTDI url to use. If BLINKA_FTX232H_{} starts with ftdi:, returns
-    that. Otherwise, returns a default value.
+    Return the FTDI url to use. If BLINKA_FT2232H_{} or BLINKA_FTX232H_{} i
+    starts with ftdi:, return that. Otherwise, returns a default value.
     """
+
+    url = os.environ.get("BLINKA_FT2232H_{}".format(interface_id), "1")
+
+    if url.startswith("ftdi:"):
+        return url
 
     url = os.environ.get("BLINKA_FTX232H_{}".format(interface_id), "1")
 
