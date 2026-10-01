@@ -26,6 +26,13 @@ from adafruit_blinka.importing import import_mod, get_import_file
 
 SCL = SDA = SCLK = MOSI = MISO = None
 
+if sys.implementation.name == "cpython":
+    from adafruit_blinka.platform_dependencies import (
+        install_missing_platform_dependencies,
+    )
+
+    install_missing_platform_dependencies(detector)
+
 # Start with micropython boards as importlib isn't available on those chips:
 
 # Go through the board_list and import the first one that matches
