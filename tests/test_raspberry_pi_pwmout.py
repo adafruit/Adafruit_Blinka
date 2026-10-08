@@ -107,7 +107,7 @@ def test_defaults_real_pin_identity_and_always_writable_frequency(adapter, varia
 
 @pytest.mark.parametrize(
     "requested, effective",
-    [(1, 1), (50.4, 50), (50.5, 50), (50.6, 51), (10000.4, 10000)],
+    [(1, 1), (50.4, 50), (50.5, 50), (50.6, 51), (10000.4, 10000), (25000.2, 25000)],
 )
 def test_float_frequency_keeps_nominal_readback(adapter, requested, effective):
     with adapter.PWMOut(object(), frequency=requested) as output:
@@ -178,7 +178,7 @@ def test_enabled_zero_duty_is_not_disabled(adapter):
         ("frequency", float("inf"), ValueError),
         ("frequency", 0.49, ValueError),
         ("frequency", -1, ValueError),
-        ("frequency", 10000.6, ValueError),
+        ("frequency", 1000000000.6, ValueError),
         ("frequency", 10**1000, ValueError),
         ("duty_cycle", "50", TypeError),
         ("duty_cycle", float("nan"), ValueError),
@@ -199,7 +199,7 @@ def test_invalid_constructor_never_creates_native(adapter, field, value, error):
         ("frequency", "50", TypeError),
         ("frequency", float("nan"), ValueError),
         ("frequency", 0, ValueError),
-        ("frequency", 10001, ValueError),
+        ("frequency", 1000000001, ValueError),
         ("duty_cycle", "1", TypeError),
         ("duty_cycle", float("inf"), ValueError),
         ("duty_cycle", -1, ValueError),
@@ -350,3 +350,35 @@ def test_destructor_suppresses_cleanup_error(adapter):
     # A direct finalizer call lets its exception suppression be asserted.
     output.__del__()  # pylint: disable=unnecessary-dunder-call
     assert native.deinit_calls == 1
+
+
+def test_selected_backend_rejects_unsupported_frequency(adapter):
+    FakeNative.constructor_error = ValueError("software frequency exceeds 10000 Hz")
+    with pytest.raises(ValueError, match="software frequency"):
+        adapter.PWMOut(object(), frequency=25000)
+    native = FakeNative.instances[-1]
+    assert native.initial[0] == 25000
+    assert native.released
+
+
+def test_hardware_cleanup_failure_retains_native_for_retry(adapter, monkeypatch):
+    output = adapter.PWMOut(object(), duty_cycle=1234)
+    native = FakeNative.instances[-1]
+    native.deinitialized = False
+
+    def close():
+        native.deinit_calls += 1
+        if native.deinit_calls == 1:
+            raise OSError("hardware low write failed")
+        native.released = True
+        native.deinitialized = True
+
+    monkeypatch.setattr(native, "deinit", close)
+    with pytest.raises(OSError, match="low write"):
+        output.deinit()
+    assert output._pwm is native  # pylint: disable=protected-access
+    output.deinit()
+    output.deinit()
+    assert native.deinit_calls == 2
+    with pytest.raises(ValueError, match="deinitialized"):
+        _ = output.frequency

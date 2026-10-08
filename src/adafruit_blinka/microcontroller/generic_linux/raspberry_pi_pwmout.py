@@ -5,9 +5,10 @@
 """Blinka's legacy PWM surface over the strict Raspberry Pi PWM package.
 
 Frequency readback retains the requested value, as the RPi.GPIO wrapper does.
-The native engine receives a nearest-integer frequency and integer duty cycle;
-this adapter does not extend its 1..10000 Hz configuration range. Disabling
-requests LOW at the native update boundary without releasing the owned line.
+The package receives a nearest-integer frequency and integer duty cycle.
+Frequency limits belong to its selected backend: software accepts 1..10000 Hz,
+while configured hardware uses controller limits. Disabling requests LOW
+without releasing the owned output.
 """
 
 import math
@@ -26,8 +27,10 @@ def _number(value, name):
 def _frequency(value):
     value = _number(value, "frequency")
     effective = round(value)
-    if not 1 <= effective <= 10000:
-        raise ValueError("frequency must round to an integer between 1 and 10000 Hz")
+    if not 1 <= effective <= 1000000000:
+        raise ValueError(
+            "frequency must round to a positive integer with a period >=1 ns"
+        )
     return effective
 
 
@@ -83,7 +86,7 @@ class PWMOut:
 
     @property
     def frequency(self):
-        """Requested frequency; the engine uses round(value) Hz, within 1..10000."""
+        """Requested frequency; the selected backend receives round(value) Hz."""
         self._check()
         return self._frequency
 
@@ -136,12 +139,15 @@ class PWMOut:
         self._enabled = value
 
     def deinit(self):
-        """Join the native worker, drive LOW and release this output; repeat-safe."""
+        """Drive LOW and release this output; retry failed hardware cleanup."""
         native = self._pwm
-        self._pwm = None
-        self._enabled = False
         if native is not None:
-            native.deinit()
+            try:
+                native.deinit()
+            finally:
+                if getattr(native, "deinitialized", True):
+                    self._pwm = None
+                    self._enabled = False
 
     def __enter__(self):
         self._check()
