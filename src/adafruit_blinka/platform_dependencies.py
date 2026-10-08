@@ -19,28 +19,26 @@ def get_platform_dependencies(detector, python_version=None):
     if python_version is None:
         python_version = sys.version_info[:2]
 
-    # BCM2712 is currently the only Blinka microcontroller backend that imports
-    # generic_linux.lgpio_pin or generic_linux.lgpio_pwmout. Keep lgpio scoped
-    # to that backend rather than installing it for Raspberry Pi generally.
-    if detector.board.any_raspberry_pi_5_board:
-        lgpio_requirement = (
-            "adafruit-lgpio>=0.2.2.0" if python_version >= (3, 13) else "lgpio>=0.2.2.0"
-        )
-        dependencies = [("lgpio", lgpio_requirement)]
-        if python_version >= (3, 11):
+    # The BCM283x/BCM2711/BCM2712 pin maps share gpiod; PWM no longer depends
+    # on either RPi.GPIO or lgpio. NeoPixel support retains its own backend.
+    if detector.board.any_raspberry_pi or detector.board.any_raspberry_pi_5_board:
+        dependencies = [
+            ("gpiod", "gpiod>=2.2.2,<3"),
+            (
+                "adafruit_blinka_raspberry_pi_pwm",
+                "Adafruit-Blinka-Raspberry-Pi-PWM>=0.0.1.dev0",
+            ),
+        ]
+        if detector.board.any_raspberry_pi_5_board and python_version >= (3, 11):
             dependencies.append(
                 (
                     "adafruit_raspberry_pi5_neopixel_write",
                     "Adafruit-Blinka-Raspberry-Pi5-Neopixel",
                 )
             )
+        elif not detector.board.any_raspberry_pi_5_board:
+            dependencies.append(("_rpi_ws281x", "rpi_ws281x>=4.0.0"))
         return dependencies
-
-    if detector.board.any_raspberry_pi:
-        return [
-            ("RPi.GPIO", "RPi.GPIO"),
-            ("_rpi_ws281x", "rpi_ws281x>=4.0.0"),
-        ]
 
     if detector.board.any_jetson_board:
         return [("Jetson.GPIO", "Jetson.GPIO")]

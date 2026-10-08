@@ -54,6 +54,8 @@ class PulseIn:
         a given max length. When it is active, new pulse lengths are
         added to the end of the list. When there is no more room
         (len() == maxlen) the oldest pulse length is removed to make room."""
+        # Chip discovery can fail before the helper starts; cleanup must be safe.
+        self._process = self._mq = None
         self._pin = pin
         self._maxlen = maxlen
         self._idle_state = idle_state
@@ -88,7 +90,7 @@ class PulseIn:
             cmd.append(f"gpiochip{pin.id[0]}")
             cmd.append(str(pin.id[1]))
         else:
-            cmd.append("gpiochip0")
+            cmd.append(f"gpiochip{getattr(pin, 'chip_index', 0)}")
             cmd.append(str(pin))
         if DEBUG:
             print(cmd)

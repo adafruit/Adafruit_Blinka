@@ -25,14 +25,18 @@ def _detector(chip_id=None, **board_values):
     )
 
 
-def test_raspberry_pi_5_uses_adafruit_lgpio_on_python_313():
+def test_raspberry_pi_5_uses_gpiod_and_native_pwm():
     dependencies = platform_dependencies.get_platform_dependencies(
         _detector(any_raspberry_pi_5_board=True, any_raspberry_pi=True),
         python_version=(3, 13),
     )
 
     assert dependencies == [
-        ("lgpio", "adafruit-lgpio>=0.2.2.0"),
+        ("gpiod", "gpiod>=2.2.2,<3"),
+        (
+            "adafruit_blinka_raspberry_pi_pwm",
+            "Adafruit-Blinka-Raspberry-Pi-PWM>=0.0.1.dev0",
+        ),
         (
             "adafruit_raspberry_pi5_neopixel_write",
             "Adafruit-Blinka-Raspberry-Pi5-Neopixel",
@@ -40,13 +44,20 @@ def test_raspberry_pi_5_uses_adafruit_lgpio_on_python_313():
     ]
 
 
-def test_raspberry_pi_5_uses_upstream_lgpio_before_python_313():
+def test_raspberry_pi_5_gpio_pwm_requirements_do_not_depend_on_python_version():
     dependencies = platform_dependencies.get_platform_dependencies(
         _detector(any_raspberry_pi_5_board=True, any_raspberry_pi=True),
         python_version=(3, 12),
     )
 
-    assert ("lgpio", "lgpio>=0.2.2.0") in dependencies
+    assert dependencies[:2] == [
+        ("gpiod", "gpiod>=2.2.2,<3"),
+        (
+            "adafruit_blinka_raspberry_pi_pwm",
+            "Adafruit-Blinka-Raspberry-Pi-PWM>=0.0.1.dev0",
+        ),
+    ]
+    assert all(name not in ("lgpio", "RPi.GPIO") for name, _ in dependencies)
 
 
 def test_raspberry_pi_5_neopixel_requires_python_311():
@@ -100,13 +111,17 @@ def test_unsupported_dependency_does_not_fall_back_to_install(monkeypatch):
     assert "pip install" not in str(raised.value)
 
 
-def test_earlier_raspberry_pi_does_not_install_lgpio():
+def test_earlier_raspberry_pi_uses_gpiod_and_native_pwm_without_legacy_gpio():
     dependencies = platform_dependencies.get_platform_dependencies(
         _detector(any_raspberry_pi=True), python_version=(3, 13)
     )
 
     assert dependencies == [
-        ("RPi.GPIO", "RPi.GPIO"),
+        ("gpiod", "gpiod>=2.2.2,<3"),
+        (
+            "adafruit_blinka_raspberry_pi_pwm",
+            "Adafruit-Blinka-Raspberry-Pi-PWM>=0.0.1.dev0",
+        ),
         ("_rpi_ws281x", "rpi_ws281x>=4.0.0"),
     ]
 
@@ -119,14 +134,31 @@ def test_unrelated_generic_linux_board_does_not_install_lgpio():
     assert dependencies == []
 
 
-def test_import_requirement_uses_detected_python_version():
+def test_import_requirement_for_gpiod():
     detector = _detector(any_raspberry_pi_5_board=True, any_raspberry_pi=True)
 
     requirement = platform_dependencies.get_platform_requirement_for_import(
-        detector, "lgpio", python_version=(3, 12)
+        detector, "gpiod", python_version=(3, 12)
     )
 
-    assert requirement == "lgpio>=0.2.2.0"
+    assert requirement == "gpiod>=2.2.2,<3"
+
+
+def test_import_requirement_for_new_pwm_package():
+    requirement = platform_dependencies.get_platform_requirement_for_import(
+        _detector(any_raspberry_pi=True), "adafruit_blinka_raspberry_pi_pwm"
+    )
+
+    assert requirement == "Adafruit-Blinka-Raspberry-Pi-PWM>=0.0.1.dev0"
+
+
+def test_legacy_gpio_imports_are_not_requested_for_raspberry_pi():
+    detector = _detector(any_raspberry_pi=True)
+    for module in ("RPi.GPIO", "RPi", "lgpio"):
+        assert (
+            platform_dependencies.get_platform_requirement_for_import(detector, module)
+            is None
+        )
 
 
 def test_missing_dependencies_include_old_distribution(monkeypatch):
