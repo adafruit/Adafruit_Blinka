@@ -14,13 +14,20 @@ def const(x):
     return x
 
 
-def native(f):
-    "Emulate making a native"
+def native(f=None, *, optional=False):  # pylint: disable=unused-argument
+    """Emulate making a native function. The function runs as plain Python."""
+    if f is None:
+        return lambda function: function
     return f
 
 
-def viper(f):
-    "User is attempting to use a viper code emitter"
+def viper(f=None, *, optional=False):
+    """
+    The viper code emitter is not available. With ``optional=True`` the
+    function runs as plain Python, as it does on a board without viper.
+    """
+    if f is None and optional:
+        return lambda function: function
     raise SyntaxError("invalid micropython decorator")
 
 
