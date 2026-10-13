@@ -30,8 +30,10 @@ def native(*, optional: bool = ...) -> Callable[[Fun], Fun]:
 
 
 def native(
-    f: Optional[Fun] = None, *, optional: bool = False
-) -> Union[Fun, Callable[[Fun], Fun]]:  # pylint: disable=unused-argument
+    f: Optional[Fun] = None,
+    *,
+    optional: bool = False  # pylint: disable=unused-argument
+) -> Union[Fun, Callable[[Fun], Fun]]:
     """Emulate making a native function. The function runs as plain Python."""
     if f is None:
         return lambda function: function
