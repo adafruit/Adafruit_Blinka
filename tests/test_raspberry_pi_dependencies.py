@@ -28,7 +28,7 @@ PI_REQUIREMENTS = {
 }
 NATIVE_SPECIFIERS = {
     "gpiod": "<3,>=2.2.2",
-    "adafruit-blinka-raspberry-pi-pwm": ">=0.0.1.dev0",
+    "adafruit-blinka-raspberry-pi-pwm": ">=1.0.1",
 }
 ARM_MARKER_CASES = [
     ("linux", "armv6l", True),
@@ -214,7 +214,7 @@ def load_importing(monkeypatch):
         ("gpiod", "pip install 'gpiod>=2.2.2,<3'"),
         (
             "adafruit_blinka_raspberry_pi_pwm",
-            "pip install 'Adafruit-Blinka-Raspberry-Pi-PWM>=0.0.1.dev0'",
+            "pip install 'Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.1'",
         ),
     ],
 )

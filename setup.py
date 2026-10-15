@@ -102,7 +102,7 @@ setup(
         "gpiod>=2.2.2,<3;sys_platform=='linux' and "
         "(platform_machine=='armv6l' or platform_machine=='armv7l' "
         "or platform_machine=='aarch64')",
-        "Adafruit-Blinka-Raspberry-Pi-PWM>=0.0.1.dev0;sys_platform=='linux' and "
+        "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.1;sys_platform=='linux' and "
         "(platform_machine=='armv6l' or platform_machine=='armv7l' "
         "or platform_machine=='aarch64')",
         "adafruit-circuitpython-typing",
