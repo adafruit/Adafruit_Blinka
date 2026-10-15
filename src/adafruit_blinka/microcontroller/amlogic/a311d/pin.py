@@ -11,24 +11,24 @@ Linux kernel 5.4.y (mainline)
     linux/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
 """
 
-import gpiod
 from adafruit_blinka.microcontroller.alias import get_dts_alias
+from adafruit_blinka.microcontroller.generic_linux.libgpiod_chip import Chip
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
-chip0 = gpiod.Chip("0")
-chip1 = gpiod.Chip("1")
+chip0 = Chip("0")
+chip1 = Chip("1")
 
-if chip0.num_lines() < 20:
+if chip0.num_lines < 20:
     aobus = 0
     periphs = 1
-    periphs_offset = chip1.num_lines() - 85
+    periphs_offset = chip1.num_lines - 85
 else:
     aobus = 1
     periphs = 0
-    periphs_offset = chip0.num_lines() - 85
+    periphs_offset = chip0.num_lines - 85
 
-chip0.close()
-chip1.close()
+del chip0
+del chip1
 
 GPIOAO_0 = GPIO496 = Pin((aobus, 0))
 GPIOAO_1 = GPIO497 = Pin((aobus, 1))

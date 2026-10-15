@@ -44,10 +44,14 @@ jobs:
     - name: Pre-commit hooks
       run: |
         pre-commit run --all-files
-    - name: GPIO and Raspberry Pi backend tests (no GPIO)
+    - name: GPIO backend tests (no GPIO)
       run: |
         python -m pip install pytest
-        PYTHONPATH=src python -m pytest -q tests/test_libgpiod_pin.py tests/test_libgpiod_legacy_cleanup.py tests/test_raspberry_pi_*.py
+        PYTHONPATH=src python -m pytest -q \
+          tests/test_libgpiod_pin.py \
+          tests/test_libgpiod_legacy_cleanup.py \
+          tests/test_khadas_vim3_gpiod.py \
+          tests/test_raspberry_pi_*.py
     - name: Build docs
       working-directory: docs
       run: sphinx-build -E -W -b html . _build/html
