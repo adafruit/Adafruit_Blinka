@@ -6,6 +6,7 @@
 # Recording fakes and assertions intentionally inspect each backend's handles.
 # pylint: disable=redefined-outer-name,protected-access
 
+import errno
 import sys
 from types import ModuleType
 
@@ -50,6 +51,50 @@ def expected_bias(library, direction):
     if hasattr(library, "LINE_REQ_DIR_IN"):
         return getattr(library, "LINE_REQ_FLAG_BIAS_" + suffix)
     return getattr(library.line_request, "FLAG_BIAS_" + suffix)
+
+
+def record_1x_requests(monkeypatch, library, reject):
+    """Record both request APIs before modeling a kernel-side rejection."""
+    chip_class = library.Chip if hasattr(library, "Chip") else library.chip
+    original_get_line = chip_class.get_line
+    attempts = []
+
+    def get_line(chip, offset):
+        line = original_get_line(chip, offset)
+        original_request = line.request
+
+        if hasattr(library, "LINE_REQ_DIR_IN"):
+
+            def request(**arguments):
+                assert "default_val" not in arguments
+                attempts.append(arguments.copy())
+                reject(arguments, len(attempts))
+                return original_request(**arguments)
+
+        else:
+
+            def request(config, default_val=0):
+                arguments = {
+                    "consumer": config.consumer,
+                    "type": config.request_type,
+                    "flags": config.flags,
+                    "default_val": default_val,
+                }
+                attempts.append(arguments)
+                reject(arguments, len(attempts))
+                return original_request(config, default_val=default_val)
+
+        monkeypatch.setattr(line, "request", request)
+        return line
+
+    monkeypatch.setattr(chip_class, "get_line", get_line)
+    return attempts
+
+
+def reject_kernel_bias(arguments, _attempt):
+    """Linux 5.4's linehandle_create rejects unknown bias flags with EINVAL."""
+    if arguments["flags"]:
+        raise OSError(errno.EINVAL, "unsupported request flags")
 
 
 @pytest.mark.parametrize("identity,chip_index", [(18, 0), ((6, 18), 6)])
@@ -312,6 +357,177 @@ def test_1x_missing_bias_disable_only_rejects_explicit_request(monkeypatch, lega
     with pytest.raises(NotImplementedError):
         pin.init(mode=pin.IN, pull=pin.PULL_NONE)
     assert pin._chip is None and line_handle(pin) is None
+    assert all(chip.closed for chip in state.chips)
+
+
+@pytest.mark.parametrize("legacy", [False, True])
+@pytest.mark.parametrize("mode", [0, 1])
+def test_1x_implicit_none_retries_kernel_rejected_bias(monkeypatch, legacy, mode):
+    module, state, library = make_pin(
+        monkeypatch, version="1", backend="libgpiod_pin", legacy=legacy
+    )
+    attempts = record_1x_requests(monkeypatch, library, reject_kernel_bias)
+    pin = module.Pin(18)
+    pin.init(mode=mode)
+    assert [attempt["flags"] for attempt in attempts] == [
+        expected_bias(library, "DISABLED"),
+        0,
+    ]
+    assert pin._mode == mode and line_handle(pin).live
+    assert len(state.chips) == 1 and not state.chips[0].closed
+    assert len(state.requests) == 1
+    assert len(line_handle(pin).configurations) == 1
+    pin.deinit()
+    assert state.chips[0].closed and not state.requests[0].live
+
+
+@pytest.mark.parametrize("legacy", [False, True])
+def test_1x_kernel_bias_fallback_preserves_output_value(monkeypatch, legacy):
+    module, state, library = make_pin(
+        monkeypatch, version="1", backend="libgpiod_pin", legacy=legacy
+    )
+    attempts = record_1x_requests(monkeypatch, library, reject_kernel_bias)
+    pin = module.Pin(18)
+    pin.init(mode=pin.OUT)
+    for value in (1, 0, 1):
+        pin.value(value)
+        pin.init(mode=pin.OUT)
+        assert pin.value() == value and pin._value == value and pin._mode == pin.OUT
+        for attempt in attempts[-2:]:
+            assert attempt["consumer"] == "adafruit_blinka"
+            if legacy:
+                assert attempt["type"] == library.line_request.DIRECTION_OUTPUT
+                assert attempt["default_val"] == value
+            else:
+                assert attempt["type"] == library.LINE_REQ_DIR_OUT
+                assert attempt["default_vals"] == [value]
+    pin.init(mode=pin.IN)
+    assert pin._mode == pin.IN
+    pin.deinit()
+    assert all(chip.closed for chip in state.chips)
+
+
+@pytest.mark.parametrize("legacy", [False, True])
+@pytest.mark.parametrize("pull", [0, 1, 2])
+def test_1x_explicit_bias_requests_do_not_fallback_on_old_kernel(
+    monkeypatch, legacy, pull
+):
+    module, state, library = make_pin(
+        monkeypatch, version="1", backend="libgpiod_pin", legacy=legacy
+    )
+    attempts = record_1x_requests(monkeypatch, library, reject_kernel_bias)
+    pin = module.Pin(18)
+    with pytest.raises(OSError) as caught:
+        pin.init(pull=pull)
+    assert caught.value.errno == errno.EINVAL
+    assert len(attempts) == 1 and attempts[0]["flags"] != 0
+    assert pin._chip is None and line_handle(pin) is None
+    assert all(chip.closed for chip in state.chips)
+    assert all(not request.live for request in state.requests)
+
+
+@pytest.mark.parametrize("legacy", [False, True])
+@pytest.mark.parametrize(
+    "error_number", [errno.EBUSY, errno.EACCES, errno.EIO, errno.EOPNOTSUPP, None]
+)
+def test_1x_implicit_bias_does_not_retry_unrelated_errors(
+    monkeypatch, legacy, error_number
+):
+    module, state, library = make_pin(
+        monkeypatch, version="1", backend="libgpiod_pin", legacy=legacy
+    )
+    failure = OSError(error_number, "unrelated request failure")
+
+    def reject(_arguments, _attempt):
+        raise failure
+
+    attempts = record_1x_requests(monkeypatch, library, reject)
+    pin = module.Pin(18)
+    with pytest.raises(OSError) as caught:
+        pin.init()
+    assert caught.value is failure and len(attempts) == 1
+    assert pin._chip is None and line_handle(pin) is None
+    assert all(chip.closed for chip in state.chips)
+
+
+@pytest.mark.parametrize("legacy", [False, True])
+def test_1x_unbiased_einval_is_not_retried(monkeypatch, legacy):
+    module, state, library = make_pin(
+        monkeypatch, version="1", backend="libgpiod_pin", legacy=legacy
+    )
+    if legacy:
+        del library.line_request.FLAG_BIAS_DISABLE
+    else:
+        del library.LINE_REQ_FLAG_BIAS_DISABLE
+    failure = OSError(errno.EINVAL, "invalid line")
+
+    def reject(_arguments, _attempt):
+        raise failure
+
+    attempts = record_1x_requests(monkeypatch, library, reject)
+    pin = module.Pin(18)
+    with pytest.raises(OSError) as caught:
+        pin.init()
+    assert caught.value is failure
+    assert len(attempts) == 1 and attempts[0]["flags"] == 0
+    assert all(chip.closed for chip in state.chips)
+
+
+@pytest.mark.parametrize("legacy", [False, True])
+def test_1x_fallback_failure_is_not_retried_and_cleans_resources(monkeypatch, legacy):
+    module, state, library = make_pin(
+        monkeypatch, version="1", backend="libgpiod_pin", legacy=legacy
+    )
+    pin = module.Pin(18)
+    pin.init(mode=pin.OUT)
+    pin.value(1)
+    failure = OSError(errno.EBUSY, "fallback failed")
+
+    def reject(arguments, attempt):
+        if attempt == 2:
+            raise failure
+        reject_kernel_bias(arguments, attempt)
+
+    attempts = record_1x_requests(monkeypatch, library, reject)
+    # Reopen to apply the recording wrapper; preserve the last commanded output.
+    pin.deinit()
+    state.fail_close = True
+    with pytest.raises(OSError) as caught:
+        pin.init(mode=pin.IN)
+    assert caught.value is failure
+    assert len(attempts) == 2 and attempts[-1]["flags"] == 0
+    assert pin._mode == pin.OUT and pin._value == 1
+    assert pin._chip is None and line_handle(pin) is None
+    assert all(chip.closed for chip in state.chips)
+    assert all(not request.live for request in state.requests)
+
+
+@pytest.mark.parametrize("legacy", [False, True])
+def test_actual_digitalio_initializes_on_kernel_without_bias_flags(monkeypatch, legacy):
+    module, state, library = make_pin(
+        monkeypatch, version="1", backend="libgpiod_pin", legacy=legacy
+    )
+    attempts = record_1x_requests(monkeypatch, library, reject_kernel_bias)
+    agnostic = ModuleType("adafruit_blinka.agnostic")
+    agnostic.board_id = "NON_PI_GPIOD_BOARD"
+    importing = ModuleType("adafruit_blinka.importing")
+    importing.get_import_file = lambda name, _location: SOURCE / name
+    importing.import_microcontroller = lambda namespace, *_args: namespace.update(
+        Pin=module.Pin
+    )
+    monkeypatch.setitem(sys.modules, "adafruit_blinka.agnostic", agnostic)
+    monkeypatch.setitem(sys.modules, "adafruit_blinka.importing", importing)
+    digitalio = load_source("_old_kernel_digitalio_test", SOURCE / "digitalio.py")
+    digital = digitalio.DigitalInOut(module.Pin(18))
+    assert digital.direction is digitalio.Direction.INPUT and digital.pull is None
+    digital.switch_to_output(value=True)
+    assert digital.value is True
+    digital.drive_mode = digitalio.DriveMode.PUSH_PULL
+    assert digital.value is True
+    digital.switch_to_input()
+    assert digital.direction is digitalio.Direction.INPUT and digital.pull is None
+    assert all(attempts[index]["flags"] == 0 for index in range(1, len(attempts), 2))
+    digital.deinit()
     assert all(chip.closed for chip in state.chips)
 
 

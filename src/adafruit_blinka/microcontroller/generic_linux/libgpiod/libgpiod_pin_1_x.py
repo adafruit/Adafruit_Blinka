@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: MIT
 """A Pin class for use with libgpiod 1.x."""
+import errno
+
 import gpiod
 
 
@@ -78,6 +80,33 @@ class Pin:
     def __eq__(self, other):
         return self.id == other
 
+    def _request_line(self, mode, flags):
+        """Request one line using the installed 1.x binding's API."""
+        if hasattr(gpiod, "LINE_REQ_DIR_IN"):
+            arguments = {
+                "consumer": self._CONSUMER,
+                "type": gpiod.LINE_REQ_DIR_IN
+                if mode == self.IN
+                else gpiod.LINE_REQ_DIR_OUT,
+                "flags": flags,
+            }
+            if mode == self.OUT:
+                arguments["default_vals"] = [int(self._value)]
+            self._line.request(**arguments)
+        else:
+            config = gpiod.line_request()
+            config.consumer = self._CONSUMER
+            config.request_type = (
+                gpiod.line_request.DIRECTION_INPUT
+                if mode == self.IN
+                else gpiod.line_request.DIRECTION_OUTPUT
+            )
+            config.flags = flags
+            if mode == self.OUT:
+                self._line.request(config, default_val=int(self._value))
+            else:
+                self._line.request(config)
+
     def init(self, mode=IN, pull=None):
         """Initialize or reconfigure this pin, opening its controller on demand."""
         try:
@@ -93,30 +122,15 @@ class Pin:
                 self._line = self._chip.get_line(int(self._num))
             if mode is not None:
                 self._line.release()
-                if hasattr(gpiod, "LINE_REQ_DIR_IN"):
-                    arguments = {
-                        "consumer": self._CONSUMER,
-                        "type": gpiod.LINE_REQ_DIR_IN
-                        if mode == self.IN
-                        else gpiod.LINE_REQ_DIR_OUT,
-                        "flags": flags,
-                    }
-                    if mode == self.OUT:
-                        arguments["default_vals"] = [int(self._value)]
-                    self._line.request(**arguments)
-                else:
-                    config = gpiod.line_request()
-                    config.consumer = self._CONSUMER
-                    config.request_type = (
-                        gpiod.line_request.DIRECTION_INPUT
-                        if mode == self.IN
-                        else gpiod.line_request.DIRECTION_OUTPUT
-                    )
-                    config.flags = flags
-                    if mode == self.OUT:
-                        self._line.request(config, default_val=int(self._value))
-                    else:
-                        self._line.request(config)
+                try:
+                    self._request_line(mode, flags)
+                except OSError as error:
+                    # Linux before 5.5 rejects the bias flags even when the
+                    # bindings expose them. Preserve implicit no-pull setup on
+                    # those kernels, but do not relax explicit pull requests.
+                    if pull is not None or not flags or error.errno != errno.EINVAL:
+                        raise
+                    self._request_line(mode, 0)
                 self._mode = mode
         except BaseException:
             try:
