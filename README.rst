@@ -49,6 +49,28 @@ running CircuitPython and would likely conflict in unhappy ways.
 The test suites in the test/src folder under **testing.universal** are by design
 intended to run on *either* CircuitPython *or* CPython/Micropython+compatibility layer to prove conformance.
 
+Platform-specific dependencies are detected when Blinka starts. When Blinka is
+running in an interactive terminal and a dependency is missing or below its
+required minimum version, it offers to install the packages needed by the detected
+board into the current Python environment. In non-interactive environments, the
+existing import error includes the command needed to install the missing platform
+package.
+
+Raspberry Pi GPIO uses the existing libgpiod pin backend with header-controller
+discovery rather than a fixed GPIO chip number. Raspberry Pi PWM uses
+``Adafruit-Blinka-Raspberry-Pi-PWM`` through a small compatibility adapter.
+The detected platform requirements are ``gpiod>=2.2.2,<3`` and that PWM package,
+not ``RPi.GPIO`` or ``lgpio``. NeoPixel support retains its separate dependencies.
+
+The PWM adapter retains writable frequency, ``period`` (seconds), and
+``enabled``, including requested fractional frequency readback. Frequencies are
+rounded to integer Hz for the native engine, whose
+supported configuration range is 1--10,000 Hz; this is not a timing guarantee.
+Disabling requests LOW at the native update boundary while retaining line
+ownership; ``deinit()``
+stops the worker and releases the line. Raspberry Pi GPIO character-device v2
+requires Linux 5.10 or newer. Other boards' GPIO/PWM backends are unchanged.
+
 Installing from PyPI
 =====================
 

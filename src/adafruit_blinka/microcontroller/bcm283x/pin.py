@@ -3,8 +3,8 @@
 # SPDX-License-Identifier: MIT
 """Broadcom BCM283x pin names"""
 
-# Use RPi.GPIO pins for Raspberry Pi 1-3B+
-from adafruit_blinka.microcontroller.generic_linux.rpi_gpio_pin import Pin
+# Use BCM-numbered libgpiod pins for Raspberry Pi 1-3B+.
+from adafruit_blinka.microcontroller.generic_linux.raspberry_pi_pin import Pin
 
 D0 = Pin(0)
 D1 = Pin(1)

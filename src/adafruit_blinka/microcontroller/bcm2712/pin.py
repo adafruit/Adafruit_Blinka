@@ -3,8 +3,8 @@
 # SPDX-License-Identifier: MIT
 """Broadcom BCM2712 pin names"""
 
-# Use lgpio pins for Raspberry Pi 5
-from adafruit_blinka.microcontroller.generic_linux.lgpio_pin import Pin
+# Use BCM-numbered libgpiod pins for Raspberry Pi 5.
+from adafruit_blinka.microcontroller.generic_linux.raspberry_pi_pin import Pin
 
 D0 = Pin(0)
 D1 = Pin(1)
