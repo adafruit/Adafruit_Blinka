@@ -15,6 +15,7 @@ class Chip:
     num_lines: int
 
     def __init__(self, chip_id: str):
+        self._chip = None
         self.id = chip_id
         if hasattr(gpiod, "Chip"):
             self._chip = gpiod.Chip(self.id)
@@ -24,11 +25,14 @@ class Chip:
         if callable(self._chip.num_lines):
             self.num_lines = self._chip.num_lines()
         else:
-            self.num_lines = self.num_lines
+            self.num_lines = self._chip.num_lines
 
     def __del__(self):
         if self._chip:
-            self._chip.close()
+            if hasattr(self._chip, "close"):
+                self._chip.close()
+            else:
+                self._chip.reset()
             self._chip = None
 
     def __repr__(self):

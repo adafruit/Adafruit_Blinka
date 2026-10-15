@@ -287,15 +287,23 @@ def test_2x_configuration_failure_keeps_primary_error_and_previous_mode(monkeypa
 
 
 def test_request_error_wins_over_chip_cleanup_error(generic_pins):
-    module, state, _ = generic_pins
+    module, state, library = generic_pins
     pin = module.Pin(18)
     state.fail_request = state.fail_close = True
     with pytest.raises(OSError, match="request failed"):
         pin.init()
-    assert pin._chip is None and line_handle(pin) is None
+    is_1x = getattr(library, "__version__", "1.x").startswith("1.")
+    assert line_handle(pin) is None
+    if is_1x:
+        assert pin._chip is state.chips[-1]
+    else:
+        assert pin._chip is None
     assert all(chip.closed for chip in state.chips)
     assert all(not request.live for request in state.requests)
+    state.fail_close = False
     pin.deinit()
+    assert pin._chip is None
+    assert state.chips[-1].close_calls == (2 if is_1x else 1)
 
 
 @pytest.mark.parametrize("legacy", [False, True])
@@ -318,8 +326,10 @@ def test_1x_failed_input_request_keeps_previous_successful_mode(monkeypatch, leg
     pin.deinit()
 
 
-def test_cleanup_attempts_line_and_chip_once_when_both_raise(generic_pins):
-    module, state, _ = generic_pins
+def test_cleanup_failure_retains_1x_handles_and_keeps_other_pin_independent(
+    generic_pins,
+):
+    module, state, library = generic_pins
     first, second = module.Pin(18), module.Pin(23)
     first.init()
     second.init()
@@ -329,13 +339,46 @@ def test_cleanup_attempts_line_and_chip_once_when_both_raise(generic_pins):
     state.fail_release = state.fail_close = True
     with pytest.raises(OSError, match="release failed"):
         first.deinit()
-    assert request1.release_calls == release_calls + 1 and chip1.close_calls == 1
-    assert first._chip is None and line_handle(first) is None
+    is_1x = getattr(library, "__version__", "1.x").startswith("1.")
+    assert request1.release_calls == release_calls + 1
+    if is_1x:
+        assert first._chip is chip1 and line_handle(first) is request1
+        assert chip1.close_calls == 0
+    else:
+        assert first._chip is None and line_handle(first) is None
+        assert chip1.close_calls == 1
     assert not chip2.closed and request2.live
-    first.deinit()
-    assert request1.release_calls == release_calls + 1 and chip1.close_calls == 1
     state.fail_release = state.fail_close = False
+    first.deinit()
+    assert request1.release_calls == release_calls + (2 if is_1x else 1)
+    assert chip1.close_calls == 1
+    assert first._chip is None and line_handle(first) is None
     second.deinit()
+
+
+@pytest.mark.parametrize("legacy", [False, True])
+def test_1x_chip_cleanup_retry_does_not_repeat_successful_line_release(
+    monkeypatch, legacy
+):
+    module, state, _ = make_pin(
+        monkeypatch, version="1", backend="libgpiod_pin", legacy=legacy
+    )
+    pin = module.Pin(18)
+    pin.init(mode=pin.OUT)
+    chip, line = pin._chip, pin._line
+    release_calls = line.release_calls
+    state.fail_close = True
+
+    with pytest.raises(OSError, match="close failed"):
+        pin.deinit()
+    assert pin._chip is chip and pin._line is None
+    assert chip.close_calls == 1 and line.release_calls == release_calls + 1
+
+    state.fail_close = False
+    pin.deinit()
+    pin.deinit()
+    assert pin._chip is None and pin._line is None
+    assert chip.close_calls == 2 and line.release_calls == release_calls + 1
 
 
 @pytest.mark.parametrize("legacy", [False, True])
@@ -497,9 +540,12 @@ def test_1x_fallback_failure_is_not_retried_and_cleans_resources(monkeypatch, le
     assert caught.value is failure
     assert len(attempts) == 2 and attempts[-1]["flags"] == 0
     assert pin._mode == pin.OUT and pin._value == 1
-    assert pin._chip is None and line_handle(pin) is None
+    assert pin._chip is state.chips[-1] and line_handle(pin) is None
     assert all(chip.closed for chip in state.chips)
     assert all(not request.live for request in state.requests)
+    state.fail_close = False
+    pin.deinit()
+    assert pin._chip is None and state.chips[-1].close_calls == 2
 
 
 @pytest.mark.parametrize("legacy", [False, True])

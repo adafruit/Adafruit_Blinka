@@ -46,6 +46,13 @@ def _chip_info(chip):
     return label() if callable(label) else label, count() if callable(count) else count
 
 
+def _close_chip(chip):
+    if hasattr(chip, "close"):
+        chip.close()
+    else:
+        chip.reset()
+
+
 def _find_chip(offset):
     candidates, inaccessible = [], []
     for path in _chip_paths():
@@ -59,8 +66,13 @@ def _find_chip(offset):
             label, count = _chip_info(chip)
             if label in _LABELS and offset < count:
                 candidates.append(index)
-        finally:
-            chip.close()
+        except BaseException:
+            try:
+                _close_chip(chip)
+            except BaseException:
+                pass  # Preserve the metadata error if cleanup also fails.
+            raise
+        _close_chip(chip)
     if len(candidates) == 1:
         return candidates[0]
     if len(candidates) > 1:
@@ -103,7 +115,7 @@ class Pin(_Pin):
                 raise RuntimeError("Raspberry Pi header GPIO controller changed")
         except BaseException:
             try:
-                chip.close()
+                _close_chip(chip)
             except BaseException:
                 pass
             raise

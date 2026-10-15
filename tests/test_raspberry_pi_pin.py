@@ -201,6 +201,12 @@ def make_pin(monkeypatch, version="2", *, backend="raspberry_pi_pin", legacy=Fal
         del library.LINE_REQ_FLAG_BIAS_PULL_UP
         del library.LINE_REQ_FLAG_BIAS_PULL_DOWN
         del library.LINE_REQ_FLAG_BIAS_DISABLE
+        # PyPI's legacy binding uses reset(), not the official binding's close(),
+        # and exposes metadata as properties rather than methods.
+        Chip.reset = Chip.close
+        del Chip.close
+        Chip.label = property(lambda self: self.get_info().label)
+        Chip.num_lines = property(lambda self: self.get_info().num_lines)
         library.chip = Chip
         library.line_request = LegacyRequest
     monkeypatch.setitem(sys.modules, "gpiod", library)
@@ -261,6 +267,49 @@ def test_discovered_chip_index_closes_metadata_handle(pins, label):
     assert pin.chip_index == 7
     assert all(chip.closed for chip in state.chips)
     assert not state.requests and pin._chip is None
+
+
+@pytest.mark.parametrize("legacy", [False, True])
+def test_1x_discovery_and_owned_handle_use_the_binding_cleanup_api(monkeypatch, legacy):
+    module, state, library = make_pin(monkeypatch, version="1", legacy=legacy)
+    pin = module.Pin(18)
+    assert pin.chip_index == 3
+    assert state.chips[-1].closed and state.chips[-1].close_calls == 1
+    if legacy:
+        assert not hasattr(library.chip, "close")
+        assert isinstance(state.chips[-1].label, str)
+        assert isinstance(state.chips[-1].num_lines, int)
+    pin.init(mode=pin.OUT)
+    owned = pin._chip
+    assert owned is state.chips[-1] and not owned.closed
+    assert all(chip.closed for chip in state.chips[:-1])
+    pin.deinit()
+    pin.deinit()
+    assert owned.closed and owned.close_calls == 1
+
+
+@pytest.mark.parametrize("version,legacy", [("2", False), ("1", False), ("1", True)])
+@pytest.mark.parametrize("owned_open", [False, True])
+def test_metadata_error_wins_when_discovery_cleanup_also_fails(
+    monkeypatch, version, legacy, owned_open
+):
+    module, state, _ = make_pin(monkeypatch, version=version, legacy=legacy)
+    original_info = module._chip_info
+
+    def inspect(chip):
+        if state.opens == (2 if owned_open else 1):
+            state.fail_close = True
+            raise OSError("metadata failed")
+        return original_info(chip)
+
+    monkeypatch.setattr(module, "_chip_info", inspect)
+    pin = module.Pin(18)
+    with pytest.raises(OSError, match="metadata failed"):
+        pin.init()
+    assert not state.requests and pin._chip is None
+    assert all(chip.close_calls == 1 for chip in state.chips)
+    state.fail_close = False
+    pin.deinit()
 
 
 @pytest.mark.parametrize("canonical_index", [0, 6])

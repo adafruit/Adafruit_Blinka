@@ -141,18 +141,17 @@ class Pin:
 
     def deinit(self):
         """Release the pin and associated resources."""
-        line, chip = getattr(self, "_line", None), getattr(self, "_chip", None)
-        self._line = self._chip = None
-        failure = None
-        for handle, operation in ((line, "release"), (chip, "close")):
-            if handle is not None:
-                try:
-                    getattr(handle, operation)()
-                except BaseException as error:
-                    if failure is None:
-                        failure = error
-        if failure is not None:
-            raise failure
+        # Keep failed handles reachable so callers can retry cleanup. A line
+        # still awaiting release also needs its owning chip to remain open.
+        if getattr(self, "_line", None) is not None:
+            self._line.release()
+            self._line = None
+        if getattr(self, "_chip", None) is not None:
+            if hasattr(self._chip, "close"):
+                self._chip.close()
+            else:
+                self._chip.reset()
+            self._chip = None
 
     def value(self, val=None):
         """Set or return the Pin Value"""
