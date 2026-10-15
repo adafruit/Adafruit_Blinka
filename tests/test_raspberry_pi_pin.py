@@ -26,7 +26,9 @@ def load_source(name, path):
     return module
 
 
-def make_pin(monkeypatch, version="2"):
+def make_pin(monkeypatch, version="2", *, backend="raspberry_pi_pin", legacy=False):
+    # One fake factory keeps all three binding APIs under the same recording state.
+    # pylint: disable=too-many-locals
     library = ModuleType("gpiod")
     library.__version__ = "2.5.0" if version == "2" else "1.6.3"
     state = SimpleNamespace(
@@ -38,6 +40,8 @@ def make_pin(monkeypatch, version="2"):
         fail_request=False,
         fail_config=False,
         fail_release=False,
+        fail_close=False,
+        fail_write=False,
     )
 
     class Value(Enum):
@@ -85,6 +89,8 @@ def make_pin(monkeypatch, version="2"):
 
         def set_value(self, offset, value):
             assert offset == self.offset
+            if state.fail_write:
+                raise OSError("write failed")
             self.value = value
 
         def release(self):
@@ -96,16 +102,32 @@ def make_pin(monkeypatch, version="2"):
     class Line(Request):
         # The 1.x line API omits the offset required by the 2.x request API.
         # pylint: disable=arguments-differ
-        def request(self, **kwargs):
+        def request(self, config=None, **kwargs):
             if state.fail_request:
                 raise OSError("request failed")
+            if config is not None:
+                assert legacy
+                assert "default_vals" not in kwargs
+                kwargs.update(
+                    consumer=config.consumer,
+                    type=config.request_type,
+                    flags=config.flags,
+                )
+            else:
+                assert not legacy
+                assert "default_val" not in kwargs
             self.live = True
             self.configurations.append(kwargs)
+            if kwargs["type"] == 2:
+                initial = kwargs.get("default_val", kwargs.get("default_vals", [0])[0])
+                self.value = Value(initial)
 
         def get_value(self):
             return self.value.value
 
         def set_value(self, value):
+            if state.fail_write:
+                raise OSError("write failed")
             self.value = Value(value)
 
     class Chip:
@@ -117,11 +139,13 @@ def make_pin(monkeypatch, version="2"):
             if state.opens == state.fail_open:
                 raise PermissionError("open failed")
             self.index = int(Path(path).name.removeprefix("gpiochip"))
+            self.path = path
+            self.open_mode = mode
             self.closed = False
             self.close_calls = 0
             state.chips.append(self)
             if mode is not None:
-                assert mode == self.OPEN_BY_NUMBER
+                assert mode in (self.OPEN_BY_NUMBER, self.OPEN_BY_NAME)
 
         def get_info(self):
             label, count = state.devices[self.index]
@@ -145,6 +169,20 @@ def make_pin(monkeypatch, version="2"):
         def close(self):
             self.closed = True
             self.close_calls += 1
+            if state.fail_close:
+                raise OSError("close failed")
+
+    class LegacyRequest:  # pylint: disable=too-few-public-methods
+        DIRECTION_INPUT = 1
+        DIRECTION_OUTPUT = 2
+        FLAG_BIAS_PULL_UP = 4
+        FLAG_BIAS_PULL_DOWN = 8
+        FLAG_BIAS_DISABLE = 16
+
+        def __init__(self):
+            self.consumer = ""
+            self.request_type = None
+            self.flags = 0
 
     library.Chip = Chip
     library.LineSettings = Settings
@@ -154,19 +192,31 @@ def make_pin(monkeypatch, version="2"):
     library.LINE_REQ_FLAG_BIAS_PULL_UP = 4
     library.LINE_REQ_FLAG_BIAS_PULL_DOWN = 8
     library.LINE_REQ_FLAG_BIAS_DISABLE = 16
+    if legacy:
+        assert version == "1"
+        del library.Chip
+        del library.__version__
+        del library.LINE_REQ_DIR_IN
+        del library.LINE_REQ_DIR_OUT
+        del library.LINE_REQ_FLAG_BIAS_PULL_UP
+        del library.LINE_REQ_FLAG_BIAS_PULL_DOWN
+        del library.LINE_REQ_FLAG_BIAS_DISABLE
+        library.chip = Chip
+        library.line_request = LegacyRequest
     monkeypatch.setitem(sys.modules, "gpiod", library)
     for name in list(sys.modules):
         if name == PREFIX + ".raspberry_pi_pin" or name.startswith(
             PREFIX + ".libgpiod"
         ):
             monkeypatch.delitem(sys.modules, name)
-    module = importlib.import_module(PREFIX + ".raspberry_pi_pin")
-    state.filesystem_chip_paths = module._chip_paths
-    monkeypatch.setattr(
-        module,
-        "_chip_paths",
-        lambda: [Path(f"/dev/gpiochip{n}") for n in sorted(state.devices)],
-    )
+    module = importlib.import_module(PREFIX + "." + backend)
+    if backend == "raspberry_pi_pin":
+        state.filesystem_chip_paths = module._chip_paths
+        monkeypatch.setattr(
+            module,
+            "_chip_paths",
+            lambda: [Path(f"/dev/gpiochip{n}") for n in sorted(state.devices)],
+        )
     return module, state, library
 
 
@@ -485,13 +535,18 @@ def test_1x_reuses_existing_numeric_chip_driver(monkeypatch):
     assert all(chip.closed for chip in state.chips)
 
 
-def test_1x_without_explicit_bias_clear_does_not_claim_success(monkeypatch):
+def test_1x_without_bias_clear_retains_implicit_default_but_rejects_explicit_none(
+    monkeypatch,
+):
     module, state, library = make_pin(monkeypatch, version="1")
     del library.LINE_REQ_FLAG_BIAS_DISABLE
     pin = module.Pin(18)
-    with pytest.raises(NotImplementedError, match="explicitly disable"):
-        pin.init()
-    assert not state.chips and not state.requests
+    pin.init()
+    assert state.requests[-1].configurations[-1]["flags"] == 0
+    with pytest.raises(NotImplementedError):
+        pin.init(pull=pin.PULL_NONE)
+    assert all(chip.closed for chip in state.chips)
+    assert all(not request.live for request in state.requests)
 
 
 @pytest.mark.parametrize(
