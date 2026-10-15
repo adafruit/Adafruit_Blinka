@@ -23,6 +23,8 @@ class Pin:
     _mode = IN
 
     def __init__(self, pin_id):
+        self._chip = None
+        self._line = None
         self.id = pin_id
         if isinstance(pin_id, tuple):
             self._num = int(pin_id[1])
@@ -36,7 +38,6 @@ class Pin:
                 self._chip = gpiod.Chip("gpiochip0", gpiod.Chip.OPEN_BY_NAME)
             else:
                 self._chip = gpiod.chip("gpiochip0", gpiod.chip.OPEN_BY_NAME)
-        self._line = None
 
     def __del__(self):
         self.deinit()
@@ -124,7 +125,10 @@ class Pin:
             self._line.release()
             self._line = None
         if self._chip:
-            self._chip.close()
+            if hasattr(self._chip, "close"):
+                self._chip.close()
+            else:
+                self._chip.reset()
             self._chip = None
 
     def value(self, val=None):
