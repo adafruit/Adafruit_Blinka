@@ -10,7 +10,6 @@
 
 import io
 import os
-import sys
 
 from setuptools import setup, find_packages
 
@@ -38,26 +37,8 @@ if os.path.exists("/proc/device-tree/compatible"):
         or b"brcm,bcm2711" in compat
         or b"brcm,bcm2712" in compat
     ):
-        _pyver = (sys.version_info.major, sys.version_info.minor)
-        # adafruit-lgpio provides pre-built wheels for Python 3.13+ (aarch64 + armv7l)
-        if _pyver >= (3, 13):
-            lgpio_req = "adafruit-lgpio>=0.2.2.0"
-        else:
-            lgpio_req = "lgpio>=0.2.2.0"
-        try:
-            import lgpio
-        except ImportError:
-            print(
-                "\n*** lgpio is not installed. On Raspberry Pi OS, install it with:\n"
-                "    sudo apt-get install -y python3-lgpio\n"
-                "  Then recreate your virtual environment with --system-site-packages\n"
-                "  or install adafruit-lgpio from PyPI:\n"
-                "    pip install adafruit-lgpio\n"
-            )
         board_reqs = [
             "rpi_ws281x>=4.0.0",
-            lgpio_req,
-            "RPi.GPIO",
             "Adafruit-Blinka-Raspberry-Pi5-Neopixel",
         ]
     # BeagleBone Black, Green, PocketBeagle, BeagleBone AI, etc.
@@ -116,6 +97,13 @@ setup(
         "Adafruit-PureIO>=1.1.7",
         "binho-host-adapter>=0.1.6",
         "pyftdi>=0.40.0",
+        # Wheel metadata must retain these even when built on a non-Pi host.
+        "gpiod>=2.2.2,<3;sys_platform=='linux' and "
+        "(platform_machine=='armv6l' or platform_machine=='armv7l' "
+        "or platform_machine=='aarch64')",
+        "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.1;sys_platform=='linux' and "
+        "(platform_machine=='armv6l' or platform_machine=='armv7l' "
+        "or platform_machine=='aarch64')",
         "adafruit-circuitpython-typing",
         "sysv_ipc>=1.1.0;sys_platform=='linux' and platform_machine!='mips'",
         "toml>=0.10.2;python_version<'3.11'",

@@ -45,9 +45,13 @@ def drivers(request, monkeypatch):
                 raise OSError("line release failed")
 
     class OfficialLine(Line):
-        def request(self, *, consumer, type):  # pylint: disable=redefined-builtin
+        def request(
+            self, *, consumer, type, flags, default_vals
+        ):  # pylint: disable=redefined-builtin
             assert consumer == "adafruit_blinka"
             assert type == 3
+            assert flags == 0
+            assert default_vals == [0]
 
     class LegacyLine(Line):
         def request(self, config, default_val=0):
@@ -92,6 +96,7 @@ def drivers(request, monkeypatch):
             self.cleanup("reset")
 
     class LineRequest:
+        DIRECTION_INPUT = 1
         DIRECTION_OUTPUT = 3
 
         def __init__(self):
@@ -101,6 +106,7 @@ def drivers(request, monkeypatch):
     binding = types.ModuleType("gpiod")
     if request.param == "official":
         binding.Chip = OfficialChip
+        binding.LINE_REQ_DIR_IN = 1
         binding.LINE_REQ_DIR_OUT = 3
         chip_type = OfficialChip
         cleanup = "close"
@@ -137,6 +143,8 @@ def test_pin_releases_line_before_chip_once(drivers):
 
 def test_pin_cleanup_without_line_request(drivers):
     pin = drivers.Pin((0, 18))
+    assert drivers.events == []
+    pin._ensure_chip()
     pin.deinit()
     pin.deinit()
 
@@ -163,6 +171,8 @@ def test_failed_open_can_be_cleaned_up(drivers, driver_name):
 
     with pytest.raises(OSError, match="chip open failed"):
         instance.__init__(identifier)
+        if driver_name == "Pin":
+            instance.init()
     instance.__del__()
 
     assert drivers.events == []

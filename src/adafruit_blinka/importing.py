@@ -34,6 +34,10 @@ PLATFORM_DEPENDENCY_INSTALLS = {
         "pip install Adafruit-Blinka-Raspberry-Pi5-Neopixel"
     ),
     "lgpio": "pip install adafruit-lgpio",
+    "gpiod": "pip install 'gpiod>=2.2.2,<3'",
+    "adafruit_blinka_raspberry_pi_pwm": (
+        "pip install 'Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.1'"
+    ),
 }
 
 

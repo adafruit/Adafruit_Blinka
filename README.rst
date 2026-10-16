@@ -74,6 +74,25 @@ To install in a virtual environment in your current project:
     source .env/bin/activate
     pip3 install Adafruit-Blinka
 
+Raspberry Pi GPIO and PWM
+=========================
+
+Raspberry Pi digital GPIO uses the official ``gpiod`` bindings. ``pwmio.PWMOut``
+uses `Adafruit Blinka Raspberry Pi PWM
+<https://github.com/adafruit/Adafruit_Blinka_Raspberry_Pi_PWM>`_ on Pi 5 and earlier
+models. Configured BCM/RP1 hardware PWM is preferred on verified pin routes;
+other pins use native software PWM. This does not use PIO or change boot overlays.
+Dependency markers also install ``gpiod`` and the PWM package on other Linux ARM
+hosts; their board-specific backends are unchanged.
+
+Software PWM accepts 1--10000 Hz, with Linux scheduling affecting timing and
+jitter. Configured hardware limits depend on its controller and driver, and
+updates are not guaranteed glitch-free. Hardware channels require separate
+kernel/overlay configuration and sysfs permissions. See the package's
+`usage guide <https://github.com/adafruit/Adafruit_Blinka_Raspberry_Pi_PWM/blob/main/docs/usage.rst>`_
+for setup and cleanup limitations; verify the waveform before connecting an
+actuator. NeoPixel support continues to use its existing separate backends.
+
 Usage Example
 =============
 
