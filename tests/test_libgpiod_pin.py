@@ -38,6 +38,14 @@ def configured_output(configuration, library):
     return configuration.direction is library.line.Direction.OUTPUT
 
 
+def configured_value(configuration):
+    if isinstance(configuration, dict):
+        if "default_vals" in configuration:
+            return configuration["default_vals"][0]
+        return configuration["default_val"]
+    return configuration.output_value.value
+
+
 def configured_bias(configuration):
     if isinstance(configuration, dict):
         return configuration["flags"]
@@ -206,6 +214,21 @@ def test_output_reconfiguration_retains_high_and_low(generic_pins):
     pin.deinit()
 
 
+@pytest.mark.parametrize("pull", [None, 2])
+def test_successful_input_clears_cached_output_before_next_output(generic_pins, pull):
+    module, _, library = generic_pins
+    pin = module.Pin(18)
+    pin.init(mode=pin.OUT)
+    pin.value(1)
+    pin.init(mode=pin.IN, pull=pull)
+    assert pin._mode == pin.IN and pin._value == 0
+    pin.init(mode=pin.OUT)
+    configuration = line_handle(pin).configurations[-1]
+    assert configured_output(configuration, library)
+    assert configured_value(configuration) == 0 and pin.value() == 0
+    pin.deinit()
+
+
 def test_failed_value_write_does_not_change_commanded_output(generic_pins):
     module, state, _ = generic_pins
     pin = module.Pin(18)
@@ -284,6 +307,25 @@ def test_2x_configuration_failure_keeps_primary_error_and_previous_mode(monkeypa
     assert pin._chip is None and line_handle(pin) is None
     assert state.chips[-1].closed and not state.requests[-1].live
     pin.deinit()
+
+
+def test_2x_failed_input_configuration_keeps_output_value_for_reopening(monkeypatch):
+    module, state, library = make_pin(monkeypatch, backend="libgpiod_pin")
+    pin = module.Pin(18)
+    pin.init(mode=pin.OUT)
+    pin.value(1)
+    state.fail_config = True
+    with pytest.raises(OSError, match="configuration failed"):
+        pin.init(mode=pin.IN)
+    assert pin._mode == pin.OUT and pin._value == 1
+    assert pin._chip is None and line_handle(pin) is None
+    state.fail_config = False
+    pin.init(mode=pin.OUT)
+    configuration = line_handle(pin).configurations[-1]
+    assert configured_output(configuration, library)
+    assert configured_value(configuration) == 1 and pin.value() == 1
+    pin.deinit()
+    assert all(chip.closed for chip in state.chips)
 
 
 def test_request_error_wins_over_chip_cleanup_error(generic_pins):
@@ -451,6 +493,26 @@ def test_1x_kernel_bias_fallback_preserves_output_value(monkeypatch, legacy):
 
 
 @pytest.mark.parametrize("legacy", [False, True])
+def test_1x_successful_input_bias_fallback_clears_cached_output(monkeypatch, legacy):
+    module, _, library = make_pin(
+        monkeypatch, version="1", backend="libgpiod_pin", legacy=legacy
+    )
+    attempts = record_1x_requests(monkeypatch, library, reject_kernel_bias)
+    pin = module.Pin(18)
+    pin.init(mode=pin.OUT)
+    pin.value(1)
+    pin.init(mode=pin.IN)
+    assert [attempt["flags"] for attempt in attempts[-2:]] == [
+        expected_bias(library, "DISABLED"),
+        0,
+    ]
+    assert pin._mode == pin.IN and pin._value == 0
+    pin.init(mode=pin.OUT)
+    assert all(configured_value(attempt) == 0 for attempt in attempts[-2:])
+    pin.deinit()
+
+
+@pytest.mark.parametrize("legacy", [False, True])
 @pytest.mark.parametrize("pull", [0, 1, 2])
 def test_1x_explicit_bias_requests_do_not_fallback_on_old_kernel(
     monkeypatch, legacy, pull
@@ -602,5 +664,37 @@ def test_actual_digitalio_switch_to_high_survives_drive_mode_configuration(
     assert digital.value is True
     digital.switch_to_output(value=False)
     assert digital.value is False
+    digital.deinit()
+    assert all(chip.closed for chip in state.chips)
+
+
+def test_actual_digitalio_input_to_low_never_configures_stale_high(
+    generic_pins, monkeypatch
+):
+    module, state, library = generic_pins
+    agnostic = ModuleType("adafruit_blinka.agnostic")
+    agnostic.board_id = "NON_PI_GPIOD_BOARD"
+    importing = ModuleType("adafruit_blinka.importing")
+    importing.get_import_file = lambda name, _location: SOURCE / name
+    importing.import_microcontroller = lambda namespace, *_args: namespace.update(
+        Pin=module.Pin
+    )
+    monkeypatch.setitem(sys.modules, "adafruit_blinka.agnostic", agnostic)
+    monkeypatch.setitem(sys.modules, "adafruit_blinka.importing", importing)
+    digitalio = load_source("_generic_digitalio_test", SOURCE / "digitalio.py")
+    digital = digitalio.DigitalInOut(module.Pin(18))
+    digital.switch_to_output(value=True)
+    digital.switch_to_input(pull=digitalio.Pull.DOWN)
+    request = line_handle(digital._pin)
+    start = len(request.configurations)
+    digital.switch_to_output(value=False)
+    assert digital.value is False
+    output_configurations = [
+        configuration
+        for configuration in request.configurations[start:]
+        if configured_output(configuration, library)
+    ]
+    assert output_configurations
+    assert all(configured_value(config) == 0 for config in output_configurations)
     digital.deinit()
     assert all(chip.closed for chip in state.chips)

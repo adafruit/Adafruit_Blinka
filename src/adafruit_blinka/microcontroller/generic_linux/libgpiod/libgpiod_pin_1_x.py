@@ -132,6 +132,9 @@ class Pin:
                         raise
                     self._request_line(mode, 0)
                 self._mode = mode
+                # Successful input configuration ends the previous output state.
+                if mode == self.IN:
+                    self._value = self.LOW
         except BaseException:
             try:
                 self.deinit()

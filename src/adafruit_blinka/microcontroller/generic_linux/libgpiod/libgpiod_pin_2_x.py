@@ -89,6 +89,9 @@ class Pin:
             if line_config is not None:
                 self._line_request.reconfigure_lines({int(self._num): line_config})
                 self._mode = mode
+                # Successful input configuration ends the previous output state.
+                if mode == self.IN:
+                    self._value = self.LOW
         except BaseException:
             try:
                 self.deinit()
