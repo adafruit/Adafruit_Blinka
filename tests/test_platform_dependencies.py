@@ -605,7 +605,9 @@ def _load_board_startup(monkeypatch, implementation):
     with monkeypatch.context() as patches:
         patches.setitem(sys.modules, "adafruit_blinka.agnostic", agnostic)
         patches.setitem(sys.modules, "adafruit_blinka.importing", imports)
-        patches.setitem(sys.modules, "adafruit_blinka.platform_dependencies", dependencies)
+        patches.setitem(
+            sys.modules, "adafruit_blinka.platform_dependencies", dependencies
+        )
         patches.setattr(sys.implementation, "name", implementation)
         patches.setattr(builtins, "open", open_registry)
         namespace = runpy.run_path(str(Path(__file__).parents[1] / "src" / "board.py"))
