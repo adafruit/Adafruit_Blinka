@@ -26,7 +26,7 @@ def get_platform_dependencies(detector, python_version=None):
             ("gpiod", "gpiod>=2.2.2,<3"),
             (
                 "adafruit_blinka_raspberry_pi_pwm",
-                "Adafruit-Blinka-Raspberry-Pi-PWM>=0.0.1.dev0",
+                "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.1",
             ),
         ]
         if detector.board.any_raspberry_pi_5_board and python_version >= (3, 11):
@@ -82,6 +82,9 @@ def get_missing_platform_dependencies(detector, python_version=None):
 
 def get_platform_requirement_for_import(detector, import_name, python_version=None):
     """Return the detected platform's pip requirement for an import name."""
+    if detector.board.any_jetson_board and import_name in ("RPi", "RPi.GPIO"):
+        # Jetson.GPIO also provides the RPi compatibility namespace used by PWM.
+        return "Jetson.GPIO"
     for module_name, requirement in get_platform_dependencies(detector, python_version):
         if import_name in (module_name, module_name.split(".", maxsplit=1)[0]):
             return requirement
@@ -117,6 +120,38 @@ def format_install_command(requirements, executable="pip"):
     return shlex.join(command)
 
 
+def _outdated_platform_dependencies(detector, python_version):
+    """Return installed distributions outside this platform's version bounds."""
+    outdated = []
+    for _module_name, requirement in get_platform_dependencies(
+        detector, python_version
+    ):
+        parsed_requirement = Requirement(requirement)
+        if not parsed_requirement.specifier:
+            continue
+        try:
+            installed_version = importlib.metadata.version(parsed_requirement.name)
+        except importlib.metadata.PackageNotFoundError:
+            continue
+        if not parsed_requirement.specifier.contains(
+            installed_version, prereleases=True
+        ):
+            outdated.append(requirement)
+    return outdated
+
+
+def _raise_for_outdated_dependencies(detector, python_version):
+    """Do not silently use installed versions outside this platform's bounds."""
+    outdated = _outdated_platform_dependencies(detector, python_version)
+    if outdated:
+        install_command = format_install_command(outdated, executable=sys.executable)
+        raise RuntimeError(
+            "Blinka found installed platform dependencies with unsupported versions. "
+            f"To install supported versions, run: {install_command}\n"
+            "Then restart Python before using Blinka."
+        )
+
+
 def install_missing_platform_dependencies(
     detector, python_version=None, input_func=input
 ):
@@ -130,6 +165,7 @@ def install_missing_platform_dependencies(
         or sys.stdout is None
         or not (sys.stdin.isatty() and sys.stdout.isatty())
     ):
+        _raise_for_outdated_dependencies(detector, python_version)
         return False
 
     print("\nBlinka detected missing or outdated platform dependencies:")
@@ -141,10 +177,20 @@ def install_missing_platform_dependencies(
             "Install them into the current Python environment? [Y/n] "
         )
     except EOFError:
+        _raise_for_outdated_dependencies(detector, python_version)
         return False
     if response.strip().lower() not in ("", "y", "yes"):
+        _raise_for_outdated_dependencies(detector, python_version)
         return False
 
+    outdated = _outdated_platform_dependencies(detector, python_version)
+    loaded = [
+        module_name
+        for module_name, requirement in get_platform_dependencies(
+            detector, python_version
+        )
+        if requirement in outdated and sys.modules.get(module_name) is not None
+    ]
     command = [sys.executable, "-m", "pip", "install", *missing]
     try:
         subprocess.run(command, check=True)
@@ -155,4 +201,9 @@ def install_missing_platform_dependencies(
         ) from error
 
     importlib.invalidate_caches()
+    if loaded:
+        raise RuntimeError(
+            "The platform dependencies were installed, but these modules were already "
+            f"loaded: {', '.join(loaded)}. Restart Python before using Blinka."
+        )
     return True

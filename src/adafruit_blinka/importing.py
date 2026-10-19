@@ -34,6 +34,10 @@ PLATFORM_DEPENDENCY_INSTALLS = {
         "pip install Adafruit-Blinka-Raspberry-Pi5-Neopixel"
     ),
     "lgpio": "pip install adafruit-lgpio",
+    "gpiod": "pip install gpiod",
+    "adafruit_blinka_raspberry_pi_pwm": (
+        "pip install 'Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.1'"
+    ),
 }
 
 
@@ -61,6 +65,12 @@ def raise_for_missing_platform_dependency(error: ModuleNotFoundError):
         raise RuntimeError(unsupported_message) from error
     if install_command is None:
         install_command = PLATFORM_DEPENDENCY_INSTALLS.get(error.name)
+        if install_command is not None and sys.implementation.name == "cpython":
+            import shlex
+
+            install_command = format_install_command(
+                shlex.split(install_command)[2:], executable=sys.executable
+            )
     if install_command is None:
         raise error
 

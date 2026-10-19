@@ -18,13 +18,13 @@ AC5 = pin.AC5
 AC6 = pin.AC6
 AC7 = pin.AC7
 
-SDA0 = pin.SDA0
-SCL0 = pin.SCL0
+SDA = SDA0 = pin.SDA0
+SCL = SCL0 = pin.SCL0
 
-SCK0 = pin.SCK0
-SCLK0 = pin.SCLK0
-MOSI0 = pin.MOSI0
-MISO0 = pin.MISO0
+SCK = SCK0 = pin.SCK0
+SCLK = SCLK0 = pin.SCLK0
+MOSI = MOSI0 = pin.MOSI0
+MISO = MISO0 = pin.MISO0
 
 # MPSSE B
 BD4 = pin.BD4

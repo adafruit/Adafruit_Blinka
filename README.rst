@@ -49,27 +49,21 @@ running CircuitPython and would likely conflict in unhappy ways.
 The test suites in the test/src folder under **testing.universal** are by design
 intended to run on *either* CircuitPython *or* CPython/Micropython+compatibility layer to prove conformance.
 
-Platform-specific dependencies are detected when Blinka starts. When Blinka is
-running in an interactive terminal and a dependency is missing or below its
-required minimum version, it offers to install the packages needed by the detected
-board into the current Python environment. In non-interactive environments, the
-existing import error includes the command needed to install the missing platform
-package.
+Blinka installs a platform-independent base package. On CPython, importing
+``board`` checks the detected Raspberry Pi, Jetson, or AM33XX dependencies. An
+interactive terminal offers to install missing or incompatible packages with
+the running Python interpreter. Other boards retain their existing backend
+selection and manual dependency setup; unrelated packages are not installed.
 
-Raspberry Pi GPIO uses the existing libgpiod pin backend with header-controller
-discovery rather than a fixed GPIO chip number. Raspberry Pi PWM uses
-``Adafruit-Blinka-Raspberry-Pi-PWM`` through a small compatibility adapter.
-The detected platform requirements are ``gpiod>=2.2.2,<3`` and that PWM package,
-not ``RPi.GPIO`` or ``lgpio``. NeoPixel support retains its separate dependencies.
+Non-interactive programs never prompt or run pip. A missing backend reports its
+installation guidance when imported; a known incompatible installed version
+reports an actionable error rather than silently continuing. If an upgraded
+backend was already imported, restart Python before using the replacement.
 
-The PWM adapter retains writable frequency, ``period`` (seconds), and
-``enabled``, including requested fractional frequency readback. Frequencies are
-rounded to integer Hz for the native engine, whose
-supported configuration range is 1--10,000 Hz; this is not a timing guarantee.
-Disabling requests LOW at the native update boundary while retaining line
-ownership; ``deinit()``
-stops the worker and releases the line. Raspberry Pi GPIO character-device v2
-requires Linux 5.10 or newer. Other boards' GPIO/PWM backends are unchanged.
+Use a virtual environment where practical. The runtime installer does not use
+sudo, bypass externally managed environment protections, install OS packages,
+or change GPIO permissions. Native packages may still need a compiler and Python
+development headers provided by the operating system.
 
 Installing from PyPI
 =====================
@@ -95,6 +89,27 @@ To install in a virtual environment in your current project:
     python3 -m venv .env
     source .env/bin/activate
     pip3 install Adafruit-Blinka
+
+Raspberry Pi GPIO and PWM
+=========================
+
+Raspberry Pi digital GPIO uses the official ``gpiod`` bindings. ``pwmio.PWMOut``
+uses `Adafruit Blinka Raspberry Pi PWM
+<https://github.com/adafruit/Adafruit_Blinka_Raspberry_Pi_PWM>`_ on Pi 5 and earlier
+models. Configured BCM/RP1 hardware PWM is preferred on verified pin routes;
+other pins use native software PWM. This does not use PIO or change boot overlays.
+Runtime checks select ``gpiod>=2.2.2,<3`` and
+``Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.1`` only for Raspberry Pi boards, rather
+than installing them on every Linux ARM host. These Pi backends require Linux
+5.10 or newer. NeoPixel support retains its separate dependencies.
+
+Software PWM accepts 1--10000 Hz, with Linux scheduling affecting timing and
+jitter. Configured hardware limits depend on its controller and driver, and
+updates are not guaranteed glitch-free. Hardware channels require separate
+kernel/overlay configuration and sysfs permissions. See the package's
+`usage guide <https://github.com/adafruit/Adafruit_Blinka_Raspberry_Pi_PWM/blob/main/docs/usage.rst>`_
+for setup and cleanup limitations; verify the waveform before connecting an
+actuator. NeoPixel support continues to use its existing separate backends.
 
 Usage Example
 =============

@@ -18,7 +18,7 @@ from adafruit_blinka.importing import raise_for_missing_platform_dependency
 # pylint: disable=unused-import
 
 try:
-    if detector.board.any_raspberry_pi:
+    if detector.board.any_raspberry_pi or detector.board.any_raspberry_pi_5_board:
         from adafruit_blinka.microcontroller.generic_linux.raspberry_pi_pwmout import (
             PWMOut,
         )
