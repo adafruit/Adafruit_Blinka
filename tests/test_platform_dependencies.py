@@ -231,7 +231,7 @@ def test_installer_uses_running_python(monkeypatch):
     monkeypatch.setattr(
         platform_dependencies,
         "get_missing_platform_dependencies",
-        lambda *_args, **_kwargs: ["Adafruit_BBIO>=1.2.4"],
+        lambda *_args, **_kwargs: [] if commands else ["Adafruit_BBIO>=1.2.4"],
     )
     monkeypatch.setattr(platform_dependencies.sys.stdin, "isatty", lambda: True)
     monkeypatch.setattr(platform_dependencies.sys.stdout, "isatty", lambda: True)
@@ -406,6 +406,8 @@ def installer(monkeypatch):
     state = SimpleNamespace(
         detector=_detector(chip_id="AM33XX"),
         missing=["Adafruit_BBIO>=1.2.4"],
+        after_install_missing=[],
+        availability_checks=[],
         answer="y",
         prompts=[],
         commands=[],
@@ -434,12 +436,17 @@ def installer(monkeypatch):
                 state.detector, input_func=state.input_func
             )
 
+    def missing_dependencies(*_args):
+        missing = state.after_install_missing if state.commands else state.missing
+        state.availability_checks.append(list(missing))
+        return missing
+
     state.input_func = answer
     state.run = run
     monkeypatch.setattr(
         platform_dependencies,
         "get_missing_platform_dependencies",
-        lambda *_args: state.missing,
+        missing_dependencies,
     )
     monkeypatch.setattr(
         platform_dependencies.importlib.metadata, "version", no_metadata
@@ -475,6 +482,7 @@ def test_installer_accepts_confirmation_and_invalidates_cache(installer, answer)
         )
     ]
     assert installer.invalidations == [True]
+    assert installer.availability_checks == [["Adafruit_BBIO>=1.2.4"], []]
 
 
 @pytest.mark.parametrize("answer", ["n", "no", "other", EOFError()])
@@ -628,3 +636,87 @@ def test_public_board_skips_cpython_only_installer(monkeypatch, implementation):
     # The dependency stub deliberately has no installer on these interpreters.
     assert events == [("board", "_runtime_test_board")]
     assert namespace["TEST_PIN"] == "stubbed pin"
+
+
+@pytest.mark.parametrize(
+    "on_search_path, installed_version, available",
+    [
+        (False, "1.0", False),
+        (True, "1.0", True),
+        (True, "0.9", False),
+        (True, None, False),
+    ],
+    ids=["first_user_site", "existing_search_path", "wrong_version", "no_metadata"],
+)
+def test_installer_checks_newly_installed_dependency_availability(
+    monkeypatch, tmp_path, on_search_path, installed_version, available
+):
+    module_name = f"blinka_install_probe_{tmp_path.name}"
+    distribution_name = module_name.replace("_", "-")
+    requirement = f"{distribution_name}>=1.0,<2"
+    install_directory = tmp_path / "user-site"
+    detector = _detector()
+    commands = []
+    terminal = SimpleNamespace(stdin=io.StringIO(), stdout=io.StringIO())
+    terminal.stdin.isatty = terminal.stdout.isatty = lambda: True
+
+    if on_search_path:
+        install_directory.mkdir()
+        monkeypatch.syspath_prepend(str(install_directory))
+    else:
+        assert not install_directory.exists()
+        assert str(install_directory) not in sys.path
+
+    monkeypatch.setattr(
+        platform_dependencies,
+        "get_platform_dependencies",
+        lambda *_args, **_kwargs: [(module_name, requirement)],
+    )
+
+    def install(command, check):
+        assert check is True
+        commands.append(command)
+        install_directory.mkdir(exist_ok=True)
+        (install_directory / f"{module_name}.py").write_text(
+            "VALUE = 'installed'\n", encoding="utf-8"
+        )
+        if installed_version is not None:
+            metadata_directory = (
+                install_directory / f"{module_name}-{installed_version}.dist-info"
+            )
+            metadata_directory.mkdir()
+            (metadata_directory / "METADATA").write_text(
+                "Metadata-Version: 2.1\n"
+                f"Name: {distribution_name}\n"
+                f"Version: {installed_version}\n",
+                encoding="utf-8",
+            )
+
+    monkeypatch.setattr(platform_dependencies.subprocess, "run", install)
+    assert platform_dependencies.get_missing_platform_dependencies(detector) == [
+        requirement
+    ]
+
+    with monkeypatch.context() as streams:
+        streams.setattr(platform_dependencies.sys, "stdin", terminal.stdin)
+        streams.setattr(platform_dependencies.sys, "stdout", terminal.stdout)
+        if available:
+            assert platform_dependencies.install_missing_platform_dependencies(
+                detector, input_func=lambda _prompt: "y"
+            )
+        else:
+            with pytest.raises(RuntimeError, match="[Rr]estart Python") as raised:
+                platform_dependencies.install_missing_platform_dependencies(
+                    detector, input_func=lambda _prompt: "y"
+                )
+            assert requirement in str(raised.value)
+            assert platform_dependencies.format_install_command(
+                [requirement], executable=sys.executable
+            ) in str(raised.value)
+
+    assert len(commands) == 1
+    assert install_directory.is_dir()
+    assert (str(install_directory) in sys.path) is on_search_path
+    assert platform_dependencies.get_missing_platform_dependencies(detector) == (
+        [] if available else [requirement]
+    )

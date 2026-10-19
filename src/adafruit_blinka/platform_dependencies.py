@@ -207,4 +207,13 @@ def install_missing_platform_dependencies(
             "The platform dependencies were installed, but these modules were already "
             f"loaded: {', '.join(loaded)}. Restart Python before using Blinka."
         )
+    remaining = get_missing_platform_dependencies(detector, python_version)
+    if remaining:
+        install_command = format_install_command(remaining, executable=sys.executable)
+        raise RuntimeError(
+            "Installation completed, but these platform dependencies are still "
+            f"missing or incompatible in this Python process: {', '.join(remaining)}. "
+            "Restart Python before using Blinka. If the problem persists, try: "
+            f"{install_command}"
+        )
     return True

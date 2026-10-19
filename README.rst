@@ -59,6 +59,10 @@ Non-interactive programs never prompt or run pip. A missing backend reports its
 installation guidance when imported; a known incompatible installed version
 reports an actionable error rather than silently continuing. If an upgraded
 backend was already imported, restart Python before using the replacement.
+After installation, Blinka rechecks imports and required versions. If they are
+still unavailable (for example, after the first user-site installation), it
+reports restart guidance rather than continuing as though installation fixed
+the running process.
 
 Use a virtual environment where practical. The runtime installer does not use
 sudo, bypass externally managed environment protections, install OS packages,
