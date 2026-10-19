@@ -558,16 +558,18 @@ def test_skipped_upgrade_reports_unsupported_installed_version(
     assert installer.invalidations == []
 
 
-def test_upgrading_loaded_module_requires_restart_without_reloading(
-    monkeypatch, installer
+@pytest.mark.parametrize("version", ["1.2.3", None], ids=["outdated", "no_metadata"])
+def test_replacing_loaded_module_requires_restart_without_reloading(
+    monkeypatch, installer, version
 ):
     loaded_module = SimpleNamespace()
     monkeypatch.setitem(
         platform_dependencies.sys.modules, "Adafruit_BBIO", loaded_module
     )
-    monkeypatch.setattr(
-        platform_dependencies.importlib.metadata, "version", lambda _name: "1.2.3"
-    )
+    if version is not None:
+        monkeypatch.setattr(
+            platform_dependencies.importlib.metadata, "version", lambda _name: version
+        )
     with pytest.raises(RuntimeError, match="Restart Python"):
         installer.run()
     assert platform_dependencies.sys.modules["Adafruit_BBIO"] is loaded_module

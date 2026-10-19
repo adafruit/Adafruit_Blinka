@@ -183,13 +183,14 @@ def install_missing_platform_dependencies(
         _raise_for_outdated_dependencies(detector, python_version)
         return False
 
-    outdated = _outdated_platform_dependencies(detector, python_version)
+    # OS-provided modules can be importable without distribution metadata.
+    # Any loaded module being installed must be restarted, not just known old ones.
     loaded = [
         module_name
         for module_name, requirement in get_platform_dependencies(
             detector, python_version
         )
-        if requirement in outdated and sys.modules.get(module_name) is not None
+        if requirement in missing and sys.modules.get(module_name) is not None
     ]
     command = [sys.executable, "-m", "pip", "install", *missing]
     try:
