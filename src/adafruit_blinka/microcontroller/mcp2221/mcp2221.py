@@ -61,6 +61,7 @@ class MCP2221:
         if MCP2221_RESET_DELAY >= 0:
             self._reset()
         self._gp_config = [0x07] * 4  # "don't care" initial value
+        self._gp_config_dirty = False
         for pin in range(4):
             self.gp_set_mode(pin, self.GP_GPIO)  # set to GPIO mode
             self.gpio_set_direction(pin, 1)  # set to INPUT
@@ -96,8 +97,12 @@ class MCP2221:
         """Set Current Pin Mode"""
         # already set to that mode?
         mode &= 0x07
-        if mode == (self._gp_config[pin] & 0x07):
-            return
+        config = self._gp_config[pin]
+        if mode == (config & 0x07):
+            if not self._gp_config_dirty:
+                return
+        else:
+            config = mode
         # empty report, this is safe since 0's = no change
         report = bytearray(b"\x60" + b"\x00" * 63)
         # set the alter GP flag byte
@@ -107,11 +112,13 @@ class MCP2221:
         report[9] = self._gp_config[1]
         report[10] = self._gp_config[2]
         report[11] = self._gp_config[3]
-        report[8 + pin] = mode
-        # and make it so
+        report[8 + pin] = config
+        # The write may reach hardware before a failure or interruption.
+        self._gp_config_dirty = True
         self._hid_xfer(report)
         # A failed transfer must not make a retry look like a no-op.
-        self._gp_config[pin] = mode
+        self._gp_config[pin] = config
+        self._gp_config_dirty = False
 
     def _pretty_report(self, register):
         report = self._hid_xfer(register)
@@ -163,8 +170,11 @@ class MCP2221:
         offset = 4 * (pin + 1)
         report[offset] = 0x01  # set pin direction
         report[offset + 1] = mode  # to this
+        was_dirty = self._gp_config_dirty
+        self._gp_config_dirty = True
         self._hid_xfer(report)
         self._gp_config[pin] = config
+        self._gp_config_dirty = was_dirty
 
     def gpio_set_pin(self, pin, value):
         """Set Current GPIO Pin Value"""
@@ -179,8 +189,11 @@ class MCP2221:
         offset = 2 + 4 * pin
         report[offset] = 0x01  # set pin value
         report[offset + 1] = value  # to this
+        was_dirty = self._gp_config_dirty
+        self._gp_config_dirty = True
         self._hid_xfer(report)
         self._gp_config[pin] = config
+        self._gp_config_dirty = was_dirty
 
     def gpio_get_pin(self, pin):
         """Get Current GPIO Pin Value"""

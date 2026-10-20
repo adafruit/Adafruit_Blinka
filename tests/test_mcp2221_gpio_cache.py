@@ -116,6 +116,7 @@ def test_failed_transfer_preserves_cache_and_retry(
 
     assert raised.value is device.failure
     assert driver._gp_config == before  # pylint: disable=protected-access
+    assert driver._gp_config_dirty is True  # pylint: disable=protected-access
     assert len(device.commands) == (1 if phase == "read" else 0)
 
     device.commands.clear()
@@ -123,6 +124,10 @@ def test_failed_transfer_preserves_cache_and_retry(
     after = list(before)
     after[2] = updated
     assert driver._gp_config == after  # pylint: disable=protected-access
+    # A successful direction/value write cannot confirm the whole SRAM cache.
+    assert driver._gp_config_dirty is (  # pylint: disable=protected-access
+        operation != "gp_set_mode"
+    )
     assert device.commands == [expected_report(operation, 2, argument, after)]
 
 
@@ -146,6 +151,114 @@ def test_other_pin_mode_does_not_replay_failed_setting(
     after[3] = driver.GP_ALT1
     assert device.commands == [expected_report("gp_set_mode", 3, driver.GP_ALT1, after)]
     assert driver._gp_config == after  # pylint: disable=protected-access
+
+
+@pytest.mark.parametrize("operation,initial,argument,updated", SETTERS)
+@pytest.mark.parametrize("phase", ["write", "read"])
+def test_old_mode_is_replayed_after_uncertain_transfer(
+    backend, operation, initial, argument, updated, phase
+):
+    # A read failure can occur after the device has accepted a NEW setting.
+    assert initial != updated
+    driver, device = backend
+    before = [0x10, 0x08, initial, 0x18]
+    driver._gp_config = list(before)  # pylint: disable=protected-access
+    device.failure_phase = phase
+    with pytest.raises(OSError):
+        getattr(driver, operation)(2, argument)
+
+    device.commands.clear()
+    old_mode = initial & 0x07
+    assert driver.gp_set_mode(2, old_mode) is None
+    after = list(before)
+    assert device.commands == [expected_report("gp_set_mode", 2, old_mode, after)]
+    assert driver._gp_config == after  # pylint: disable=protected-access
+    assert driver._gp_config_dirty is False  # pylint: disable=protected-access
+
+    # Only the confirmed full replay makes the same-mode shortcut safe again.
+    device.commands.clear()
+    assert driver.gp_set_mode(2, old_mode) is None
+    assert device.commands == []
+
+
+@pytest.mark.parametrize("phase", ["write", "read"])
+@pytest.mark.parametrize(
+    "operation,argument,updated",
+    [("gpio_set_direction", 0, 0), ("gpio_set_pin", 1, 0x18)],
+)
+def test_partial_gpio_success_keeps_mode_replay_required(
+    backend, phase, operation, argument, updated
+):
+    driver, device = backend
+    before = [0x10, 0x08, 0x18, 0x18]
+    driver._gp_config = list(before)  # pylint: disable=protected-access
+    device.failure_phase = phase
+    with pytest.raises(OSError):
+        driver.gp_set_mode(2, driver.GP_ALT0)
+
+    # A successful operation on another pin does not resolve the lost reply.
+    getattr(driver, operation)(1, argument)
+    after_partial = list(before)
+    after_partial[1] = updated
+    assert driver._gp_config == after_partial  # pylint: disable=protected-access
+    assert driver._gp_config_dirty is True  # pylint: disable=protected-access
+
+    device.commands.clear()
+    driver.gp_set_mode(2, driver.GP_GPIO)
+    after_replay = list(after_partial)
+    assert device.commands == [
+        expected_report("gp_set_mode", 2, driver.GP_GPIO, after_replay)
+    ]
+    assert driver._gp_config == after_replay  # pylint: disable=protected-access
+    assert driver._gp_config_dirty is False  # pylint: disable=protected-access
+
+
+@pytest.mark.parametrize("phase", ["write", "read"])
+def test_failed_recovery_replay_remains_dirty(backend, phase):
+    driver, device = backend
+    before = [0x10, 0x08, 0x18, 0x18]
+    driver._gp_config = list(before)  # pylint: disable=protected-access
+    device.failure_phase = "read"
+    with pytest.raises(OSError):
+        driver.gp_set_mode(2, driver.GP_ALT0)
+
+    device.failure_phase = phase
+    with pytest.raises(OSError) as raised:
+        driver.gp_set_mode(2, driver.GP_GPIO)
+    assert raised.value is device.failure
+    assert driver._gp_config == before  # pylint: disable=protected-access
+    assert driver._gp_config_dirty is True  # pylint: disable=protected-access
+
+    device.commands.clear()
+    driver.gp_set_mode(2, driver.GP_GPIO)
+    after = list(before)
+    assert device.commands == [expected_report("gp_set_mode", 2, driver.GP_GPIO, after)]
+    assert driver._gp_config_dirty is False  # pylint: disable=protected-access
+
+
+@pytest.mark.parametrize("phase", ["write", "read"])
+@pytest.mark.parametrize(
+    "operation,argument",
+    [("gp_set_mode", 2), ("gpio_set_direction", 0), ("gpio_set_pin", 1)],
+)
+def test_interruption_preserves_cache_and_requires_replay(
+    backend, phase, operation, argument
+):
+    driver, device = backend
+    before = [0x08] * 4
+    driver._gp_config = list(before)  # pylint: disable=protected-access
+    device.failure = KeyboardInterrupt()
+    device.failure_phase = phase
+    with pytest.raises(KeyboardInterrupt) as raised:
+        getattr(driver, operation)(2, argument)
+    assert raised.value is device.failure
+    assert driver._gp_config == before  # pylint: disable=protected-access
+    assert driver._gp_config_dirty is True  # pylint: disable=protected-access
+
+    device.commands.clear()
+    driver.gp_set_mode(2, driver.GP_GPIO)
+    assert device.commands == [expected_report("gp_set_mode", 2, 0, before)]
+    assert driver._gp_config_dirty is False  # pylint: disable=protected-access
 
 
 def test_mode_noop_keeps_direction_and_output_bits(backend):
