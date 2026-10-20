@@ -44,7 +44,7 @@ elif agnostic.implementation == "micropython":
         tm_isdst=-1,
     ):
         """Construct struct_time with default values."""
-        _struct_time(
+        return _struct_time(
             tm_year,
             tm_mon,
             tm_mday,

@@ -48,6 +48,7 @@ jobs:
       run: |
         python -m pip install pytest
         PYTHONPATH=src python -m pytest -q \
+          tests/test_agnostic_time.py \
           tests/test_ftdi_i2c.py \
           tests/test_mcp2221_i2c.py \
           tests/test_pin_repr.py \
