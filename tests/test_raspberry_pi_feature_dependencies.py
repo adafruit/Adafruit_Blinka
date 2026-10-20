@@ -214,6 +214,10 @@ def test_missing_optional_backend_retains_recovery_command(
     """Missing modules retain current-interpreter guidance, not a pip attempt."""
     importing, _detector = prepare_feature_import(monkeypatch, **flags)
     monkeypatch.setattr(importing, "check_platform_dependency", lambda _name: None)
+    if module_name == "adafruit_raspberry_pi5_neopixel_write":
+        # Exercise missing-package guidance on a supported target Python,
+        # independently of the interpreter used to run this test.
+        monkeypatch.setattr(sys, "version_info", (3, 11, 0, "final", 0))
     real_import = builtins.__import__
     missing = ModuleNotFoundError(name=module_name)
 
