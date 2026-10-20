@@ -48,6 +48,7 @@ jobs:
       run: |
         python -m pip install pytest
         PYTHONPATH=src python -m pytest -q \
+          tests/test_mcp2221_gpio_cache.py \
           tests/test_mcp2221_vref.py \
           tests/test_u2if_pwmout.py \
           tests/test_mip_package.py \
