@@ -92,15 +92,15 @@ if board in ("ODROID_M1"):
     alias = get_pwm_chipid("fdd70010.pwm")
     if alias is not None:
         globals()["PWM" + alias] = GPIO0B_5
-        pwmOuts.append(((int(alias[-1]), 0), GPIO0B_5))
+        pwmOuts.append(((int(alias[3:]), 0), GPIO0B_5))
     alias = get_pwm_chipid("fdd70020.pwm")
     if alias is not None:
         globals()["PWM" + alias] = GPIO0B_6
-        pwmOuts.append(((int(alias[-1]), 0), GPIO0B_6))
+        pwmOuts.append(((int(alias[3:]), 0), GPIO0B_6))
     alias = get_pwm_chipid("fe6f0010.pwm")
     if alias is not None:
         globals()["PWM" + alias] = GPIO3B_2
-        pwmOuts.append(((int(alias[-1]), 0), GPIO3B_2))
+        pwmOuts.append(((int(alias[3:]), 0), GPIO3B_2))
     alias = get_dts_alias("fdd50000.serial")
     if alias is not None:
         globals()[alias + "_TX"] = GPIO0C_1

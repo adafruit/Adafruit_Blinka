@@ -216,15 +216,15 @@ if board in ("ODROID_M1S"):
     alias = get_pwm_chipid("fdd70010.pwm")
     if alias is not None:
         globals()["PWM" + alias] = GPIO0_B5
-        pwmOuts.append(((int(alias[-1]), 0), GPIO0_B5))
+        pwmOuts.append(((int(alias[3:]), 0), GPIO0_B5))
     alias = get_pwm_chipid("fdd70020.pwm")
     if alias is not None:
         globals()["PWM" + alias] = GPIO0_B6
-        pwmOuts.append(((int(alias[-1]), 0), GPIO0_B6))
+        pwmOuts.append(((int(alias[3:]), 0), GPIO0_B6))
     alias = get_pwm_chipid("fdd70030.pwm")
     if alias is not None:
         globals()["PWM" + alias] = GPIO0_C2
-        pwmOuts.append(((int(alias[-1]), 0), GPIO0_C2))
+        pwmOuts.append(((int(alias[3:]), 0), GPIO0_C2))
     alias = get_dts_alias("fe620000.spi")
     if alias is not None:
         globals()[alias + "_CLK"] = GPIO3_C3
@@ -246,11 +246,11 @@ if board in ("RADXA_ZERO3"):
     alias = get_pwm_chipid("fe6f0000.pwm")
     if alias is not None:
         globals()["PWM" + alias] = GPIO3_B1
-        pwmOuts.append(((int(alias[-1]), 0), GPIO3_B1))
+        pwmOuts.append(((int(alias[3:]), 0), GPIO3_B1))
     alias = get_pwm_chipid("fe6f0010.pwm")
     if alias is not None:
         globals()["PWM" + alias] = GPIO3_B2
-        pwmOuts.append(((int(alias[-1]), 0), GPIO3_B2))
+        pwmOuts.append(((int(alias[3:]), 0), GPIO3_B2))
 
 analogIns = tuple(analogIns)
 i2cPorts = tuple(i2cPorts)

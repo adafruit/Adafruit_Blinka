@@ -167,8 +167,8 @@ if board in ("BANANA_PI_F3"):
     alias = get_pwm_chipid("d401bc00.pwm")
     if alias is not None:
         globals()["PWM" + alias] = GPIO_92
-        pwmOuts.append(((int(alias[-1]), 0), GPIO_92))
+        pwmOuts.append(((int(alias[3:]), 0), GPIO_92))
     alias = get_pwm_chipid("d4020400.pwm")
     if alias is not None:
         globals()["PWM" + alias] = GPIO_74
-        pwmOuts.append(((int(alias[-1]), 0), GPIO_74))
+        pwmOuts.append(((int(alias[3:]), 0), GPIO_74))
