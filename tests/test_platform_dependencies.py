@@ -25,8 +25,8 @@ from adafruit_blinka import _gpiod_compat
 def dependency_check_environment(monkeypatch):
     """Isolate startup-policy tests from a user's configured opt-out."""
     monkeypatch.delenv("BLINKA_SKIP_DEPENDENCY_CHECK", raising=False)
-    # These tests exercise policy; provenance is tested with real file/checksum
-    # operations in test_system_gpiod_compat.py, not against the test host's OS.
+    # System package origin/version handling is tested separately, rather than
+    # querying the test host's package database from startup-policy tests.
     monkeypatch.setattr(_gpiod_compat, "is_supported_system_gpiod", lambda: False)
 
 
@@ -578,8 +578,9 @@ def test_gpiod_220_label_requires_supported_install_or_explicit_opt_out(
 
 
 @pytest.mark.parametrize("verified", [False, True])
+@pytest.mark.parametrize("preloaded", [False, True])
 def test_trixie_exception_is_consistent_at_startup_and_feature_use(
-    monkeypatch, verified
+    monkeypatch, verified, preloaded
 ):
     detector = _detector(any_raspberry_pi=True)
     monkeypatch.setattr(
@@ -594,6 +595,10 @@ def test_trixie_exception_is_consistent_at_startup_and_feature_use(
         platform_dependencies.importlib.metadata, "version", lambda _name: "2.2.0"
     )
     monkeypatch.setattr(_gpiod_compat, "is_supported_system_gpiod", lambda: verified)
+    if preloaded:
+        monkeypatch.setitem(sys.modules, "gpiod", SimpleNamespace(__version__="2.2.0"))
+    else:
+        monkeypatch.delitem(sys.modules, "gpiod", raising=False)
     monkeypatch.setattr(sys, "stdin", io.StringIO())
     monkeypatch.setattr(
         platform_dependencies.subprocess,
