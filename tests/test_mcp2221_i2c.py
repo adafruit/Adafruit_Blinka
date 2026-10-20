@@ -56,17 +56,22 @@ class ScriptedHID:
         assert len(report) == 65
         assert report[0] == 0
         self.commands.append(bytes(report[1:]))
+        return len(report)
 
     def read(self, length):
         """Return the next scripted response or raise a transport error."""
         assert self.opened
         assert length == 64
         if self.responses is None:
-            return response()
+            report = response()
+            report[0] = self.commands[-1][0]
+            return report
         assert self.responses, "driver requested an unexpected response"
         item = self.responses.popleft()
         if isinstance(item, Exception):
             raise item
+        item = bytearray(item)
+        item[0] = self.commands[-1][0]
         return item
 
     def script(self, *reports):
