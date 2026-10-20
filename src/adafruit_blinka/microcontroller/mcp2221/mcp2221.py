@@ -98,10 +98,17 @@ class MCP2221:
         mode &= 0x07
         if mode == (self._gp_config[pin] & 0x07):
             return
+        # Read current references before a GPIO SRAM write reinitializes VRM.
+        # MCP2221A datasheet, Section 1.8.1.1 and Tables 3-36/3-39.
+        sram = self._hid_xfer(b"\x61")
+        if len(sram) != 64 or sram[0] != 0x61 or sram[1] != 0:
+            raise OSError("Couldn't get SRAM settings")
         # update GP mode for pin
         self._gp_config[pin] = mode
-        # empty report, this is safe since 0's = no change
+        # Explicitly preserve both references, leaving DAC output unchanged.
         report = bytearray(b"\x60" + b"\x00" * 63)
+        report[3] = 0x80 | ((sram[6] >> 5) & 0x07)
+        report[5] = 0x80 | ((sram[7] >> 2) & 0x07)
         # set the alter GP flag byte
         report[7] = 0xFF
         # add GP setttings
