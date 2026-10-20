@@ -602,9 +602,12 @@ def test_unused_optional_old_backend_does_not_block_startup(
     assert installer.invalidations == []
 
 
-@pytest.mark.parametrize("failure", ["os", "externally_managed"])
+@pytest.mark.parametrize(
+    "failure, already_loaded",
+    [("os", False), ("externally_managed", False), ("os", True)],
+)
 def test_optional_install_failure_warns_without_blocking_startup(
-    monkeypatch, installer, failure
+    monkeypatch, installer, failure, already_loaded
 ):
     requirement = "rpi_ws281x>=4.0.0"
     monkeypatch.setattr(
@@ -613,6 +616,8 @@ def test_optional_install_failure_warns_without_blocking_startup(
         lambda *_args: [("_rpi_ws281x", requirement)],
     )
     installer.missing = [requirement]
+    if already_loaded:
+        monkeypatch.setitem(sys.modules, "_rpi_ws281x", SimpleNamespace())
 
     def failed_install(command, check):
         assert check is True
@@ -630,6 +635,31 @@ def test_optional_install_failure_warns_without_blocking_startup(
     )
     assert expected in str(caught[0].message)
     assert installer.invalidations == []
+
+
+def test_partial_upgrade_of_loaded_optional_backend_remains_fatal(
+    monkeypatch, installer
+):
+    requirement = "rpi_ws281x>=4.0.0"
+    monkeypatch.setattr(
+        platform_dependencies,
+        "get_platform_dependencies",
+        lambda *_args: [("_rpi_ws281x", requirement)],
+    )
+    installer.missing = [requirement]
+    original = SimpleNamespace()
+    monkeypatch.setitem(sys.modules, "_rpi_ws281x", original)
+    error = platform_dependencies.subprocess.CalledProcessError(1, ["python"])
+
+    def partial_install(_command, check):
+        assert check is True
+        raise error
+
+    monkeypatch.setattr(platform_dependencies.subprocess, "run", partial_install)
+    with pytest.raises(RuntimeError, match="Unable to install") as raised:
+        installer.run()
+    assert raised.value.__cause__ is error
+    assert sys.modules["_rpi_ws281x"] is original
 
 
 def test_optional_install_still_invisible_warns_with_restart_guidance(

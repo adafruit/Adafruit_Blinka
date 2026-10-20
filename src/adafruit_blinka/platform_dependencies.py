@@ -254,7 +254,9 @@ def _install_platform_dependencies(detector, python_version, missing, optional):
         subprocess.run(command, check=True)
     except (OSError, subprocess.CalledProcessError) as error:
         install_command = shlex.join(command)
-        if set(missing).issubset(optional) and not loaded:
+        if set(missing).issubset(optional) and (
+            not loaded or isinstance(error, OSError)
+        ):
             warnings.warn(
                 "Unable to install optional platform dependencies. Blinka startup "
                 "will continue; features that need them may be unavailable. "
