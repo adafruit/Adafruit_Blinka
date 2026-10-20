@@ -39,3 +39,20 @@ See the `CircuitPython docs <https://circuitpython.readthedocs.io/>`_ for extens
 .. literalinclude:: ../examples/usb_hid_keyboard.py
     :caption: examples/usb_hid_keyboard.py
     :linenos:
+
+MCP2221 USB error recovery
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+After an incomplete or interrupted USB HID exchange, reconnect the MCP2221
+and restart the program before using it again. An old response can remain
+queued, and the protocol has no transaction identifier to distinguish it
+from a new response to the same command. Blinka therefore rejects further
+transfers on that instance rather than guessing that the connection recovered.
+It does not automatically retry commands, drain replies, or reset the device.
+A failed exchange may already have changed the device's outputs; reporting
+the error does not roll back its effects.
+
+This applies to USB transport failures, not ordinary I2C busy or NACK
+responses. Complete, matching responses still use the existing I2C error
+handling, and scans continue past unsuccessful address probes. A transport
+failure aborts the scan instead of appearing as an empty or partial device list.

@@ -39,6 +39,7 @@ RESP_I2C_WRITINGNOSTOP = 0x45  # ???
 MCP2221_RETRY_MAX = 50
 MCP2221_MAX_I2C_DATA_LEN = 60
 MASK_ADDR_NACK = 0x40
+_HID_RECOVERY = "Reconnect the MCP2221 and restart the program."
 
 
 class MCP2221:
@@ -56,6 +57,7 @@ class MCP2221:
     def __init__(self):
         self._hid = hid.device()
         self._hid.open(MCP2221.VID, MCP2221.PID)
+        self._hid_in_sync = True
         # make sure the device gets closed before exit
         atexit.register(self.close)
         if MCP2221_RESET_DELAY >= 0:
@@ -75,14 +77,33 @@ class MCP2221:
 
     def _hid_xfer(self, report, response=True):
         """Perform HID Transfer"""
+        if not self._hid_in_sync:
+            raise OSError("MCP2221 HID session is out of sync. " + _HID_RECOVERY)
+        if not 1 <= len(report) <= 64:
+            raise ValueError("HID command must contain between 1 and 64 bytes")
+        if not response and report != b"\x70\xAB\xCD\xEF":
+            raise ValueError("Only the MCP2221 reset command has no HID response")
+        if response and report[0] == 0x70:
+            raise ValueError("MCP2221 reset must not request a HID response")
         # first byte is report ID, which =0 for MCP2221
-        # remaing bytes = 64 byte report data
+        # remaining bytes = 64 byte report data
         # https://github.com/libusb/hidapi/blob/083223e77952e1ef57e6b77796536a3359c1b2a3/hidapi/hidapi.h#L185
-        self._hid.write(b"\0" + report + b"\0" * (64 - len(report)))
+        frame = b"\0" + report + b"\0" * (64 - len(report))
+        # A failed/interrupted transfer may leave an indistinguishable old reply.
+        # Do not reuse this session unless the complete exchange is confirmed.
+        self._hid_in_sync = False
+        written = self._hid.write(frame)
+        if not isinstance(written, int) or written != len(frame):
+            raise OSError("MCP2221 HID write was incomplete. " + _HID_RECOVERY)
         time.sleep(MCP2221_HID_DELAY)
         if response:
-            # return is 64 byte response report
-            return self._hid.read(64)
+            reply = self._hid.read(64)
+            if len(reply) != 64 or reply[0] != frame[1]:
+                raise OSError("Invalid MCP2221 HID response. " + _HID_RECOVERY)
+            # Command status belongs to the caller, e.g. I2C busy/NACK handling.
+            self._hid_in_sync = True
+            return reply
+        self._hid_in_sync = True
         return None
 
     # ----------------------------------------------------------------
@@ -361,6 +382,8 @@ class MCP2221:
             try:
                 self.i2c_writeto(addr, b"\x00")
             except OSError:  # no reply!
+                if not self._hid_in_sync:
+                    raise
                 # We got a NACK, which could be correct
                 continue
             # store if success
