@@ -4,6 +4,8 @@
 
 """Hardware-free regression tests for CircuitPython-compatible colorwheel output."""
 
+from array import array
+
 import pytest
 
 from rainbowio import colorwheel
@@ -71,7 +73,18 @@ def test_colorwheel_negative_integers_remain_black(hue):
     assert colorwheel(hue) == 0
 
 
-@pytest.mark.parametrize("hue", [None, "1", "84.5", b"1", bytearray(b"1")])
+@pytest.mark.parametrize(
+    "hue",
+    [
+        None,
+        "1",
+        "84.5",
+        b"1",
+        bytearray(b"1"),
+        memoryview(b"84.5"),
+        array("b", b"84.5"),
+    ],
+)
 def test_colorwheel_requires_numeric_input(hue):
     """The native binding accepts numbers, not text parsed as a number."""
     with pytest.raises(TypeError):

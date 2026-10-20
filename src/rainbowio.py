@@ -20,7 +20,9 @@ def colorwheel(color_value):
     :param float color_value: Hue, normally in the range 0-255
     :return: RGB color packed into a 24-bit integer
     """
-    if isinstance(color_value, (str, bytes, bytearray)):
+    if not isinstance(color_value, (int, float)) and not hasattr(
+        color_value, "__float__"
+    ):
         raise TypeError("color_value must be a number")
     color_value = float(color_value)
     if color_value < 0:
