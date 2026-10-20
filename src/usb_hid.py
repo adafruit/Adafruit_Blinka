@@ -682,8 +682,15 @@ def enable(requested_devices: Sequence[Device], boot_device: int = 0) -> None:
             Path("%s/protocol" % function_root).write_text(
                 "%s" % report_id, encoding="utf-8"
             )
+            # Linux needs capacity for either direction, including the report-ID byte.
+            report_length = max(
+                device.in_report_lengths[report_index],
+                device.out_report_lengths[report_index],
+            )
+            if report_id > 0:
+                report_length += 1
             Path("%s/report_length" % function_root).write_text(
-                "%s" % device.in_report_lengths[report_index], encoding="utf-8"
+                "%s" % report_length, encoding="utf-8"
             )
             Path("%s/subclass" % function_root).write_text("%s" % 1, encoding="utf-8")
             Path("%s/report_desc" % function_root).write_bytes(device.descriptor)
