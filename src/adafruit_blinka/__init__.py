@@ -22,12 +22,13 @@ class Enum:
         Assumes instance will be found as attribute of own class.
         Returns dot-subscripted path to instance
         (assuming absolute import of containing package)
+        or a class label when the instance has no registered name.
         """
         cls = type(self)
         for key in dir(cls):
             if getattr(cls, key) is self:
                 return "{}.{}.{}".format(cls.__module__, cls.__qualname__, key)
-        return repr(self)
+        return "<{}>".format(getattr(cls, "__qualname__", "Enum"))
 
     @classmethod
     def iteritems(cls):
