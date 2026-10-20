@@ -136,6 +136,51 @@ automatic dependency checks and installation prompts:
 This does not install packages or make unsupported backends supported. Missing
 backend imports and PWM/NeoPixel feature checks still report errors.
 
+Installing on MicroPython
+=========================
+
+The root ``package.json`` installs Blinka's existing MicroPython subset directly
+from GitHub with `mip <https://docs.micropython.org/en/latest/reference/packages.html>`_.
+From a computer with the board connected, run:
+
+.. code-block:: shell
+
+    mpremote mip install github:adafruit/Adafruit_Blinka
+
+On firmware that includes ``mip`` and has a working network connection, you can
+instead install from the MicroPython REPL:
+
+.. code-block:: python
+
+    import mip
+    mip.install("github:adafruit/Adafruit_Blinka")
+
+Restart the board after installing. To select a release or branch, append
+``@TAG_OR_BRANCH`` to the ``mpremote`` URL, or pass ``version="TAG_OR_BRANCH"``
+to ``mip.install``. Choose a ref containing ``package.json``; older releases do
+not have this manifest. Installation needs network access to GitHub on the
+computer (``mpremote``) or board (``mip``). This is not a PyPI install or a
+short-name package in the default MicroPython package index.
+
+The manifest includes ``board``, ``microcontroller``, ``digitalio``, ``busio``,
+``bitbangio``, and ``rainbowio``, plus the existing Pico-family, Pyboard, and
+ESP8266 board routes. It installs only the required PlatformDetect source files,
+pinned to release 3.89.1, and their licenses. Linux drivers, native binaries,
+pip dependencies, and the CPython ``micropython`` shim are not installed.
+The installed file contents total about 190 KiB, plus filesystem overhead.
+When updating PlatformDetect, update all its manifest URLs together to the new
+release's commit; absolute pinned URLs keep Blinka branch/tag installs from
+accidentally selecting the same ref in another repository.
+
+This packages existing backends, not new hardware or API support. Not every
+CircuitPython module is implemented on MicroPython, and existing backend/firmware
+limitations still apply. In particular, the legacy ESP8266 backend's ``TOUT``
+pin initialization is incompatible with current MicroPython firmware. Source
+compilation also requires RAM in addition to filesystem space; small boards
+such as ESP8266 may not have enough. Install CircuitPython libraries needed by
+your application separately, and verify compatibility on your board. Do not
+install Blinka on CircuitPython itself.
+
 Raspberry Pi GPIO and PWM
 =========================
 

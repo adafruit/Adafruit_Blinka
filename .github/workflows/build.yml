@@ -48,6 +48,7 @@ jobs:
       run: |
         python -m pip install pytest
         PYTHONPATH=src python -m pytest -q \
+          tests/test_mip_package.py \
           tests/test_usb_hid.py \
           tests/test_pwm_chip_aliases.py \
           tests/test_agnostic_time.py \
