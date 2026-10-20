@@ -13,12 +13,16 @@ Not supported by all boards.
 import sys
 
 from adafruit_blinka.agnostic import detector
-from adafruit_blinka.importing import raise_for_missing_platform_dependency
+from adafruit_blinka.importing import (
+    check_platform_dependency,
+    raise_for_missing_platform_dependency,
+)
 
 # pylint: disable=unused-import
 
 try:
     if detector.board.any_raspberry_pi or detector.board.any_raspberry_pi_5_board:
+        check_platform_dependency("adafruit_blinka_raspberry_pi_pwm")
         from adafruit_blinka.microcontroller.generic_linux.raspberry_pi_pwmout import (
             PWMOut,
         )

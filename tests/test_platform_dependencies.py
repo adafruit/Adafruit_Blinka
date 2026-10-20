@@ -20,6 +20,12 @@ from adafruit_blinka import platform_dependencies
 # pylint: disable=redefined-outer-name
 
 
+@pytest.fixture(autouse=True)
+def dependency_check_environment(monkeypatch):
+    """Isolate startup-policy tests from a user's configured opt-out."""
+    monkeypatch.delenv("BLINKA_SKIP_DEPENDENCY_CHECK", raising=False)
+
+
 def _detector(chip_id=None, **board_values):
     values = {
         "any_raspberry_pi_5_board": False,
@@ -515,6 +521,149 @@ def test_installer_does_nothing_when_requirements_are_satisfied(installer):
     assert installer.prompts == []
     assert installer.commands == []
     assert installer.invalidations == []
+
+
+def test_opt_out_skips_discovery_prompt_and_install(monkeypatch, installer):
+    monkeypatch.setenv("BLINKA_SKIP_DEPENDENCY_CHECK", "1")
+    assert not installer.run()
+    assert installer.availability_checks == []
+    assert installer.prompts == []
+    assert installer.commands == []
+    assert installer.invalidations == []
+
+
+@pytest.mark.parametrize("value", ["0", "", "false"])
+def test_only_explicit_opt_out_disables_checks(monkeypatch, installer, value):
+    monkeypatch.setenv("BLINKA_SKIP_DEPENDENCY_CHECK", value)
+    installer.missing = []
+    assert not installer.run()
+    assert installer.availability_checks == [[]]
+
+
+@pytest.mark.parametrize("opt_out", [False, True])
+def test_gpiod_220_label_requires_supported_install_or_explicit_opt_out(
+    monkeypatch, opt_out
+):
+    monkeypatch.setattr(
+        platform_dependencies,
+        "get_platform_dependencies",
+        lambda *_args: [("gpiod", "gpiod>=2.2.2,<3")],
+    )
+    monkeypatch.setattr(
+        platform_dependencies.importlib.util, "find_spec", lambda _name: object()
+    )
+    monkeypatch.setattr(
+        platform_dependencies.importlib.metadata, "version", lambda _name: "2.2.0"
+    )
+    monkeypatch.setattr(sys, "stdin", io.StringIO())
+    monkeypatch.setattr(
+        platform_dependencies.subprocess,
+        "run",
+        lambda *_args, **_kwargs: pytest.fail("Non-interactive pip is forbidden"),
+    )
+    if opt_out:
+        monkeypatch.setenv("BLINKA_SKIP_DEPENDENCY_CHECK", "1")
+        assert not platform_dependencies.install_missing_platform_dependencies(
+            _detector(any_raspberry_pi=True)
+        )
+    else:
+        with pytest.raises(RuntimeError, match="unsupported versions"):
+            platform_dependencies.install_missing_platform_dependencies(
+                _detector(any_raspberry_pi=True)
+            )
+
+
+@pytest.mark.parametrize(
+    "module_name, requirement",
+    [
+        ("_rpi_ws281x", "rpi_ws281x>=4.0.0"),
+        ("adafruit_blinka_raspberry_pi_pwm", "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.1"),
+    ],
+)
+@pytest.mark.parametrize("skip", ["noninteractive", "decline", "eof"])
+def test_unused_optional_old_backend_does_not_block_startup(
+    monkeypatch, installer, module_name, requirement, skip
+):
+    monkeypatch.setattr(
+        platform_dependencies,
+        "get_platform_dependencies",
+        lambda *_args: [(module_name, requirement)],
+    )
+    installer.missing = [requirement]
+    monkeypatch.setattr(
+        platform_dependencies.importlib.metadata, "version", lambda _name: "0.1"
+    )
+    if skip == "noninteractive":
+        monkeypatch.setattr(installer.stdin, "isatty", lambda: False)
+    else:
+        installer.answer = "n" if skip == "decline" else EOFError()
+    assert not installer.run()
+    assert installer.commands == []
+    assert installer.invalidations == []
+
+
+@pytest.mark.parametrize("failure", ["os", "externally_managed"])
+def test_optional_install_failure_warns_without_blocking_startup(
+    monkeypatch, installer, failure
+):
+    requirement = "rpi_ws281x>=4.0.0"
+    monkeypatch.setattr(
+        platform_dependencies,
+        "get_platform_dependencies",
+        lambda *_args: [("_rpi_ws281x", requirement)],
+    )
+    installer.missing = [requirement]
+
+    def failed_install(command, check):
+        assert check is True
+        if failure == "os":
+            raise OSError("Cannot launch pip")
+        raise platform_dependencies.subprocess.CalledProcessError(
+            1, command, stderr="externally-managed-environment"
+        )
+
+    monkeypatch.setattr(platform_dependencies.subprocess, "run", failed_install)
+    with pytest.warns(RuntimeWarning, match="optional platform dependencies") as caught:
+        assert not installer.run()
+    expected = platform_dependencies.format_install_command(
+        [requirement], executable=sys.executable
+    )
+    assert expected in str(caught[0].message)
+    assert installer.invalidations == []
+
+
+def test_optional_install_still_invisible_warns_with_restart_guidance(
+    monkeypatch, installer
+):
+    requirement = "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.1"
+    monkeypatch.setattr(
+        platform_dependencies,
+        "get_platform_dependencies",
+        lambda *_args: [("adafruit_blinka_raspberry_pi_pwm", requirement)],
+    )
+    installer.missing = installer.after_install_missing = [requirement]
+    with pytest.warns(RuntimeWarning, match="Restart Python"):
+        assert not installer.run()
+    assert len(installer.commands) == 1
+    assert installer.invalidations == [True]
+
+
+def test_replacing_loaded_optional_backend_still_requires_restart(
+    monkeypatch, installer
+):
+    requirement = "rpi_ws281x>=4.0.0"
+    monkeypatch.setattr(
+        platform_dependencies,
+        "get_platform_dependencies",
+        lambda *_args: [("_rpi_ws281x", requirement)],
+    )
+    installer.missing = [requirement]
+    original = SimpleNamespace()
+    monkeypatch.setitem(sys.modules, "_rpi_ws281x", original)
+    with pytest.raises(RuntimeError, match="Restart Python"):
+        installer.run()
+    assert sys.modules["_rpi_ws281x"] is original
+    assert len(installer.commands) == 1
 
 
 @pytest.mark.parametrize("failure", ["os", "pip"])

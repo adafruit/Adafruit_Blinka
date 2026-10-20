@@ -7,11 +7,19 @@
 import importlib
 import importlib.metadata
 import importlib.util
+import os
 import shlex
 import subprocess
 import sys
+import warnings
 
 from packaging.requirements import Requirement
+
+_OPTIONAL_BACKENDS = {
+    "_rpi_ws281x",
+    "adafruit_raspberry_pi5_neopixel_write",
+    "adafruit_blinka_raspberry_pi_pwm",
+}
 
 
 def get_platform_dependencies(detector, python_version=None):
@@ -120,6 +128,37 @@ def format_install_command(requirements, executable="pip"):
     return shlex.join(command)
 
 
+def check_platform_dependency(detector, import_name, python_version=None):
+    """Check a backend when its feature is imported, without installing it."""
+    unsupported = get_unsupported_platform_dependency_message(
+        detector, import_name, python_version
+    )
+    if unsupported is not None:
+        raise RuntimeError(unsupported)
+
+    requirement = get_platform_requirement_for_import(
+        detector, import_name, python_version
+    )
+    if requirement is None:
+        return
+    parsed = Requirement(requirement)
+    if not parsed.specifier:
+        return
+    try:
+        installed_version = importlib.metadata.version(parsed.name)
+    except importlib.metadata.PackageNotFoundError:
+        # Let the backend import report missing modules; OS packages may have
+        # no Python distribution metadata at all.
+        return
+    if not parsed.specifier.contains(installed_version, prereleases=True):
+        install_command = format_install_command([requirement], sys.executable)
+        raise RuntimeError(
+            f"The platform library '{import_name}' has unsupported installed version "
+            f"{installed_version}. To install a supported version, run: "
+            f"{install_command}\nThen restart Python before using this feature."
+        )
+
+
 def _outdated_platform_dependencies(detector, python_version):
     """Return installed distributions outside this platform's version bounds."""
     outdated = []
@@ -140,9 +179,13 @@ def _outdated_platform_dependencies(detector, python_version):
     return outdated
 
 
-def _raise_for_outdated_dependencies(detector, python_version):
-    """Do not silently use installed versions outside this platform's bounds."""
-    outdated = _outdated_platform_dependencies(detector, python_version)
+def _raise_for_outdated_dependencies(detector, python_version, optional):
+    """Reject unsupported GPIO backends, deferring optional ones to feature use."""
+    outdated = [
+        requirement
+        for requirement in _outdated_platform_dependencies(detector, python_version)
+        if requirement not in optional
+    ]
     if outdated:
         install_command = format_install_command(outdated, executable=sys.executable)
         raise RuntimeError(
@@ -156,16 +199,25 @@ def install_missing_platform_dependencies(
     detector, python_version=None, input_func=input
 ):
     """Offer to install missing or outdated dependencies into the environment."""
+    if os.environ.get("BLINKA_SKIP_DEPENDENCY_CHECK") == "1":
+        return False
     missing = get_missing_platform_dependencies(detector, python_version)
     if not missing:
         return False
+    optional = {
+        requirement
+        for module_name, requirement in get_platform_dependencies(
+            detector, python_version
+        )
+        if module_name in _OPTIONAL_BACKENDS
+    }
 
     if (
         sys.stdin is None
         or sys.stdout is None
         or not (sys.stdin.isatty() and sys.stdout.isatty())
     ):
-        _raise_for_outdated_dependencies(detector, python_version)
+        _raise_for_outdated_dependencies(detector, python_version, optional)
         return False
 
     print("\nBlinka detected missing or outdated platform dependencies:")
@@ -177,12 +229,17 @@ def install_missing_platform_dependencies(
             "Install them into the current Python environment? [Y/n] "
         )
     except EOFError:
-        _raise_for_outdated_dependencies(detector, python_version)
+        _raise_for_outdated_dependencies(detector, python_version, optional)
         return False
     if response.strip().lower() not in ("", "y", "yes"):
-        _raise_for_outdated_dependencies(detector, python_version)
+        _raise_for_outdated_dependencies(detector, python_version, optional)
         return False
 
+    return _install_platform_dependencies(detector, python_version, missing, optional)
+
+
+def _install_platform_dependencies(detector, python_version, missing, optional):
+    """Install confirmed requirements and check same-process usability."""
     # OS-provided modules can be importable without distribution metadata.
     # Any loaded module being installed must be restarted, not just known old ones.
     loaded = [
@@ -197,6 +254,15 @@ def install_missing_platform_dependencies(
         subprocess.run(command, check=True)
     except (OSError, subprocess.CalledProcessError) as error:
         install_command = shlex.join(command)
+        if set(missing).issubset(optional) and not loaded:
+            warnings.warn(
+                "Unable to install optional platform dependencies. Blinka startup "
+                "will continue; features that need them may be unavailable. "
+                f"Try: {install_command}",
+                RuntimeWarning,
+                stacklevel=2,
+            )
+            return False
         raise RuntimeError(
             f"Unable to install the platform dependencies. Try: {install_command}"
         ) from error
@@ -210,10 +276,14 @@ def install_missing_platform_dependencies(
     remaining = get_missing_platform_dependencies(detector, python_version)
     if remaining:
         install_command = format_install_command(remaining, executable=sys.executable)
-        raise RuntimeError(
+        message = (
             "Installation completed, but these platform dependencies are still "
             f"missing or incompatible in this Python process: {', '.join(remaining)}. "
             "Restart Python before using Blinka. If the problem persists, try: "
             f"{install_command}"
         )
+        if set(remaining).issubset(optional):
+            warnings.warn(message, RuntimeWarning, stacklevel=2)
+            return False
+        raise RuntimeError(message)
     return True

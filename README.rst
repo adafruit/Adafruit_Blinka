@@ -57,12 +57,17 @@ selection and manual dependency setup; unrelated packages are not installed.
 
 Non-interactive programs never prompt or run pip. A missing backend reports its
 installation guidance when imported; a known incompatible installed version
-reports an actionable error rather than silently continuing. If an upgraded
-backend was already imported, restart Python before using the replacement.
+of a required GPIO backend reports an actionable error rather than silently
+continuing. PWM and NeoPixel backends are optional for ``board``: declining
+their installation or encountering an installation failure does not block
+unrelated GPIO use. Installation failures produce a warning, and missing or
+known incompatible backends are reported when their feature is imported.
+If an upgraded backend was already imported, restart Python before using the
+replacement, even when that backend is optional.
 After installation, Blinka rechecks imports and required versions. If they are
 still unavailable (for example, after the first user-site installation), it
 reports restart guidance rather than continuing as though installation fixed
-the running process.
+the running process. Optional-only problems warn instead of aborting ``board``.
 
 Use a virtual environment where practical. The runtime installer does not use
 sudo, bypass externally managed environment protections, install OS packages,
@@ -72,20 +77,8 @@ development headers provided by the operating system.
 Installing from PyPI
 =====================
 
-On supported GNU/Linux systems like the Raspberry Pi, you can install the driver locally `from
-PyPI <https://pypi.org/project/Adafruit-Blinka/>`_. To install for current user:
-
-.. code-block:: shell
-
-    pip3 install Adafruit-Blinka
-
-To install system-wide (this may be required in some cases):
-
-.. code-block:: shell
-
-    sudo pip3 install Adafruit-Blinka
-
-To install in a virtual environment in your current project:
+On supported GNU/Linux systems like the Raspberry Pi, install
+`from PyPI <https://pypi.org/project/Adafruit-Blinka/>`_ in a virtual environment:
 
 .. code-block:: shell
 
@@ -93,6 +86,38 @@ To install in a virtual environment in your current project:
     python3 -m venv .env
     source .env/bin/activate
     pip3 install Adafruit-Blinka
+
+Services and managed environments
+---------------------------------
+
+Install the backends your program needs before starting a service, cron job, or
+other non-interactive program. For Raspberry Pi digital GPIO, for example:
+
+.. code-block:: shell
+
+    .env/bin/python -m pip install Adafruit-Blinka 'gpiod>=2.2.2,<3'
+
+If the program also uses PWM, install its backend during setup:
+
+.. code-block:: shell
+
+    .env/bin/python -m pip install 'Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.1'
+
+Run the service with that same environment's Python. A virtual environment using
+``--system-site-packages`` can see OS packages, but those packages must still
+meet the required versions. Blinka does not bypass externally managed system
+Python protections.
+
+For an application that manages its own dependencies, set
+``BLINKA_SKIP_DEPENDENCY_CHECK=1`` before importing ``board`` to disable its
+automatic dependency checks and installation prompts:
+
+.. code-block:: shell
+
+    BLINKA_SKIP_DEPENDENCY_CHECK=1 .env/bin/python program.py
+
+This does not install packages or make unsupported backends supported. Missing
+backend imports and PWM/NeoPixel feature checks still report errors.
 
 Raspberry Pi GPIO and PWM
 =========================

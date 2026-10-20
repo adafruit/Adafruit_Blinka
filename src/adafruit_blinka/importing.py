@@ -41,6 +41,16 @@ PLATFORM_DEPENDENCY_INSTALLS = {
 }
 
 
+def check_platform_dependency(import_name):
+    """Validate a selected feature's backend without installing dependencies."""
+    if sys.implementation.name == "cpython":
+        from adafruit_blinka.platform_dependencies import (
+            check_platform_dependency as check_dependency,
+        )
+
+        check_dependency(detector, import_name)
+
+
 def raise_for_missing_platform_dependency(error: ModuleNotFoundError):
     """Raise a helpful message for known optional platform dependencies."""
     install_command = None
