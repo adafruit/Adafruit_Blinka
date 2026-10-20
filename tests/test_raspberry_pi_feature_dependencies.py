@@ -135,7 +135,7 @@ def test_neopixel_checks_only_selected_pi_backend(
             "pwmio.py",
             "Adafruit-Blinka-Raspberry-Pi-PWM",
             {"any_raspberry_pi": True},
-            "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.1",
+            "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.2",
         ),
         (
             "neopixel_write.py",
@@ -169,6 +169,44 @@ def test_incompatible_optional_backend_fails_only_at_feature_import(
     assert inspected
 
 
+@pytest.mark.parametrize(
+    "version, supported",
+    [
+        ("1.0.0", False),
+        ("1.0.1", False),
+        ("1.0.2rc1", False),
+        ("1.0.2", True),
+        ("1.1.0", True),
+    ],
+)
+def test_pwm_minimum_requires_system_gpiod_compatible_release(
+    monkeypatch, version, supported
+):
+    """Older PWM metadata must not replace maintained system gpiod transitively."""
+    _importing, detector = prepare_feature_import(monkeypatch, any_raspberry_pi=True)
+    module = "adafruit_blinka_raspberry_pi_pwm"
+    requirement = platform_dependencies.get_platform_requirement_for_import(
+        detector, module
+    )
+    monkeypatch.setattr(
+        platform_dependencies.importlib.util, "find_spec", lambda _name: object()
+    )
+    monkeypatch.setattr(
+        platform_dependencies.importlib.metadata, "version", lambda _name: version
+    )
+    assert (
+        platform_dependencies._requirement_available(  # pylint: disable=protected-access
+            module, requirement
+        )
+        is supported
+    )
+    if supported:
+        platform_dependencies.check_platform_dependency(detector, module)
+    else:
+        with pytest.raises(RuntimeError, match="PWM>=1.0.2"):
+            platform_dependencies.check_platform_dependency(detector, module)
+
+
 def test_pi5_neopixel_reports_unsupported_python_before_native_import(monkeypatch):
     """An installed backend cannot hide the Pi 5 package's Python floor."""
     _importing, _detector = prepare_feature_import(
@@ -189,7 +227,7 @@ def test_pi5_neopixel_reports_unsupported_python_before_native_import(monkeypatc
             "pwmio.py",
             "adafruit_blinka_raspberry_pi_pwm",
             PREFIX + "generic_linux.raspberry_pi_pwmout",
-            "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.1",
+            "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.2",
             {"any_raspberry_pi": True},
         ),
         (

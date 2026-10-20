@@ -101,7 +101,7 @@ If the program also uses PWM, install its backend during setup:
 
 .. code-block:: shell
 
-    .env/bin/python -m pip install 'Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.1'
+    .env/bin/python -m pip install 'Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.2'
 
 Run the service with that same environment's Python. A virtual environment using
 ``--system-site-packages`` can see OS packages, but those packages must still
@@ -145,7 +145,7 @@ uses `Adafruit Blinka Raspberry Pi PWM
 models. Configured BCM/RP1 hardware PWM is preferred on verified pin routes;
 other pins use native software PWM. This does not use PIO or change boot overlays.
 Runtime checks select ``gpiod>=2.2.2,<3`` and
-``Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.1`` only for Raspberry Pi boards, rather
+``Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.2`` only for Raspberry Pi boards, rather
 than installing them on every Linux ARM host. These Pi backends require Linux
 5.10 or newer. NeoPixel support retains its separate dependencies.
 

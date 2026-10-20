@@ -36,7 +36,7 @@ PLATFORM_DEPENDENCY_INSTALLS = {
     "lgpio": "pip install adafruit-lgpio",
     "gpiod": "pip install gpiod",
     "adafruit_blinka_raspberry_pi_pwm": (
-        "pip install 'Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.1'"
+        "pip install 'Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.2'"
     ),
 }
 

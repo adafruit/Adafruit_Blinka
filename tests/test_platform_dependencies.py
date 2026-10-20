@@ -53,7 +53,7 @@ def test_raspberry_pi_5_uses_gpiod_and_native_pwm():
         ("gpiod", "gpiod>=2.2.2,<3"),
         (
             "adafruit_blinka_raspberry_pi_pwm",
-            "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.1",
+            "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.2",
         ),
         (
             "adafruit_raspberry_pi5_neopixel_write",
@@ -72,7 +72,7 @@ def test_raspberry_pi_5_gpio_pwm_requirements_do_not_depend_on_python_version():
         ("gpiod", "gpiod>=2.2.2,<3"),
         (
             "adafruit_blinka_raspberry_pi_pwm",
-            "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.1",
+            "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.2",
         ),
     ]
     assert all(name not in ("lgpio", "RPi.GPIO") for name, _ in dependencies)
@@ -138,7 +138,7 @@ def test_earlier_raspberry_pi_uses_gpiod_and_native_pwm_without_legacy_gpio():
         ("gpiod", "gpiod>=2.2.2,<3"),
         (
             "adafruit_blinka_raspberry_pi_pwm",
-            "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.1",
+            "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.2",
         ),
         ("_rpi_ws281x", "rpi_ws281x>=4.0.0"),
     ]
@@ -167,7 +167,7 @@ def test_import_requirement_for_new_pwm_package():
         _detector(any_raspberry_pi=True), "adafruit_blinka_raspberry_pi_pwm"
     )
 
-    assert requirement == "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.1"
+    assert requirement == "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.2"
 
 
 def test_legacy_gpio_imports_are_not_requested_for_raspberry_pi():
@@ -664,7 +664,7 @@ def test_verified_trixie_does_not_satisfy_a_future_higher_minimum(monkeypatch):
     "module_name, requirement",
     [
         ("_rpi_ws281x", "rpi_ws281x>=4.0.0"),
-        ("adafruit_blinka_raspberry_pi_pwm", "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.1"),
+        ("adafruit_blinka_raspberry_pi_pwm", "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.2"),
     ],
 )
 @pytest.mark.parametrize("skip", ["noninteractive", "decline", "eof"])
@@ -752,7 +752,7 @@ def test_partial_upgrade_of_loaded_optional_backend_remains_fatal(
 def test_optional_install_still_invisible_warns_with_restart_guidance(
     monkeypatch, installer
 ):
-    requirement = "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.1"
+    requirement = "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.2"
     monkeypatch.setattr(
         platform_dependencies,
         "get_platform_dependencies",

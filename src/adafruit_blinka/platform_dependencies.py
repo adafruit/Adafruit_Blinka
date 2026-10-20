@@ -30,12 +30,13 @@ def get_platform_dependencies(detector, python_version=None):
 
     # The BCM283x/BCM2711/BCM2712 pin maps share gpiod; PWM no longer depends
     # on either RPi.GPIO or lgpio. NeoPixel support retains its own backend.
+    # PWM 1.0.2 permits maintained system gpiod without a transitive upgrade.
     if detector.board.any_raspberry_pi or detector.board.any_raspberry_pi_5_board:
         dependencies = [
             ("gpiod", "gpiod>=2.2.2,<3"),
             (
                 "adafruit_blinka_raspberry_pi_pwm",
-                "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.1",
+                "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.2",
             ),
         ]
         if detector.board.any_raspberry_pi_5_board and python_version >= (3, 11):

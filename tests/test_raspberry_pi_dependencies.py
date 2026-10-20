@@ -212,7 +212,7 @@ def load_importing(monkeypatch, detector=None):
         ("gpiod", "gpiod>=2.2.2,<3"),
         (
             "adafruit_blinka_raspberry_pi_pwm",
-            "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.1",
+            "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.2",
         ),
     ],
 )
