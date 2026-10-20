@@ -23,6 +23,33 @@ from pathlib import Path
 _SYSTEM_SITE = Path("/usr/lib/python3/dist-packages")
 _OS_RELEASE = Path("/etc/os-release")
 _SOURCE_VERSION = "2.2.1-2+deb13u1"
+# Identity attestations are shared only with our mirror, not availability caches.
+_VERIFIED_MODULES = {}
+_HELPER_MODULES = (
+    "adafruit_blinka._gpiod_compat",
+    "adafruit_blinka_raspberry_pi_pwm._gpiod_compat",
+)
+
+
+def _loaded_bindings():
+    """Snapshot every loaded binding object, including partially failed imports."""
+    return {
+        name: module
+        for name, module in tuple(sys.modules.items())
+        if name == "gpiod" or name.startswith("gpiod.")
+    }
+
+
+def _previously_verified(name, module):
+    """Require the identical object imported after successful file verification."""
+    if module is None:
+        return False
+    if _VERIFIED_MODULES.get(name) is module:
+        return True
+    return any(
+        getattr(sys.modules.get(helper), "_VERIFIED_MODULES", {}).get(name) is module
+        for helper in _HELPER_MODULES
+    )
 
 
 def _dpkg_query(*arguments):
@@ -96,7 +123,9 @@ def is_supported_system_gpiod():
 
     This is only the system-package exception. Callers retain their normal
     supported PyPI version bounds. Unknown versions and unverifiable installs
-    are deliberately not accepted, and results are not cached across installs.
+    are deliberately not accepted. Previously loaded objects need an identity
+    attestation from this helper or its mirror; filenames cannot prove their
+    source after an OS reinstall. Files and packages are rechecked every call.
     """
     # Keep the explicit fail-closed predicates together for auditability.
     # pylint: disable=too-many-return-statements,too-many-boolean-expressions
@@ -129,12 +158,10 @@ def is_supported_system_gpiod():
             )
         ):
             return False
-        extension_spec = importlib.machinery.PathFinder.find_spec(
-            "gpiod._ext", [str(package)]
-        )
-        if extension_spec is None:
+        spec = importlib.machinery.PathFinder.find_spec("gpiod._ext", [str(package)])
+        if spec is None:
             return False
-        extension = Path(extension_spec.origin)
+        extension = Path(spec.origin)
         if extension.parent != package:
             return False
 
@@ -148,6 +175,11 @@ def is_supported_system_gpiod():
         verified = _verified_files(package, extension, metadata)
         if not verified:
             return False
+        if any(
+            not _previously_verified(name, loaded)
+            for name, loaded in _loaded_bindings().items()
+        ):
+            return False
 
         module = importlib.import_module("gpiod")
         native = importlib.import_module("gpiod._ext")
@@ -159,12 +191,15 @@ def is_supported_system_gpiod():
             or module.api_version != "2.2.1"
         ):
             return False
-        return all(
+        loaded_bindings = _loaded_bindings()
+        if not all(
             Path(loaded.__file__) in verified
             and _same_path(loaded.__file__, Path(loaded.__file__))
-            for name, loaded in tuple(sys.modules.items())
-            if name == "gpiod" or name.startswith("gpiod.")
-        )
+            for loaded in loaded_bindings.values()
+        ):
+            return False
+        _VERIFIED_MODULES.update(loaded_bindings)
+        return True
     # Compatibility detection must not turn a missing/unverifiable package into
     # an unrelated startup exception. Interrupts and SystemExit still propagate.
     except Exception:  # pylint: disable=broad-exception-caught

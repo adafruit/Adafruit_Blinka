@@ -108,6 +108,21 @@ Run the service with that same environment's Python. A virtual environment using
 meet the required versions. Blinka does not bypass externally managed system
 Python protections.
 
+For Raspberry Pi GPIO, Blinka also recognizes the maintained Trixie
+``python3-libgpiod`` source build ``2.2.1-2+deb13u1``, which reports the Python
+version ``2.2.0`` despite containing later fixes. In a virtual environment
+created with ``--system-site-packages``, Blinka verifies the approved OS package,
+selected installation, and dpkg-owned files and checksums before accepting it.
+This is not blanket support for older PyPI bindings or other distro builds.
+Unknown builds need supported PyPI bindings instead.
+
+Import ``board`` before importing system ``gpiod`` yourself. Previously loaded
+system bindings without verified first-load provenance are refused, since an
+OS reinstall cannot replace cached Python/native code. Restart the process after
+OS package updates; do not attempt to reload native modules. The installed OS
+package database is trusted, not treated as protection against privileged
+tampering or deliberate in-process monkeypatching.
+
 For an application that manages its own dependencies, set
 ``BLINKA_SKIP_DEPENDENCY_CHECK=1`` before importing ``board`` to disable its
 automatic dependency checks and installation prompts:

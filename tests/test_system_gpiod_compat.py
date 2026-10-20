@@ -15,6 +15,12 @@ import pytest
 
 from adafruit_blinka import _gpiod_compat as compat
 
+_OTHER_HELPER = (
+    "adafruit_blinka_raspberry_pi_pwm._gpiod_compat"
+    if compat.__name__ == "adafruit_blinka._gpiod_compat"
+    else "adafruit_blinka._gpiod_compat"
+)
+
 # Pytest supplies the named fixtures.
 # pylint: disable=redefined-outer-name
 
@@ -31,6 +37,8 @@ def system_binding(tmp_path, monkeypatch):  # pylint: disable=too-many-locals
     files = {
         package / "__init__.py": b"# maintained binding\n",
         package / "line.py": b"# line enums\n",
+        package / "line_request.py": b"# line requests\n",
+        package / "chip.py": b"# chip wrapper\n",
         package / "version.py": b'__version__ = "2.2.0"\n',
         extension: b"recording extension; never loaded by the dynamic linker\n",
         metadata: b"Name: gpiod\nVersion: 2.2.0\n",
@@ -54,8 +62,12 @@ def system_binding(tmp_path, monkeypatch):  # pylint: disable=too-many-locals
     for name in tuple(sys.modules):
         if name == "gpiod" or name.startswith("gpiod."):
             monkeypatch.delitem(sys.modules, name)
-    monkeypatch.setitem(sys.modules, "gpiod", module)
-    monkeypatch.setitem(sys.modules, "gpiod._ext", native)
+    monkeypatch.delitem(sys.modules, _OTHER_HELPER, raising=False)
+    binding_modules = {"gpiod": module, "gpiod._ext": native}
+    for submodule in ("line", "line_request", "chip"):
+        loaded = ModuleType("gpiod." + submodule)
+        loaded.__file__ = str(package / (submodule + ".py"))
+        binding_modules["gpiod." + submodule] = loaded
     distribution = SimpleNamespace(
         version="2.2.0", locate_file=lambda name: site / name
     )
@@ -70,6 +82,7 @@ def system_binding(tmp_path, monkeypatch):  # pylint: disable=too-many-locals
         module=module,
         native=native,
         distribution=distribution,
+        binding_modules=binding_modules,
         status="install ok installed\tlibgpiod\t2.2.1-2+deb13u1\n",
         manifest="".join(
             f"{hashlib.md5(contents, usedforsecurity=False).hexdigest()}  "
@@ -94,16 +107,28 @@ def system_binding(tmp_path, monkeypatch):  # pylint: disable=too-many-locals
         if name in ("gpiod", "gpiod._ext"):
             state.imports.append(name)
             # File integrity must be checked before importing any binding code.
-            assert len(state.calls) == 2
+            assert state.calls and len(state.calls) % 2 == 0
+            if name == "gpiod" and name not in sys.modules:
+                for module_name, loaded in state.binding_modules.items():
+                    monkeypatch.setitem(sys.modules, module_name, loaded)
         return original_import(name, *args)
+
+    original_find_spec = compat.importlib.util.find_spec
+
+    def find_spec(name, *args, **kwargs):
+        if name == "gpiod":
+            return module.__spec__
+        return original_find_spec(name, *args, **kwargs)
 
     monkeypatch.setattr(compat, "_SYSTEM_SITE", site)
     monkeypatch.setattr(compat, "_OS_RELEASE", release)
+    monkeypatch.setattr(compat, "_VERIFIED_MODULES", {})
     monkeypatch.setattr(compat.sys, "platform", "linux")
     monkeypatch.setattr(
         compat.importlib.metadata, "distribution", lambda _: distribution
     )
     monkeypatch.setattr(compat.importlib, "import_module", import_module)
+    monkeypatch.setattr(compat.importlib.util, "find_spec", find_spec)
     monkeypatch.setattr(compat.subprocess, "run", run)
     return state
 
@@ -293,3 +318,91 @@ def test_does_not_cache_success_across_file_changes(system_binding):
     system_binding.calls.clear()
     system_binding.extension.write_bytes(b"different binding\n")
     assert not compat.is_supported_system_gpiod()
+
+
+@pytest.mark.parametrize("submodule", ["chip", "line_request"])
+def test_rejects_same_path_stale_module_after_os_reinstall(
+    system_binding, monkeypatch, submodule
+):
+    """Restored files cannot attest code objects loaded before the repair."""
+    module_name = "gpiod." + submodule
+    stale = ModuleType(module_name)
+    path = system_binding.package / (submodule + ".py")
+    stale.__file__ = str(path)
+    path.write_bytes(b"# previously edited code\n")
+    monkeypatch.setitem(sys.modules, module_name, stale)
+    path.write_bytes(system_binding.files[path])
+    assert not compat.is_supported_system_gpiod()
+    assert not system_binding.imports
+
+
+def test_rechecks_files_but_accepts_verified_repeat(system_binding):
+    assert compat.is_supported_system_gpiod()
+    first_objects = dict(compat._VERIFIED_MODULES)  # pylint: disable=protected-access
+    system_binding.calls.clear()
+    assert compat.is_supported_system_gpiod()
+    assert len(system_binding.calls) == 2
+    assert all(sys.modules[name] is loaded for name, loaded in first_objects.items())
+
+
+@pytest.mark.parametrize("mirror_first", [False, True])
+def test_mirrored_helpers_share_identity_attestations(
+    system_binding, monkeypatch, mirror_first
+):
+    spec = importlib.util.spec_from_file_location(_OTHER_HELPER, compat.__file__)
+    mirror = importlib.util.module_from_spec(spec)
+    monkeypatch.setitem(sys.modules, _OTHER_HELPER, mirror)
+    spec.loader.exec_module(mirror)
+    monkeypatch.setattr(mirror, "_SYSTEM_SITE", system_binding.site)
+    monkeypatch.setattr(mirror, "_OS_RELEASE", system_binding.release)
+    first, second = (mirror, compat) if mirror_first else (compat, mirror)
+    assert first.is_supported_system_gpiod()
+    system_binding.calls.clear()
+    assert second.is_supported_system_gpiod()
+    assert len(system_binding.calls) == 2
+
+
+@pytest.mark.parametrize("module_name", ["gpiod", "gpiod.line_request", "gpiod.chip"])
+def test_rejects_replaced_previously_verified_object(
+    system_binding, monkeypatch, module_name
+):
+    assert compat.is_supported_system_gpiod()
+    replacement = ModuleType(module_name)
+    replacement.__file__ = sys.modules[module_name].__file__
+    monkeypatch.setitem(sys.modules, module_name, replacement)
+    system_binding.calls.clear()
+    system_binding.imports.clear()
+    assert not compat.is_supported_system_gpiod()
+    assert not system_binding.imports
+
+
+def test_rejects_new_same_path_submodule_after_verification(
+    system_binding, monkeypatch
+):
+    assert compat.is_supported_system_gpiod()
+    # version.py was checked on disk, but this later object has no provenance.
+    unexpected = ModuleType("gpiod.version")
+    unexpected.__file__ = str(system_binding.package / "version.py")
+    monkeypatch.setitem(sys.modules, "gpiod.version", unexpected)
+    system_binding.calls.clear()
+    system_binding.imports.clear()
+    assert not compat.is_supported_system_gpiod()
+    assert not system_binding.imports
+
+
+def test_identity_attestation_does_not_cache_package_status(system_binding):
+    assert compat.is_supported_system_gpiod()
+    system_binding.calls.clear()
+    system_binding.status = "install ok installed\tlibgpiod\t2.2.2-1\n"
+    assert not compat.is_supported_system_gpiod()
+    assert len(system_binding.calls) == 1
+
+
+def test_failed_validation_does_not_attest_imported_objects(system_binding):
+    system_binding.module.api_version = "unexpected"
+    assert not compat.is_supported_system_gpiod()
+    system_binding.module.api_version = "2.2.1"
+    system_binding.calls.clear()
+    system_binding.imports.clear()
+    assert not compat.is_supported_system_gpiod()
+    assert not system_binding.imports

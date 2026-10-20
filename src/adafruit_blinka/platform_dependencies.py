@@ -21,6 +21,11 @@ _OPTIONAL_BACKENDS = {
     "adafruit_raspberry_pi5_neopixel_write",
     "adafruit_blinka_raspberry_pi_pwm",
 }
+_SYSTEM_GPIOD_RESTART = (
+    " When using supported Trixie system bindings, start a fresh Python process "
+    "and import board before importing gpiod so its provenance can be verified "
+    "before loading. Do not reload native modules after an OS package update."
+)
 
 
 def get_platform_dependencies(detector, python_version=None):
@@ -181,10 +186,12 @@ def check_platform_dependency(detector, import_name, python_version=None):
         return
     if not _installed_version_supported(import_name, parsed, installed_version):
         install_command = format_install_command([requirement], sys.executable)
+        system_advice = _SYSTEM_GPIOD_RESTART if import_name == "gpiod" else ""
         raise RuntimeError(
             f"The platform library '{import_name}' has unsupported installed version "
             f"{installed_version}. To install a supported version, run: "
             f"{install_command}\nThen restart Python before using this feature."
+            + system_advice
         )
 
 
@@ -215,10 +222,15 @@ def _raise_for_outdated_dependencies(detector, python_version, optional):
     ]
     if outdated:
         install_command = format_install_command(outdated, executable=sys.executable)
+        system_advice = (
+            _SYSTEM_GPIOD_RESTART
+            if any(Requirement(item).name == "gpiod" for item in outdated)
+            else ""
+        )
         raise RuntimeError(
             "Blinka found installed platform dependencies with unsupported versions. "
             f"To install supported versions, run: {install_command}\n"
-            "Then restart Python before using Blinka."
+            "Then restart Python before using Blinka." + system_advice
         )
 
 
