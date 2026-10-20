@@ -62,7 +62,9 @@ class ScriptedHID:
         assert self.opened
         assert length == 64
         if self.responses is None:
-            return response()
+            report = response()
+            report[0] = self.commands[-1][0]
+            return report
         assert self.responses, "driver requested an unexpected response"
         item = self.responses.popleft()
         if isinstance(item, Exception):
