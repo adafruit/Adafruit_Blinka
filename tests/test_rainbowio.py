@@ -7,6 +7,7 @@
 from array import array
 
 import pytest
+import rainbowio
 
 from rainbowio import colorwheel
 
@@ -101,3 +102,26 @@ def test_colorwheel_accepts_float_conversion():
             return 84.5
 
     assert colorwheel(Hue()) == 0x02FD00
+
+
+@pytest.mark.parametrize("hue, expected", [(False, 0xFF0000), (True, 0xFC0300)])
+def test_colorwheel_micropython_boolean_hues(monkeypatch, hue, expected):
+    """MicroPython bool has no int parent or __float__; both values are numeric."""
+    builtin_isinstance = isinstance
+    builtin_hasattr = hasattr
+
+    def micropython_isinstance(value, classes):
+        if builtin_isinstance(value, bool):
+            return bool in classes
+        return builtin_isinstance(value, classes)
+
+    def micropython_hasattr(value, name):
+        if builtin_isinstance(value, bool) and name == "__float__":
+            return False
+        return builtin_hasattr(value, name)
+
+    # Model these two source-verified interpreter differences locally, not by
+    # altering CPython's global builtins. This is not a MicroPython VM test.
+    monkeypatch.setattr(rainbowio, "isinstance", micropython_isinstance, raising=False)
+    monkeypatch.setattr(rainbowio, "hasattr", micropython_hasattr, raising=False)
+    assert colorwheel(hue) == expected
