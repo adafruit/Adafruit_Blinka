@@ -167,6 +167,7 @@ The manifest includes ``board``, ``microcontroller``, ``digitalio``, ``busio``,
 ESP8266 board routes. It installs only the required PlatformDetect source files,
 pinned to release 3.89.1, and their licenses. Linux drivers, native binaries,
 pip dependencies, and the CPython ``micropython`` shim are not installed.
+The installed file contents total about 190 KiB, plus filesystem overhead.
 When updating PlatformDetect, update all its manifest URLs together to the new
 release's commit; absolute pinned URLs keep Blinka branch/tag installs from
 accidentally selecting the same ref in another repository.
