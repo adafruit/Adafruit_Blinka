@@ -117,15 +117,13 @@ class MCP2221:
         """Set Current Pin Mode"""
         # already set to that mode?
         mode &= 0x07
-        if mode == (self._gp_config[pin] & 0x07):
+        if mode == (self._gp_config[pin] & 0x07) and self._hid_in_sync:
             return
         # Read current references before a GPIO SRAM write reinitializes VRM.
         # MCP2221A datasheet, Section 1.8.1.1 and Tables 3-36/3-39.
         sram = self._hid_xfer(b"\x61")
         if len(sram) != 64 or sram[0] != 0x61 or sram[1] != 0:
             raise OSError("Couldn't get SRAM settings")
-        # update GP mode for pin
-        self._gp_config[pin] = mode
         # Explicitly preserve both references, leaving DAC output unchanged.
         report = bytearray(b"\x60" + b"\x00" * 63)
         report[3] = 0x80 | ((sram[6] >> 5) & 0x07)
@@ -137,8 +135,10 @@ class MCP2221:
         report[9] = self._gp_config[1]
         report[10] = self._gp_config[2]
         report[11] = self._gp_config[3]
-        # and make it so
+        report[8 + pin] = mode
         self._hid_xfer(report)
+        # Cache only confirmed settings; failed exchanges remain blocked.
+        self._gp_config[pin] = mode
 
     def _pretty_report(self, register):
         report = self._hid_xfer(register)
@@ -179,31 +179,35 @@ class MCP2221:
     # ----------------------------------------------------------------
     def gpio_set_direction(self, pin, mode):
         """Set Current GPIO Pin Direction"""
+        config = self._gp_config[pin]
         if mode:
             # set bit 3 for INPUT
-            self._gp_config[pin] |= 1 << 3
+            config |= 1 << 3
         else:
             # clear bit 3 for OUTPUT
-            self._gp_config[pin] &= ~(1 << 3)
+            config &= ~(1 << 3)
         report = bytearray(b"\x50" + b"\x00" * 63)  # empty set GPIO report
         offset = 4 * (pin + 1)
         report[offset] = 0x01  # set pin direction
         report[offset + 1] = mode  # to this
         self._hid_xfer(report)
+        self._gp_config[pin] = config
 
     def gpio_set_pin(self, pin, value):
         """Set Current GPIO Pin Value"""
+        config = self._gp_config[pin]
         if value:
             # set bit 4
-            self._gp_config[pin] |= 1 << 4
+            config |= 1 << 4
         else:
             # clear bit 4
-            self._gp_config[pin] &= ~(1 << 4)
+            config &= ~(1 << 4)
         report = bytearray(b"\x50" + b"\x00" * 63)  # empty set GPIO report
         offset = 2 + 4 * pin
         report[offset] = 0x01  # set pin value
         report[offset + 1] = value  # to this
         self._hid_xfer(report)
+        self._gp_config[pin] = config
 
     def gpio_get_pin(self, pin):
         """Get Current GPIO Pin Value"""
