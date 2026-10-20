@@ -191,7 +191,7 @@ class MCP2221:
     def _i2c_status(self):
         resp = self._hid_xfer(b"\x10")
         if resp[1] != 0:
-            raise RuntimeError("Couldn't get I2C status")
+            raise OSError("Couldn't get I2C status")
         return resp
 
     def _i2c_state(self):
@@ -200,7 +200,7 @@ class MCP2221:
     def _i2c_cancel(self):
         resp = self._hid_xfer(b"\x10\x00\x10")
         if resp[1] != 0x00:
-            raise RuntimeError("Couldn't cancel I2C")
+            raise OSError("Couldn't cancel I2C")
         if resp[2] == 0x10:
             # bus release will need "a few hundred microseconds"
             time.sleep(0.001)
@@ -230,10 +230,10 @@ class MCP2221:
                     RESP_I2C_WRDATA_TOUT,
                     RESP_I2C_STOP_TOUT,
                 ):
-                    raise RuntimeError("Unrecoverable I2C state failure")
+                    raise OSError("Unrecoverable I2C state failure")
                 retries += 1
                 if retries >= MCP2221_RETRY_MAX:
-                    raise RuntimeError("I2C write error, max retries reached.")
+                    raise OSError("I2C write error, max retries reached.")
                 time.sleep(0.001)
                 continue  # try again
             # yay chunk sent!
@@ -261,10 +261,10 @@ class MCP2221:
                 RESP_I2C_WRDATA_TOUT,
                 RESP_I2C_STOP_TOUT,
             ):
-                raise RuntimeError("Unrecoverable I2C state failure")
+                raise OSError("Unrecoverable I2C state failure")
             time.sleep(0.001)
         else:
-            raise RuntimeError("I2C write error: max retries reached.")
+            raise OSError("I2C write error: max retries reached.")
         # whew success!
 
     def _i2c_read(self, cmd, address, buffer, start=0, end=None):
@@ -281,7 +281,7 @@ class MCP2221:
 
         # check for success
         if resp[1] != 0x00:
-            raise RuntimeError("Unrecoverable I2C read failure")
+            raise OSError("Unrecoverable I2C read failure")
 
         # and now the read part
         while (end - start) > 0:
@@ -293,9 +293,9 @@ class MCP2221:
                     time.sleep(0.001)
                     continue
                 if resp[1] != 0x00:
-                    raise RuntimeError("Unrecoverable I2C read failure")
+                    raise OSError("Unrecoverable I2C read failure")
                 if resp[2] == RESP_ADDR_NACK:
-                    raise RuntimeError("I2C NACK")
+                    raise OSError("I2C NACK")
                 if resp[3] == 0x00 and resp[2] == 0x00:
                     break
                 if resp[3] == RESP_READ_ERR:
@@ -304,7 +304,7 @@ class MCP2221:
                 if resp[2] in (RESP_READ_COMPL, RESP_READ_PARTIAL):
                     break
             else:
-                raise RuntimeError("I2C read error: max retries reached.")
+                raise OSError("I2C read error: max retries reached.")
 
             # move data into buffer
             chunk = min(end - start, 60)
