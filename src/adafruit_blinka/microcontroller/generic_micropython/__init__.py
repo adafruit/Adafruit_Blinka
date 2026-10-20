@@ -35,4 +35,4 @@ class Pin(MachinePin):
         for key in dir(microcontroller.pin):
             if getattr(microcontroller.pin, key) is self:
                 return f"microcontroller.pin.{key}"
-        return repr(self)
+        return "Pin({!r})".format(self.id)
