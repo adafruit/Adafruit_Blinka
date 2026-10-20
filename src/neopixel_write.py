@@ -14,13 +14,18 @@ Currently supported on Raspberry Pi only.
 import sys
 
 from adafruit_blinka.agnostic import detector
-from adafruit_blinka.importing import raise_for_missing_platform_dependency
+from adafruit_blinka.importing import (
+    check_platform_dependency,
+    raise_for_missing_platform_dependency,
+)
 
 try:
     if detector.board.any_raspberry_pi:
         if detector.board.any_raspberry_pi_5_board:
+            check_platform_dependency("adafruit_raspberry_pi5_neopixel_write")
             import adafruit_raspberry_pi5_neopixel_write as _neopixel
         else:
+            check_platform_dependency("_rpi_ws281x")
             from adafruit_blinka.microcontroller.bcm283x import neopixel as _neopixel
     elif detector.board.pico_u2if:
         from adafruit_blinka.microcontroller.rp2040_u2if import neopixel as _neopixel

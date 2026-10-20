@@ -49,23 +49,36 @@ running CircuitPython and would likely conflict in unhappy ways.
 The test suites in the test/src folder under **testing.universal** are by design
 intended to run on *either* CircuitPython *or* CPython/Micropython+compatibility layer to prove conformance.
 
+Blinka installs a platform-independent base package. On CPython, importing
+``board`` checks the detected Raspberry Pi, Jetson, or AM33XX dependencies. An
+interactive terminal offers to install missing or incompatible packages with
+the running Python interpreter. Other boards retain their existing backend
+selection and manual dependency setup; unrelated packages are not installed.
+
+Non-interactive programs never prompt or run pip. A missing backend reports its
+installation guidance when imported; a known incompatible installed version
+of a required GPIO backend reports an actionable error rather than silently
+continuing. PWM and NeoPixel backends are optional for ``board``: declining
+their installation or encountering an installation failure does not block
+unrelated GPIO use. Installation failures produce a warning, and missing or
+known incompatible backends are reported when their feature is imported.
+If an upgraded backend was already imported, restart Python before using the
+replacement, even when that backend is optional.
+After installation, Blinka rechecks imports and required versions. If they are
+still unavailable (for example, after the first user-site installation), it
+reports restart guidance rather than continuing as though installation fixed
+the running process. Optional-only problems warn instead of aborting ``board``.
+
+Use a virtual environment where practical. The runtime installer does not use
+sudo, bypass externally managed environment protections, install OS packages,
+or change GPIO permissions. Native packages may still need a compiler and Python
+development headers provided by the operating system.
+
 Installing from PyPI
 =====================
 
-On supported GNU/Linux systems like the Raspberry Pi, you can install the driver locally `from
-PyPI <https://pypi.org/project/Adafruit-Blinka/>`_. To install for current user:
-
-.. code-block:: shell
-
-    pip3 install Adafruit-Blinka
-
-To install system-wide (this may be required in some cases):
-
-.. code-block:: shell
-
-    sudo pip3 install Adafruit-Blinka
-
-To install in a virtual environment in your current project:
+On supported GNU/Linux systems like the Raspberry Pi, install
+`from PyPI <https://pypi.org/project/Adafruit-Blinka/>`_ in a virtual environment:
 
 .. code-block:: shell
 
@@ -73,6 +86,55 @@ To install in a virtual environment in your current project:
     python3 -m venv .env
     source .env/bin/activate
     pip3 install Adafruit-Blinka
+
+Services and managed environments
+---------------------------------
+
+Install the backends your program needs before starting a service, cron job, or
+other non-interactive program. For Raspberry Pi digital GPIO, for example:
+
+.. code-block:: shell
+
+    .env/bin/python -m pip install Adafruit-Blinka 'gpiod>=2.2.2,<3'
+
+If the program also uses PWM, install its backend during setup:
+
+.. code-block:: shell
+
+    .env/bin/python -m pip install 'Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.2'
+
+Run the service with that same environment's Python. A virtual environment using
+``--system-site-packages`` can see OS packages, but those packages must still
+meet the required versions. Blinka does not bypass externally managed system
+Python protections.
+
+For Raspberry Pi GPIO, Blinka also accepts Debian-style ``python3-libgpiod``
+bindings labelled ``2.2.0`` when they come from maintained libgpiod source
+``>=2.2.1,<3`` and report a native API version in that range. Trixie's package
+uses this older Python label despite containing later fixes. In a virtual
+environment created with ``--system-site-packages``, Blinka checks that the
+selected binding and metadata paths belong to the installed system package.
+Security-update revisions are not pinned, and importing ``gpiod`` before
+``board`` works normally. Package-manager queries are cached per process.
+
+This trusts the system administrator and package database; it is not a file
+integrity monitor. Restart Python after package upgrades rather than reloading
+native modules. Ordinary PyPI installs retain the conservative
+``gpiod>=2.2.2,<3`` baseline: old PyPI ``2.2.0`` has a native use-after-free
+during line requests, which a check for available API functions cannot detect.
+See the `upstream fix
+<https://github.com/brgl/libgpiod/commit/c497e29ca1f88963c525351e60af23ed896a2b8c>`_.
+
+For an application that manages its own dependencies, set
+``BLINKA_SKIP_DEPENDENCY_CHECK=1`` before importing ``board`` to disable its
+automatic dependency checks and installation prompts:
+
+.. code-block:: shell
+
+    BLINKA_SKIP_DEPENDENCY_CHECK=1 .env/bin/python program.py
+
+This does not install packages or make unsupported backends supported. Missing
+backend imports and PWM/NeoPixel feature checks still report errors.
 
 Raspberry Pi GPIO and PWM
 =========================
@@ -82,8 +144,10 @@ uses `Adafruit Blinka Raspberry Pi PWM
 <https://github.com/adafruit/Adafruit_Blinka_Raspberry_Pi_PWM>`_ on Pi 5 and earlier
 models. Configured BCM/RP1 hardware PWM is preferred on verified pin routes;
 other pins use native software PWM. This does not use PIO or change boot overlays.
-Dependency markers also install ``gpiod`` and the PWM package on other Linux ARM
-hosts; their board-specific backends are unchanged.
+Runtime checks select ``gpiod>=2.2.2,<3`` and
+``Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.2`` only for Raspberry Pi boards, rather
+than installing them on every Linux ARM host. These Pi backends require Linux
+5.10 or newer. NeoPixel support retains its separate dependencies.
 
 Software PWM accepts 1--10000 Hz, with Linux scheduling affecting timing and
 jitter. Configured hardware limits depend on its controller and driver, and

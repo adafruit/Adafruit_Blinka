@@ -38,6 +38,11 @@ def test_public_pwmio_routing(monkeypatch, flags, selected):
     agnostic = ModuleType("adafruit_blinka.agnostic")
     agnostic.detector = SimpleNamespace(board=BoardFlags(**flags))
     monkeypatch.setitem(sys.modules, "adafruit_blinka.agnostic", agnostic)
+    importing = ModuleType("adafruit_blinka.importing")
+    checks = []
+    importing.check_platform_dependency = checks.append
+    importing.raise_for_missing_platform_dependency = pytest.fail
+    monkeypatch.setitem(sys.modules, "adafruit_blinka.importing", importing)
     backends = {}
     for name in (
         "generic_linux.raspberry_pi_pwmout",
@@ -57,3 +62,8 @@ def test_public_pwmio_routing(monkeypatch, flags, selected):
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     assert module.PWMOut is backends[selected]
+    assert checks == (
+        ["adafruit_blinka_raspberry_pi_pwm"]
+        if selected == "generic_linux.raspberry_pi_pwmout"
+        else []
+    )

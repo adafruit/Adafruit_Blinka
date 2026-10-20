@@ -1,15 +1,8 @@
-Adafruit-PlatformDetect>=3.89.0
+Adafruit-PlatformDetect>=3.89.1
 Adafruit-PureIO>=1.1.7
 binho-host-adapter>=0.1.6
 pyftdi>=0.40.0
+packaging>=20.0
 adafruit-circuitpython-typing
 sysv_ipc>=1.1.0;sys_platform=='linux' and platform_machine!='mips'
 toml>=0.10.2;python_version<'3.11'
-Jetson.GPIO;sys_platform=='linux' and platform_machine=='aarch64'
-rpi_ws281x>=4.0.0;sys_platform=='linux' and (platform_machine=='armv6l' or platform_machine=='armv7l' or platform_machine=='aarch64')
-gpiod>=2.2.2,<3;sys_platform=='linux' and (platform_machine=='armv6l' or platform_machine=='armv7l' or platform_machine=='aarch64')
-Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.1;sys_platform=='linux' and (platform_machine=='armv6l' or platform_machine=='armv7l' or platform_machine=='aarch64')
-# Retained for the existing Jetson PWM backend; Raspberry Pi setup no longer needs it.
-RPi.GPIO;sys_platform=='linux' and (platform_machine=='armv6l' or platform_machine=='armv7l' or platform_machine=='aarch64')
-Adafruit-Blinka-Raspberry-Pi5-Neopixel;sys_platform=='linux' and platform_machine=='aarch64' and python_version>='3.11'
-Adafruit_BBIO>=1.2.4;sys_platform=='linux' and platform_machine=='armv7l'

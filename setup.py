@@ -21,30 +21,6 @@ here = os.path.abspath(os.path.dirname(__file__))
 with io.open(os.path.join(here, "README.rst"), encoding="utf-8") as f:
     long_description = "\n" + f.read()
 
-board_reqs = []
-if os.path.exists("/proc/device-tree/compatible"):
-    with open("/proc/device-tree/compatible", "rb") as f:
-        compat = f.read()
-    # Jetson Nano, TX2, Xavier, etc
-    if b"nvidia,tegra" in compat:
-        board_reqs = ["Jetson.GPIO"]
-    # Pi 5 and Earlier
-    elif (
-        b"brcm,bcm2835" in compat
-        or b"brcm,bcm2836" in compat
-        or b"brcm,bcm2837" in compat
-        or b"brcm,bcm2838" in compat
-        or b"brcm,bcm2711" in compat
-        or b"brcm,bcm2712" in compat
-    ):
-        board_reqs = [
-            "rpi_ws281x>=4.0.0",
-            "Adafruit-Blinka-Raspberry-Pi5-Neopixel",
-        ]
-    # BeagleBone Black, Green, PocketBeagle, BeagleBone AI, etc.
-    elif b"ti,am335x" in compat:
-        board_reqs = ["Adafruit_BBIO"]
-
 setup(
     name="Adafruit-Blinka",
     use_scm_version={
@@ -97,18 +73,11 @@ setup(
         "Adafruit-PureIO>=1.1.7",
         "binho-host-adapter>=0.1.6",
         "pyftdi>=0.40.0",
-        # Wheel metadata must retain these even when built on a non-Pi host.
-        "gpiod>=2.2.2,<3;sys_platform=='linux' and "
-        "(platform_machine=='armv6l' or platform_machine=='armv7l' "
-        "or platform_machine=='aarch64')",
-        "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.1;sys_platform=='linux' and "
-        "(platform_machine=='armv6l' or platform_machine=='armv7l' "
-        "or platform_machine=='aarch64')",
+        "packaging>=20.0",
         "adafruit-circuitpython-typing",
         "sysv_ipc>=1.1.0;sys_platform=='linux' and platform_machine!='mips'",
         "toml>=0.10.2;python_version<'3.11'",
-    ]
-    + board_reqs,
+    ],
     license="MIT",
     classifiers=[
         # Trove classifiers
