@@ -10,7 +10,9 @@ These modes are not alternate I2C/UART data pins, and are not digitalio modes.
 UART indicators require traffic on the separate USB serial port.
 
 Settings are volatile until reset. No flash configuration is written. This
-example restores the three pins to GPIO inputs on exit; normal GPIO/ADC/DAC
+example restores the three pins to GPIO inputs on exit while the USB session
+is healthy. After a USB transport error, reconnect the device and restart the
+program; cleanup cannot guarantee the physical pin state. Normal GPIO/ADC/DAC
 configuration of a pin also replaces that pin's activity-indicator mode.
 """
 

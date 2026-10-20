@@ -189,12 +189,15 @@ class InertHID:
         assert len(report) == 65
         assert report[0] == 0
         self.commands.append(bytes(report[1:]))
+        return len(report)
 
     def read(self, length):
-        """Return a successful, empty response."""
+        """Return a successful response with the command echo."""
         assert self.opened
         assert length == 64
-        return bytearray(length)
+        response = bytearray(length)
+        response[0] = self.commands[-1][0]
+        return response
 
 
 @pytest.fixture
@@ -232,11 +235,14 @@ def test_sram_mode_change_preserves_other_gp_settings(
     expected_settings[pin_id] = raw_mode
     report = bytearray(64)
     report[0] = 0x60
+    report[3] = 0x80
+    report[5] = 0x80
     report[7] = 0xFF
     report[8:12] = expected_settings
-    assert device.commands == [bytes(report)]
+    expected_reports = [b"\x61" + bytes(63), bytes(report)]
+    assert device.commands == expected_reports
     assert backend._gp_config == expected_settings
 
     backend.gp_set_mode(pin_id, raw_mode)
-    assert device.commands == [bytes(report)]
+    assert device.commands == expected_reports
     assert backend._gp_config == expected_settings
