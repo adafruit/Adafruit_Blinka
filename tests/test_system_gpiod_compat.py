@@ -28,6 +28,7 @@ def system_binding(tmp_path, monkeypatch):  # pylint: disable=too-many-locals
     extension = package / "_ext.cpython-313-aarch64-linux-gnu.so"
     for path in (package / "__init__.py", metadata, extension):
         path.write_text("# maintained system package\n", encoding="utf-8")
+    metadata.write_text("Name: gpiod\nVersion: 2.2.0\n", encoding="utf-8")
 
     def forbidden_gpio(*_args, **_kwargs):
         pytest.fail("compatibility detection must not open/request GPIOs")
@@ -46,7 +47,7 @@ def system_binding(tmp_path, monkeypatch):  # pylint: disable=too-many-locals
         if name == "gpiod" or name.startswith("gpiod."):
             monkeypatch.delitem(sys.modules, name)
     distribution = SimpleNamespace(
-        version="2.2.0", locate_file=lambda name: site / name
+        version="2.2.0", locate_file=lambda name: site / name, _path=metadata.parent
     )
     state = SimpleNamespace(
         site=site,
@@ -105,6 +106,42 @@ def test_accepts_preloaded_system_bindings(system_binding, monkeypatch):
     monkeypatch.setitem(sys.modules, "gpiod", system_binding.module)
     monkeypatch.setitem(sys.modules, "gpiod._ext", system_binding.native)
     assert compat.is_supported_system_gpiod()
+
+
+def test_accepts_actual_system_metadata_directory(system_binding, monkeypatch):
+    """Check the real stdlib distribution's origin, not a constructed path."""
+    distribution = compat.importlib.metadata.PathDistribution(
+        system_binding.metadata.parent
+    )
+    monkeypatch.setattr(
+        compat.importlib.metadata, "distribution", lambda _name: distribution
+    )
+    assert distribution.version == "2.2.0"
+    assert compat.is_supported_system_gpiod()
+
+
+def test_rejects_unowned_selected_metadata_in_same_system_root(
+    system_binding, monkeypatch
+):
+    """Another metadata directory shares locate_file's root but not ownership."""
+    selected = system_binding.site / "gpiod-2.2.0.egg-info"
+    selected.mkdir()
+    (selected / "PKG-INFO").write_text(
+        "Name: gpiod\nVersion: 2.2.0\n", encoding="utf-8"
+    )
+    distribution = compat.importlib.metadata.PathDistribution(selected)
+    monkeypatch.setattr(
+        compat.importlib.metadata, "distribution", lambda _name: distribution
+    )
+    assert distribution.version == "2.2.0"
+    assert distribution.locate_file("") == system_binding.site
+    assert not compat.is_supported_system_gpiod()
+
+
+def test_rejects_distribution_without_metadata_origin(system_binding):
+    """An unavailable concrete metadata origin cannot qualify for the exception."""
+    del system_binding.distribution._path
+    assert not compat.is_supported_system_gpiod()
 
 
 @pytest.mark.parametrize("upstream", ["2.2.1", "2.2.2", "2.3", "2.9.1"])

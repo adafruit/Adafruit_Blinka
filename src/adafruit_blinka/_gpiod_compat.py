@@ -89,6 +89,10 @@ def is_supported_system_gpiod():
         distribution = importlib.metadata.distribution("gpiod")
         package = _SYSTEM_SITE / "gpiod"
         metadata = _SYSTEM_SITE / "gpiod-2.2.0.dist-info" / "METADATA"
+        # locate_file() uses the installation root, not the selected metadata
+        # directory. PathDistribution exposes that origin only through _path;
+        # decline the exception if another provider cannot identify its origin.
+        metadata_directory = getattr(distribution, "_path", None)
         extension = Path(native.__file__)
         if (
             module.__version__ != "2.2.0"
@@ -96,9 +100,8 @@ def is_supported_system_gpiod():
             or not _same_path(module.__file__, package / "__init__.py")
             or list(module.__path__) != [str(package)]
             or not _same_path(distribution.locate_file(""), _SYSTEM_SITE)
-            or not _same_path(
-                distribution.locate_file("gpiod-2.2.0.dist-info/METADATA"), metadata
-            )
+            or metadata_directory is None
+            or not _same_path(Path(metadata_directory) / "METADATA", metadata)
             or extension.parent != package
             or extension.suffix != ".so"
             or not _same_path(extension, extension)
