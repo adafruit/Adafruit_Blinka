@@ -98,8 +98,6 @@ class MCP2221:
         mode &= 0x07
         if mode == (self._gp_config[pin] & 0x07):
             return
-        # update GP mode for pin
-        self._gp_config[pin] = mode
         # empty report, this is safe since 0's = no change
         report = bytearray(b"\x60" + b"\x00" * 63)
         # set the alter GP flag byte
@@ -109,8 +107,11 @@ class MCP2221:
         report[9] = self._gp_config[1]
         report[10] = self._gp_config[2]
         report[11] = self._gp_config[3]
+        report[8 + pin] = mode
         # and make it so
         self._hid_xfer(report)
+        # A failed transfer must not make a retry look like a no-op.
+        self._gp_config[pin] = mode
 
     def _pretty_report(self, register):
         report = self._hid_xfer(register)
@@ -151,31 +152,35 @@ class MCP2221:
     # ----------------------------------------------------------------
     def gpio_set_direction(self, pin, mode):
         """Set Current GPIO Pin Direction"""
+        config = self._gp_config[pin]
         if mode:
             # set bit 3 for INPUT
-            self._gp_config[pin] |= 1 << 3
+            config |= 1 << 3
         else:
             # clear bit 3 for OUTPUT
-            self._gp_config[pin] &= ~(1 << 3)
+            config &= ~(1 << 3)
         report = bytearray(b"\x50" + b"\x00" * 63)  # empty set GPIO report
         offset = 4 * (pin + 1)
         report[offset] = 0x01  # set pin direction
         report[offset + 1] = mode  # to this
         self._hid_xfer(report)
+        self._gp_config[pin] = config
 
     def gpio_set_pin(self, pin, value):
         """Set Current GPIO Pin Value"""
+        config = self._gp_config[pin]
         if value:
             # set bit 4
-            self._gp_config[pin] |= 1 << 4
+            config |= 1 << 4
         else:
             # clear bit 4
-            self._gp_config[pin] &= ~(1 << 4)
+            config &= ~(1 << 4)
         report = bytearray(b"\x50" + b"\x00" * 63)  # empty set GPIO report
         offset = 2 + 4 * pin
         report[offset] = 0x01  # set pin value
         report[offset + 1] = value  # to this
         self._hid_xfer(report)
+        self._gp_config[pin] = config
 
     def gpio_get_pin(self, pin):
         """Get Current GPIO Pin Value"""
