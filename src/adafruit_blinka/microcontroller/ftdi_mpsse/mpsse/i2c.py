@@ -22,6 +22,10 @@ class I2C:
             raise NotImplementedError("Only I2C Master supported!")
         _mode = self.MASTER
 
+        # Accept the MicroPython-style alias used by busio's numbered I2C ports.
+        if baudrate is not None:
+            frequency = baudrate
+
         # change GPIO controller to I2C
         # pylint: disable=import-outside-toplevel
         from pyftdi.i2c import I2cController
