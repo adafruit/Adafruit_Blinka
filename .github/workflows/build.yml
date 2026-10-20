@@ -58,6 +58,7 @@ jobs:
           tests/test_ftdi_i2c.py \
           tests/test_mcp2221_i2c.py \
           tests/test_mcp2221_hid.py \
+          tests/test_mcp2221_led_modes.py \
           tests/test_pin_repr.py \
           tests/test_rainbowio.py \
           tests/test_platform_dependencies.py \

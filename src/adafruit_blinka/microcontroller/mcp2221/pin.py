@@ -13,6 +13,10 @@ class Pin:
     IN = 1
     ADC = 2
     DAC = 3
+    # Autonomous activity indicators, specific to the MCP2221.
+    LED_URX = 4
+    LED_UTX = 5
+    LED_I2C = 6
     # pin values
     LOW = 0
     HIGH = 1
@@ -43,6 +47,18 @@ class Pin:
                 raise ValueError("Pin does not have DAC capabilities")
             mcp2221.gp_set_mode(self.id, mcp2221.GP_ALT1)
             mcp2221.dac_configure()
+        elif mode == Pin.LED_URX:
+            if self.id != 0:
+                raise ValueError("UART receive indicator is only available on G0")
+            mcp2221.gp_set_mode(self.id, mcp2221.GP_ALT0)
+        elif mode == Pin.LED_UTX:
+            if self.id != 1:
+                raise ValueError("UART transmit indicator is only available on G1")
+            mcp2221.gp_set_mode(self.id, mcp2221.GP_ALT1)
+        elif mode == Pin.LED_I2C:
+            if self.id != 3:
+                raise ValueError("I2C activity indicator is only available on G3")
+            mcp2221.gp_set_mode(self.id, mcp2221.GP_DEDICATED)
         else:
             raise ValueError("Incorrect pin mode: {}".format(mode))
         self._mode = mode

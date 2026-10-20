@@ -56,3 +56,17 @@ This applies to USB transport failures, not ordinary I2C busy or NACK
 responses. Complete, matching responses still use the existing I2C error
 handling, and scans continue past unsuccessful address probes. A transport
 failure aborts the scan instead of appearing as an empty or partial device list.
+
+MCP2221 activity LEDs
+~~~~~~~~~~~~~~~~~~~~~
+
+The MCP2221 exposes chip-specific, autonomous activity indicators on G0
+(UART receive), G1 (UART transmit), and G3 (I2C). These do not change the
+CircuitPython-facing ``digitalio`` or ``busio`` APIs. Pin assignments and
+active-low signaling are described in the `MCP2221A datasheet
+<https://ww1.microchip.com/downloads/aemDocuments/documents/APID/ProductDocuments/DataSheets/MCP2221A-Data-Sheet-20005565E.pdf>`_
+(Table 1-5 and Sections 1.7.1.4--1.7.1.6).
+
+.. literalinclude:: ../examples/mcp2221_activity_leds.py
+    :caption: examples/mcp2221_activity_leds.py
+    :linenos:
