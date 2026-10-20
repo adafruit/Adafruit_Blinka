@@ -14,6 +14,7 @@ import sys
 import warnings
 
 from packaging.requirements import Requirement
+from packaging.version import InvalidVersion
 
 _OPTIONAL_BACKENDS = {
     "_rpi_ws281x",
@@ -57,6 +58,32 @@ def get_platform_dependencies(detector, python_version=None):
     return []
 
 
+def _installed_version_supported(module_name, requirement, installed_version):
+    """Check normal version bounds or the verified Trixie gpiod exception."""
+    try:
+        supported = requirement.specifier.contains(installed_version, prereleases=True)
+        if module_name == "gpiod" and sys.modules.get("gpiod") is not None:
+            # Replacing files cannot upgrade an already loaded native binding.
+            supported = supported and requirement.specifier.contains(
+                getattr(sys.modules["gpiod"], "__version__", ""), prereleases=True
+            )
+    except (InvalidVersion, TypeError):
+        supported = False
+    if (
+        supported
+        or module_name != "gpiod"
+        or installed_version != "2.2.0"
+        or not requirement.specifier.contains("2.2.2", prereleases=True)
+    ):
+        return supported
+
+    # Debian's maintained source has fixes absent from PyPI's 2.2.0. The label
+    # alone cannot distinguish them; verify the selected OS package and files.
+    from ._gpiod_compat import is_supported_system_gpiod
+
+    return is_supported_system_gpiod()
+
+
 def _requirement_available(module_name, requirement):
     """Return whether an import and its required distribution version are available."""
     try:
@@ -74,7 +101,9 @@ def _requirement_available(module_name, requirement):
     except importlib.metadata.PackageNotFoundError:
         return False
 
-    return parsed_requirement.specifier.contains(installed_version, prereleases=True)
+    return _installed_version_supported(
+        module_name, parsed_requirement, installed_version
+    )
 
 
 def get_missing_platform_dependencies(detector, python_version=None):
@@ -150,7 +179,7 @@ def check_platform_dependency(detector, import_name, python_version=None):
         # Let the backend import report missing modules; OS packages may have
         # no Python distribution metadata at all.
         return
-    if not parsed.specifier.contains(installed_version, prereleases=True):
+    if not _installed_version_supported(import_name, parsed, installed_version):
         install_command = format_install_command([requirement], sys.executable)
         raise RuntimeError(
             f"The platform library '{import_name}' has unsupported installed version "
@@ -162,9 +191,7 @@ def check_platform_dependency(detector, import_name, python_version=None):
 def _outdated_platform_dependencies(detector, python_version):
     """Return installed distributions outside this platform's version bounds."""
     outdated = []
-    for _module_name, requirement in get_platform_dependencies(
-        detector, python_version
-    ):
+    for module_name, requirement in get_platform_dependencies(detector, python_version):
         parsed_requirement = Requirement(requirement)
         if not parsed_requirement.specifier:
             continue
@@ -172,8 +199,8 @@ def _outdated_platform_dependencies(detector, python_version):
             installed_version = importlib.metadata.version(parsed_requirement.name)
         except importlib.metadata.PackageNotFoundError:
             continue
-        if not parsed_requirement.specifier.contains(
-            installed_version, prereleases=True
+        if not _installed_version_supported(
+            module_name, parsed_requirement, installed_version
         ):
             outdated.append(requirement)
     return outdated

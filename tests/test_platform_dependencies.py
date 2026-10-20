@@ -15,6 +15,7 @@ import pytest
 
 from adafruit_blinka import importing
 from adafruit_blinka import platform_dependencies
+from adafruit_blinka import _gpiod_compat
 
 # Pytest supplies the named fixtures.
 # pylint: disable=redefined-outer-name
@@ -24,6 +25,9 @@ from adafruit_blinka import platform_dependencies
 def dependency_check_environment(monkeypatch):
     """Isolate startup-policy tests from a user's configured opt-out."""
     monkeypatch.delenv("BLINKA_SKIP_DEPENDENCY_CHECK", raising=False)
+    # These tests exercise policy; provenance is tested with real file/checksum
+    # operations in test_system_gpiod_compat.py, not against the test host's OS.
+    monkeypatch.setattr(_gpiod_compat, "is_supported_system_gpiod", lambda: False)
 
 
 def _detector(chip_id=None, **board_values):
@@ -571,6 +575,84 @@ def test_gpiod_220_label_requires_supported_install_or_explicit_opt_out(
             platform_dependencies.install_missing_platform_dependencies(
                 _detector(any_raspberry_pi=True)
             )
+
+
+@pytest.mark.parametrize("verified", [False, True])
+def test_trixie_exception_is_consistent_at_startup_and_feature_use(
+    monkeypatch, verified
+):
+    detector = _detector(any_raspberry_pi=True)
+    monkeypatch.setattr(
+        platform_dependencies,
+        "get_platform_dependencies",
+        lambda *_args: [("gpiod", "gpiod>=2.2.2,<3")],
+    )
+    monkeypatch.setattr(
+        platform_dependencies.importlib.util, "find_spec", lambda _name: object()
+    )
+    monkeypatch.setattr(
+        platform_dependencies.importlib.metadata, "version", lambda _name: "2.2.0"
+    )
+    monkeypatch.setattr(_gpiod_compat, "is_supported_system_gpiod", lambda: verified)
+    monkeypatch.setattr(sys, "stdin", io.StringIO())
+    monkeypatch.setattr(
+        platform_dependencies.subprocess,
+        "run",
+        lambda *_args, **_kwargs: pytest.fail("No pip during non-interactive startup"),
+    )
+    assert platform_dependencies.get_missing_platform_dependencies(detector) == (
+        [] if verified else ["gpiod>=2.2.2,<3"]
+    )
+    if verified:
+        assert not platform_dependencies.install_missing_platform_dependencies(detector)
+        platform_dependencies.check_platform_dependency(detector, "gpiod")
+    else:
+        with pytest.raises(RuntimeError, match="unsupported versions"):
+            platform_dependencies.install_missing_platform_dependencies(detector)
+        with pytest.raises(RuntimeError, match="unsupported installed version"):
+            platform_dependencies.check_platform_dependency(detector, "gpiod")
+
+
+@pytest.mark.parametrize("loaded_version", ["2.2.0", "3.0.0", "invalid", None])
+def test_new_metadata_cannot_hide_an_incompatible_loaded_gpiod(
+    monkeypatch, loaded_version
+):
+    detector = _detector(any_raspberry_pi=True)
+    monkeypatch.setattr(
+        platform_dependencies,
+        "get_platform_dependencies",
+        lambda *_args: [("gpiod", "gpiod>=2.2.2,<3")],
+    )
+    monkeypatch.setattr(
+        platform_dependencies.importlib.util, "find_spec", lambda _name: object()
+    )
+    monkeypatch.setattr(
+        platform_dependencies.importlib.metadata, "version", lambda _name: "2.2.2"
+    )
+    monkeypatch.setitem(
+        sys.modules, "gpiod", SimpleNamespace(__version__=loaded_version)
+    )
+    monkeypatch.setattr(sys, "stdin", io.StringIO())
+    assert platform_dependencies.get_missing_platform_dependencies(detector) == [
+        "gpiod>=2.2.2,<3"
+    ]
+    with pytest.raises(RuntimeError, match="restart Python"):
+        platform_dependencies.install_missing_platform_dependencies(detector)
+    with pytest.raises(RuntimeError, match="restart Python"):
+        platform_dependencies.check_platform_dependency(detector, "gpiod")
+
+
+def test_verified_trixie_does_not_satisfy_a_future_higher_minimum(monkeypatch):
+    monkeypatch.setattr(_gpiod_compat, "is_supported_system_gpiod", lambda: True)
+    monkeypatch.setattr(
+        platform_dependencies.importlib.util, "find_spec", lambda _name: object()
+    )
+    monkeypatch.setattr(
+        platform_dependencies.importlib.metadata, "version", lambda _name: "2.2.0"
+    )
+    assert not platform_dependencies._requirement_available(  # pylint: disable=protected-access
+        "gpiod", "gpiod>=2.3,<3"
+    )
 
 
 @pytest.mark.parametrize(
