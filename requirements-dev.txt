@@ -1,0 +1,3 @@
+# compare blinka's implementation vs the stubs coming from CircuitPython's implementation
+circuitpython-stubs
+mypy
