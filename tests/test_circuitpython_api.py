@@ -533,3 +533,38 @@ def test_importing_checker_does_not_import_production_modules(checker):
     assert checker.SOURCE == ROOT / "src"
     assert "usb_hid" not in checker.CHECKED_MODULES
     assert "pulseio" not in checker.CHECKED_MODULES
+
+
+@pytest.mark.parametrize(
+    "message",
+    [
+        "busio encountered unexpected error, CheckError: "
+        "Blocked hardware/kernel access: /dev/example",
+        "busio encountered unexpected error, RuntimeError: introspection failed",
+        "busio unrecognized verification failure",
+    ],
+)
+def test_introspection_failures_are_not_api_diagnostics(checker, message):
+    # Real mypy 2.4.0 test_module emits the first format when runtime __dir__
+    # raises CheckError. It is not evidence of a completed API comparison.
+    process = subprocess.CompletedProcess([], 1, stdout=message + "\n", stderr="")
+    with pytest.raises(checker.CheckError, match="Unexpected stubtest output"):
+        checker.parse_diagnostics(process)
+
+
+def test_update_cannot_baseline_a_caught_audit_failure(cli, monkeypatch, tmp_path):
+    process = subprocess.CompletedProcess(
+        [],
+        1,
+        stdout="busio encountered unexpected error, CheckError: "
+        "Blocked hardware/kernel access: /dev/example\n",
+        stderr="",
+    )
+    monkeypatch.setattr(cli, "run_stubtest", lambda: cli.parse_diagnostics(process))
+    previous = cli.BASELINE.read_bytes()
+    report_path = tmp_path / "failure.json"
+    assert cli.main(["--update-baseline", "--json", str(report_path)]) == 2
+    assert cli.BASELINE.read_bytes() == previous
+    report = json.loads(report_path.read_text())
+    assert report["diagnostics"] == []
+    assert "encountered unexpected error" in report["errors"][0]

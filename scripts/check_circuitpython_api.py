@@ -243,7 +243,10 @@ def parse_diagnostics(process):
         if (
             not match
             or match[1].split(".")[0] not in CHECKED_MODULES
-            or "failed to import" in match[2]
+            # The pinned tool's API differences start with "is". In particular,
+            # "encountered unexpected error" means verification did not finish,
+            # including when stubtest catches one of our audit exceptions.
+            or not match[2].startswith("is ")
         ):
             raise CheckError("Unexpected stubtest output:\n" + process.stdout.strip())
         diagnostics.append(line)
