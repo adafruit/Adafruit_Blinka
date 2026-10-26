@@ -8,7 +8,7 @@ import json
 import os
 from pathlib import Path, PurePosixPath
 import subprocess
-from types import SimpleNamespace
+from types import ModuleType, SimpleNamespace
 
 import pytest
 
@@ -541,7 +541,8 @@ def test_importing_checker_does_not_import_production_modules(checker):
         "busio encountered unexpected error, CheckError: "
         "Blocked hardware/kernel access: /dev/example",
         "busio encountered unexpected error, RuntimeError: introspection failed",
-        "busio unrecognized verification failure",
+        "busio failed to find stubs",
+        "busio.Widget is an unknown mypy node",
     ],
 )
 def test_introspection_failures_are_not_api_diagnostics(checker, message):
@@ -568,3 +569,115 @@ def test_update_cannot_baseline_a_caught_audit_failure(cli, monkeypatch, tmp_pat
     report = json.loads(report_path.read_text())
     assert report["diagnostics"] == []
     assert "encountered unexpected error" in report["errors"][0]
+
+
+@pytest.mark.parametrize(
+    "message",
+    [
+        "busio.I2C has `__final__` attribute, but isn't marked with @final in the stub",
+        "busio.I2C cannot be subclassed at runtime, but isn't marked with @final in the stub",
+        "busio.I2C metaclass mismatch",
+        "busio.__all__ names exported from the stub do not correspond "
+        "to the names exported at runtime.",
+        "busio.value variable differs from runtime type int",
+    ],
+)
+def test_legitimate_non_is_api_findings_can_be_reported_and_baselined(
+    cli, monkeypatch, message
+):
+    process = subprocess.CompletedProcess([], 1, stdout=message + "\n", stderr="")
+    assert cli.parse_diagnostics(process) == [message]
+    monkeypatch.setattr(cli, "run_stubtest", lambda: cli.parse_diagnostics(process))
+    assert cli.main(["--update-baseline"]) == 0
+    assert json.loads(cli.BASELINE.read_text())["diagnostics"] == [message]
+
+
+def test_real_stubtest_introspection_failure_is_rejected(checker, monkeypatch):
+    """Exercise the pinned tool, using only synthetic runtime objects."""
+    nodes = pytest.importorskip("mypy.nodes")
+    stubtest = pytest.importorskip("mypy.stubtest")
+
+    class BrokenModule(ModuleType):
+        def __dir__(self):
+            raise checker.CheckError("Blocked hardware/kernel access: /dev/example")
+
+    runtime = BrokenModule("busio")
+    stub = nodes.MypyFile([], [], False)
+    stub._fullname = "busio"  # pylint: disable=protected-access
+    stub.names = {}
+    monkeypatch.setattr(stubtest, "get_stub", lambda _: stub)
+    monkeypatch.setattr(stubtest, "silent_import_module", lambda _: runtime)
+    lines = [
+        error.get_description(concise=True) for error in stubtest.test_module("busio")
+    ]
+    assert lines == [
+        "busio encountered unexpected error, CheckError: "
+        "Blocked hardware/kernel access: /dev/example"
+    ]
+    process = subprocess.CompletedProcess(
+        [], 1, stdout="\n".join(lines) + "\n", stderr=""
+    )
+    with pytest.raises(checker.CheckError, match="Unexpected stubtest output"):
+        checker.parse_diagnostics(process)
+
+
+def test_real_stubtest_finality_findings_are_preserved(checker):
+    nodes = pytest.importorskip("mypy.nodes")
+    stubtest = pytest.importorskip("mypy.stubtest")
+    stub = nodes.TypeInfo(
+        nodes.SymbolTable(), nodes.ClassDef("I2C", nodes.Block([])), "busio"
+    )
+
+    class FinalRuntime:  # pylint: disable=too-few-public-methods
+        __final__ = True
+
+    class CannotSubclass:  # pylint: disable=too-few-public-methods
+        def __init_subclass__(cls):
+            raise TypeError("Cannot subclass")
+
+    for runtime, prefix in ((FinalRuntime, "has"), (CannotSubclass, "cannot")):
+        # The private helper belongs to the exact pinned development tool.
+        # pylint: disable=protected-access
+        errors = list(stubtest._verify_final(stub, runtime, ["busio", "I2C"]))
+        # pylint: enable=protected-access
+        assert len(errors) == 1
+        assert not errors[0].is_missing_stub()
+        line = errors[0].get_description(concise=True)
+        assert line.startswith("busio.I2C " + prefix)
+        process = subprocess.CompletedProcess([], 1, stdout=line + "\n", stderr="")
+        assert checker.parse_diagnostics(process) == [line]
+
+
+def test_worker_rejects_swallowed_audit_failure(checker, monkeypatch, tmp_path):
+    """No real imports or permanent hooks: emulate a tool catching the exception."""
+    guard = checker.audit_guard(tmp_path)
+    registered = []
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(checker.sys, "path", list(checker.sys.path))
+    monkeypatch.setattr(checker.sys, "argv", list(checker.sys.argv))
+    monkeypatch.setattr(
+        checker.sys, "dont_write_bytecode", checker.sys.dont_write_bytecode
+    )
+    monkeypatch.setattr(checker.sys, "addaudithook", registered.append)
+    monkeypatch.setattr(checker, "audit_guard", lambda _: guard)
+
+    def import_fake(name):
+        if name == "adafruit_blinka.agnostic":
+            return SimpleNamespace(chip_id=checker.TARGET, board_id="OS_AGNOSTIC_BOARD")
+        return SimpleNamespace(__file__=str(checker.SOURCE / (name + ".py")))
+
+    def swallow():
+        try:
+            guard("open", ("/dev/example", "r", os.O_RDONLY))
+        except checker.CheckError:
+            pass
+        return 0
+
+    fake_mypy = ModuleType("mypy")
+    fake_mypy.stubtest = SimpleNamespace(main=swallow)
+    monkeypatch.setitem(checker.sys.modules, "mypy", fake_mypy)
+    monkeypatch.setattr(checker.importlib, "import_module", import_fake)
+    with pytest.raises(checker.CheckError, match="caught an audit failure"):
+        checker.stubtest_worker()
+    assert registered == [guard]
+    assert len(guard.failures) == 1

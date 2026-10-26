@@ -89,7 +89,9 @@ jobs:
       with:
         python-version: '3.11'
     - name: Install API comparison tools
-      run: python -m pip install -r requirements-api.txt
+      run: python -m pip install -r requirements-api.txt pytest
+    - name: Test checker with pinned tools
+      run: python -m pytest -q tests/test_circuitpython_api.py
     - name: Compare API surface and baseline
       env:
         GH_TOKEN: ${{ github.token }}

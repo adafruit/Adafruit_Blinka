@@ -145,6 +145,7 @@ def worker_environment(scratch):
 def audit_guard(scratch):
     """Defense in depth for the fixed import profile, not a malicious-code sandbox."""
     scratch = Path(scratch).resolve()
+    failures = []
     blocked_imports = {
         "hid",
         "gpiod",
@@ -156,6 +157,12 @@ def audit_guard(scratch):
         "usb_hid",
     }
 
+    def reject(message):
+        # Introspection tools sometimes catch exceptions themselves. Retain the
+        # attempt so a swallowed guard failure cannot produce a passing report.
+        failures.append(message)
+        raise CheckError(message)
+
     def check_path(value, write=False):
         if not isinstance(value, (str, bytes, os.PathLike)):
             return
@@ -166,20 +173,20 @@ def audit_guard(scratch):
             path == base or base in path.parents
             for base in (Path("/dev"), Path("/proc"), Path("/sys"))
         ):
-            raise CheckError(f"Blocked hardware/kernel access: {path}")
+            reject(f"Blocked hardware/kernel access: {path}")
         if write and path != scratch and scratch not in path.parents:
-            raise CheckError(f"Blocked write outside checker scratch directory: {path}")
+            reject(f"Blocked write outside checker scratch directory: {path}")
 
     def guard(event, args):
         if event == "import":
             name = args[0]
             if name.split(".")[0] in blocked_imports:
-                raise CheckError(f"Blocked hardware import: {name}")
+                reject(f"Blocked hardware import: {name}")
             prefix = "adafruit_blinka.microcontroller."
             if name.startswith(prefix) and not name.startswith(
                 prefix + "generic_agnostic_board"
             ):
-                raise CheckError(f"Blocked non-agnostic backend: {name}")
+                reject(f"Blocked non-agnostic backend: {name}")
         elif event == "open":
             mode, flags = args[1:3]
             write = bool(flags & (os.O_WRONLY | os.O_RDWR | os.O_CREAT | os.O_TRUNC))
@@ -195,8 +202,9 @@ def audit_guard(scratch):
         elif event.startswith(
             ("subprocess.", "socket.", "os.exec", "os.spawn")
         ) or event in ("os.system", "os.fork", "ctypes.dlopen"):
-            raise CheckError(f"Blocked external/native operation: {event}")
+            reject(f"Blocked external/native operation: {event}")
 
+    guard.failures = failures
     return guard
 
 
@@ -204,7 +212,8 @@ def stubtest_worker():
     """Run the pinned checker in a fresh process, with no real hardware backends."""
     sys.dont_write_bytecode = True
     sys.path.insert(0, str(SOURCE))
-    sys.addaudithook(audit_guard(Path.cwd()))
+    guard = audit_guard(Path.cwd())
+    sys.addaudithook(guard)
     agnostic = importlib.import_module("adafruit_blinka.agnostic")
     if (agnostic.chip_id, agnostic.board_id) != (TARGET, "OS_AGNOSTIC_BOARD"):
         raise CheckError("The checker did not select the OS-agnostic target.")
@@ -226,7 +235,12 @@ def stubtest_worker():
         "--mypy-config-file",
         str(config),
     ]
-    return stubtest.main()
+    result = stubtest.main()
+    if guard.failures:
+        raise CheckError(
+            "A verification step caught an audit failure: " + guard.failures[0]
+        )
+    return result
 
 
 def parse_diagnostics(process):
@@ -243,10 +257,16 @@ def parse_diagnostics(process):
         if (
             not match
             or match[1].split(".")[0] not in CHECKED_MODULES
-            # The pinned tool's API differences start with "is". In particular,
-            # "encountered unexpected error" means verification did not finish,
+            # These pinned-tool formats mean comparison did not finish,
             # including when stubtest catches one of our audit exceptions.
-            or not match[2].startswith("is ")
+            # Actual API findings use several verbs; do not filter those out.
+            or match[2].startswith(
+                (
+                    "failed to ",
+                    "encountered unexpected error",
+                    "is an unknown mypy node",
+                )
+            )
         ):
             raise CheckError("Unexpected stubtest output:\n" + process.stdout.strip())
         diagnostics.append(line)
