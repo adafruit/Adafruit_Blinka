@@ -502,20 +502,20 @@ class SPI(Lockable):
                 "Frequency attribute not implemented for this platform"
             ) from error
 
-    def write(self, buf, start=0, end=None):
+    def write(self, buffer, start=0, end=None):
         """Write to the SPI device"""
-        return self._spi.write(buf, start, end)
+        return self._spi.write(buffer, start, end)
 
-    def readinto(self, buf, start=0, end=None, write_value=0):
+    def readinto(self, buffer, start=0, end=None, write_value=0):
         """Read from the SPI device into a buffer"""
-        return self._spi.readinto(buf, start, end, write_value=write_value)
+        return self._spi.readinto(buffer, start, end, write_value=write_value)
 
     def write_readinto(
-        self, buffer_out, buffer_in, out_start=0, out_end=None, in_start=0, in_end=None
+        self, out_buffer, in_buffer, out_start=0, out_end=None, in_start=0, in_end=None
     ):
         """Write to the SPI device and read from the SPI device into a buffer"""
         return self._spi.write_readinto(
-            buffer_out, buffer_in, out_start, out_end, in_start, in_end
+            out_buffer, in_buffer, out_start, out_end, in_start, in_end
         )
 
 
