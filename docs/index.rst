@@ -21,6 +21,11 @@ Table of Contents
     api
 
 .. toctree::
+    :caption: Development
+
+    api_compatibility
+
+.. toctree::
     :caption: Other Links
 
     Download <https://github.com/adafruit/adafruit_CircuitPython_Blinka/releases/latest>
