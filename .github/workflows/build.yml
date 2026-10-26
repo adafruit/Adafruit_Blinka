@@ -55,6 +55,7 @@ jobs:
           tests/test_usb_hid.py \
           tests/test_pwm_chip_aliases.py \
           tests/test_agnostic_time.py \
+          tests/test_busio_i2c.py \
           tests/test_ftdi_i2c.py \
           tests/test_mcp2221_i2c.py \
           tests/test_mcp2221_hid.py \
