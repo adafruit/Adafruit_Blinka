@@ -23,8 +23,9 @@ from adafruit_blinka import _gpiod_compat
 
 @pytest.fixture(autouse=True)
 def dependency_check_environment(monkeypatch):
-    """Isolate startup-policy tests from a user's configured opt-out."""
+    """Isolate startup policy from the host's opt-out and installer tools."""
     monkeypatch.delenv("BLINKA_SKIP_DEPENDENCY_CHECK", raising=False)
+    monkeypatch.setattr(platform_dependencies, "_pip_available", lambda: True)
     # System package origin/version handling is tested separately, rather than
     # querying the test host's package database from startup-policy tests.
     monkeypatch.setattr(_gpiod_compat, "is_supported_system_gpiod", lambda: False)
@@ -475,7 +476,12 @@ def installer(monkeypatch):
 
 
 @pytest.mark.parametrize("answer", ["", "y", "Y", "yes", " YES "])
-def test_installer_accepts_confirmation_and_invalidates_cache(installer, answer):
+def test_installer_accepts_confirmation_and_invalidates_cache(
+    monkeypatch, installer, answer
+):
+    monkeypatch.setattr(
+        platform_dependencies.shutil, "which", lambda _name: "/uv tools/bin/uv"
+    )
     installer.answer = answer
     assert installer.run()
     assert len(installer.prompts) == 1

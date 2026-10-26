@@ -87,6 +87,32 @@ On supported GNU/Linux systems like the Raspberry Pi, install
     source .env/bin/activate
     pip3 install Adafruit-Blinka
 
+Environments created with uv
+----------------------------
+
+By default, ``uv venv`` does not install pip into the environment. Blinka's
+automatic installer requires pip; it does not install pip or run uv for you.
+If pip has no runnable entry point, a confirmed installation reports manual
+recovery guidance without launching an installer. Missing optional PWM/NeoPixel
+packages still do not block unrelated GPIO use.
+
+Use uv to install the required backends into the same environment. For Raspberry
+Pi GPIO, for example:
+
+.. code-block:: shell
+
+    uv venv .env
+    uv pip install --python .env/bin/python Adafruit-Blinka 'gpiod>=2.2.2,<3'
+
+Add the PWM or NeoPixel backend if needed, and run your program with
+``.env/bin/python``. Manual recovery commands use the running interpreter's path
+so an unrelated active environment is not selected. After installing dependencies
+while Python is running, restart it before trying again. See uv's
+`Python environment documentation
+<https://docs.astral.sh/uv/pip/environments/#using-arbitrary-python-environments>`_.
+For pip-backed interactive installation, create the environment with
+``uv venv --seed .env`` instead.
+
 Services and managed environments
 ---------------------------------
 

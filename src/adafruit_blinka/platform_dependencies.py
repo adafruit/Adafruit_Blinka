@@ -5,10 +5,12 @@
 """Runtime installation helpers for platform-specific dependencies."""
 
 import importlib
+import importlib.machinery
 import importlib.metadata
 import importlib.util
 import os
 import shlex
+import shutil
 import subprocess
 import sys
 import warnings
@@ -149,12 +151,41 @@ def get_unsupported_platform_dependency_message(
     return None
 
 
+def _pip_available():
+    """Find this interpreter's pip entry point without importing or executing it."""
+    try:
+        spec = importlib.util.find_spec("pip")
+        if spec is not None and spec.submodule_search_locations is not None:
+            # Dotted util.find_spec would import pip. Search its package paths
+            # directly instead, including namespace leftovers from uninstalling.
+            spec = importlib.machinery.PathFinder.find_spec(
+                "pip.__main__", spec.submodule_search_locations
+            )
+        return (
+            spec is not None
+            and spec.loader is not None
+            and spec.submodule_search_locations is None
+        )
+    except (ImportError, AttributeError, KeyError, TypeError, ValueError):
+        return False
+
+
 def format_install_command(requirements, executable="pip"):
-    """Return a shell-safe command for installing pip requirements."""
+    """Return shell-safe manual installation guidance for the target Python."""
     if executable == "pip":
         command = [executable, "install", *requirements]
     else:
         command = [executable, "-m", "pip", "install", *requirements]
+        if executable == sys.executable and not _pip_available():
+            if shutil.which("uv") is not None:
+                command = [
+                    "uv",
+                    "pip",
+                    "install",
+                    "--python",
+                    executable,
+                    *requirements,
+                ]
     return shlex.join(command)
 
 
@@ -268,6 +299,27 @@ def install_missing_platform_dependencies(
 
 def _install_platform_dependencies(detector, python_version, missing, optional):
     """Install confirmed requirements and check same-process usability."""
+    if not _pip_available():
+        uv_command = shlex.join(
+            ["uv", "pip", "install", "--python", sys.executable, *missing]
+        )
+        message = (
+            "The current Python environment has no runnable pip entry point, so Blinka cannot "
+            "install its platform dependencies automatically. Install them with "
+            "your environment's package manager, or install pip into this "
+            f"environment and retry. If using uv, run: {uv_command}\n"
+            "Then restart Python before using Blinka."
+        )
+        if set(missing).issubset(optional):
+            warnings.warn(
+                message
+                + " Blinka startup will continue; optional features may be unavailable.",
+                RuntimeWarning,
+                stacklevel=2,
+            )
+            return False
+        raise RuntimeError(message)
+
     # OS-provided modules can be importable without distribution metadata.
     # Any loaded module being installed must be restarted, not just known old ones.
     loaded = [
