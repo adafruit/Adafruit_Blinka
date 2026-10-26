@@ -225,8 +225,8 @@ class I2C(Lockable):
     def writeto_then_readfrom(
         self,
         address,
-        buffer_out,
-        buffer_in,
+        out_buffer,
+        in_buffer,
         *,
         out_start=0,
         out_end=None,
@@ -239,8 +239,8 @@ class I2C(Lockable):
         """
         return self._i2c.writeto_then_readfrom(
             address,
-            buffer_out,
-            buffer_in,
+            out_buffer,
+            in_buffer,
             out_start=out_start,
             out_end=out_end,
             in_start=in_start,
