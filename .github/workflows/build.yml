@@ -59,6 +59,7 @@ jobs:
           tests/test_mcp2221_i2c.py \
           tests/test_mcp2221_hid.py \
           tests/test_mcp2221_led_modes.py \
+          tests/test_circuitpython_api.py \
           tests/test_pin_repr.py \
           tests/test_rainbowio.py \
           tests/test_platform_dependencies.py \
@@ -78,3 +79,33 @@ jobs:
         done;
         python -m build
         twine check dist/*
+
+  api-compatibility:
+    name: CircuitPython API compatibility
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    - name: Install API comparison tools
+      run: python -m pip install -r requirements-api.txt
+    - name: Compare API surface and baseline
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        circuitpython_stable=$(gh api repos/adafruit/circuitpython/releases/latest --jq .tag_name) || exit 1
+        test -n "$circuitpython_stable" || exit 1
+        python scripts/check_circuitpython_api.py \
+          --stable-release "$circuitpython_stable" \
+          --json "${{ runner.temp }}/blinka-api.json" \
+          --markdown "${{ runner.temp }}/blinka-api.md"
+    - name: Upload API comparison reports
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: circuitpython-api-comparison
+        path: |
+          ${{ runner.temp }}/blinka-api.json
+          ${{ runner.temp }}/blinka-api.md
+        if-no-files-found: error
