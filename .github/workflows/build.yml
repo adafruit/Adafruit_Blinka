@@ -65,6 +65,7 @@ jobs:
           tests/test_pin_repr.py \
           tests/test_rainbowio.py \
           tests/test_platform_dependencies.py \
+          tests/test_uv_dependencies.py \
           tests/test_system_gpiod_compat.py \
           tests/test_libgpiod_pin.py \
           tests/test_libgpiod_legacy_cleanup.py \

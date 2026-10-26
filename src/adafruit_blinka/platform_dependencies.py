@@ -9,6 +9,7 @@ import importlib.metadata
 import importlib.util
 import os
 import shlex
+import shutil
 import subprocess
 import sys
 import warnings
@@ -149,12 +150,30 @@ def get_unsupported_platform_dependency_message(
     return None
 
 
+def _pip_available():
+    """Check for this interpreter's pip without importing or executing it."""
+    try:
+        return importlib.util.find_spec("pip") is not None
+    except (ImportError, ValueError):
+        return False
+
+
 def format_install_command(requirements, executable="pip"):
-    """Return a shell-safe command for installing pip requirements."""
+    """Return shell-safe manual installation guidance for the target Python."""
     if executable == "pip":
         command = [executable, "install", *requirements]
     else:
         command = [executable, "-m", "pip", "install", *requirements]
+        if executable == sys.executable and not _pip_available():
+            if shutil.which("uv") is not None:
+                command = [
+                    "uv",
+                    "pip",
+                    "install",
+                    "--python",
+                    executable,
+                    *requirements,
+                ]
     return shlex.join(command)
 
 
@@ -268,6 +287,27 @@ def install_missing_platform_dependencies(
 
 def _install_platform_dependencies(detector, python_version, missing, optional):
     """Install confirmed requirements and check same-process usability."""
+    if not _pip_available():
+        uv_command = shlex.join(
+            ["uv", "pip", "install", "--python", sys.executable, *missing]
+        )
+        message = (
+            "The current Python environment does not contain pip, so Blinka cannot "
+            "install its platform dependencies automatically. Install them with "
+            "your environment's package manager, or install pip into this "
+            f"environment and retry. If using uv, run: {uv_command}\n"
+            "Then restart Python before using Blinka."
+        )
+        if set(missing).issubset(optional):
+            warnings.warn(
+                message
+                + " Blinka startup will continue; optional features may be unavailable.",
+                RuntimeWarning,
+                stacklevel=2,
+            )
+            return False
+        raise RuntimeError(message)
+
     # OS-provided modules can be importable without distribution metadata.
     # Any loaded module being installed must be restarted, not just known old ones.
     loaded = [
