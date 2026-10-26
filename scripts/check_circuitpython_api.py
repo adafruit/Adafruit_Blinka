@@ -11,17 +11,20 @@ import argparse
 from collections import Counter
 import importlib
 from importlib import metadata
+import io
 import json
 import os
 from pathlib import Path, PurePosixPath
 import re
 import subprocess
 import sys
+import tarfile
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "src"
-BASELINE = Path(__file__).with_name("circuitpython_api_baseline.json")
+# Known-good local installation defaults. CI may install the matching stubs for
+# a newer stable release; both revisions always use that same installed version.
 REFERENCE = {"circuitpython-stubs": "10.3.1", "mypy": "2.4.0"}
 TARGET = "OS_AGNOSTIC"
 
@@ -63,7 +66,7 @@ NOT_CHECKED = {
 
 
 class CheckError(Exception):
-    """A checker/import failure, never an acceptable compatibility baseline."""
+    """An incomplete comparison, not an ordinary API discrepancy."""
 
 
 def stub_modules(distribution):
@@ -97,14 +100,17 @@ def source_modules(source):
     return modules
 
 
-def inventory(modules, implemented):
+def inventory(modules, implemented, selected=None):
     """Classify availability separately from the signature-checking result."""
+    selected = set(CHECKED_MODULES if selected is None else selected)
     result = []
     for name in modules:
         root = name.split(".")[0]
         if name in implemented:
-            if root in CHECKED_MODULES:
+            if root in selected:
                 status, reason = "checked", "API surface only, OS-agnostic target."
+            elif root in CHECKED_MODULES:
+                status, reason = "not_selected", "Not selected for this comparison."
             else:
                 status = "not_checked"
                 reason = NOT_CHECKED.get(
@@ -208,18 +214,22 @@ def audit_guard(scratch):
     return guard
 
 
-def stubtest_worker():
+def stubtest_worker(source=None, modules=None):
     """Run the pinned checker in a fresh process, with no real hardware backends."""
+    source = SOURCE if source is None else Path(source).resolve()
+    modules = CHECKED_MODULES if modules is None else tuple(modules)
+    if not modules or not set(modules).issubset(CHECKED_MODULES):
+        raise CheckError("Worker modules must use an audited import profile.")
     sys.dont_write_bytecode = True
-    sys.path.insert(0, str(SOURCE))
+    sys.path.insert(0, str(source))
     guard = audit_guard(Path.cwd())
     sys.addaudithook(guard)
     agnostic = importlib.import_module("adafruit_blinka.agnostic")
     if (agnostic.chip_id, agnostic.board_id) != (TARGET, "OS_AGNOSTIC_BOARD"):
         raise CheckError("The checker did not select the OS-agnostic target.")
-    for name in CHECKED_MODULES:
+    for name in modules:
         module = importlib.import_module(name)
-        if SOURCE not in Path(module.__file__).resolve().parents:
+        if source not in Path(module.__file__).resolve().parents:
             raise CheckError(f"{name} did not load from the Blinka source tree.")
     # Keep the prototype's runtime/stub comparison, but not its unbounded import
     # scan. The CLI and concise output are pinned along with the tool version.
@@ -229,7 +239,7 @@ def stubtest_worker():
     config.write_text("[mypy]\n", encoding="utf-8")
     sys.argv = [
         "stubtest",
-        *CHECKED_MODULES,
+        *modules,
         "--concise",
         "--ignore-missing-stub",
         "--mypy-config-file",
@@ -240,11 +250,29 @@ def stubtest_worker():
         raise CheckError(
             "A verification step caught an audit failure: " + guard.failures[0]
         )
+    # --ignore-missing-stub is needed for Blinka extensions, but must not hide
+    # a missing reference for one of the explicitly selected public modules.
+    verify_reference_stubs(stubtest, modules)
     return result
 
 
-def parse_diagnostics(process):
-    """Accept only concise API findings; failures cannot be hidden in a baseline."""
+def verify_reference_stubs(stubtest, modules):
+    """Confirm selected roots were compared to the installed CP stub files."""
+    distribution = metadata.distribution("circuitpython-stubs")
+    files = {
+        Path(distribution.locate_file(entry)).resolve()
+        for entry in distribution.files or ()
+        if str(entry).endswith(".pyi")
+    }
+    for name in modules:
+        stub = stubtest.get_stub(name)
+        if stub is None or Path(stub.path).resolve() not in files:
+            raise CheckError(f"No CircuitPython reference stub was checked for {name}.")
+
+
+def parse_diagnostics(process, modules=None):
+    """Accept only concise API findings; incomplete comparisons must fail."""
+    modules = CHECKED_MODULES if modules is None else modules
     if process.stderr.strip() or process.returncode not in (0, 1):
         raise CheckError(
             process.stderr.strip() or f"stubtest exited {process.returncode}"
@@ -256,7 +284,7 @@ def parse_diagnostics(process):
         match = re.fullmatch(r"([A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*) (.+)", line)
         if (
             not match
-            or match[1].split(".")[0] not in CHECKED_MODULES
+            or match[1].split(".")[0] not in modules
             # These pinned-tool formats mean comparison did not finish,
             # including when stubtest catches one of our audit exceptions.
             # Actual API findings use several verbs; do not filter those out.
@@ -275,12 +303,23 @@ def parse_diagnostics(process):
     return sorted(set(diagnostics))
 
 
-def run_stubtest():
+def run_stubtest(source=None, modules=None):
     """Use an isolated child and temporary cwd, not the caller's hardware target."""
+    source = SOURCE if source is None else Path(source).resolve()
+    modules = CHECKED_MODULES if modules is None else tuple(modules)
+    if not modules:
+        return []
     with tempfile.TemporaryDirectory(prefix="blinka-api-") as scratch:
         try:
             process = subprocess.run(
-                [sys.executable, "-I", str(Path(__file__).resolve()), "--_worker"],
+                [
+                    sys.executable,
+                    "-I",
+                    str(Path(__file__).resolve()),
+                    "--_worker",
+                    str(source),
+                    *modules,
+                ],
                 cwd=scratch,
                 env=worker_environment(scratch),
                 capture_output=True,
@@ -289,44 +328,194 @@ def run_stubtest():
                 timeout=120,
             )
         except subprocess.TimeoutExpired as error:
-            raise CheckError("stubtest timed out; no baseline was changed.") from error
-    return parse_diagnostics(process)
+            raise CheckError("stubtest timed out; comparison is incomplete.") from error
+    return parse_diagnostics(process, modules)
 
 
-def snapshot(report):
-    """Keep exact diagnostics and inventory states, never wildcard suppressions."""
-    return {
-        "reference": REFERENCE,
-        "target": TARGET,
-        "modules": {item["name"]: item["status"] for item in report["modules"]},
-        "diagnostics": report["diagnostics"],
+def git_output(*arguments):
+    """Run bounded read-only Git operations; callers pass resolved commits."""
+    environment = {
+        key: value for key, value in os.environ.items() if not key.startswith("GIT_")
     }
-
-
-def compare_baseline(current, previous):
-    """Return new and resolved observations, including coverage changes."""
-    if not isinstance(previous, dict):
-        raise CheckError("Invalid baseline schema.")
-    if previous.get("reference") != REFERENCE or previous.get("target") != TARGET:
-        raise CheckError(
-            "Baseline reference/target differs; review and update it explicitly."
+    try:
+        result = subprocess.run(
+            ["git", *arguments],
+            cwd=ROOT,
+            env=environment,
+            capture_output=True,
+            check=False,
+            timeout=60,
         )
-    if not isinstance(previous.get("modules"), dict) or not isinstance(
-        previous.get("diagnostics"), list
-    ):
-        raise CheckError("Invalid baseline schema.")
-    if not all(isinstance(line, str) for line in previous["diagnostics"]) or not all(
-        isinstance(name, str) and isinstance(status, str)
-        for name, status in previous["modules"].items()
-    ):
-        raise CheckError("Invalid baseline schema.")
-    observed = set(current["diagnostics"])
-    accepted = set(previous["diagnostics"])
-    for name, status in current["modules"].items():
-        observed.add(f"inventory: {name}: {status}")
-    for name, status in previous["modules"].items():
-        accepted.add(f"inventory: {name}: {status}")
-    return sorted(observed - accepted), sorted(accepted - observed)
+    except subprocess.TimeoutExpired as error:
+        raise CheckError("Git operation timed out.") from error
+    if result.returncode:
+        raise CheckError(
+            "Git comparison failed: " + result.stderr.decode("utf-8", "replace").strip()
+        )
+    return result.stdout
+
+
+def resolve_commit(reference):
+    """Resolve user input before using it in any Git operation."""
+    value = (
+        git_output("rev-parse", "--verify", "--end-of-options", reference + "^{commit}")
+        .decode()
+        .strip()
+    )
+    if not re.fullmatch(r"(?:[0-9a-f]{40}|[0-9a-f]{64})", value):
+        raise CheckError("Git did not return a commit ID.")
+    return value
+
+
+def revision_pair(reference):
+    """Compare committed HEAD with its merge base, not unrelated main commits."""
+    head = resolve_commit("HEAD")
+    target = resolve_commit(reference)
+    base = git_output("merge-base", target, head).decode().strip()
+    if not re.fullmatch(r"(?:[0-9a-f]{40}|[0-9a-f]{64})", base):
+        raise CheckError("No valid merge base found; fetch the comparison history.")
+    paths = [
+        os.fsdecode(path)
+        for path in git_output(
+            "diff",
+            "--no-ext-diff",
+            "--no-textconv",
+            "--no-renames",
+            "--name-only",
+            "-z",
+            base,
+            head,
+            "--",
+        ).split(b"\0")
+        if path
+    ]
+    return base, head, paths
+
+
+def affected_modules(paths):
+    """Use conservative consumers; unknown shared/backend edits check everything."""
+    selected = set()
+    reasons = set()
+    broad = ("src/adafruit_blinka/", "src/microcontroller/", "src/micropython/")
+    consumers = {
+        "busio": {"board"},
+        "digitalio": {"keypad", "neopixel_write"},
+        "micropython": set(CHECKED_MODULES),
+        "microcontroller": set(CHECKED_MODULES),
+    }
+    for path in paths:
+        if path.startswith(broad) or path in (
+            "scripts/check_circuitpython_api.py",
+            "requirements-api.txt",
+            "requirements.txt",
+            "setup.py",
+            "pyproject.toml",
+            ".github/workflows/build.yml",
+            "src/board_imports.json",
+            "src/microcontroller_imports.json",
+        ):
+            return (
+                list(CHECKED_MODULES),
+                "Shared/backend/tooling change: full audited profile.",
+            )
+        if path.startswith("src/"):
+            relative = PurePosixPath(path).relative_to("src")
+            if (
+                len(relative.parts) == 1
+                and relative.suffix == ".py"
+                and relative.stem in CHECKED_MODULES
+            ):
+                name = relative.stem
+                selected.add(name)
+                selected.update(consumers.get(name, ()))
+                reasons.add(name)
+            else:
+                return (
+                    list(CHECKED_MODULES),
+                    "Unmapped source change: full audited profile.",
+                )
+    ordered = [name for name in CHECKED_MODULES if name in selected]
+    return (
+        ordered,
+        "Affected APIs: " + ", ".join(sorted(reasons))
+        if ordered
+        else "No audited API source changed.",
+    )
+
+
+def extract_source(revision, destination):
+    """Materialize only regular source files; never extract links or traversal."""
+    payload = git_output("archive", "--format=tar", revision, "src")
+    destination = Path(destination).resolve()
+    with tarfile.open(fileobj=io.BytesIO(payload), mode="r:") as archive:
+        members = archive.getmembers()
+        for member in members:
+            path = PurePosixPath(member.name)
+            if (
+                path.is_absolute()
+                or ".." in path.parts
+                or not path.parts
+                or path.parts[0] != "src"
+            ):
+                raise CheckError("Unsafe Git archive path: " + member.name)
+            if not (member.isdir() or member.isfile()):
+                raise CheckError(
+                    "Git source archive contains a link or special file: " + member.name
+                )
+        for member in members:
+            target = destination.joinpath(*PurePosixPath(member.name).parts)
+            resolved = target.resolve()
+            if resolved != destination and destination not in resolved.parents:
+                raise CheckError(
+                    "Archive target escapes the snapshot directory: " + member.name
+                )
+            if member.isdir():
+                target.mkdir(parents=True, exist_ok=True)
+            else:
+                target.parent.mkdir(parents=True, exist_ok=True)
+                with archive.extractfile(member) as source:
+                    target.write_bytes(source.read())
+    return destination / "src"
+
+
+def collect_diagnostics(source, modules):
+    """Keep selected-module deletion a regression, not a silent skipped check."""
+    implemented = source_modules(source)
+    present = [name for name in modules if name in implemented]
+    missing = [
+        name + " is not present at runtime"
+        for name in modules
+        if name not in implemented
+    ]
+    return sorted(missing + run_stubtest(source, present))
+
+
+def compare_revisions(report, reference, names, modules=None):
+    """Run the same trusted worker and installed stubs on both committed trees."""
+    base, head, paths = revision_pair(reference)
+    selected, reason = affected_modules(paths)
+    if modules is not None:
+        selected = [name for name in CHECKED_MODULES if name in modules]
+        reason = "Explicit module selection."
+    report["unreferenced_modules"] = [name for name in selected if name not in names]
+    selected = [name for name in selected if name in names]
+    report.update(
+        base_revision=base,
+        head_revision=head,
+        changed_paths=paths,
+        checked_modules=selected,
+        selection_reason=reason,
+    )
+    with tempfile.TemporaryDirectory(prefix="blinka-api-revisions-") as scratch:
+        base_source = extract_source(base, Path(scratch) / "base")
+        head_source = extract_source(head, Path(scratch) / "head")
+        report["modules"] = inventory(names, source_modules(head_source), selected)
+        report["base_diagnostics"] = collect_diagnostics(base_source, selected)
+        report["diagnostics"] = collect_diagnostics(head_source, selected)
+    previous, current = set(report["base_diagnostics"]), set(report["diagnostics"])
+    report["new"], report["resolved"] = sorted(current - previous), sorted(
+        previous - current
+    )
 
 
 def markdown_report(report):
@@ -334,8 +523,9 @@ def markdown_report(report):
     lines = [
         "# CircuitPython API comparison",
         "",
-        f"Reference: circuitpython-stubs {REFERENCE['circuitpython-stubs']}; "
-        f"mypy {REFERENCE['mypy']}. Target: {TARGET}.",
+        f"Reference: {report['reference']}. Target: {TARGET}.",
+        f"Mode: {report['mode']}. {report['selection_reason']}",
+        f"Checked modules: {', '.join(report['checked_modules']) or 'none'}.",
         "",
         "API surface only; this is not behavior or hardware validation.",
         "",
@@ -344,12 +534,18 @@ def markdown_report(report):
         "| Module | Status | Notes |",
         "| --- | --- | --- |",
     ]
+    if report["base_revision"]:
+        lines[8:8] = [
+            f"Base: `{report['base_revision']}`; head: `{report['head_revision']}`.",
+            "",
+        ]
     for item in report["modules"]:
         lines.append(f"| {item['name']} | {item['status']} | {item['reason']} |")
     for title, values in (
         ("Checker errors", report["errors"]),
-        ("New observations", report["new"]),
-        ("Resolved observations", report["resolved"]),
+        ("New API differences", report["new"]),
+        ("Resolved API differences", report["resolved"]),
+        ("Base revision discrepancies", report["base_diagnostics"]),
         ("All current stub discrepancies", report["diagnostics"]),
     ):
         lines.extend(["", "## " + title, ""])
@@ -360,60 +556,89 @@ def markdown_report(report):
 
 
 def main(argv=None):
-    """Run reporting and the baseline gate; never install development dependencies."""
+    """Report full compatibility or gate regressions; never install dependencies."""
     # Reporting and error paths deliberately share the same result object.
     # pylint: disable=too-many-locals
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--json", type=Path, help="write the full JSON report")
     parser.add_argument("--markdown", type=Path, help="write the full Markdown report")
-    parser.add_argument("--update-baseline", action="store_true")
+    parser.add_argument(
+        "--module",
+        choices=CHECKED_MODULES,
+        action="append",
+        help="check only this API (repeatable)",
+    )
+    parser.add_argument(
+        "--base", help="compare committed HEAD with the merge base of this Git ref"
+    )
     parser.add_argument(
         "--stable-release",
-        help="official stable tag resolved by CI; reject an outdated stub reference",
+        help="require installed stubs to match this verified CircuitPython stable tag",
     )
     args = parser.parse_args(argv)
     report = {
-        "reference": REFERENCE,
+        "reference": {},
         "target": TARGET,
+        "mode": "revision" if args.base else "standalone",
+        "checked_modules": [],
+        "selection_reason": "",
+        "unreferenced_modules": [],
+        "base_revision": None,
+        "head_revision": None,
+        "changed_paths": [],
         "modules": [],
         "diagnostics": [],
+        "base_diagnostics": [],
         "new": [],
         "resolved": [],
         "errors": [],
     }
     try:
+        report["reference"] = {name: metadata.version(name) for name in REFERENCE}
+        actual = report["reference"]
+        if actual["mypy"] != REFERENCE["mypy"]:
+            raise CheckError(
+                f"Expected mypy=={REFERENCE['mypy']}, found {actual['mypy']}."
+            )
+        if not re.fullmatch(r"\d+\.\d+\.\d+", actual["circuitpython-stubs"]):
+            raise CheckError("Use stubs matching a stable CircuitPython release.")
         if (
             args.stable_release is not None
-            and args.stable_release != REFERENCE["circuitpython-stubs"]
+            and args.stable_release != actual["circuitpython-stubs"]
         ):
             raise CheckError(
                 f"CircuitPython stable is {args.stable_release}, but the reference is "
-                f"{REFERENCE['circuitpython-stubs']}. Update the matching stubs and "
-                "review the baseline before continuing."
+                f"{actual['circuitpython-stubs']}. Install the matching stubs before continuing."
             )
-        for name, expected in REFERENCE.items():
-            actual = metadata.version(name)
-            if actual != expected:
-                raise CheckError(f"Expected {name}=={expected}, found {actual}.")
         names = stub_modules(metadata.distribution("circuitpython-stubs"))
-        implemented = source_modules(SOURCE)
-        missing = set(CHECKED_MODULES) - set(names).intersection(implemented)
-        if missing:
-            raise CheckError(
-                "Checked modules lack source/stubs: " + ", ".join(sorted(missing))
-            )
-        report["modules"] = inventory(names, implemented)
-        report["diagnostics"] = run_stubtest()
-        current = snapshot(report)
-        if args.update_baseline:
-            BASELINE.write_text(
-                json.dumps(current, indent=2, sort_keys=True) + "\n", encoding="utf-8"
-            )
-            print("Updated baseline; review its diff before committing.")
+        selected = (
+            None
+            if args.module is None
+            else [name for name in CHECKED_MODULES if name in args.module]
+        )
+        if args.base:
+            compare_revisions(report, args.base, names, selected)
         else:
-            previous = json.loads(BASELINE.read_text(encoding="utf-8"))
-            report["new"], report["resolved"] = compare_baseline(current, previous)
-    except (CheckError, OSError, ValueError, metadata.PackageNotFoundError) as error:
+            chosen = list(CHECKED_MODULES) if selected is None else selected
+            report["unreferenced_modules"] = [
+                name for name in chosen if name not in names
+            ]
+            chosen = [name for name in chosen if name in names]
+            report["checked_modules"] = chosen
+            report["selection_reason"] = (
+                "Full audited profile."
+                if selected is None
+                else "Explicit module selection."
+            )
+            report["modules"] = inventory(names, source_modules(SOURCE), chosen)
+            report["diagnostics"] = collect_diagnostics(SOURCE, chosen)
+    except (
+        CheckError,
+        OSError,
+        ValueError,
+        tarfile.TarError,
+        metadata.PackageNotFoundError,
+    ) as error:
         report["errors"].append(str(error))
     for flag in ("json", "markdown"):
         path = getattr(args, flag)
@@ -424,6 +649,16 @@ def main(argv=None):
                 else markdown_report(report)
             )
             path.write_text(content, encoding="utf-8")
+    print(
+        "Reference:",
+        ", ".join(f"{key}={value}" for key, value in report["reference"].items()),
+    )
+    print(f"Mode: {report['mode']}. {report['selection_reason']}")
+    if report["unreferenced_modules"]:
+        print(
+            "NOT CHECKED (no reference stub): "
+            + ", ".join(report["unreferenced_modules"])
+        )
     counts = Counter(item["status"] for item in report["modules"])
     print(
         "Module inventory:", ", ".join(f"{key}={counts[key]}" for key in sorted(counts))
@@ -435,12 +670,17 @@ def main(argv=None):
     for field in ("errors", "new", "resolved"):
         for message in report[field]:
             print(field.upper() + ": " + message)
+    if report["mode"] == "standalone":
+        for message in report["diagnostics"]:
+            print("DIFFERENCE: " + message)
     if report["errors"]:
         return 2
-    return int(bool(report["new"] or report["resolved"]))
+    return int(bool(report["new"] if args.base else report["diagnostics"]))
 
 
 if __name__ == "__main__":
-    if sys.argv[1:] == ["--_worker"]:
-        raise SystemExit(stubtest_worker())
+    if sys.argv[1:2] == ["--_worker"]:
+        if len(sys.argv) < 4:
+            raise SystemExit("Worker requires a source directory and audited modules.")
+        raise SystemExit(stubtest_worker(sys.argv[2], sys.argv[3:]))
     raise SystemExit(main())

@@ -4,16 +4,18 @@
 """Exercise the API checker without importing Blinka drivers or installing tools."""
 
 import importlib.util
+import io
 import json
 import os
 from pathlib import Path, PurePosixPath
 import subprocess
+import tarfile
 from types import ModuleType, SimpleNamespace
 
 import pytest
 
-# Pytest supplies the named fixtures.
-# pylint: disable=redefined-outer-name
+# Keep the safety and differential-regression matrix together; pytest supplies fixtures.
+# pylint: disable=redefined-outer-name,too-many-lines
 
 ROOT = Path(__file__).parents[1]
 SOURCE = ROOT / "scripts/check_circuitpython_api.py"
@@ -36,13 +38,24 @@ def distribution(*files):
     return SimpleNamespace(files=[PurePosixPath(name) for name in files])
 
 
-def baseline(checker, diagnostics=(), modules=None):
-    """Construct the tracked observations used by the baseline gate."""
+def empty_report(checker):
+    """Construct a report for exercising revision comparison directly."""
     return {
         "reference": dict(checker.REFERENCE),
         "target": checker.TARGET,
-        "modules": {"busio": "checked"} if modules is None else modules,
-        "diagnostics": list(diagnostics),
+        "mode": "revision",
+        "checked_modules": [],
+        "selection_reason": "",
+        "unreferenced_modules": [],
+        "base_revision": None,
+        "head_revision": None,
+        "changed_paths": [],
+        "modules": [],
+        "diagnostics": [],
+        "base_diagnostics": [],
+        "errors": [],
+        "new": [],
+        "resolved": [],
     }
 
 
@@ -125,6 +138,24 @@ def test_inventory_distinguishes_coverage_from_platform_availability(checker):
     assert "not checked" in result["os"]["reason"]
     assert "unimplemented placeholder" in result["onewireio"]["reason"]
     assert result["displayio"]["reason"] == "Adafruit-Blinka-Displayio"
+
+
+def test_inventory_marks_unselected_audited_modules_separately(checker):
+    result = {
+        item["name"]: item["status"]
+        for item in checker.inventory(
+            ["busio", "keypad", "keypad.Event", "usb_hid", "alarm"],
+            {"busio", "keypad", "keypad.Event", "usb_hid"},
+            ["busio"],
+        )
+    }
+    assert result == {
+        "busio": "checked",
+        "keypad": "not_selected",
+        "keypad.Event": "not_selected",
+        "usb_hid": "not_checked",
+        "alarm": "missing",
+    }
 
 
 @pytest.mark.parametrize(
@@ -280,7 +311,7 @@ def test_diagnostics_are_exact_deduplicated_and_sorted(checker):
         (1, DIAGNOSTIC + "\n", "unexpected warning"),
     ],
 )
-def test_tool_and_import_failures_cannot_become_baseline_entries(
+def test_tool_and_import_failures_cannot_become_api_diagnostics(
     checker, returncode, stdout, stderr
 ):
     process = SimpleNamespace(returncode=returncode, stdout=stdout, stderr=stderr)
@@ -295,7 +326,9 @@ def test_run_uses_isolated_subprocess_and_scratch(checker, monkeypatch):
         calls.append((command, kwargs))
         assert Path(kwargs["cwd"]).is_dir()
         assert command[1] == "-I"
-        assert command[-1] == "--_worker"
+        assert command[3] == "--_worker"
+        assert command[4] == str(checker.SOURCE.resolve())
+        assert command[5:] == list(checker.CHECKED_MODULES)
         assert kwargs["env"]["BLINKA_SKIP_DEPENDENCY_CHECK"] == "1"
         assert kwargs["capture_output"] and kwargs["text"]
         assert kwargs["check"] is False
@@ -317,85 +350,39 @@ def test_timeout_is_reported_as_a_tool_failure(checker, monkeypatch):
         checker.run_stubtest()
 
 
-def test_snapshot_does_not_hide_exact_diagnostics(checker):
-    report = {
-        "modules": [{"name": "busio", "status": "checked", "reason": "notes"}],
-        "diagnostics": [DIAGNOSTIC],
-        "errors": [],
-        "new": [],
-        "resolved": [],
-    }
-    assert checker.snapshot(report) == baseline(checker, [DIAGNOSTIC])
-    assert DIAGNOSTIC in checker.markdown_report(report)
-    assert "All current stub discrepancies" in checker.markdown_report(report)
+def test_selected_worker_only_receives_explicit_source_and_modules(
+    checker, monkeypatch, tmp_path
+):
+    calls = []
+
+    def fake_run(command, **_kwargs):
+        calls.append(command)
+        return SimpleNamespace(returncode=1, stdout=DIAGNOSTIC + "\n", stderr="")
+
+    monkeypatch.setattr(checker.subprocess, "run", fake_run)
+    assert checker.run_stubtest(tmp_path, ["busio"]) == [DIAGNOSTIC]
+    assert calls[0][3:] == ["--_worker", str(tmp_path.resolve()), "busio"]
+    assert checker.run_stubtest(tmp_path, []) == []
+    assert len(calls) == 1
 
 
-def test_identical_baseline_passes(checker):
-    current = baseline(checker, [DIAGNOSTIC])
-    assert checker.compare_baseline(current, current) == ([], [])
-
-
-def test_diagnostic_changes_identify_both_new_and_resolved(checker):
-    old = "busio.I2C.old is not present at runtime"
-    assert checker.compare_baseline(
-        baseline(checker, [DIAGNOSTIC]), baseline(checker, [old])
-    ) == ([DIAGNOSTIC], [old])
-
-
-def test_inventory_changes_are_not_silently_accepted(checker):
-    new, resolved = checker.compare_baseline(
-        baseline(checker, modules={"busio": "checked", "alarm": "not_checked"}),
-        baseline(checker, modules={"busio": "checked", "alarm": "missing"}),
-    )
-    assert new == ["inventory: alarm: not_checked"]
-    assert resolved == ["inventory: alarm: missing"]
-
-
-@pytest.mark.parametrize(
-    "change",
-    [
-        {"reference": {"circuitpython-stubs": "different"}},
-        {"target": "BCM2712"},
-        {"modules": []},
-        {"diagnostics": {}},
-    ],
-)
-def test_baseline_reference_and_schema_fail_closed(checker, change):
-    previous = baseline(checker)
-    previous.update(change)
-    with pytest.raises(checker.CheckError):
-        checker.compare_baseline(baseline(checker), previous)
-
-
-@pytest.mark.parametrize("previous", [None, [], "not an object"])
-def test_baseline_requires_a_json_object(checker, previous):
-    with pytest.raises(checker.CheckError, match="Invalid baseline schema"):
-        checker.compare_baseline(baseline(checker), previous)
-
-
-@pytest.mark.parametrize(
-    "change",
-    [
-        {"diagnostics": [{}]},
-        {"diagnostics": [["nested"]]},
-        {"diagnostics": [42]},
-        {"modules": {42: "checked"}},
-        {"modules": {"busio": []}},
-        {"modules": {"busio": {}}},
-    ],
-)
-def test_baseline_observations_must_be_strings(checker, change):
-    previous = baseline(checker)
-    previous.update(change)
-    with pytest.raises(checker.CheckError, match="Invalid baseline schema"):
-        checker.compare_baseline(baseline(checker), previous)
+def test_diagnostics_from_unselected_modules_are_a_tool_error(checker):
+    process = SimpleNamespace(returncode=1, stdout=DIAGNOSTIC + "\n", stderr="")
+    with pytest.raises(checker.CheckError, match="Unexpected stubtest output"):
+        checker.parse_diagnostics(process, ["board"])
 
 
 @pytest.fixture
 def cli(checker, monkeypatch, tmp_path):
     """Replace every dependency query and worker run before invoking the CLI."""
-    monkeypatch.setattr(checker, "CHECKED_MODULES", ("busio",))
-    monkeypatch.setattr(checker, "BASELINE", tmp_path / "baseline.json")
+    monkeypatch.setattr(checker, "CHECKED_MODULES", ("board", "busio"))
+    source = tmp_path / "current" / "src"
+    source.mkdir(parents=True)
+    for name in checker.CHECKED_MODULES:
+        (source / (name + ".py")).write_text(
+            "raise AssertionError('must not import')\n"
+        )
+    monkeypatch.setattr(checker, "SOURCE", source)
     monkeypatch.setattr(
         checker.metadata, "version", lambda name: checker.REFERENCE[name]
     )
@@ -403,101 +390,150 @@ def cli(checker, monkeypatch, tmp_path):
         checker.metadata,
         "distribution",
         lambda _name: distribution(
-            "busio-stubs/__init__.pyi", "alarm-stubs/__init__.pyi"
+            "board-stubs/__init__.pyi",
+            "busio-stubs/__init__.pyi",
+            "alarm-stubs/__init__.pyi",
         ),
     )
-    monkeypatch.setattr(checker, "source_modules", lambda _path: {"busio"})
-    monkeypatch.setattr(checker, "run_stubtest", lambda: [DIAGNOSTIC])
-    checker.BASELINE.write_text(
-        json.dumps(
-            baseline(checker, [DIAGNOSTIC], {"alarm": "missing", "busio": "checked"})
-        )
+    monkeypatch.setattr(checker, "run_stubtest", lambda _source, _modules: [DIAGNOSTIC])
+    monkeypatch.setattr(
+        checker,
+        "revision_pair",
+        lambda _reference: ("a" * 40, "b" * 40, ["src/busio.py"]),
     )
+
+    def extract(_revision, destination):
+        extracted = destination / "src"
+        extracted.mkdir(parents=True)
+        for name in checker.CHECKED_MODULES:
+            (extracted / (name + ".py")).write_text("raise AssertionError\n")
+        return extracted
+
+    monkeypatch.setattr(checker, "extract_source", extract)
     return checker
 
 
-def test_cli_default_is_read_only_and_full_reports_keep_existing_differences(
+def test_standalone_reports_all_differences_and_missing_catalog_is_informational(
     cli, tmp_path
 ):
-    previous = cli.BASELINE.read_bytes()
     report_path = tmp_path / "report.json"
     markdown_path = tmp_path / "report.md"
-    assert cli.main(["--json", str(report_path), "--markdown", str(markdown_path)]) == 0
-    assert cli.BASELINE.read_bytes() == previous
+    assert cli.main(["--json", str(report_path), "--markdown", str(markdown_path)]) == 1
     report = json.loads(report_path.read_text())
+    assert report["mode"] == "standalone"
     assert report["diagnostics"] == [DIAGNOSTIC]
     assert report["new"] == report["resolved"] == report["errors"] == []
+    assert report["base_revision"] is None
+    assert report["base_diagnostics"] == []
     assert DIAGNOSTIC in markdown_path.read_text()
+    assert "All current stub discrepancies" in markdown_path.read_text()
     assert any(
         item["name"] == "alarm" and item["status"] == "missing"
         for item in report["modules"]
     )
+    assert not list(tmp_path.rglob("*baseline*"))
+
+
+def test_standalone_clean_run_passes_without_creating_a_baseline(cli, monkeypatch):
+    monkeypatch.setattr(cli, "run_stubtest", lambda _source, _modules: [])
+    assert cli.main([]) == 0
 
 
 @pytest.mark.parametrize(
-    "observed", [[], [DIAGNOSTIC, "busio.Parity is not present at runtime"]]
+    "observation",
+    [
+        ([DIAGNOSTIC], [DIAGNOSTIC], 0),
+        ([DIAGNOSTIC], [], 0),
+        ([], [DIAGNOSTIC], 1),
+        ([DIAGNOSTIC], [DIAGNOSTIC, "busio.Parity is not present at runtime"], 1),
+    ],
 )
-def test_cli_fails_on_new_and_resolved_diagnostics(cli, monkeypatch, observed):
-    monkeypatch.setattr(cli, "run_stubtest", lambda: observed)
-    previous = cli.BASELINE.read_bytes()
-    assert cli.main([]) == 1
-    assert cli.BASELINE.read_bytes() == previous
+def test_revision_gate_only_fails_on_new_head_diagnostics(
+    cli, monkeypatch, tmp_path, observation
+):
+    previous, current, expected = observation
+    calls = []
 
+    def worker(source, modules):
+        calls.append((source.parent.name, list(modules)))
+        return previous if source.parent.name == "base" else current
 
-def test_explicit_update_records_current_diagnostics(cli, monkeypatch):
-    new_diagnostic = "busio.Parity is not present at runtime"
-    monkeypatch.setattr(cli, "run_stubtest", lambda: [new_diagnostic])
-    assert cli.main(["--update-baseline"]) == 0
-    assert json.loads(cli.BASELINE.read_text())["diagnostics"] == [new_diagnostic]
+    monkeypatch.setattr(cli, "run_stubtest", worker)
+    # A newer stable stub release may add the same findings to both revisions.
+    monkeypatch.setattr(
+        cli.metadata,
+        "version",
+        lambda name: "10.4.0" if name == "circuitpython-stubs" else cli.REFERENCE[name],
+    )
+    report_path = tmp_path / "revisions.json"
+    markdown_path = tmp_path / "revisions.md"
+    assert (
+        cli.main(
+            [
+                "--base",
+                "origin/main",
+                "--stable-release",
+                "10.4.0",
+                "--json",
+                str(report_path),
+                "--markdown",
+                str(markdown_path),
+            ]
+        )
+        == expected
+    )
+    report = json.loads(report_path.read_text())
+    assert report["reference"]["circuitpython-stubs"] == "10.4.0"
+    assert report["mode"] == "revision"
+    assert report["base_revision"] == "a" * 40
+    assert report["head_revision"] == "b" * 40
+    assert report["base_diagnostics"] == previous
+    assert report["diagnostics"] == current
+    assert report["new"] == sorted(set(current) - set(previous))
+    assert report["resolved"] == sorted(set(previous) - set(current))
+    assert report["errors"] == []
+    assert calls == [("base", ["board", "busio"]), ("head", ["board", "busio"])]
+    assert "Base revision discrepancies" in markdown_path.read_text()
+    assert "a" * 40 in markdown_path.read_text()
+    assert not list(tmp_path.rglob("*baseline*"))
 
 
 def test_matching_stable_tag_runs_normal_check(cli, monkeypatch):
     calls = []
 
-    def worker():
+    def worker(_source, _modules):
         calls.append("checked")
-        return [DIAGNOSTIC]
+        return []
 
     monkeypatch.setattr(cli, "run_stubtest", worker)
-    previous = cli.BASELINE.read_bytes()
     assert cli.main(["--stable-release", cli.REFERENCE["circuitpython-stubs"]]) == 0
     assert calls == ["checked"]
-    assert cli.BASELINE.read_bytes() == previous
 
 
-@pytest.mark.parametrize("update", [[], ["--update-baseline"]])
-def test_changed_stable_tag_stops_before_dependency_queries_or_worker(
-    cli, monkeypatch, tmp_path, update
+def test_mismatched_stable_tag_stops_before_inventory_or_worker(
+    cli, monkeypatch, tmp_path
 ):
     def unexpected(*_args):
-        pytest.fail(
-            "An outdated reference must stop before dependency or runtime checks"
-        )
+        pytest.fail("A mismatched stable reference must stop before runtime checks")
 
-    monkeypatch.setattr(cli.metadata, "version", unexpected)
     monkeypatch.setattr(cli.metadata, "distribution", unexpected)
     monkeypatch.setattr(cli, "run_stubtest", unexpected)
-    previous = cli.BASELINE.read_bytes()
     report_path = tmp_path / "outdated.json"
-    assert (
-        cli.main(["--stable-release", "99.0.0", "--json", str(report_path), *update])
-        == 2
-    )
-    assert cli.BASELINE.read_bytes() == previous
+    assert cli.main(["--stable-release", "99.0.0", "--json", str(report_path)]) == 2
     report = json.loads(report_path.read_text())
     assert report["diagnostics"] == []
     assert len(report["errors"]) == 1
     assert "CircuitPython stable is 99.0.0" in report["errors"][0]
-    assert "Update the matching stubs" in report["errors"][0]
+    assert "Install the matching stubs" in report["errors"][0]
 
 
 @pytest.mark.parametrize("failure", ["import", "version", "missing_stubs"])
-def test_explicit_update_never_accepts_a_checker_failure(
+def test_standalone_never_accepts_a_checker_failure(
     cli, monkeypatch, failure, tmp_path
 ):
     if failure == "import":
 
-        def fail():
+        def fail(_source, _modules):
             raise cli.CheckError("busio failed to import")
 
         monkeypatch.setattr(cli, "run_stubtest", fail)
@@ -505,17 +541,119 @@ def test_explicit_update_never_accepts_a_checker_failure(
         monkeypatch.setattr(cli.metadata, "version", lambda _name: "unexpected")
     else:
         monkeypatch.setattr(cli.metadata, "distribution", lambda _name: distribution())
-    previous = cli.BASELINE.read_bytes()
     report_path = tmp_path / "failure.json"
-    assert cli.main(["--update-baseline", "--json", str(report_path)]) == 2
-    assert cli.BASELINE.read_bytes() == previous
+    assert cli.main(["--json", str(report_path)]) == 2
     assert json.loads(report_path.read_text())["errors"]
 
 
-def test_missing_baseline_is_not_silently_created(cli):
-    cli.BASELINE.unlink()
+@pytest.mark.parametrize("side", ["base", "head"])
+@pytest.mark.parametrize("message", ["busio failed to import", "stubtest timed out"])
+def test_revision_checker_failures_on_either_side_are_fatal(
+    cli, monkeypatch, tmp_path, side, message
+):
+    def worker(source, _modules):
+        if source.parent.name == side:
+            raise cli.CheckError(message)
+        return [DIAGNOSTIC]
+
+    monkeypatch.setattr(cli, "run_stubtest", worker)
+    report_path = tmp_path / "failure.json"
+    assert cli.main(["--base", "origin/main", "--json", str(report_path)]) == 2
+    report = json.loads(report_path.read_text())
+    assert report["errors"] == [message]
+    assert report["new"] == []
+
+
+@pytest.mark.parametrize("version", ["10.4.0rc1", "10.4.0.dev1", "unexpected"])
+def test_nonstable_stub_versions_are_tool_errors(cli, monkeypatch, version):
+    monkeypatch.setattr(
+        cli.metadata,
+        "version",
+        lambda name: version if name == "circuitpython-stubs" else cli.REFERENCE[name],
+    )
     assert cli.main([]) == 2
-    assert not cli.BASELINE.exists()
+
+
+def test_baseline_update_flag_is_no_longer_supported(cli):
+    with pytest.raises(SystemExit) as error:
+        cli.main(["--update-baseline"])
+    assert error.value.code == 2
+
+
+@pytest.mark.parametrize("revision", [False, True])
+def test_repeatable_module_selection_is_deduplicated_and_reported(
+    cli, monkeypatch, tmp_path, revision
+):
+    calls = []
+
+    def worker(_source, modules):
+        calls.append(list(modules))
+        return []
+
+    monkeypatch.setattr(cli, "run_stubtest", worker)
+    report_path = tmp_path / "selected.json"
+    arguments = ["--module", "busio", "--module", "busio", "--json", str(report_path)]
+    if revision:
+        arguments.extend(["--base", "origin/main"])
+    assert cli.main(arguments) == 0
+    report = json.loads(report_path.read_text())
+    assert report["checked_modules"] == ["busio"]
+    assert report["selection_reason"] == "Explicit module selection."
+    assert calls == [["busio"]] * (2 if revision else 1)
+    inventory = {item["name"]: item["status"] for item in report["modules"]}
+    assert inventory["board"] == "not_selected"
+    assert inventory["busio"] == "checked"
+
+
+@pytest.mark.parametrize("revision", [False, True])
+def test_absent_stub_catalog_modules_are_reported_without_false_api_failures(
+    cli, monkeypatch, tmp_path, revision
+):
+    monkeypatch.setattr(
+        cli.metadata,
+        "distribution",
+        lambda _name: distribution("alarm-stubs/__init__.pyi"),
+    )
+
+    def worker(_source, modules):
+        assert modules == []
+        return []
+
+    monkeypatch.setattr(cli, "run_stubtest", worker)
+    report_path = tmp_path / "catalog.json"
+    arguments = ["--json", str(report_path)]
+    if revision:
+        arguments.extend(["--base", "origin/main"])
+    assert cli.main(arguments) == 0
+    report = json.loads(report_path.read_text())
+    assert report["checked_modules"] == []
+    assert report["unreferenced_modules"] == ["board", "busio"]
+    assert report["errors"] == report["diagnostics"] == report["new"] == []
+
+
+def test_selected_module_deletion_is_a_new_head_regression(cli, monkeypatch, tmp_path):
+    extract = cli.extract_source
+
+    def extract_with_deletion(revision, destination):
+        source = extract(revision, destination)
+        if destination.name == "head":
+            (source / "busio.py").unlink()
+        return source
+
+    calls = []
+
+    def worker(source, modules):
+        calls.append((source.parent.name, list(modules)))
+        return []
+
+    monkeypatch.setattr(cli, "extract_source", extract_with_deletion)
+    monkeypatch.setattr(cli, "run_stubtest", worker)
+    report_path = tmp_path / "deleted.json"
+    assert cli.main(["--base", "origin/main", "--json", str(report_path)]) == 1
+    report = json.loads(report_path.read_text())
+    assert report["base_diagnostics"] == []
+    assert report["diagnostics"] == report["new"] == ["busio is not present at runtime"]
+    assert calls == [("base", ["board", "busio"]), ("head", ["board"])]
 
 
 def test_development_requirements_match_reference_pins(checker):
@@ -553,7 +691,7 @@ def test_introspection_failures_are_not_api_diagnostics(checker, message):
         checker.parse_diagnostics(process)
 
 
-def test_update_cannot_baseline_a_caught_audit_failure(cli, monkeypatch, tmp_path):
+def test_cli_cannot_accept_a_caught_audit_failure(cli, monkeypatch, tmp_path):
     process = subprocess.CompletedProcess(
         [],
         1,
@@ -561,11 +699,11 @@ def test_update_cannot_baseline_a_caught_audit_failure(cli, monkeypatch, tmp_pat
         "Blocked hardware/kernel access: /dev/example\n",
         stderr="",
     )
-    monkeypatch.setattr(cli, "run_stubtest", lambda: cli.parse_diagnostics(process))
-    previous = cli.BASELINE.read_bytes()
+    monkeypatch.setattr(
+        cli, "run_stubtest", lambda _source, _modules: cli.parse_diagnostics(process)
+    )
     report_path = tmp_path / "failure.json"
-    assert cli.main(["--update-baseline", "--json", str(report_path)]) == 2
-    assert cli.BASELINE.read_bytes() == previous
+    assert cli.main(["--json", str(report_path)]) == 2
     report = json.loads(report_path.read_text())
     assert report["diagnostics"] == []
     assert "encountered unexpected error" in report["errors"][0]
@@ -582,14 +720,17 @@ def test_update_cannot_baseline_a_caught_audit_failure(cli, monkeypatch, tmp_pat
         "busio.value variable differs from runtime type int",
     ],
 )
-def test_legitimate_non_is_api_findings_can_be_reported_and_baselined(
-    cli, monkeypatch, message
+def test_legitimate_non_is_api_findings_are_preserved_in_standalone_reports(
+    cli, monkeypatch, tmp_path, message
 ):
     process = subprocess.CompletedProcess([], 1, stdout=message + "\n", stderr="")
     assert cli.parse_diagnostics(process) == [message]
-    monkeypatch.setattr(cli, "run_stubtest", lambda: cli.parse_diagnostics(process))
-    assert cli.main(["--update-baseline"]) == 0
-    assert json.loads(cli.BASELINE.read_text())["diagnostics"] == [message]
+    monkeypatch.setattr(
+        cli, "run_stubtest", lambda _source, _modules: cli.parse_diagnostics(process)
+    )
+    report_path = tmp_path / "report.json"
+    assert cli.main(["--json", str(report_path)]) == 1
+    assert json.loads(report_path.read_text())["diagnostics"] == [message]
 
 
 def test_real_stubtest_introspection_failure_is_rejected(checker, monkeypatch):
@@ -681,3 +822,460 @@ def test_worker_rejects_swallowed_audit_failure(checker, monkeypatch, tmp_path):
         checker.stubtest_worker()
     assert registered == [guard]
     assert len(guard.failures) == 1
+
+
+@pytest.mark.parametrize("modules", [[], ["wifi"], ["busio", "usb_hid"]])
+def test_worker_rejects_unaudited_or_empty_import_profiles(
+    checker, monkeypatch, modules
+):
+    monkeypatch.setattr(
+        checker.sys,
+        "addaudithook",
+        lambda _guard: pytest.fail(
+            "Invalid profiles must stop before registering hooks"
+        ),
+    )
+    with pytest.raises(checker.CheckError, match="audited import profile"):
+        checker.stubtest_worker(modules=modules)
+
+
+def test_worker_uses_selected_revision_source_and_verifies_its_reference(
+    checker, monkeypatch, tmp_path
+):
+    """Emulate imports/tool invocation without installing a permanent audit hook."""
+    source = tmp_path / "revision" / "src"
+    registered, imported, verified = [], [], []
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(checker.sys, "path", list(checker.sys.path))
+    monkeypatch.setattr(checker.sys, "argv", list(checker.sys.argv))
+    monkeypatch.setattr(
+        checker.sys, "dont_write_bytecode", checker.sys.dont_write_bytecode
+    )
+    monkeypatch.setattr(checker.sys, "addaudithook", registered.append)
+
+    def import_fake(name):
+        imported.append(name)
+        if name == "adafruit_blinka.agnostic":
+            return SimpleNamespace(chip_id=checker.TARGET, board_id="OS_AGNOSTIC_BOARD")
+        return SimpleNamespace(__file__=str(source / (name + ".py")))
+
+    fake_mypy = ModuleType("mypy")
+    fake_mypy.stubtest = SimpleNamespace(main=lambda: 0)
+    monkeypatch.setitem(checker.sys.modules, "mypy", fake_mypy)
+    monkeypatch.setattr(checker.importlib, "import_module", import_fake)
+    monkeypatch.setattr(
+        checker,
+        "verify_reference_stubs",
+        lambda tool, modules: verified.append((tool, modules)),
+    )
+    assert checker.stubtest_worker(source, ["busio"]) == 0
+    assert checker.sys.path[0] == str(source.resolve())
+    assert imported == ["adafruit_blinka.agnostic", "busio"]
+    assert checker.sys.argv[:2] == ["stubtest", "busio"]
+    assert "--ignore-missing-stub" in checker.sys.argv
+    assert verified == [(fake_mypy.stubtest, ("busio",))]
+    assert len(registered) == 1
+    assert (tmp_path / "mypy.ini").read_text() == "[mypy]\n"
+
+
+@pytest.mark.parametrize("failure", ["target", "source"])
+def test_worker_rejects_wrong_hardware_target_or_host_runtime_modules(
+    checker, monkeypatch, tmp_path, failure
+):
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(checker.sys, "path", list(checker.sys.path))
+    monkeypatch.setattr(
+        checker.sys, "dont_write_bytecode", checker.sys.dont_write_bytecode
+    )
+    monkeypatch.setattr(checker.sys, "addaudithook", lambda _guard: None)
+
+    def import_fake(name):
+        if name == "adafruit_blinka.agnostic":
+            return SimpleNamespace(
+                chip_id="BCM2712" if failure == "target" else checker.TARGET,
+                board_id="OS_AGNOSTIC_BOARD",
+            )
+        return SimpleNamespace(__file__=str(tmp_path / "host" / (name + ".py")))
+
+    monkeypatch.setattr(checker.importlib, "import_module", import_fake)
+    with pytest.raises(
+        checker.CheckError, match="OS-agnostic target|Blinka source tree"
+    ):
+        checker.stubtest_worker(tmp_path / "revision" / "src", ["busio"])
+
+
+@pytest.mark.parametrize(
+    "paths,expected",
+    [
+        (["src/busio.py"], {"busio", "board"}),
+        (["src/digitalio.py"], {"digitalio", "keypad", "neopixel_write"}),
+        (["src/busio.py", "src/keypad.py"], {"busio", "board", "keypad"}),
+        (["src/rainbowio.py"], {"rainbowio"}),
+        (["docs/api_compatibility.rst", "tests/test_circuitpython_api.py"], set()),
+        (["README.rst", ".github/workflows/tests.yml"], set()),
+        ([], set()),
+    ],
+)
+def test_affected_module_selection_includes_consumers(checker, paths, expected):
+    selected, reason = checker.affected_modules(paths)
+    assert selected == [name for name in checker.CHECKED_MODULES if name in expected]
+    assert bool(expected) == reason.startswith("Affected APIs:")
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "src/adafruit_blinka/microcontroller/generic_agnostic_board/pin.py",
+        "src/adafruit_blinka/agnostic/__init__.py",
+        "src/microcontroller/__init__.py",
+        "src/micropython/__init__.py",
+        "src/unknown_backend.py",
+        "src/busio/helper.py",
+        "src/board_imports.json",
+        "src/microcontroller_imports.json",
+        "scripts/check_circuitpython_api.py",
+        "requirements-api.txt",
+        "requirements.txt",
+        "setup.py",
+        "pyproject.toml",
+    ],
+)
+def test_shared_backend_unknown_source_and_tooling_changes_check_everything(
+    checker, path
+):
+    selected, reason = checker.affected_modules(["docs/index.rst", path])
+    assert selected == list(checker.CHECKED_MODULES)
+    assert "full audited profile" in reason
+
+
+def test_resolve_commit_treats_ref_as_data_and_validates_git_result(
+    checker, monkeypatch
+):
+    calls = []
+
+    def git(*arguments):
+        calls.append(arguments)
+        return ("a" * 40 + "\n").encode()
+
+    monkeypatch.setattr(checker, "git_output", git)
+    assert checker.resolve_commit("--output=/untrusted") == "a" * 40
+    assert calls == [
+        ("rev-parse", "--verify", "--end-of-options", "--output=/untrusted^{commit}")
+    ]
+
+
+@pytest.mark.parametrize("value", [b"", b"HEAD\n", b"--output=elsewhere\n", b"a" * 39])
+def test_non_commit_git_output_is_never_used_for_diff_or_archive(
+    checker, monkeypatch, value
+):
+    calls = []
+
+    def git(*arguments):
+        calls.append(arguments)
+        return value
+
+    monkeypatch.setattr(checker, "git_output", git)
+    with pytest.raises(checker.CheckError, match="commit ID"):
+        checker.revision_pair("origin/main")
+    assert len(calls) == 1
+    assert calls[0][0] == "rev-parse"
+
+
+@pytest.mark.parametrize("width", [40, 64])
+def test_revision_pair_uses_merge_base_and_nul_delimited_no_renames_diff(
+    checker, monkeypatch, width
+):
+    head, target, base = "b" * width, "c" * width, "a" * width
+    calls = []
+    paths = ["src/busio.py", "docs/new\nname.rst", "src/old_name.py"]
+
+    def git(*arguments):
+        calls.append(arguments)
+        if arguments[0] == "rev-parse":
+            return (
+                (head if arguments[-1] == "HEAD^{commit}" else target) + "\n"
+            ).encode()
+        if arguments[0] == "merge-base":
+            assert arguments == ("merge-base", target, head)
+            return (base + "\n").encode()
+        assert arguments == (
+            "diff",
+            "--no-ext-diff",
+            "--no-textconv",
+            "--no-renames",
+            "--name-only",
+            "-z",
+            base,
+            head,
+            "--",
+        )
+        return "\0".join(paths).encode() + b"\0"
+
+    monkeypatch.setattr(checker, "git_output", git)
+    assert checker.revision_pair("origin/main") == (base, head, paths)
+    assert [call[0] for call in calls] == [
+        "rev-parse",
+        "rev-parse",
+        "merge-base",
+        "diff",
+    ]
+
+
+@pytest.mark.parametrize("base", [b"", b"HEAD\n", b"a" * 39])
+def test_invalid_merge_base_stops_before_diff_or_archive(checker, monkeypatch, base):
+    calls = []
+
+    def git(*arguments):
+        calls.append(arguments)
+        return base if arguments[0] == "merge-base" else b"a" * 40
+
+    monkeypatch.setattr(checker, "git_output", git)
+    monkeypatch.setattr(
+        checker,
+        "extract_source",
+        lambda *_args: pytest.fail("An invalid merge base must never be archived"),
+    )
+    with pytest.raises(checker.CheckError, match="valid merge base"):
+        checker.compare_revisions(empty_report(checker), "origin/main", ["busio"])
+    assert [call[0] for call in calls] == ["rev-parse", "rev-parse", "merge-base"]
+
+
+@pytest.mark.parametrize("failure", ["exit", "timeout"])
+def test_git_failures_are_tool_errors(checker, monkeypatch, failure):
+    def run(command, **kwargs):
+        assert command == ["git", "rev-parse", "HEAD"]
+        assert kwargs["cwd"] == checker.ROOT
+        assert kwargs["capture_output"] and not kwargs["check"]
+        assert kwargs["timeout"] == 60
+        if failure == "timeout":
+            raise subprocess.TimeoutExpired(command, 60)
+        return SimpleNamespace(returncode=128, stdout=b"", stderr=b"bad revision")
+
+    monkeypatch.setattr(checker.subprocess, "run", run)
+    with pytest.raises(checker.CheckError):
+        checker.git_output("rev-parse", "HEAD")
+
+
+def test_git_cannot_be_redirected_by_inherited_repository_environment(
+    checker, monkeypatch
+):
+    monkeypatch.setenv("GIT_DIR", "/not/the/selected/repository")
+    monkeypatch.setenv("GIT_WORK_TREE", "/not/the/selected/source")
+    monkeypatch.setenv("CHECKER_TEST_PRESERVE", "kept")
+
+    def run(_command, **kwargs):
+        assert kwargs["cwd"] == checker.ROOT
+        assert not any(key.startswith("GIT_") for key in kwargs["env"])
+        assert kwargs["env"]["CHECKER_TEST_PRESERVE"] == "kept"
+        return SimpleNamespace(returncode=0, stdout=b"checked\n", stderr=b"")
+
+    monkeypatch.setattr(checker.subprocess, "run", run)
+    assert checker.git_output("rev-parse", "HEAD") == b"checked\n"
+
+
+def test_real_revision_gate_with_private_git_and_guarded_mypy(
+    checker, monkeypatch, tmp_path
+):
+    """Exercise the actual worker; all source edits and commits stay in a fixture."""
+    pytest.importorskip("mypy.stubtest")
+    try:
+        checker.metadata.distribution("circuitpython-stubs")
+        mypy_version = checker.metadata.version("mypy")
+    except checker.metadata.PackageNotFoundError:
+        pytest.skip(
+            "The optional API-checking development requirements are not installed"
+        )
+    if mypy_version != checker.REFERENCE["mypy"]:
+        pytest.skip("This integration test requires the pinned mypy development tool")
+
+    fixture = tmp_path / "repository"
+    fixture.mkdir()
+    checker.extract_source(checker.resolve_commit("HEAD"), fixture)
+    environment = {
+        key: value for key, value in os.environ.items() if not key.startswith("GIT_")
+    }
+
+    def git(*arguments):
+        result = subprocess.run(
+            [
+                "git",
+                "-c",
+                "core.hooksPath=/dev/null",
+                "-c",
+                "commit.gpgsign=false",
+                "-c",
+                "user.name=API checker fixture",
+                "-c",
+                "user.email=api-checker@example.invalid",
+                *arguments,
+            ],
+            cwd=fixture,
+            env=environment,
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=30,
+        )
+        return result.stdout.strip()
+
+    git("init", "-q")
+    git("add", "src")
+    git("commit", "-qm", "Fixture base")
+    base = git("rev-parse", "HEAD")
+    rainbow = fixture / "src/rainbowio.py"
+    original = rainbow.read_text()
+    assert original.count("def colorwheel(color_value):") == 1
+    rainbow.write_text(
+        original.replace(
+            "def colorwheel(color_value):", "def colorwheel(color_value, extra):"
+        )
+    )
+    git("add", "src/rainbowio.py")
+    git("commit", "-qm", "Fixture required argument regression")
+    head = git("rev-parse", "HEAD")
+
+    monkeypatch.setattr(checker, "ROOT", fixture)
+    report_path = tmp_path / "real-revisions.json"
+    assert checker.main(["--base", base, "--json", str(report_path)]) == 1
+    report = json.loads(report_path.read_text())
+    assert report["errors"] == []
+    assert report["checked_modules"] == ["rainbowio"]
+    assert report["base_revision"] == base
+    assert report["head_revision"] == head
+    assert report["base_diagnostics"]
+    assert set(report["base_diagnostics"]).issubset(report["diagnostics"])
+    assert report["new"] == [
+        'rainbowio.colorwheel is inconsistent, stub does not have parameter "extra"'
+    ]
+    assert report["resolved"] == []
+
+    # A later docs-only commit has no audited API changes, even though HEAD's
+    # source still has the deliberately introduced discrepancy.
+    (fixture / "fixture-docs.rst").write_text("Private fixture documentation.\n")
+    git("add", "fixture-docs.rst")
+    git("commit", "-qm", "Fixture documentation only")
+    assert checker.main(["--base", head, "--json", str(report_path)]) == 0
+    docs_report = json.loads(report_path.read_text())
+    assert docs_report["errors"] == []
+    assert docs_report["checked_modules"] == []
+    assert docs_report["base_diagnostics"] == docs_report["diagnostics"] == []
+
+
+def archive_payload(entries):
+    """Build a synthetic Git archive without extracting untrusted test entries."""
+    payload = io.BytesIO()
+    with tarfile.open(fileobj=payload, mode="w:") as archive:
+        for name, kind in entries:
+            member = tarfile.TarInfo(name)
+            member.type = kind
+            data = (
+                b"raise AssertionError('must not import')\n" if member.isfile() else b""
+            )
+            member.size = len(data)
+            if member.issym() or member.islnk():
+                member.linkname = "../../outside"
+            archive.addfile(member, io.BytesIO(data) if data else None)
+    return payload.getvalue()
+
+
+def test_archive_extracts_only_source_into_requested_directory(
+    checker, monkeypatch, tmp_path
+):
+    revision = "a" * 40
+    payload = archive_payload(
+        [
+            ("src", tarfile.DIRTYPE),
+            ("src/busio.py", tarfile.REGTYPE),
+            ("src/microcontroller/__init__.py", tarfile.REGTYPE),
+        ]
+    )
+    calls = []
+
+    def git(*arguments):
+        calls.append(arguments)
+        return payload
+
+    monkeypatch.setattr(checker, "git_output", git)
+    destination = tmp_path / "snapshot"
+    source = checker.extract_source(revision, destination)
+    assert source == destination / "src"
+    assert checker.source_modules(source) == {"busio", "microcontroller"}
+    assert calls == [("archive", "--format=tar", revision, "src")]
+
+
+@pytest.mark.parametrize(
+    "name,kind",
+    [
+        ("/absolute.py", tarfile.REGTYPE),
+        ("../outside.py", tarfile.REGTYPE),
+        ("src/../outside.py", tarfile.REGTYPE),
+        ("other/file.py", tarfile.REGTYPE),
+        ("src/link.py", tarfile.SYMTYPE),
+        ("src/link.py", tarfile.LNKTYPE),
+        ("src/pipe", tarfile.FIFOTYPE),
+        ("src/device", tarfile.CHRTYPE),
+        ("src/device", tarfile.BLKTYPE),
+    ],
+)
+def test_unsafe_archive_entries_are_rejected_before_any_write(
+    checker, monkeypatch, tmp_path, name, kind
+):
+    # A valid first member must not be written before validating later members.
+    payload = archive_payload([("src/safe.py", tarfile.REGTYPE), (name, kind)])
+    monkeypatch.setattr(checker, "git_output", lambda *_arguments: payload)
+    destination = tmp_path / "snapshot"
+    before = set(tmp_path.rglob("*"))
+    with pytest.raises(checker.CheckError, match="Unsafe Git archive|link or special"):
+        checker.extract_source("a" * 40, destination)
+    assert not destination.exists()
+    assert set(tmp_path.rglob("*")) == before
+
+
+@pytest.mark.parametrize("case", ["missing", "other_distribution", "directory"])
+def test_selected_roots_require_actual_installed_reference_stubs(
+    checker, monkeypatch, tmp_path, case
+):
+    installed = tmp_path / "installed"
+    installed.mkdir()
+    reference = installed / "busio-stubs/__init__.pyi"
+    metadata_files = [PurePosixPath("busio-stubs/__init__.pyi")]
+    monkeypatch.setattr(
+        checker.metadata,
+        "distribution",
+        lambda name: SimpleNamespace(
+            files=metadata_files, locate_file=lambda entry: installed / entry
+        ),
+    )
+    stub = None
+    if case != "missing":
+        path = reference if case == "directory" else tmp_path / "other/busio.pyi"
+        stub = SimpleNamespace(path=str(path))
+        if case == "directory":
+            metadata_files[:] = [PurePosixPath("busio-stubs/py.typed")]
+    with pytest.raises(checker.CheckError, match="No CircuitPython reference stub"):
+        checker.verify_reference_stubs(
+            SimpleNamespace(get_stub=lambda _name: stub), ["busio"]
+        )
+
+
+def test_reference_stub_verification_checks_every_selected_root(
+    checker, monkeypatch, tmp_path
+):
+    files = [PurePosixPath(name + "-stubs/__init__.pyi") for name in ("board", "busio")]
+    calls = []
+    monkeypatch.setattr(
+        checker.metadata,
+        "distribution",
+        lambda _name: SimpleNamespace(
+            files=files, locate_file=lambda entry: tmp_path / entry
+        ),
+    )
+
+    def get_stub(name):
+        calls.append(name)
+        return SimpleNamespace(path=str(tmp_path / (name + "-stubs/__init__.pyi")))
+
+    checker.verify_reference_stubs(
+        SimpleNamespace(get_stub=get_stub), ["board", "busio"]
+    )
+    assert calls == ["board", "busio"]
