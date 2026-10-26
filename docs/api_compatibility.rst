@@ -89,7 +89,7 @@ not that Blinka has no discrepancies. Exit status ``1`` indicates a regression;
 be treated as accepted API differences.
 
 Choosing the stub reference
---------------------------
+----------------------------
 
 Each API-check run in CI queries the official CircuitPython releases for the
 latest stable release, installs matching ``circuitpython-stubs`` and passes the
@@ -152,7 +152,7 @@ electrical operation, or compatibility on every supported board. Those still
 need focused tests and, where appropriate, hardware testing.
 
 Interpreting discrepancies
--------------------------
+----------------------------
 
 A diagnostic records an observed difference, not a confirmed Blinka defect or a
 promise to implement a feature. The stubs can be wrong or represent an API
