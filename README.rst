@@ -92,9 +92,9 @@ Environments created with uv
 
 By default, ``uv venv`` does not install pip into the environment. Blinka's
 automatic installer requires pip; it does not install pip or run uv for you.
-If pip is unavailable, a confirmed installation reports manual recovery guidance
-without launching an installer. Missing optional PWM/NeoPixel packages still do
-not block unrelated GPIO use.
+If pip has no runnable entry point, a confirmed installation reports manual
+recovery guidance without launching an installer. Missing optional PWM/NeoPixel
+packages still do not block unrelated GPIO use.
 
 Use uv to install the required backends into the same environment. For Raspberry
 Pi GPIO, for example:

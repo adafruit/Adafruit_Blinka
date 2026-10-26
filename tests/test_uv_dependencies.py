@@ -7,6 +7,7 @@
 import io
 import shlex
 import sys
+from importlib.machinery import ModuleSpec, PathFinder, SourceFileLoader
 from types import SimpleNamespace
 
 import pytest
@@ -44,6 +45,28 @@ def detector():
         ),
         chip=SimpleNamespace(id="AM33XX"),
     )
+
+
+@pytest.fixture
+def pip_search_path(monkeypatch, tmp_path):
+    """Build an isolated pip layout whose source must never be executed."""
+
+    def configure(files):
+        (tmp_path / "pip").mkdir()
+        for filename in files:
+            source = tmp_path / filename
+            source.parent.mkdir(parents=True, exist_ok=True)
+            source.write_text(
+                "raise AssertionError('Pip discovery must not execute source')\n",
+                encoding="utf-8",
+            )
+        for module_name in tuple(sys.modules):
+            if module_name == "pip" or module_name.startswith("pip."):
+                monkeypatch.delitem(sys.modules, module_name)
+        monkeypatch.setattr(sys, "path", [str(tmp_path)])
+        monkeypatch.setattr(sys, "meta_path", [PathFinder])
+
+    return configure
 
 
 @pytest.fixture
@@ -111,23 +134,69 @@ def test_pip_availability_checks_spec_without_importing(
 
     def find_spec(name):
         names.append(name)
-        return object() if present else None
+        return (
+            ModuleSpec("pip", SourceFileLoader("pip", "/fake/pip.py"))
+            if present
+            else None
+        )
 
     monkeypatch.setattr(platform_dependencies.importlib.util, "find_spec", find_spec)
     assert dependency_check_environment() is present
     assert names == ["pip"]
 
 
-@pytest.mark.parametrize("failure", [ImportError, ModuleNotFoundError, ValueError])
+@pytest.mark.parametrize(
+    "failure",
+    [ImportError, ModuleNotFoundError, AttributeError, TypeError, ValueError, KeyError],
+)
+@pytest.mark.parametrize("lookup", ["pip", "pip.__main__"])
 def test_pip_availability_treats_invalid_spec_as_missing(
-    monkeypatch, dependency_check_environment, failure
+    monkeypatch, dependency_check_environment, failure, lookup
 ):
-    def invalid_spec(name):
+    def find_spec(name):
         assert name == "pip"
-        raise failure("No usable pip spec")
+        if lookup == "pip":
+            raise failure("No usable pip spec")
+        return ModuleSpec(
+            "pip", SourceFileLoader("pip", "/fake/pip/__init__.py"), is_package=True
+        )
 
-    monkeypatch.setattr(platform_dependencies.importlib.util, "find_spec", invalid_spec)
+    def find_main(name, _path):
+        assert name == "pip.__main__"
+        raise failure("No usable pip entry point")
+
+    monkeypatch.setattr(platform_dependencies.importlib.util, "find_spec", find_spec)
+    monkeypatch.setattr(PathFinder, "find_spec", find_main)
     assert dependency_check_environment() is False
+
+
+@pytest.mark.parametrize(
+    "files, available",
+    [
+        ([], False),
+        (["pip/__init__.py"], False),
+        (["pip/__init__.py", "pip/__main__.py"], True),
+        (["pip/__main__.py"], True),
+        (["pip.py"], True),
+        (["pip/__init__.py", "pip/__main__/__init__.py"], False),
+        (["pip/__init__.py", "pip/__main__/entry.py"], False),
+    ],
+    ids=[
+        "namespace_without_main",
+        "package_without_main",
+        "complete_package",
+        "namespace_with_main",
+        "single_file_module",
+        "main_is_package",
+        "main_is_namespace",
+    ],
+)
+def test_pip_availability_requires_discoverable_entry_point(
+    dependency_check_environment, pip_search_path, files, available
+):
+    pip_search_path(files)
+    assert dependency_check_environment() is available
+    assert not any(name == "pip" or name.startswith("pip.") for name in sys.modules)
 
 
 def test_manual_command_uses_uv_for_current_python_without_pip(monkeypatch):
@@ -225,7 +294,7 @@ def test_confirmed_install_without_pip_reports_manual_recovery(
     else:
         monkeypatch.delitem(sys.modules, "Adafruit_BBIO", raising=False)
 
-    with pytest.raises(RuntimeError, match="does not contain pip") as raised:
+    with pytest.raises(RuntimeError, match="no runnable pip") as raised:
         installer.run()
 
     message = str(raised.value)
@@ -269,7 +338,7 @@ def test_optional_install_without_pip_warns_even_for_loaded_backends(
         else:
             monkeypatch.delitem(sys.modules, module_name, raising=False)
 
-    with pytest.warns(RuntimeWarning, match="does not contain pip") as caught:
+    with pytest.warns(RuntimeWarning, match="no runnable pip") as caught:
         assert not installer.run()
 
     message = str(caught[0].message)
@@ -283,6 +352,62 @@ def test_optional_install_without_pip_warns_even_for_loaded_backends(
     assert "restart Python" in message
     assert len(installer.prompts) == 1
     assert dependency_queries == [True]
+    assert installer.commands == []
+    assert installer.invalidations == []
+
+
+@pytest.mark.parametrize(
+    "files",
+    [
+        [],
+        ["pip/__init__.py"],
+        ["pip/__init__.py", "pip/__main__/__init__.py"],
+        ["pip/__init__.py", "pip/__main__/entry.py"],
+    ],
+    ids=[
+        "namespace_without_main",
+        "package_without_main",
+        "main_is_package",
+        "main_is_namespace",
+    ],
+)
+def test_unusable_pip_preserves_loaded_optional_startup_and_uv_recovery(
+    monkeypatch, dependency_check_environment, pip_search_path, installer, files
+):
+    executable = "/python env's/bin/python"
+    requirement = "rpi_ws281x>=4.0.0"
+    loaded_module = SimpleNamespace()
+    installer.missing = [requirement]
+    monkeypatch.setattr(platform_dependencies.sys, "executable", executable)
+    monkeypatch.setattr(
+        platform_dependencies, "_pip_available", dependency_check_environment
+    )
+    monkeypatch.setattr(
+        platform_dependencies,
+        "get_platform_dependencies",
+        lambda *_args: [("_rpi_ws281x", requirement)],
+    )
+    monkeypatch.setattr(
+        platform_dependencies.shutil, "which", lambda _name: "/uv tools/bin/uv"
+    )
+    monkeypatch.setitem(sys.modules, "_rpi_ws281x", loaded_module)
+    pip_search_path(files)
+
+    command = platform_dependencies.format_install_command([requirement], executable)
+    assert shlex.split(command) == [
+        "uv",
+        "pip",
+        "install",
+        "--python",
+        executable,
+        requirement,
+    ]
+    with pytest.warns(RuntimeWarning, match="no runnable pip"):
+        assert not installer.run()
+
+    assert sys.modules["_rpi_ws281x"] is loaded_module
+    assert not any(name == "pip" or name.startswith("pip.") for name in sys.modules)
+    assert len(installer.prompts) == 1
     assert installer.commands == []
     assert installer.invalidations == []
 

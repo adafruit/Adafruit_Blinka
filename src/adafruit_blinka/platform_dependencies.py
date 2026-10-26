@@ -5,6 +5,7 @@
 """Runtime installation helpers for platform-specific dependencies."""
 
 import importlib
+import importlib.machinery
 import importlib.metadata
 import importlib.util
 import os
@@ -151,10 +152,21 @@ def get_unsupported_platform_dependency_message(
 
 
 def _pip_available():
-    """Check for this interpreter's pip without importing or executing it."""
+    """Find this interpreter's pip entry point without importing or executing it."""
     try:
-        return importlib.util.find_spec("pip") is not None
-    except (ImportError, ValueError):
+        spec = importlib.util.find_spec("pip")
+        if spec is not None and spec.submodule_search_locations is not None:
+            # Dotted util.find_spec would import pip. Search its package paths
+            # directly instead, including namespace leftovers from uninstalling.
+            spec = importlib.machinery.PathFinder.find_spec(
+                "pip.__main__", spec.submodule_search_locations
+            )
+        return (
+            spec is not None
+            and spec.loader is not None
+            and spec.submodule_search_locations is None
+        )
+    except (ImportError, AttributeError, KeyError, TypeError, ValueError):
         return False
 
 
@@ -292,7 +304,7 @@ def _install_platform_dependencies(detector, python_version, missing, optional):
             ["uv", "pip", "install", "--python", sys.executable, *missing]
         )
         message = (
-            "The current Python environment does not contain pip, so Blinka cannot "
+            "The current Python environment has no runnable pip entry point, so Blinka cannot "
             "install its platform dependencies automatically. Install them with "
             "your environment's package manager, or install pip into this "
             f"environment and retry. If using uv, run: {uv_command}\n"
