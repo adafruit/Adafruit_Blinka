@@ -18,7 +18,6 @@ from pathlib import Path, PurePosixPath
 import re
 import subprocess
 import sys
-import tarfile
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -332,16 +331,18 @@ def run_stubtest(source=None, modules=None):
     return parse_diagnostics(process, modules)
 
 
-def git_output(*arguments):
+def git_output(*arguments, input_data=None):
     """Run bounded read-only Git operations; callers pass resolved commits."""
     environment = {
         key: value for key, value in os.environ.items() if not key.startswith("GIT_")
     }
+    environment["GIT_NO_REPLACE_OBJECTS"] = "1"
     try:
         result = subprocess.run(
             ["git", *arguments],
             cwd=ROOT,
             env=environment,
+            input=input_data,
             capture_output=True,
             check=False,
             timeout=60,
@@ -444,37 +445,75 @@ def affected_modules(paths):
 
 
 def extract_source(revision, destination):
-    """Materialize only regular source files; never extract links or traversal."""
-    payload = git_output("archive", "--format=tar", revision, "src")
+    """Read exact committed blobs, ignoring archive/export attributes entirely."""
+    # Keep complete manifest/framing validation ahead of every filesystem write.
+    # pylint: disable=too-many-locals
+    listing = git_output("ls-tree", "-r", "-z", "--full-tree", revision, "--", "src")
     destination = Path(destination).resolve()
-    with tarfile.open(fileobj=io.BytesIO(payload), mode="r:") as archive:
-        members = archive.getmembers()
-        for member in members:
-            path = PurePosixPath(member.name)
+    entries = []
+    for record in listing.split(b"\0"):
+        if not record:
+            continue
+        try:
+            details, raw_path = record.split(b"\t", 1)
+            mode, kind, object_id = details.split()
+        except ValueError as error:
+            raise CheckError("Invalid Git source-tree entry.") from error
+        path = PurePosixPath(os.fsdecode(raw_path))
+        if (
+            path.is_absolute()
+            or ".." in path.parts
+            or not path.parts
+            or path.parts[0] != "src"
+        ):
+            raise CheckError("Unsafe Git source path: " + str(path))
+        if mode not in (b"100644", b"100755") or kind != b"blob":
+            raise CheckError(
+                "Git source contains a link or special entry: " + str(path)
+            )
+        if not re.fullmatch(rb"(?:[0-9a-f]{40}|[0-9a-f]{64})", object_id):
+            raise CheckError("Invalid Git source object ID.")
+        entries.append((path, object_id))
+    contents = []
+    if entries:
+        stream = io.BytesIO(
+            git_output(
+                "cat-file",
+                "--batch",
+                input_data=b"".join(object_id + b"\n" for _, object_id in entries),
+            )
+        )
+        for path, object_id in entries:
+            fields = stream.readline().rstrip(b"\n").split()
             if (
-                path.is_absolute()
-                or ".." in path.parts
-                or not path.parts
-                or path.parts[0] != "src"
+                len(fields) != 3
+                or fields[:2] != [object_id, b"blob"]
+                or not fields[2].isdigit()
             ):
-                raise CheckError("Unsafe Git archive path: " + member.name)
-            if not (member.isdir() or member.isfile()):
-                raise CheckError(
-                    "Git source archive contains a link or special file: " + member.name
-                )
-        for member in members:
-            target = destination.joinpath(*PurePosixPath(member.name).parts)
-            resolved = target.resolve()
-            if resolved != destination and destination not in resolved.parents:
-                raise CheckError(
-                    "Archive target escapes the snapshot directory: " + member.name
-                )
-            if member.isdir():
-                target.mkdir(parents=True, exist_ok=True)
-            else:
-                target.parent.mkdir(parents=True, exist_ok=True)
-                with archive.extractfile(member) as source:
-                    target.write_bytes(source.read())
+                raise CheckError("Invalid Git source-blob response.")
+            size = int(fields[2])
+            if size > len(stream.getbuffer()) - stream.tell() - 1:
+                raise CheckError("Incomplete Git source-blob response.")
+            content = stream.read(size)
+            if len(content) != size or stream.read(1) != b"\n":
+                raise CheckError("Incomplete Git source-blob response.")
+            contents.append((path, content))
+        if stream.read():
+            raise CheckError("Unexpected trailing Git source-blob response.")
+    # Validate every target before writing any content. Links in the tree were
+    # rejected above; also reject any pre-existing filesystem link escape.
+    targets = []
+    for path, content in contents:
+        target = destination.joinpath(*path.parts)
+        if destination not in target.resolve().parents:
+            raise CheckError(
+                "Source target escapes the snapshot directory: " + str(path)
+            )
+        targets.append((target, content))
+    for target, content in targets:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(content)
+    (destination / "src").mkdir(parents=True, exist_ok=True)
     return destination / "src"
 
 
@@ -636,7 +675,6 @@ def main(argv=None):
         CheckError,
         OSError,
         ValueError,
-        tarfile.TarError,
         metadata.PackageNotFoundError,
     ) as error:
         report["errors"].append(str(error))

@@ -4,12 +4,10 @@
 """Exercise the API checker without importing Blinka drivers or installing tools."""
 
 import importlib.util
-import io
 import json
 import os
 from pathlib import Path, PurePosixPath
 import subprocess
-import tarfile
 from types import ModuleType, SimpleNamespace
 
 import pytest
@@ -965,7 +963,7 @@ def test_resolve_commit_treats_ref_as_data_and_validates_git_result(
 
 
 @pytest.mark.parametrize("value", [b"", b"HEAD\n", b"--output=elsewhere\n", b"a" * 39])
-def test_non_commit_git_output_is_never_used_for_diff_or_archive(
+def test_non_commit_git_output_is_never_used_for_diff_or_source_extraction(
     checker, monkeypatch, value
 ):
     calls = []
@@ -1022,7 +1020,7 @@ def test_revision_pair_uses_merge_base_and_nul_delimited_no_renames_diff(
 
 
 @pytest.mark.parametrize("base", [b"", b"HEAD\n", b"a" * 39])
-def test_invalid_merge_base_stops_before_diff_or_archive(checker, monkeypatch, base):
+def test_invalid_merge_base_stops_before_diff_or_extraction(checker, monkeypatch, base):
     calls = []
 
     def git(*arguments):
@@ -1033,7 +1031,7 @@ def test_invalid_merge_base_stops_before_diff_or_archive(checker, monkeypatch, b
     monkeypatch.setattr(
         checker,
         "extract_source",
-        lambda *_args: pytest.fail("An invalid merge base must never be archived"),
+        lambda *_args: pytest.fail("An invalid merge base must never be extracted"),
     )
     with pytest.raises(checker.CheckError, match="valid merge base"):
         checker.compare_revisions(empty_report(checker), "origin/main", ["busio"])
@@ -1061,20 +1059,32 @@ def test_git_cannot_be_redirected_by_inherited_repository_environment(
 ):
     monkeypatch.setenv("GIT_DIR", "/not/the/selected/repository")
     monkeypatch.setenv("GIT_WORK_TREE", "/not/the/selected/source")
+    monkeypatch.setenv("GIT_NO_REPLACE_OBJECTS", "0")
+    monkeypatch.setenv("GIT_CONFIG_COUNT", "1")
+    monkeypatch.setenv("GIT_CONFIG_KEY_0", "core.worktree")
+    monkeypatch.setenv("GIT_CONFIG_VALUE_0", "/not/the/selected/worktree")
     monkeypatch.setenv("CHECKER_TEST_PRESERVE", "kept")
 
-    def run(_command, **kwargs):
+    def run(command, **kwargs):
+        assert command == ["git", "cat-file", "--batch"]
         assert kwargs["cwd"] == checker.ROOT
-        assert not any(key.startswith("GIT_") for key in kwargs["env"])
+        assert kwargs["input"] == b"a" * 40 + b"\n"
+        assert {
+            key: value for key, value in kwargs["env"].items() if key.startswith("GIT_")
+        } == {"GIT_NO_REPLACE_OBJECTS": "1"}
         assert kwargs["env"]["CHECKER_TEST_PRESERVE"] == "kept"
         return SimpleNamespace(returncode=0, stdout=b"checked\n", stderr=b"")
 
     monkeypatch.setattr(checker.subprocess, "run", run)
-    assert checker.git_output("rev-parse", "HEAD") == b"checked\n"
+    assert (
+        checker.git_output("cat-file", "--batch", input_data=b"a" * 40 + b"\n")
+        == b"checked\n"
+    )
 
 
+@pytest.mark.parametrize("export_attributes", [False, True])
 def test_real_revision_gate_with_private_git_and_guarded_mypy(
-    checker, monkeypatch, tmp_path
+    checker, monkeypatch, tmp_path, export_attributes
 ):
     """Exercise the actual worker; all source edits and commits stay in a fixture."""
     pytest.importorskip("mypy.stubtest")
@@ -1091,6 +1101,14 @@ def test_real_revision_gate_with_private_git_and_guarded_mypy(
     fixture = tmp_path / "repository"
     fixture.mkdir()
     checker.extract_source(checker.resolve_commit("HEAD"), fixture)
+    rainbow = fixture / "src/rainbowio.py"
+    if export_attributes:
+        (fixture / ".gitattributes").write_text(
+            "src/rainbowio.py export-ignore export-subst\n"
+            "src/export_marker.txt export-subst\n"
+        )
+        rainbow.write_bytes(rainbow.read_bytes() + b"\n# source revision $Format:%H$\n")
+        (fixture / "src/export_marker.txt").write_bytes(b"literal $Format:%H$\r\n")
     environment = {
         key: value for key, value in os.environ.items() if not key.startswith("GIT_")
     }
@@ -1101,6 +1119,10 @@ def test_real_revision_gate_with_private_git_and_guarded_mypy(
                 "git",
                 "-c",
                 "core.hooksPath=/dev/null",
+                "-c",
+                "core.attributesFile=/dev/null",
+                "-c",
+                "core.autocrlf=false",
                 "-c",
                 "commit.gpgsign=false",
                 "-c",
@@ -1120,14 +1142,15 @@ def test_real_revision_gate_with_private_git_and_guarded_mypy(
 
     git("init", "-q")
     git("add", "src")
+    if export_attributes:
+        git("add", ".gitattributes")
     git("commit", "-qm", "Fixture base")
     base = git("rev-parse", "HEAD")
-    rainbow = fixture / "src/rainbowio.py"
-    original = rainbow.read_text()
-    assert original.count("def colorwheel(color_value):") == 1
-    rainbow.write_text(
-        original.replace(
-            "def colorwheel(color_value):", "def colorwheel(color_value, extra):"
+    base_content = rainbow.read_bytes()
+    assert base_content.count(b"def colorwheel(color_value):") == 1
+    rainbow.write_bytes(
+        base_content.replace(
+            b"def colorwheel(color_value):", b"def colorwheel(color_value, extra):"
         )
     )
     git("add", "src/rainbowio.py")
@@ -1135,6 +1158,16 @@ def test_real_revision_gate_with_private_git_and_guarded_mypy(
     head = git("rev-parse", "HEAD")
 
     monkeypatch.setattr(checker, "ROOT", fixture)
+    if export_attributes:
+        assert (
+            checker.extract_source(base, tmp_path / "exact-base") / "rainbowio.py"
+        ).read_bytes() == base_content
+        assert (
+            checker.extract_source(head, tmp_path / "exact-head") / "rainbowio.py"
+        ).read_bytes() == rainbow.read_bytes()
+        assert (
+            tmp_path / "exact-head/src/export_marker.txt"
+        ).read_bytes() == b"literal $Format:%H$\r\n"
     report_path = tmp_path / "real-revisions.json"
     assert checker.main(["--base", base, "--json", str(report_path)]) == 1
     report = json.loads(report_path.read_text())
@@ -1161,74 +1194,206 @@ def test_real_revision_gate_with_private_git_and_guarded_mypy(
     assert docs_report["base_diagnostics"] == docs_report["diagnostics"] == []
 
 
-def archive_payload(entries):
-    """Build a synthetic Git archive without extracting untrusted test entries."""
-    payload = io.BytesIO()
-    with tarfile.open(fileobj=payload, mode="w:") as archive:
-        for name, kind in entries:
-            member = tarfile.TarInfo(name)
-            member.type = kind
-            data = (
-                b"raise AssertionError('must not import')\n" if member.isfile() else b""
-            )
-            member.size = len(data)
-            if member.issym() or member.islnk():
-                member.linkname = "../../outside"
-            archive.addfile(member, io.BytesIO(data) if data else None)
-    return payload.getvalue()
+def tree_entry(name, mode=b"100644", kind=b"blob", object_id=b"a" * 40):
+    """Encode one NUL-delimited ls-tree entry, including unsafe synthetic paths."""
+    return b" ".join((mode, kind, object_id)) + b"\t" + os.fsencode(name) + b"\0"
 
 
-def test_archive_extracts_only_source_into_requested_directory(
-    checker, monkeypatch, tmp_path
+def blob_response(content, object_id=b"a" * 40):
+    """Encode cat-file's exact byte-counted batch response, not a text payload."""
+    return object_id + b" blob " + str(len(content)).encode() + b"\n" + content + b"\n"
+
+
+@pytest.mark.parametrize("width", [40, 64])
+def test_tree_extraction_preserves_exact_source_and_executable_blob_bytes(
+    checker, monkeypatch, tmp_path, width
 ):
-    revision = "a" * 40
-    payload = archive_payload(
-        [
-            ("src", tarfile.DIRTYPE),
-            ("src/busio.py", tarfile.REGTYPE),
-            ("src/microcontroller/__init__.py", tarfile.REGTYPE),
-        ]
+    revision, first_id, second_id = "c" * width, b"a" * width, b"b" * width
+    first = b"raise AssertionError('must not import')\n"
+    # Binary bytes, embedded framing-looking text, and export substitutions must
+    # remain untouched, including for executable-mode source-tree entries.
+    second = b"\x00\xff\r\nliteral $Format:%H$\n" + first_id + b" blob 0\n\n"
+    listing = tree_entry("src/busio.py", object_id=first_id) + tree_entry(
+        "src/microcontroller/__init__.py", b"100755", object_id=second_id
     )
     calls = []
 
-    def git(*arguments):
-        calls.append(arguments)
-        return payload
+    def git(*arguments, input_data=None):
+        calls.append((arguments, input_data))
+        if arguments[0] == "ls-tree":
+            return listing
+        return blob_response(first, first_id) + blob_response(second, second_id)
 
     monkeypatch.setattr(checker, "git_output", git)
     destination = tmp_path / "snapshot"
     source = checker.extract_source(revision, destination)
     assert source == destination / "src"
-    assert checker.source_modules(source) == {"busio", "microcontroller"}
-    assert calls == [("archive", "--format=tar", revision, "src")]
+    assert (source / "busio.py").read_bytes() == first
+    assert (source / "microcontroller/__init__.py").read_bytes() == second
+    assert calls == [
+        (("ls-tree", "-r", "-z", "--full-tree", revision, "--", "src"), None),
+        (("cat-file", "--batch"), first_id + b"\n" + second_id + b"\n"),
+    ]
+
+
+def test_empty_source_tree_produces_an_empty_source_root_without_batch_call(
+    checker, monkeypatch, tmp_path
+):
+    calls = []
+
+    def git(*arguments, input_data=None):
+        calls.append((arguments, input_data))
+        assert arguments[0] == "ls-tree"
+        return b""
+
+    monkeypatch.setattr(checker, "git_output", git)
+    source = checker.extract_source("a" * 40, tmp_path / "snapshot")
+    assert source.is_dir()
+    assert not list(source.iterdir())
+    assert len(calls) == 1
 
 
 @pytest.mark.parametrize(
-    "name,kind",
+    "entry",
     [
-        ("/absolute.py", tarfile.REGTYPE),
-        ("../outside.py", tarfile.REGTYPE),
-        ("src/../outside.py", tarfile.REGTYPE),
-        ("other/file.py", tarfile.REGTYPE),
-        ("src/link.py", tarfile.SYMTYPE),
-        ("src/link.py", tarfile.LNKTYPE),
-        ("src/pipe", tarfile.FIFOTYPE),
-        ("src/device", tarfile.CHRTYPE),
-        ("src/device", tarfile.BLKTYPE),
+        tree_entry("/absolute.py"),
+        tree_entry("../outside.py"),
+        tree_entry("src/../outside.py"),
+        tree_entry("other/file.py"),
+        tree_entry("src/link.py", b"120000"),
+        tree_entry("src/submodule", b"160000", b"commit"),
+        tree_entry("src/tree", b"040000", b"tree"),
+        tree_entry("src/pipe", b"010000"),
+        tree_entry("src/device", b"020000"),
+        tree_entry("src/file.py", b"100644", b"tree"),
     ],
 )
-def test_unsafe_archive_entries_are_rejected_before_any_write(
-    checker, monkeypatch, tmp_path, name, kind
+def test_unsafe_tree_entries_are_rejected_before_any_write(
+    checker, monkeypatch, tmp_path, entry
 ):
-    # A valid first member must not be written before validating later members.
-    payload = archive_payload([("src/safe.py", tarfile.REGTYPE), (name, kind)])
-    monkeypatch.setattr(checker, "git_output", lambda *_arguments: payload)
+    # Even a valid first entry must not be written before validating all paths.
+    def git(*arguments, input_data=None):
+        assert arguments[0] == "ls-tree"
+        assert input_data is None
+        return tree_entry("src/safe.py") + entry
+
+    monkeypatch.setattr(checker, "git_output", git)
     destination = tmp_path / "snapshot"
     before = set(tmp_path.rglob("*"))
-    with pytest.raises(checker.CheckError, match="Unsafe Git archive|link or special"):
+    with pytest.raises(checker.CheckError, match="Unsafe Git source|link or special"):
         checker.extract_source("a" * 40, destination)
     assert not destination.exists()
     assert set(tmp_path.rglob("*")) == before
+
+
+@pytest.mark.parametrize(
+    "entry",
+    [
+        b"missing tab separator\0",
+        b"100644 blob\tsrc/file.py\0",
+        b"100644 blob " + b"a" * 40 + b" extra\tsrc/file.py\0",
+        tree_entry("src/file.py", object_id=b"a" * 39),
+        tree_entry("src/file.py", object_id=b"not-an-object-id"),
+    ],
+)
+def test_malformed_source_tree_records_fail_before_any_write(
+    checker, monkeypatch, tmp_path, entry
+):
+    def git(*arguments, input_data=None):
+        assert arguments[0] == "ls-tree"
+        assert input_data is None
+        return tree_entry("src/safe.py") + entry
+
+    monkeypatch.setattr(checker, "git_output", git)
+    destination = tmp_path / "snapshot"
+    with pytest.raises(checker.CheckError, match="Invalid Git source"):
+        checker.extract_source("a" * 40, destination)
+    assert not destination.exists()
+
+
+@pytest.mark.parametrize(
+    "response",
+    [
+        b"",
+        b"a" * 40 + b" missing\n",
+        b"a" * 40 + b" blob\n",
+        b"b" * 40 + b" blob 0\n\n",
+        b"a" * 40 + b" tree 0\n\n",
+        b"a" * 40 + b" blob -1\n\n",
+        b"a" * 40 + b" blob 18446744073709551616\n\n",
+        b"a" * 40 + b" blob size\n\n",
+        b"a" * 40 + b" blob 0 extra\n\n",
+        b"a" * 40 + b" blob 5\nabc\n",
+        b"a" * 40 + b" blob 3\nabc",
+        b"a" * 40 + b" blob 3\nabcX",
+        blob_response(b"valid") + b"unexpected trailing response\n",
+    ],
+)
+def test_invalid_or_truncated_batch_responses_fail_before_any_write(
+    checker, monkeypatch, tmp_path, response
+):
+    def git(*arguments, input_data=None):
+        if arguments[0] == "ls-tree":
+            return tree_entry("src/file.py")
+        assert input_data == b"a" * 40 + b"\n"
+        return response
+
+    monkeypatch.setattr(checker, "git_output", git)
+    destination = tmp_path / "snapshot"
+    with pytest.raises(checker.CheckError, match="Git source-blob response"):
+        checker.extract_source("c" * 40, destination)
+    assert not destination.exists()
+
+
+def test_late_batch_error_does_not_write_an_earlier_valid_blob(
+    checker, monkeypatch, tmp_path
+):
+    def git(*arguments, input_data=None):
+        if arguments[0] == "ls-tree":
+            return tree_entry("src/first.py") + tree_entry(
+                "src/second.py", object_id=b"b" * 40
+            )
+        assert input_data == b"a" * 40 + b"\n" + b"b" * 40 + b"\n"
+        return blob_response(b"valid first blob") + b"b" * 40 + b" missing\n"
+
+    monkeypatch.setattr(checker, "git_output", git)
+    destination = tmp_path / "snapshot"
+    with pytest.raises(checker.CheckError, match="Invalid Git source-blob response"):
+        checker.extract_source("c" * 40, destination)
+    assert not destination.exists()
+
+
+@pytest.mark.parametrize("link_is_file", [False, True])
+def test_existing_destination_symlink_escape_is_rejected_before_any_write(
+    checker, monkeypatch, tmp_path, link_is_file
+):
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    destination = tmp_path / "snapshot"
+    (destination / "src").mkdir(parents=True)
+    if link_is_file:
+        outside_file = outside / "escape.py"
+        outside_file.write_bytes(b"original outside bytes")
+        (destination / "src/escape.py").symlink_to(outside_file)
+        escape_path = "src/escape.py"
+    else:
+        (destination / "src/escape").symlink_to(outside, target_is_directory=True)
+        escape_path = "src/escape/file.py"
+
+    def git(*arguments, input_data=None):
+        if arguments[0] == "ls-tree":
+            return tree_entry("src/safe.py") + tree_entry(escape_path)
+        assert input_data == (b"a" * 40 + b"\n") * 2
+        return blob_response(b"must not write") * 2
+
+    monkeypatch.setattr(checker, "git_output", git)
+    before = {path: path.read_bytes() for path in outside.rglob("*") if path.is_file()}
+    with pytest.raises(checker.CheckError, match="escapes the snapshot directory"):
+        checker.extract_source("c" * 40, destination)
+    assert not (destination / "src/safe.py").exists()
+    assert {
+        path: path.read_bytes() for path in outside.rglob("*") if path.is_file()
+    } == before
 
 
 @pytest.mark.parametrize("case", ["missing", "other_distribution", "directory"])
