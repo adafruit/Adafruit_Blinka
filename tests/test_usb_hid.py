@@ -123,6 +123,27 @@ def report_length(gadget, report_id):
     return int(gadget.state.files[f"{ROOT}/functions/hid.usb{report_id}/report_length"])
 
 
+def test_mouse_descriptor_preserves_report_layout(hid_gadget):
+    """Avoid the 64-byte descriptor boundary without changing mouse reports."""
+    expected = bytes.fromhex(
+        "05010902a10185020901a100"  # Mouse/Pointer collections; report ID 2
+        "05091901290515002501950575018102"  # Five buttons, bounds 0..1
+        "950175038101"  # Three padding bits
+        "0501093009311581257f750895028106"  # X/Y: -127..127, eight bits each
+        "09381581257f95018106"  # Wheel inherits eight-bit size; count one
+        "c0c0"  # End collections
+    )
+    mouse = hid_gadget.module.Device.MOUSE
+    assert mouse.descriptor == expected
+    assert tuple(mouse.report_ids) == (2,)
+    assert tuple(mouse.in_report_lengths) == (4,)
+    assert tuple(mouse.out_report_lengths) == (0,)
+    hid_gadget.module.enable((mouse,))
+    assert hid_gadget.state.files[f"{ROOT}/functions/hid.usb2/report_desc"] == expected
+    assert report_length(hid_gadget, 2) == 5
+    assert hid_gadget.state.sent == []
+
+
 @pytest.mark.parametrize(
     "name, expected",
     [

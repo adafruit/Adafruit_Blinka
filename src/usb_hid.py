@@ -249,8 +249,7 @@ Device.MOUSE = Device(
             0x81,  # Logical Minimum (-127)
             0x25,
             0x7F,  # Logical Maximum (127)
-            0x75,
-            0x08,  # Report Size (8)
+            # Report Size (8) remains active; omit it to avoid a 64-byte descriptor.
             0x95,
             0x01,  # Report Count (1)
             0x81,
