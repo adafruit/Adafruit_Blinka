@@ -35,6 +35,7 @@ class Pin:
     PULL_UP = 3
     LOW = 0
     HIGH = 1
+    spi_active = False
 
     def __init__(self, pin_id=None):
         self.id = pin_id
@@ -43,6 +44,8 @@ class Pin:
 
     def init(self, mode=IN, pull=None):
         """Configure this GPIO without changing the other pins."""
+        if self.id == 4 and Pin.spi_active:
+            raise RuntimeError("G4 is reserved while MCP2222 SPI is active")
         if self.id not in range(6):
             raise ValueError("Not an MCP2222 GPIO pin")
         if mode == self.OPEN_DRAIN:
@@ -67,6 +70,8 @@ class Pin:
 
     def value(self, val=None):
         """Read the pin level or set an output."""
+        if self.id == 4 and Pin.spi_active:
+            raise RuntimeError("G4 is reserved while MCP2222 SPI is active")
         if self._mode is None:
             raise RuntimeError("Pin is not initialized")
         if val is None:
@@ -92,3 +97,6 @@ G4 = Pin(4)
 G5 = Pin(5)
 SCL = Pin()
 SDA = Pin()
+SCK = SCLK = Pin()
+MOSI = Pin()
+MISO = Pin()

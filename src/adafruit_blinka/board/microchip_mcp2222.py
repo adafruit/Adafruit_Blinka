@@ -13,3 +13,6 @@ G4 = pin.G4
 G5 = pin.G5
 SCL = pin.SCL
 SDA = pin.SDA
+SCK = SCLK = pin.SCK
+MOSI = pin.MOSI
+MISO = pin.MISO
