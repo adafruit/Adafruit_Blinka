@@ -124,7 +124,7 @@ def assert_minimal_requirements(requirements, environment):
     assert set(requirements).isdisjoint(BOARD_REQUIREMENTS)
     assert set(requirements) == CORE_REQUIREMENTS | {"sysv-ipc", "toml"}
     for name, specifier in (
-        ("adafruit-platformdetect", ">=3.89.1"),
+        ("adafruit-platformdetect", ">=3.90.0"),
         ("packaging", ">=20.0"),
     ):
         requirement = requirements[name]
