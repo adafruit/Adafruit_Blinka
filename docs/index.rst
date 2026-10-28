@@ -21,6 +21,11 @@ Table of Contents
     api
 
 .. toctree::
+    :caption: Platform Notes
+
+    implementation_notes
+
+.. toctree::
     :caption: Development
 
     api_compatibility

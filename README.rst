@@ -87,6 +87,9 @@ On supported GNU/Linux systems like the Raspberry Pi, install
     source .env/bin/activate
     pip3 install Adafruit-Blinka
 
+For MCP2222 setup and backend details, see the `implementation notes
+<https://docs.circuitpython.org/projects/blinka/en/latest/implementation_notes.html>`_.
+
 Environments created with uv
 ----------------------------
 

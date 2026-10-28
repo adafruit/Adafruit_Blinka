@@ -67,6 +67,7 @@
     "SUNRISE_X3": "adafruit_blinka.microcontroller.horizon.sunrise_x3",
     "LPC4330": "adafruit_blinka.microcontroller.nxp_lpc4330",
     "MCP2221": "adafruit_blinka.microcontroller.mcp2221",
+    "MCP2222": "adafruit_blinka.microcontroller.mcp2222",
     "RP2040_U2IF": "adafruit_blinka.microcontroller.rp2040_u2if",
     "STM32F405": "adafruit_blinka.microcontroller.stm32.stm32f405",
     "RP2040": "adafruit_blinka.microcontroller.rp2040",
