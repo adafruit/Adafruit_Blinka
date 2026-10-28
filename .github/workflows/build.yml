@@ -46,9 +46,10 @@ jobs:
         pre-commit run --all-files
     - name: Hardware-free tests
       run: |
-        python -m pip install pytest
+        python -m pip install pytest 'pymcp2222>=1.0.1.7'
         PYTHONPATH=src python -m pytest -q \
           tests/test_mcp2221_gpio_cache.py \
+          tests/test_mcp2222.py \
           tests/test_mcp2221_vref.py \
           tests/test_u2if_pwmout.py \
           tests/test_mip_package.py \

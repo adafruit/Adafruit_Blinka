@@ -83,6 +83,7 @@
     "FTDI_FT4232H": "adafruit_blinka.board.ftdi_ft4232h",
     "BINHO_NOVA": "adafruit_blinka.board.binho_nova",
     "MICROCHIP_MCP2221": "adafruit_blinka.board.microchip_mcp2221",
+    "MICROCHIP_MCP2222": "adafruit_blinka.board.microchip_mcp2222",
     "GREATFET_ONE": "adafruit_blinka.board.greatfet_one",
     "SIFIVE_UNLEASHED": "adafruit_blinka.board.hifive_unleashed",
     "PINE64": "adafruit_blinka.board.pine64.pine64",
