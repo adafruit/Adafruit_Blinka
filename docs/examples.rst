@@ -70,3 +70,15 @@ active-low signaling are described in the `MCP2221A datasheet
 .. literalinclude:: ../examples/mcp2221_activity_leds.py
     :caption: examples/mcp2221_activity_leds.py
     :linenos:
+
+MCP2222 touchpaint
+~~~~~~~~~~~~~~~~~~
+
+Use an MCP2222 USB bridge with the ST7796S/FT6336U version of the 3.5-inch
+capacitive TFT FeatherWing. The example includes wiring and installation
+instructions and uses SPI for the display, I2C for touch, and GPIO for IRQ
+and backlight control.
+
+.. literalinclude:: ../examples/mcp2222_touchpaint.py
+    :caption: examples/mcp2222_touchpaint.py
+    :linenos:
