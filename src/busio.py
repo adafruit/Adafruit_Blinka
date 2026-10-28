@@ -263,6 +263,23 @@ class SPI(Lockable):
 
     def __init__(self, clock, MOSI=None, MISO=None):
         self.deinit()
+        if board_id == "MICROCHIP_MCP2222":
+            from adafruit_blinka.microcontroller.mcp2222.spi import SPI as _SPI
+            from adafruit_blinka.microcontroller.mcp2222 import pin
+
+            if (
+                clock is not pin.SCK
+                or MOSI not in (None, pin.MOSI)
+                or MISO
+                not in (
+                    None,
+                    pin.MISO,
+                )
+            ):
+                raise ValueError("Use the dedicated MCP2222 SCK, MOSI, and MISO pins")
+            self._spi = _SPI()
+            self._pins = (clock, MOSI, MISO)
+            return
         if detector.board.ftdi_ft232h:
             from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.spi import SPI as _SPI
             from adafruit_blinka.microcontroller.ftdi_mpsse.ft232h.pin import (
@@ -409,7 +426,9 @@ class SPI(Lockable):
 
     def configure(self, baudrate=100000, polarity=0, phase=0, bits=8):
         """Update the configuration"""
-        if detector.board.any_nanopi and detector.chip.id == ap_chip.SUN8I:
+        if board_id == "MICROCHIP_MCP2222":
+            from adafruit_blinka.microcontroller.mcp2222.spi import SPI as _SPI
+        elif detector.board.any_nanopi and detector.chip.id == ap_chip.SUN8I:
             from adafruit_blinka.microcontroller.generic_linux.spi import SPI as _SPI
         elif detector.board.ftdi_ft232h:
             from adafruit_blinka.microcontroller.ftdi_mpsse.mpsse.spi import (
@@ -495,6 +514,8 @@ class SPI(Lockable):
 
     def deinit(self):
         """Deinitialization"""
+        if board_id == "MICROCHIP_MCP2222" and getattr(self, "_spi", None) is not None:
+            self._spi.deinit()
         self._spi = None
         self._pinIds = None
 
