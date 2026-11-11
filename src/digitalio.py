@@ -16,9 +16,16 @@ from adafruit_blinka import Enum, ContextManaged
 
 Pin = None
 
-with open(get_import_file("microcontroller_imports.json", __file__)) as f:
-    microcontroller_imports = json.load(f)
-    import_microcontroller(globals(), microcontroller_imports, "pin", "Pin")
+
+def _get_pin_class():
+    """Load the GPIO backend only when a digital pin is constructed."""
+    if Pin is None:
+        with open(
+            get_import_file("microcontroller_imports.json", __file__)
+        ) as pin_file:
+            microcontroller_imports = json.load(pin_file)
+        import_microcontroller(globals(), microcontroller_imports, "pin", "Pin")
+    return Pin
 
 
 class DriveMode(Enum):
@@ -63,7 +70,7 @@ class DigitalInOut(ContextManaged):
     _pin = None
 
     def __init__(self, pin):
-        self._pin = Pin(pin.id)  # pylint: disable=not-callable
+        self._pin = _get_pin_class()(pin.id)  # pylint: disable=not-callable
         self.direction = Direction.INPUT
 
     def switch_to_output(self, value=False, drive_mode=DriveMode.PUSH_PULL):

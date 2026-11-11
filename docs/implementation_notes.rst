@@ -5,6 +5,19 @@
 Implementation notes
 ====================
 
+Hardware backend loading
+------------------------
+
+Importing ``digitalio.DigitalInOut`` or Raspberry Pi ``pwmio.PWMOut`` does not
+load the corresponding GPIO or native PWM backend. The backend is loaded when
+an output object is constructed instead. This lets CircuitPython libraries
+import those classes for type annotations without requiring an unused backend.
+
+Creating a GPIO or PWM object still requires its platform dependencies, and
+missing or unsupported dependencies retain their installation guidance. This
+does not change ``board`` detection, board-startup dependency prompts, or the
+requirements for initializing an actual bus or pin.
+
 MCP2222 USB bridge
 ------------------
 

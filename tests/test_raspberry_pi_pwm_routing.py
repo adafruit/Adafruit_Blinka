@@ -62,8 +62,4 @@ def test_public_pwmio_routing(monkeypatch, flags, selected):
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     assert module.PWMOut is backends[selected]
-    assert checks == (
-        ["adafruit_blinka_raspberry_pi_pwm"]
-        if selected == "generic_linux.raspberry_pi_pwmout"
-        else []
-    )
+    assert not checks

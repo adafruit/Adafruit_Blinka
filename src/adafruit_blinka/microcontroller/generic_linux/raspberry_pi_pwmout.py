@@ -13,7 +13,22 @@ without releasing the owned output.
 
 import math
 
-from adafruit_blinka_raspberry_pi_pwm import PWMOut as _NativePWMOut
+
+def _native_pwmout():
+    # Loading the public class must not require the optional platform package.
+    from adafruit_blinka.importing import (  # pylint: disable=import-outside-toplevel
+        check_platform_dependency,
+        raise_for_missing_platform_dependency,
+    )
+
+    check_platform_dependency("adafruit_blinka_raspberry_pi_pwm")
+    try:
+        from adafruit_blinka_raspberry_pi_pwm import (  # pylint: disable=import-outside-toplevel
+            PWMOut as native_pwmout,
+        )
+    except ModuleNotFoundError as error:
+        raise_for_missing_platform_dependency(error)
+    return native_pwmout
 
 
 def _number(value, name):
@@ -55,12 +70,13 @@ class PWMOut:
         self._enabled = False
         effective = _frequency(frequency)
         duty = _duty(duty_cycle)
+        native_pwmout = _native_pwmout()
         # Retain a partially initialized native object so cleanup is attempted
         # even when its constructor raises. Never replace the primary error.
-        native = _NativePWMOut.__new__(_NativePWMOut)
+        native = native_pwmout.__new__(native_pwmout)
         self._pwm = native
         try:
-            _NativePWMOut.__init__(
+            native_pwmout.__init__(
                 native,
                 pin,
                 frequency=effective,
