@@ -66,6 +66,7 @@ jobs:
           tests/test_circuitpython_api.py \
           tests/test_pin_repr.py \
           tests/test_rainbowio.py \
+          tests/test_lazy_backend_imports.py \
           tests/test_platform_dependencies.py \
           tests/test_uv_dependencies.py \
           tests/test_system_gpiod_compat.py \

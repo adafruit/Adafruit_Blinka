@@ -4,12 +4,44 @@
 
 """Recording-only adapter tests; no board, GPIO, or native engine imports."""
 
+import builtins
 import importlib.util
 import sys
 import types
 from pathlib import Path
 
 import pytest
+
+PACKAGE_NAME = "adafruit_blinka_raspberry_pi_pwm"
+ADAPTER_PATH = (
+    Path(__file__).resolve().parents[1]
+    / "src/adafruit_blinka/microcontroller/generic_linux/raspberry_pi_pwmout.py"
+)
+
+
+def load_adapter():
+    """Load only the adapter, with no board detection or native GPIO imports."""
+    spec = importlib.util.spec_from_file_location("recording_pwm_adapter", ADAPTER_PATH)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+@pytest.fixture(name="dependency_helpers")
+def dependency_helpers_fixture(monkeypatch):
+    """Keep dependency checks independent of the host and installed packages."""
+    module = types.ModuleType("adafruit_blinka.importing")
+    module.checks = []
+    module.missing = []
+    module.check_platform_dependency = module.checks.append
+
+    def missing(error):
+        module.missing.append(error)
+        raise RuntimeError("Install Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.2") from error
+
+    module.raise_for_missing_platform_dependency = missing
+    monkeypatch.setitem(sys.modules, "adafruit_blinka.importing", module)
+    return module
 
 
 class FakeNative:
@@ -68,27 +100,96 @@ class FakeNative:
 
 
 @pytest.fixture(name="adapter")
-def pwm_adapter_fixture(monkeypatch):
+def pwm_adapter_fixture(monkeypatch, dependency_helpers):
     FakeNative.instances = []
     FakeNative.constructor_error = None
     FakeNative.cleanup_error = None
-    package_name = "adafruit_blinka_raspberry_pi_pwm"
-    package = types.ModuleType(package_name)
+    package = types.ModuleType(PACKAGE_NAME)
     package.PWMOut = FakeNative
-    monkeypatch.setitem(sys.modules, package_name, package)
-    path = (
-        Path(__file__).resolve().parents[1]
-        / "src/adafruit_blinka/microcontroller/generic_linux/raspberry_pi_pwmout.py"
-    )
-    spec = importlib.util.spec_from_file_location("recording_pwm_adapter", path)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
+    monkeypatch.setitem(sys.modules, PACKAGE_NAME, package)
+    module = load_adapter()
+    assert not dependency_helpers.checks
     yield module
     for native in FakeNative.instances:
         native.read_error = None
         native.frequency_error = None
         native.duty_error = None
     FakeNative.cleanup_error = None
+
+
+@pytest.mark.parametrize(
+    "failure", ["missing", "old", "native_runtime", "native_oserror"]
+)
+def test_class_import_defers_all_backend_checks_and_imports(
+    monkeypatch, dependency_helpers, failure
+):
+    """Absent, old, or broken native backends cannot break a class-only import."""
+    native_imports = []
+    original_import = builtins.__import__
+    if failure == "missing":
+        error = ModuleNotFoundError("No module named backend", name=PACKAGE_NAME)
+    elif failure == "old":
+        error = RuntimeError("unsupported installed version; install >=1.0.2")
+    elif failure == "native_runtime":
+        error = RuntimeError("native backend initialization failed")
+    else:
+        error = OSError("native backend library could not load")
+
+    def native_import(name, *args, **kwargs):
+        if name == PACKAGE_NAME:
+            native_imports.append(name)
+            raise error
+        return original_import(name, *args, **kwargs)
+
+    def dependency_check(name):
+        dependency_helpers.checks.append(name)
+        if failure == "old":
+            raise error
+
+    monkeypatch.setattr(builtins, "__import__", native_import)
+    monkeypatch.setattr(
+        dependency_helpers, "check_platform_dependency", dependency_check
+    )
+    adapter = load_adapter()
+    assert isinstance(adapter.PWMOut, type)
+    assert not native_imports
+    assert not dependency_helpers.checks
+    expected_type = RuntimeError if failure == "missing" else type(error)
+    with pytest.raises(expected_type) as caught:
+        adapter.PWMOut(object())
+    assert dependency_helpers.checks == [PACKAGE_NAME]
+    assert native_imports == ([] if failure == "old" else [PACKAGE_NAME])
+    if failure == "missing":
+        assert caught.value.__cause__ is error
+        assert "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.2" in str(caught.value)
+        assert dependency_helpers.missing == [error]
+    else:
+        assert caught.value is error
+        assert dependency_helpers.missing == []
+
+
+def test_constructor_retries_after_missing_backend(
+    monkeypatch, adapter, dependency_helpers
+):
+    """A failed first attempt must not cache a permanently unusable backend."""
+    original_import = builtins.__import__
+    missing = ModuleNotFoundError("No module named backend", name=PACKAGE_NAME)
+
+    def native_import(name, *args, **kwargs):
+        if name == PACKAGE_NAME:
+            raise missing
+        return original_import(name, *args, **kwargs)
+
+    with monkeypatch.context() as context:
+        context.setattr(builtins, "__import__", native_import)
+        with pytest.raises(RuntimeError) as caught:
+            adapter.PWMOut(object())
+    assert caught.value.__cause__ is missing
+    assert not FakeNative.instances
+    with adapter.PWMOut(object()) as output:
+        assert isinstance(output, adapter.PWMOut)
+        assert output.frequency == 500
+    assert dependency_helpers.checks == [PACKAGE_NAME, PACKAGE_NAME]
 
 
 @pytest.mark.parametrize("variable", [False, True])
@@ -228,17 +329,18 @@ def test_invalid_setter_leaves_public_and_native_state(adapter, field, value, er
 
 
 @pytest.mark.parametrize("field", ["frequency", "duty_cycle", "period", "enabled"])
-def test_native_setter_errors_do_not_commit_public_cache(adapter, field):
+@pytest.mark.parametrize("error_type", [RuntimeError, OSError])
+def test_native_setter_errors_do_not_commit_public_cache(adapter, field, error_type):
     with adapter.PWMOut(object(), duty_cycle=1234) as output:
         native = FakeNative.instances[-1]
-        error = OSError("native configure failed")
+        error = error_type("native configure failed")
         if field in ("frequency", "period"):
             native.frequency_error = error
             value = 50.6 if field == "frequency" else 0.02
         else:
             native.duty_error = error
             value = 9999 if field == "duty_cycle" else False
-        with pytest.raises(OSError) as caught:
+        with pytest.raises(error_type) as caught:
             setattr(output, field, value)
         assert caught.value is error
         assert (output.frequency, output.duty_cycle, output.enabled) == (
@@ -272,22 +374,25 @@ def test_disabled_frequency_error_rolls_back_while_output_stays_low(adapter):
         assert output.enabled is False and native.duty_cycle == 0
 
 
-def test_native_worker_failure_is_not_hidden_by_cached_reads(adapter):
+@pytest.mark.parametrize("error_type", [RuntimeError, OSError])
+def test_native_worker_failure_is_not_hidden_by_cached_reads(adapter, error_type):
     with adapter.PWMOut(object(), duty_cycle=1234) as output:
         native = FakeNative.instances[-1]
         output.enabled = False
-        native.read_error = OSError("worker failed")
+        error = native.read_error = error_type("worker failed")
         for field in ("frequency", "duty_cycle", "period", "enabled"):
-            with pytest.raises(OSError):
+            with pytest.raises(error_type) as caught:
                 getattr(output, field)
-        with pytest.raises(OSError):
+            assert caught.value is error
+        with pytest.raises(error_type) as caught:
             output.duty_cycle = 9999
+        assert caught.value is error
         # Worker failure must not commit the disabled-state cache.
         assert output._duty_cycle == 1234  # pylint: disable=protected-access
 
 
 @pytest.mark.parametrize("cleanup_fails", [False, True])
-@pytest.mark.parametrize("error_type", [KeyboardInterrupt, OSError])
+@pytest.mark.parametrize("error_type", [KeyboardInterrupt, RuntimeError, OSError])
 def test_partial_constructor_cleanup_preserves_original_error(
     adapter, cleanup_fails, error_type
 ):
@@ -315,14 +420,15 @@ def test_context_exception_propagates_and_only_its_output_is_released(adapter):
     sibling.deinit()
 
 
-@pytest.mark.parametrize("cleanup_fails", [False, True])
-def test_deinit_repeat_safe_and_all_properties_guarded(adapter, cleanup_fails):
+@pytest.mark.parametrize("error_type", [None, RuntimeError, OSError])
+def test_deinit_repeat_safe_and_all_properties_guarded(adapter, error_type):
     output = adapter.PWMOut(object())
     native = FakeNative.instances[-1]
-    if cleanup_fails:
-        FakeNative.cleanup_error = OSError("cleanup failed")
-        with pytest.raises(OSError):
+    if error_type:
+        error = FakeNative.cleanup_error = error_type("cleanup failed")
+        with pytest.raises(error_type) as caught:
             output.deinit()
+        assert caught.value is error
     else:
         output.deinit()
     output.deinit()

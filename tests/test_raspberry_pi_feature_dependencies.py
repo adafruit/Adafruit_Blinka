@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Melissa LeBlanc-Williams for Adafruit Industries
 #
 # SPDX-License-Identifier: MIT
-"""Validate optional backends only when their public feature is imported."""
+"""Validate optional backends at the point their feature needs them."""
 
 # Pytest provides the named monkeypatch fixture.
 # pylint: disable=redefined-outer-name
@@ -145,7 +145,7 @@ def test_neopixel_checks_only_selected_pi_backend(
         ),
     ],
 )
-def test_incompatible_optional_backend_fails_only_at_feature_import(
+def test_incompatible_optional_backend_fails_only_when_needed(
     monkeypatch, feature, distribution, flags, expected
 ):
     """The selected feature rejects its installed old backend without pip."""
@@ -163,7 +163,11 @@ def test_incompatible_optional_backend_fails_only_at_feature_import(
     assert not inspected
 
     with pytest.raises(RuntimeError) as raised:
-        load_module("_test_incompatible_feature", feature)
+        selected = load_module("_test_incompatible_feature", feature)
+        if feature == "pwmio.py":
+            # The public PWMOut type is available even with an old native engine.
+            assert not inspected
+            selected.PWMOut(object())
 
     assert expected in str(raised.value)
     assert inspected
