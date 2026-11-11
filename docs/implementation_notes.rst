@@ -18,6 +18,12 @@ missing or unsupported dependencies retain their installation guidance. This
 does not change ``board`` detection, board-startup dependency prompts, or the
 requirements for initializing an actual bus or pin.
 
+An import is therefore not a GPIO/PWM availability check. Code that chooses a
+fallback by catching an error from ``import digitalio`` or Raspberry Pi
+``import pwmio`` must also handle errors when constructing ``DigitalInOut`` or
+``PWMOut``. Missing-backend errors now occur at construction, with the same
+installation guidance as before.
+
 MCP2222 USB bridge
 ------------------
 
