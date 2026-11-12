@@ -28,9 +28,15 @@ line = SimpleNamespace(
 
 PROBE = """
 import json
+
+# The PWM controller is pwmchip2 here: look-up by device name, not order
+import adafruit_blinka.microcontroller.alias as alias
+alias.get_pwm_chipid = lambda device: "PWM2" if device == "2000c00.pwm" else None
+
 import board
 import digitalio
 from microcontroller import pin
+import pwmio
 
 def ids(row):
     return [row[0]] + [p.id for p in row[1:]]
@@ -43,6 +49,9 @@ print(json.dumps({
     "uart": [ids(r) for r in pin.uartPorts],
     "spi": [ids(r) for r in pin.spiPorts],
     "analog": [list(r) for r in pin.analogIns],
+    "pwm": [[list(r[0]), r[1].id] for r in pin.pwmOuts],
+    "pwm_board": {n: getattr(board, n).id for n in ("F6", "D18", "D19")},
+    "pwmout": pwmio.PWMOut.__module__,
     "has_i2c": hasattr(board, "I2C"),
     "has_spi": hasattr(board, "SPI"),
 }))
@@ -103,3 +112,11 @@ def test_feather_buses_are_valid_ports(tmp_path):
 def test_a0_is_gpadc_channel_0(tmp_path):
     info = probe(tmp_path)
     assert [info["A0"], 0, 0] in info["analog"]
+
+
+def test_pwm_on_the_feather_pins(tmp_path):
+    info = probe(tmp_path)
+    pwm = info["pwm"]
+    for name, channel in (("F6", 5), ("D18", 2), ("D19", 3)):
+        assert [[2, channel], info["pwm_board"][name]] in pwm
+    assert info["pwmout"].endswith("generic_linux.sysfs_pwmout")

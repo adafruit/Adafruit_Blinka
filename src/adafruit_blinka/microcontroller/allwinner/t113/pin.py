@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 """Allwinner T113-S3 pin names"""
+from adafruit_blinka.microcontroller.alias import get_pwm_chipid
 from adafruit_blinka.microcontroller.generic_linux.libgpiod_pin import Pin
 
 PB2 = Pin(34)
@@ -131,3 +132,38 @@ spiPorts = (
 )
 
 analogIns = ((GPADC0, 0, 0),)
+
+# PWM controller at 0x2000c00 (pwm-sun8i driver): its pwmchip number depends
+# on the probe order, so look it up. A pin is a PWM output once the device
+# tree muxes it to its pwm function.
+pwmOuts = []
+_PWM_CHANNELS = (
+    (0, PB5),
+    (0, PD16),
+    (0, PG12),
+    (1, PB6),
+    (1, PD17),
+    (1, PG6),
+    (2, PD18),
+    (2, PE8),
+    (2, PG13),
+    (3, PD19),
+    (3, PE9),
+    (3, PG10),
+    (4, PD20),
+    (4, PE10),
+    (4, PG5),
+    (5, PD21),
+    (5, PE13),
+    (5, PF6),
+    (5, PG4),
+    (6, PD9),
+    (6, PF4),
+    (6, PG1),
+    (7, PD22),
+    (7, PG0),
+)
+_pwm_chip = get_pwm_chipid("2000c00.pwm")
+if _pwm_chip is not None:
+    for _channel, _pin in _PWM_CHANNELS:
+        pwmOuts.append(((int(_pwm_chip[3:]), _channel), _pin))

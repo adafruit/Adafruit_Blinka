@@ -5,6 +5,8 @@
 
 Names follow the silkscreen of the Feather headers, plus the usual bus names.
 SPI needs a spidev device on SPI1 (/dev/spidev1.0, chip select on D10).
+PWM is on F6 (PWM5), D18 (PWM2) and D19 (PWM3) once the device tree muxes
+those pins to the PWM controller.
 """
 
 from adafruit_blinka.microcontroller.allwinner.t113 import pin
