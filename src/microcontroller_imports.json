@@ -33,6 +33,7 @@
     "A20": "adafruit_blinka.microcontroller.allwinner.a20",
     "A64": "adafruit_blinka.microcontroller.allwinner.a64",
     "A33": "adafruit_blinka.microcontroller.allwinner.a33",
+    "T113": "adafruit_blinka.microcontroller.allwinner.t113",
     "MIPS24KC": "adafruit_blinka.microcontroller.atheros.ar9331",
     "MIPS24KEC": "adafruit_blinka.microcontroller.mips24kec",
     "RK3308": "adafruit_blinka.microcontroller.rockchip.rk3308",

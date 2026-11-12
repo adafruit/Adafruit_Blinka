@@ -93,6 +93,7 @@
     "PCDUINO3": "adafruit_blinka.board.linksprite.pcduino3",
     "SOPINE": "adafruit_blinka.board.soPine",
     "CLOCKWORK_CPI3": "adafruit_blinka.board.clockworkcpi3",
+    "PHYX_TESS": "adafruit_blinka.board.phyx_tess",
     "ONION_OMEGA2": "adafruit_blinka.board.onion.omega2",
     "RADXA_CM3": "adafruit_blinka.board.radxa.radxacm3",
     "ROCK_PI_3A": "adafruit_blinka.board.radxa.rockpi3a",

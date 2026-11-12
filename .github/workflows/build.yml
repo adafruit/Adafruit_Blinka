@@ -73,7 +73,8 @@ jobs:
           tests/test_libgpiod_pin.py \
           tests/test_libgpiod_legacy_cleanup.py \
           tests/test_khadas_vim3_gpiod.py \
-          tests/test_raspberry_pi_*.py
+          tests/test_raspberry_pi_*.py \
+          tests/test_phyx_tess.py
     - name: Build docs
       working-directory: docs
       run: sphinx-build -E -W -b html . _build/html
