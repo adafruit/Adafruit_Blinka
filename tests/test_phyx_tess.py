@@ -43,7 +43,7 @@ def ids(row):
 
 print(json.dumps({
     "board": {n: getattr(board, n).id for n in ("SDA", "SCL", "SCK", "MOSI",
-              "MISO", "TX", "RX", "D10", "G3")},
+              "MISO", "TX", "RX", "D10", "G3", "LED")},
     "A0": board.A0,
     "i2c": [ids(r) for r in pin.i2cPorts],
     "uart": [ids(r) for r in pin.uartPorts],
@@ -96,6 +96,7 @@ def test_feather_pins(tmp_path):
         "RX": "PB5",
         "D10": "PD10",
         "G3": "PG3",
+        "LED": "PG14",
     }
     assert info["board"] == {name: line(p) for name, p in expected.items()}
     assert info["has_i2c"] and info["has_spi"]
