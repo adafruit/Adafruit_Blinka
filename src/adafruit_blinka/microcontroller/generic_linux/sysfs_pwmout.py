@@ -7,7 +7,9 @@ Copyright (c) 2015-2016 vsergeev / Ivan (Vanya) A. Sergeev
 License: MIT
 """
 
+import atexit
 import os
+import weakref
 from time import sleep
 from errno import EACCES
 
@@ -25,6 +27,22 @@ class PWMError(IOError):
 
 
 # pylint: enable=unnecessary-pass
+
+# PWM outputs not deinitialized yet. An output that lives until the program
+# ends is only finalized during interpreter shutdown, when open() and the
+# other builtins may be gone ("NameError: name 'open' is not defined" from
+# __del__) and the pin stays exported: deinitialize them from atexit, which
+# runs before that.
+_ACTIVE_PWMOUTS = weakref.WeakSet()
+
+
+@atexit.register
+def _deinit_active_pwmouts():
+    for pwmout in list(_ACTIVE_PWMOUTS):
+        try:
+            pwmout.deinit()
+        except PWMError:
+            pass
 
 
 class PWMOut:
@@ -120,6 +138,7 @@ class PWMOut:
                 f_export.write("%d\n" % self._pwmpin)
         except IOError as e:
             raise PWMError(e.errno, "Exporting PWM pin: " + e.strerror) from IOError
+        _ACTIVE_PWMOUTS.add(self)
 
         # Loop until 'period' is writable, because application of udev rules
         # after the above pin export is asynchronous.
@@ -175,6 +194,7 @@ class PWMOut:
 
         self._channel = None
         self._pwmpin = None
+        _ACTIVE_PWMOUTS.discard(self)
 
     def _is_deinited(self):
         if self._pwmpin is None:
