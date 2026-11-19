@@ -44,51 +44,42 @@ def _detector(chip_id=None, **board_values):
     )
 
 
-def test_raspberry_pi_5_uses_gpiod_and_native_pwm():
+@pytest.mark.parametrize("any_raspberry_pi", [False, True])
+@pytest.mark.parametrize(
+    "python_version, has_neopixel",
+    [((3, 10), False), ((3, 11), True), ((3, 13), True)],
+)
+def test_raspberry_pi_5_uses_gpiod_and_native_pwm(
+    any_raspberry_pi, python_version, has_neopixel
+):
     dependencies = platform_dependencies.get_platform_dependencies(
-        _detector(any_raspberry_pi_5_board=True, any_raspberry_pi=True),
-        python_version=(3, 13),
+        _detector(any_raspberry_pi_5_board=True, any_raspberry_pi=any_raspberry_pi),
+        python_version=python_version,
     )
 
-    assert dependencies == [
-        ("gpiod", "gpiod>=2.2.2,<3"),
-        (
-            "adafruit_blinka_raspberry_pi_pwm",
-            "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.2",
-        ),
-        (
-            "adafruit_raspberry_pi5_neopixel_write",
-            "Adafruit-Blinka-Raspberry-Pi5-Neopixel",
-        ),
-    ]
-
-
-def test_raspberry_pi_5_gpio_pwm_requirements_do_not_depend_on_python_version():
-    dependencies = platform_dependencies.get_platform_dependencies(
-        _detector(any_raspberry_pi_5_board=True, any_raspberry_pi=True),
-        python_version=(3, 12),
-    )
-
-    assert dependencies[:2] == [
+    expected = [
         ("gpiod", "gpiod>=2.2.2,<3"),
         (
             "adafruit_blinka_raspberry_pi_pwm",
             "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.2",
         ),
     ]
-    assert all(name not in ("lgpio", "RPi.GPIO") for name, _ in dependencies)
+    if has_neopixel:
+        expected.append(
+            (
+                "adafruit_raspberry_pi5_neopixel_write",
+                "Adafruit-Blinka-Raspberry-Pi5-Neopixel",
+            )
+        )
+    assert dependencies == expected
 
 
-def test_raspberry_pi_5_neopixel_requires_python_311():
-    detector = _detector(any_raspberry_pi_5_board=True, any_raspberry_pi=True)
-    dependencies = platform_dependencies.get_platform_dependencies(
-        detector, python_version=(3, 10)
+@pytest.mark.parametrize("any_raspberry_pi", [False, True])
+def test_raspberry_pi_5_neopixel_requires_python_311(any_raspberry_pi):
+    detector = _detector(
+        any_raspberry_pi_5_board=True, any_raspberry_pi=any_raspberry_pi
     )
 
-    assert all(
-        module_name != "adafruit_raspberry_pi5_neopixel_write"
-        for module_name, _ in dependencies
-    )
     assert platform_dependencies.get_unsupported_platform_dependency_message(
         detector,
         "adafruit_raspberry_pi5_neopixel_write",
@@ -324,6 +315,16 @@ def test_jetson_namespaces_use_jetson_gpio_distribution(import_name):
         _detector(any_jetson_board=True), import_name
     )
     assert requirement == "Jetson.GPIO"
+
+
+def test_jetson_alias_guidance_is_separate_from_startup_selection():
+    # A forced board ID can disagree with the detected Raspberry Pi revision.
+    detector = _detector(any_raspberry_pi=True, any_jetson_board=True)
+    assert platform_dependencies.get_platform_dependencies(detector)[0][0] == "gpiod"
+    assert (
+        platform_dependencies.get_platform_requirement_for_import(detector, "RPi.GPIO")
+        == "Jetson.GPIO"
+    )
 
 
 @pytest.mark.parametrize(

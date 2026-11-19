@@ -57,6 +57,7 @@ setup(
         "adafruit_blinka": [
             "../board_imports.json",
             "../microcontroller_imports.json",
+            "platform_dependencies.json",
         ],
         "adafruit_blinka.microcontroller.bcm283x.pulseio": [
             "libgpiod_pulsein",

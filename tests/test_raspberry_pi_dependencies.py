@@ -12,6 +12,7 @@ import io
 import os
 import runpy
 import shlex
+import subprocess
 import sys
 from collections import namedtuple
 from pathlib import Path
@@ -183,6 +184,12 @@ def test_metadata_preserves_micropython_package(monkeypatch):
     assert metadata["package_data"]["micropython"] == ["py.typed"]
 
 
+def test_metadata_includes_platform_dependency_registry(monkeypatch):
+    """The installed CPython package must include the runtime dependency data."""
+    metadata = setup_metadata(monkeypatch)
+    assert "platform_dependencies.json" in metadata["package_data"]["adafruit_blinka"]
+
+
 def load_importing(monkeypatch, detector=None):
     """Load diagnostic helpers with no real board detection or GPIO imports."""
     agnostic = ModuleType("adafruit_blinka.agnostic")
@@ -227,39 +234,89 @@ def test_new_missing_dependency_hints(monkeypatch, module_name, requirement):
     assert raised.value.__cause__ is error
 
 
-def test_unknown_missing_dependency_is_preserved(monkeypatch):
+@pytest.mark.parametrize("module_name", ["unrelated_library", "lgpio._backend", None])
+def test_unknown_missing_dependency_is_preserved(monkeypatch, module_name):
     """Unrelated missing imports retain their original exception identity."""
     importing = load_importing(monkeypatch)
-    error = ModuleNotFoundError(name="unrelated_library")
+    error = ModuleNotFoundError(name=module_name)
     with pytest.raises(ModuleNotFoundError) as raised:
         importing.raise_for_missing_platform_dependency(error)
     assert raised.value is error
 
 
-@pytest.mark.parametrize(
-    "chip_id, is_jetson, module_name, requirement",
-    [
-        ("GENERIC_X86", False, "gpiod", "gpiod"),
-        ("TEGRA210", True, "RPi", "Jetson.GPIO"),
-    ],
-)
-def test_non_pi_missing_dependency_hints(
-    monkeypatch, chip_id, is_jetson, module_name, requirement
-):
-    """Generic gpiod stays unbounded and Jetson uses its own RPi provider."""
-    detector = SimpleNamespace(
+def non_pi_detector(chip_id):
+    """Select a non-Pi platform rule without real hardware detection."""
+    return SimpleNamespace(
         board=SimpleNamespace(
-            id="JETSON_NANO" if is_jetson else "GENERIC_LINUX_PC",
             any_raspberry_pi=False,
             any_raspberry_pi_5_board=False,
-            any_jetson_board=is_jetson,
+            any_jetson_board=chip_id == "TEGRA210",
         ),
         chip=SimpleNamespace(id=chip_id),
     )
-    importing = load_importing(monkeypatch, detector)
+
+
+@pytest.mark.parametrize(
+    "chip_id, module_name, requirement",
+    [
+        ("TEGRA210", "RPi", "Jetson.GPIO"),
+        ("AM33XX", "Adafruit_BBIO", "Adafruit_BBIO>=1.2.4"),
+    ],
+)
+def test_non_pi_missing_dependency_hints(
+    monkeypatch, chip_id, module_name, requirement
+):
+    """Selected platform rules provide the platform's pip requirement."""
+    importing = load_importing(monkeypatch, non_pi_detector(chip_id))
     error = ModuleNotFoundError(name=module_name)
     with pytest.raises(RuntimeError) as raised:
         importing.raise_for_missing_platform_dependency(error)
     install_command = shlex.join([sys.executable, "-m", "pip", "install", requirement])
-    assert install_command in str(raised.value)
+    assert str(raised.value).endswith(install_command)
     assert raised.value.__cause__ is error
+
+
+@pytest.mark.parametrize(
+    "module_name",
+    [
+        "gpiod",
+        "adafruit_blinka_raspberry_pi_pwm",
+        "adafruit_raspberry_pi5_neopixel_write",
+        "_rpi_ws281x",
+        "Jetson",
+        "Adafruit_BBIO",
+        "RPi",
+        "lgpio",
+    ],
+)
+def test_nonmatching_dependency_preserves_error(monkeypatch, module_name):
+    """A backend with no matching platform rule gets no installation guidance."""
+    importing = load_importing(monkeypatch, non_pi_detector("GENERIC_X86"))
+    monkeypatch.setattr(
+        subprocess,
+        "run",
+        lambda *_args, **_kwargs: pytest.fail("Import diagnostics must not run pip"),
+    )
+    error = ModuleNotFoundError(name=module_name)
+    with pytest.raises(ModuleNotFoundError) as raised:
+        importing.raise_for_missing_platform_dependency(error)
+    assert raised.value is error
+
+
+@pytest.mark.parametrize("implementation", ["micropython", "circuitpython"])
+def test_embedded_missing_dependency_preserves_error(monkeypatch, implementation):
+    """Embedded Python doesn't need the CPython registry or its Linux guidance."""
+    importing = load_importing(monkeypatch)
+    original_import = builtins.__import__
+
+    def reject_cpython_helper(name, *args, **kwargs):
+        assert name != "adafruit_blinka.platform_dependencies"
+        return original_import(name, *args, **kwargs)
+
+    error = ModuleNotFoundError(name="gpiod")
+    with pytest.raises(ModuleNotFoundError) as raised, monkeypatch.context() as patches:
+        patches.setattr(sys.implementation, "name", implementation)
+        patches.setattr(builtins, "__import__", reject_cpython_helper)
+        importing.raise_for_missing_platform_dependency(error)
+
+    assert raised.value is error

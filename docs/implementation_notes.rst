@@ -5,6 +5,27 @@
 Implementation notes
 ====================
 
+Platform dependency rules
+-------------------------
+
+To add a CPython backend dependency, edit
+``src/adafruit_blinka/platform_dependencies.json``:
+
+1. Add the Python import name to ``packages`` with a pip requirement, for
+   example ``"Adafruit_BBIO": {"requirement": "Adafruit_BBIO>=1.2.4"}``.
+2. Add that import name to the ``packages`` list of the platform that needs it
+   (in this example, the ``AM33XX`` rule).
+
+Blinka uses the first matching rule in ``platforms``. Rules match either a
+PlatformDetect board flag or an exact chip ID. Put specific rules before
+broader ones. The same requirement is used for startup checks and for install
+guidance if the import fails. Unmatched imports keep their original error.
+
+Set ``optional`` for a backend that isn't required at startup. A backend with
+a Python version floor can specify ``minimum_python`` and a ``feature``
+label. A platform can also declare ``aliases`` for alternate import names
+without checking those names at startup.
+
 Hardware backend loading
 ------------------------
 
