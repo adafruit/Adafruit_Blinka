@@ -36,15 +36,14 @@ import those classes for type annotations without requiring an unused backend.
 
 Creating a GPIO or PWM object still requires its platform dependencies, and
 missing or unsupported dependencies retain their installation guidance.
-``board`` startup checks only required dependencies. Raspberry Pi NeoPixel
-backend loading is also deferred: a missing or unsupported backend reports
-manual setup guidance on the first ``neopixel_write()`` call.
+``board`` startup checks only required dependencies. On Raspberry Pi,
+importing ``neopixel_write`` checks the selected optional NeoPixel backend
+and reports manual setup guidance before any NeoPixel GPIO is opened.
 
 An import is therefore not a GPIO/PWM availability check. Code that chooses a
 fallback by catching an error from ``import digitalio`` or Raspberry Pi
 ``import pwmio`` must also handle errors when constructing ``DigitalInOut`` or
-``PWMOut``. On Raspberry Pi, likewise handle NeoPixel backend errors at the
-first write if you need a fallback.
+``PWMOut``.
 
 MCP2222 USB bridge
 ------------------

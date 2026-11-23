@@ -63,9 +63,10 @@ if an upgraded module was already loaded or if the required backend is still
 unavailable (for example, after the first user-site installation).
 
 Optional Raspberry Pi PWM and NeoPixel backends are not checked or installed
-at startup. If one is missing or incompatible, creating a ``PWMOut`` or
-writing to NeoPixels shows manual setup guidance. Restart Python after
-installing or updating a backend manually.
+when importing ``board``. Creating a ``PWMOut`` or importing ``neopixel_write``
+checks its optional backend and shows manual setup guidance if it is missing
+or incompatible. Restart Python after installing or updating a backend
+manually.
 
 Use a virtual environment where practical. The runtime installer does not use
 sudo, bypass externally managed environment protections, install OS packages,

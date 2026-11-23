@@ -124,10 +124,8 @@ def test_neopixel_checks_only_selected_pi_backend(
 
     neopixel = load_module("_test_feature_neopixel", "neopixel_write.py")
 
-    assert not checks
-    assert neopixel.neopixel_write("pin", b"rgb") == ("pin", b"rgb")
-    assert neopixel.neopixel_write("pin", b"next") == ("pin", b"next")
     assert checks == ([dependency] if dependency is not None else [])
+    assert neopixel.neopixel_write("pin", b"rgb") == ("pin", b"rgb")
 
 
 @pytest.mark.parametrize(
@@ -162,14 +160,14 @@ def test_incompatible_optional_backend_fails_only_when_needed(
     monkeypatch.setattr(
         platform_dependencies.importlib.metadata, "version", installed_version
     )
-    selected = load_module("_test_incompatible_feature", feature)
     assert not inspected
 
     with pytest.raises(RuntimeError) as raised:
+        selected = load_module("_test_incompatible_feature", feature)
         if feature == "pwmio.py":
+            # The public PWMOut type is available even with an old native engine.
+            assert not inspected
             selected.PWMOut(object())
-        else:
-            selected.neopixel_write(object(), b"rgb")
 
     assert expected in str(raised.value)
     assert inspected
@@ -222,9 +220,8 @@ def test_pi5_neopixel_reports_unsupported_python_before_native_import(monkeypatc
     native = ModuleType("adafruit_raspberry_pi5_neopixel_write")
     monkeypatch.setitem(sys.modules, "adafruit_raspberry_pi5_neopixel_write", native)
 
-    selected = load_module("_test_unsupported_neopixel", "neopixel_write.py")
     with pytest.raises(RuntimeError, match="Python 3.11 or newer"):
-        selected.neopixel_write(object(), b"rgb")
+        load_module("_test_unsupported_neopixel", "neopixel_write.py")
 
 
 @pytest.mark.parametrize(
@@ -242,22 +239,25 @@ def test_python_floor_check_does_not_probe_unrelated_platforms(import_name):
 
 
 @pytest.mark.parametrize(
-    "feature, module_name, requirement, flags",
+    "feature, module_name, import_statement, requirement, flags",
     [
         (
             "pwmio.py",
             "adafruit_blinka_raspberry_pi_pwm",
+            PREFIX + "generic_linux.raspberry_pi_pwmout",
             "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.2",
             {"any_raspberry_pi": True},
         ),
         (
             "neopixel_write.py",
             "_rpi_ws281x",
+            PREFIX + "bcm283x",
             "rpi_ws281x>=4.0.0",
             {"any_raspberry_pi": True},
         ),
         (
             "neopixel_write.py",
+            "adafruit_raspberry_pi5_neopixel_write",
             "adafruit_raspberry_pi5_neopixel_write",
             "Adafruit-Blinka-Raspberry-Pi5-Neopixel",
             {"any_raspberry_pi": True, "any_raspberry_pi_5_board": True},
@@ -265,8 +265,8 @@ def test_python_floor_check_does_not_probe_unrelated_platforms(import_name):
     ],
 )
 def test_missing_optional_backend_retains_recovery_command(
-    monkeypatch, feature, module_name, requirement, flags
-):
+    monkeypatch, feature, module_name, import_statement, requirement, flags
+):  # pylint: disable=too-many-arguments
     """Missing modules retain current-interpreter guidance, not a pip attempt."""
     importing, _detector = prepare_feature_import(monkeypatch, **flags)
     monkeypatch.setattr(importing, "check_platform_dependency", lambda _name: None)
@@ -276,9 +276,6 @@ def test_missing_optional_backend_retains_recovery_command(
         monkeypatch.setattr(sys, "version_info", (3, 11, 0, "final", 0))
     real_import = builtins.__import__
     missing = ModuleNotFoundError(name=module_name)
-    import_statement = (
-        PREFIX + "bcm283x" if module_name == "_rpi_ws281x" else module_name
-    )
 
     def import_without_backend(name, *args, **kwargs):
         if name == import_statement:
@@ -287,12 +284,8 @@ def test_missing_optional_backend_retains_recovery_command(
 
     monkeypatch.setattr(builtins, "__import__", import_without_backend)
 
-    selected = load_module("_test_missing_feature", feature)
     with pytest.raises(RuntimeError) as raised:
-        if feature == "pwmio.py":
-            selected.PWMOut(object())
-        else:
-            selected.neopixel_write(object(), b"rgb")
+        load_module("_test_missing_feature", feature)
 
     command = shlex.join([sys.executable, "-m", "pip", "install", requirement])
     assert command in str(raised.value)
