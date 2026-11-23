@@ -157,6 +157,7 @@ class _KeysBase:
         self._last_scan = time.monotonic()
         self._events = EventQueue(max_events)
         self._scanning_function = scanning_function
+        self._stop_scanning = threading.Event()
         self._scan_thread = threading.Thread(target=self._scanning_loop, daemon=True)
         self._scan_thread.start()
 
@@ -167,6 +168,7 @@ class _KeysBase:
 
     def deinit(self):
         """Stop scanning"""
+        self._stop_scanning.set()
         if self._scan_thread.is_alive():
             self._scan_thread.join()
 
@@ -182,10 +184,12 @@ class _KeysBase:
         self.deinit()
 
     def _scanning_loop(self):
-        while True:
+        while not self._stop_scanning.is_set():
             remaining_delay = self._interval - (time.monotonic() - self._last_scan)
-            if remaining_delay > 0:
-                time.sleep(remaining_delay)
+            # Wait on the stop event rather than sleep, so that deinit() returns
+            # within one interval instead of never
+            if remaining_delay > 0 and self._stop_scanning.wait(remaining_delay):
+                break
             self._last_scan = time.monotonic()
             self._scanning_function()
 
