@@ -43,14 +43,17 @@ def ids(row):
 
 print(json.dumps({
     "board": {n: getattr(board, n).id for n in ("SDA", "SCL", "SCK", "MOSI",
-              "MISO", "TX", "RX", "D10", "G3", "LED")},
+              "MISO", "TX", "RX", "D5", "D6", "D9", "D10", "D11", "D12",
+              "D13", "A1", "A2", "A3", "A4", "A5", "CE0", "E12", "F6", "G3",
+              "D18", "D19", "LED")},
     "A0": board.A0,
     "i2c": [ids(r) for r in pin.i2cPorts],
     "uart": [ids(r) for r in pin.uartPorts],
     "spi": [ids(r) for r in pin.spiPorts],
     "analog": [list(r) for r in pin.analogIns],
     "pwm": [[list(r[0]), r[1].id] for r in pin.pwmOuts],
-    "pwm_board": {n: getattr(board, n).id for n in ("F6", "D18", "D19")},
+    "pwm_board": {n: getattr(board, n).id for n in ("D10", "A5", "A4", "F6",
+                  "D18", "D19")},
     "pwmout": pwmio.PWMOut.__module__,
     "has_i2c": hasattr(board, "I2C"),
     "has_spi": hasattr(board, "SPI"),
@@ -94,8 +97,26 @@ def test_feather_pins(tmp_path):
         "MISO": "PD13",
         "TX": "PB4",
         "RX": "PB5",
-        "D10": "PD10",
+        # Feather names
+        "D5": "PE12",
+        "D6": "PE13",
+        "D9": "PC7",
+        "D10": "PF6",
+        "D11": "PG11",
+        "D12": "PG9",
+        "D13": "PG7",
+        "A1": "PG3",
+        "A2": "PB2",
+        "A3": "PB3",
+        "A4": "PD19",
+        "A5": "PD18",
+        # Silkscreen names; the silkscreen's "D10" (PD10) is CE0
+        "CE0": "PD10",
+        "E12": "PE12",
+        "F6": "PF6",
         "G3": "PG3",
+        "D18": "PD18",
+        "D19": "PD19",
         "LED": "PG14",
     }
     assert info["board"] == {name: line(p) for name, p in expected.items()}
@@ -118,6 +139,13 @@ def test_a0_is_gpadc_channel_0(tmp_path):
 def test_pwm_on_the_feather_pins(tmp_path):
     info = probe(tmp_path)
     pwm = info["pwm"]
-    for name, channel in (("F6", 5), ("D18", 2), ("D19", 3)):
+    for name, channel in (
+        ("D10", 5),
+        ("A5", 2),
+        ("A4", 3),
+        ("F6", 5),
+        ("D18", 2),
+        ("D19", 3),
+    ):
         assert [[2, channel], info["pwm_board"][name]] in pwm
     assert info["pwmout"].endswith("generic_linux.sysfs_pwmout")
