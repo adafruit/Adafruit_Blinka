@@ -50,24 +50,22 @@ The test suites in the test/src folder under **testing.universal** are by design
 intended to run on *either* CircuitPython *or* CPython/Micropython+compatibility layer to prove conformance.
 
 Blinka installs a platform-independent base package. On CPython, importing
-``board`` checks the detected Raspberry Pi, Jetson, or AM33XX dependencies. An
-interactive terminal offers to install missing or incompatible packages with
-the running Python interpreter. Other boards retain their existing backend
-selection and manual dependency setup; unrelated packages are not installed.
+``board`` checks required dependencies for the detected Raspberry Pi, Jetson,
+or AM33XX platform. In an interactive terminal, Blinka offers to install missing
+or incompatible required packages with the running Python interpreter. Other
+boards retain their existing backend selection and manual dependency setup.
 
-Non-interactive programs never prompt or run pip. A missing backend reports its
-installation guidance when imported; a known incompatible installed version
-of a required GPIO backend reports an actionable error rather than silently
-continuing. PWM and NeoPixel backends are optional for ``board``: declining
-their installation or encountering an installation failure does not block
-unrelated GPIO use. Installation failures produce a warning, and missing or
-known incompatible backends are reported when their feature is imported.
-If an upgraded backend was already imported, restart Python before using the
-replacement, even when that backend is optional.
-After installation, Blinka rechecks imports and required versions. If they are
-still unavailable (for example, after the first user-site installation), it
-reports restart guidance rather than continuing as though installation fixed
-the running process. Optional-only problems warn instead of aborting ``board``.
+Non-interactive programs never prompt or run pip. A missing required backend
+reports installation guidance when imported; a known incompatible version
+reports an actionable error rather than silently continuing. After
+installation, Blinka rechecks imports and versions and reports restart guidance
+if an upgraded module was already loaded or if the required backend is still
+unavailable (for example, after the first user-site installation).
+
+Optional Raspberry Pi PWM and NeoPixel backends are not checked or installed
+at startup. If one is missing or incompatible, creating a ``PWMOut`` or
+writing to NeoPixels shows manual setup guidance. Restart Python after
+installing or updating a backend manually.
 
 Use a virtual environment where practical. The runtime installer does not use
 sudo, bypass externally managed environment protections, install OS packages,
@@ -96,8 +94,7 @@ Environments created with uv
 By default, ``uv venv`` does not install pip into the environment. Blinka's
 automatic installer requires pip; it does not install pip or run uv for you.
 If pip has no runnable entry point, a confirmed installation reports manual
-recovery guidance without launching an installer. Missing optional PWM/NeoPixel
-packages still do not block unrelated GPIO use.
+recovery guidance without launching an installer.
 
 Use uv to install the required backends into the same environment. For Raspberry
 Pi GPIO, for example:
