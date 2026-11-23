@@ -8,57 +8,62 @@ import importlib
 import importlib.machinery
 import importlib.metadata
 import importlib.util
+import json
 import os
 import shlex
 import shutil
 import subprocess
 import sys
 import warnings
+from functools import lru_cache
+from importlib.resources import files
 
 from packaging.requirements import Requirement
 from packaging.version import InvalidVersion
 
-_OPTIONAL_BACKENDS = {
-    "_rpi_ws281x",
-    "adafruit_raspberry_pi5_neopixel_write",
-    "adafruit_blinka_raspberry_pi_pwm",
-}
+
+@lru_cache(maxsize=1)
+def _registry():
+    """Read the bundled dependency declarations only when needed."""
+    resource = files("adafruit_blinka").joinpath("platform_dependencies.json")
+    return json.loads(resource.read_text(encoding="utf-8"))
+
+
+def _platform_packages(detector):
+    """Yield the ordered packages for the first matching platform rule."""
+    registry = _registry()
+    for platform in registry["platforms"]:
+        if _matches_platform(detector, platform):
+            for name in platform["packages"]:
+                yield name, registry["packages"][name]
+            return
+
+
+def _matches_platform(detector, platform):
+    if "board" in platform:
+        return getattr(detector.board, platform["board"])
+    return detector.chip.id == platform["chip"]
+
+
+def _python_is_supported(package, python_version):
+    return python_version >= tuple(package.get("minimum_python", ()))
+
+
+def _platform_dependencies(detector, python_version):
+    """Yield supported package records, without probing installed libraries."""
+    if python_version is None:
+        python_version = sys.version_info[:2]
+    for name, package in _platform_packages(detector):
+        if _python_is_supported(package, python_version):
+            yield name, package
 
 
 def get_platform_dependencies(detector, python_version=None):
     """Return ``(import name, pip requirement)`` pairs for detected hardware."""
-    if python_version is None:
-        python_version = sys.version_info[:2]
-
-    # The BCM283x/BCM2711/BCM2712 pin maps share gpiod; PWM no longer depends
-    # on either RPi.GPIO or lgpio. NeoPixel support retains its own backend.
-    # PWM 1.0.2 permits maintained system gpiod without a transitive upgrade.
-    if detector.board.any_raspberry_pi or detector.board.any_raspberry_pi_5_board:
-        dependencies = [
-            ("gpiod", "gpiod>=2.2.2,<3"),
-            (
-                "adafruit_blinka_raspberry_pi_pwm",
-                "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.2",
-            ),
-        ]
-        if detector.board.any_raspberry_pi_5_board and python_version >= (3, 11):
-            dependencies.append(
-                (
-                    "adafruit_raspberry_pi5_neopixel_write",
-                    "Adafruit-Blinka-Raspberry-Pi5-Neopixel",
-                )
-            )
-        elif not detector.board.any_raspberry_pi_5_board:
-            dependencies.append(("_rpi_ws281x", "rpi_ws281x>=4.0.0"))
-        return dependencies
-
-    if detector.board.any_jetson_board:
-        return [("Jetson.GPIO", "Jetson.GPIO")]
-
-    if detector.chip.id == "AM33XX":
-        return [("Adafruit_BBIO", "Adafruit_BBIO>=1.2.4")]
-
-    return []
+    return [
+        (name, package["requirement"])
+        for name, package in _platform_dependencies(detector, python_version)
+    ]
 
 
 def _installed_version_supported(module_name, requirement, installed_version):
@@ -122,12 +127,20 @@ def get_missing_platform_dependencies(detector, python_version=None):
 
 def get_platform_requirement_for_import(detector, import_name, python_version=None):
     """Return the detected platform's pip requirement for an import name."""
-    if detector.board.any_jetson_board and import_name in ("RPi", "RPi.GPIO"):
-        # Jetson.GPIO also provides the RPi compatibility namespace used by PWM.
-        return "Jetson.GPIO"
-    for module_name, requirement in get_platform_dependencies(detector, python_version):
-        if import_name in (module_name, module_name.split(".", maxsplit=1)[0]):
-            return requirement
+    if python_version is None:
+        python_version = sys.version_info[:2]
+    registry = _registry()
+    # Compatibility namespaces (such as RPi on Jetson) are not startup checks.
+    for platform in registry["platforms"]:
+        alias = platform.get("aliases", {}).get(import_name)
+        if alias is not None and _matches_platform(detector, platform):
+            package = registry["packages"][alias]
+            if _python_is_supported(package, python_version):
+                return package["requirement"]
+
+    for name, package in _platform_dependencies(detector, python_version):
+        if import_name in (name, name.split(".", maxsplit=1)[0]):
+            return package["requirement"]
     return None
 
 
@@ -138,17 +151,23 @@ def get_unsupported_platform_dependency_message(
     if python_version is None:
         python_version = sys.version_info[:2]
 
-    if (
-        detector.board.any_raspberry_pi_5_board
-        and import_name == "adafruit_raspberry_pi5_neopixel_write"
-        and python_version < (3, 11)
+    registry = _registry()
+    package = registry["packages"].get(import_name)
+    if package is None or _python_is_supported(package, python_version):
+        return None
+    # Don't probe unrelated board rules just to check one feature's Python floor.
+    if not any(
+        import_name in platform["packages"] and _matches_platform(detector, platform)
+        for platform in registry["platforms"]
     ):
-        return (
-            "Raspberry Pi 5 NeoPixel support requires Python 3.11 or newer; "
-            f"the current interpreter is Python {python_version[0]}.{python_version[1]}."
-        )
+        return None
 
-    return None
+    minimum = ".".join(map(str, package["minimum_python"]))
+    current = ".".join(map(str, python_version[:2]))
+    return (
+        f"{package['feature']} requires Python {minimum} or newer; "
+        f"the current interpreter is Python {current}."
+    )
 
 
 def _pip_available():
@@ -263,12 +282,13 @@ def install_missing_platform_dependencies(
     missing = get_missing_platform_dependencies(detector, python_version)
     if not missing:
         return False
+    packages = _registry()["packages"]
     optional = {
         requirement
         for module_name, requirement in get_platform_dependencies(
             detector, python_version
         )
-        if module_name in _OPTIONAL_BACKENDS
+        if packages.get(module_name, {}).get("optional", False)
     }
 
     if (

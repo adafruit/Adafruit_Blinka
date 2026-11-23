@@ -225,6 +225,20 @@ def test_pi5_neopixel_reports_unsupported_python_before_native_import(monkeypatc
 
 
 @pytest.mark.parametrize(
+    "import_name", ["_rpi_ws281x", "adafruit_raspberry_pi5_neopixel_write"]
+)
+def test_python_floor_check_does_not_probe_unrelated_platforms(import_name):
+    """Only the Pi 5 flag is relevant, not generic Pi revision discovery."""
+    detector = SimpleNamespace(board=SimpleNamespace(any_raspberry_pi_5_board=False))
+    assert (
+        platform_dependencies.get_unsupported_platform_dependency_message(
+            detector, import_name, python_version=(3, 10)
+        )
+        is None
+    )
+
+
+@pytest.mark.parametrize(
     "feature, module_name, import_statement, requirement, flags",
     [
         (

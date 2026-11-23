@@ -1,0 +1,46 @@
+{
+    "platforms": [
+        {
+            "board": "any_raspberry_pi_5_board",
+            "packages": ["gpiod", "adafruit_blinka_raspberry_pi_pwm", "adafruit_raspberry_pi5_neopixel_write"]
+        },
+        {
+            "board": "any_raspberry_pi",
+            "packages": ["gpiod", "adafruit_blinka_raspberry_pi_pwm", "_rpi_ws281x"]
+        },
+        {
+            "board": "any_jetson_board",
+            "packages": ["Jetson.GPIO"],
+            "aliases": {"RPi": "Jetson.GPIO", "RPi.GPIO": "Jetson.GPIO"}
+        },
+        {
+            "chip": "AM33XX",
+            "packages": ["Adafruit_BBIO"]
+        }
+    ],
+    "packages": {
+        "gpiod": {
+            "requirement": "gpiod>=2.2.2,<3"
+        },
+        "adafruit_blinka_raspberry_pi_pwm": {
+            "requirement": "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.2",
+            "optional": true
+        },
+        "adafruit_raspberry_pi5_neopixel_write": {
+            "requirement": "Adafruit-Blinka-Raspberry-Pi5-Neopixel",
+            "optional": true,
+            "minimum_python": [3, 11],
+            "feature": "Raspberry Pi 5 NeoPixel support"
+        },
+        "_rpi_ws281x": {
+            "requirement": "rpi_ws281x>=4.0.0",
+            "optional": true
+        },
+        "Jetson.GPIO": {
+            "requirement": "Jetson.GPIO"
+        },
+        "Adafruit_BBIO": {
+            "requirement": "Adafruit_BBIO>=1.2.4"
+        }
+    }
+}

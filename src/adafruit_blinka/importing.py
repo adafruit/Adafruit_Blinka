@@ -25,21 +25,6 @@ except ImportError as e:
 
 from adafruit_blinka.agnostic import detector
 
-PLATFORM_DEPENDENCY_INSTALLS = {
-    "Adafruit_BBIO": "pip install Adafruit_BBIO",
-    "Jetson": "pip install Jetson.GPIO",
-    "RPi": "pip install RPi.GPIO",
-    "_rpi_ws281x": "pip install rpi_ws281x",
-    "adafruit_raspberry_pi5_neopixel_write": (
-        "pip install Adafruit-Blinka-Raspberry-Pi5-Neopixel"
-    ),
-    "lgpio": "pip install adafruit-lgpio",
-    "gpiod": "pip install gpiod",
-    "adafruit_blinka_raspberry_pi_pwm": (
-        "pip install 'Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.2'"
-    ),
-}
-
 
 def check_platform_dependency(import_name):
     """Validate a selected feature's backend without installing dependencies."""
@@ -52,48 +37,28 @@ def check_platform_dependency(import_name):
 
 
 def raise_for_missing_platform_dependency(error: ModuleNotFoundError):
-    """Raise a helpful message for known optional platform dependencies."""
-    install_command = None
-    unsupported_message = None
-    if sys.implementation.name == "cpython":
-        from adafruit_blinka.platform_dependencies import (
-            format_install_command,
-            get_platform_requirement_for_import,
-            get_unsupported_platform_dependency_message,
-        )
-
-        requirement = get_platform_requirement_for_import(detector, error.name)
-        if requirement is not None:
-            install_command = format_install_command(
-                [requirement], executable=sys.executable
-            )
-        else:
-            unsupported_message = get_unsupported_platform_dependency_message(
-                detector, error.name
-            )
-    if unsupported_message is not None:
-        raise RuntimeError(unsupported_message) from error
-    if install_command is None:
-        install_command = PLATFORM_DEPENDENCY_INSTALLS.get(error.name)
-        if install_command is not None and sys.implementation.name == "cpython":
-            import shlex
-
-            install_command = format_install_command(
-                shlex.split(install_command)[2:], executable=sys.executable
-            )
-    if install_command is None:
+    """Raise installation guidance for a known CPython platform dependency."""
+    if sys.implementation.name != "cpython":
         raise error
 
-    message = (
+    from adafruit_blinka.platform_dependencies import (
+        format_install_command,
+        get_platform_requirement_for_import,
+        get_unsupported_platform_dependency_message,
+    )
+
+    requirement = get_platform_requirement_for_import(detector, error.name)
+    if requirement is None:
+        unsupported = get_unsupported_platform_dependency_message(detector, error.name)
+        if unsupported is not None:
+            raise RuntimeError(unsupported) from error
+        raise error
+
+    install_command = format_install_command([requirement], executable=sys.executable)
+    raise RuntimeError(
         f"The platform library '{error.name}' was not found. "
         f"To install, try typing: {install_command}"
-    )
-    if error.name == "lgpio":
-        message += (
-            "\nOn Raspberry Pi OS, you can also try: "
-            "sudo apt-get install -y python3-lgpio"
-        )
-    raise RuntimeError(message) from error
+    ) from error
 
 
 def get_import_file(json_file_name, script_file_location):
