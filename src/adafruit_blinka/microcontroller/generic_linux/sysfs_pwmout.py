@@ -100,7 +100,7 @@ class PWMOut:
     def __del__(self):
         # Only in the process that exported the channel: a forked child that
         # inherited this output must not unexport the parent's channel
-        if self._owner_pid in (None, os.getpid()):
+        if self._owner_pid is None or self._owner_pid == os.getpid():
             self.deinit()
 
     def __enter__(self):
