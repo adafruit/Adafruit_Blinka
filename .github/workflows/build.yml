@@ -53,6 +53,7 @@ jobs:
           tests/test_mcp2222_spi.py \
           tests/test_mcp2221_vref.py \
           tests/test_u2if_pwmout.py \
+          tests/test_sysfs_pwmout_fork.py \
           tests/test_mip_package.py \
           tests/test_usb_hid.py \
           tests/test_pwm_chip_aliases.py \

@@ -32,8 +32,11 @@ class PWMError(IOError):
 # ends is only finalized during interpreter shutdown, when open() and the
 # other builtins may be gone ("NameError: name 'open' is not defined" from
 # __del__) and the pin stays exported: deinitialize them from atexit, which
-# runs before that.
+# runs before that. A forked child starts with none: the outputs it
+# inherits belong to the parent, so only the ones the child opens itself
+# are deinitialized when it exits.
 _ACTIVE_PWMOUTS = weakref.WeakSet()
+os.register_at_fork(after_in_child=_ACTIVE_PWMOUTS.clear)
 
 
 @atexit.register
@@ -91,10 +94,14 @@ class PWMOut:
         self._pwmpin = None
         self._channel = None
         self._period = 0
+        self._owner_pid = None
         self._open(pin, duty_cycle, frequency, variable_frequency)
 
     def __del__(self):
-        self.deinit()
+        # Only in the process that exported the channel: a forked child that
+        # inherited this output must not unexport the parent's channel
+        if self._owner_pid in (None, os.getpid()):
+            self.deinit()
 
     def __enter__(self):
         return self
@@ -138,6 +145,7 @@ class PWMOut:
                 f_export.write("%d\n" % self._pwmpin)
         except IOError as e:
             raise PWMError(e.errno, "Exporting PWM pin: " + e.strerror) from IOError
+        self._owner_pid = os.getpid()
         _ACTIVE_PWMOUTS.add(self)
 
         # Loop until 'period' is writable, because application of udev rules
