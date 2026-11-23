@@ -305,55 +305,11 @@ def test_confirmed_install_without_pip_reports_manual_recovery(
     assert "install pip into this environment" in message
     assert "restart Python" in message
     assert len(installer.prompts) == 1
-    # Only optional-dependency classification runs; loaded-state scanning does not.
-    assert dependency_queries == [True]
+    # Startup already has the missing requirements and cannot install them.
+    assert not dependency_queries
     assert installer.commands == []
     assert installer.invalidations == []
     assert installer.availability_checks == [[requirement]]
-
-
-@pytest.mark.parametrize("already_loaded", [False, True])
-def test_optional_install_without_pip_warns_even_for_loaded_backends(
-    monkeypatch, installer, already_loaded
-):
-    dependencies = [
-        ("_rpi_ws281x", "rpi_ws281x>=4.0.0"),
-        (
-            "adafruit_raspberry_pi5_neopixel_write",
-            "Adafruit-Blinka-Raspberry-Pi5-Neopixel",
-        ),
-        ("adafruit_blinka_raspberry_pi_pwm", "Adafruit-Blinka-Raspberry-Pi-PWM>=1.0.2"),
-    ]
-    installer.missing = [requirement for _, requirement in dependencies]
-    dependency_queries = []
-    monkeypatch.setattr(platform_dependencies, "_pip_available", lambda: False)
-    monkeypatch.setattr(
-        platform_dependencies,
-        "get_platform_dependencies",
-        lambda *_args: dependency_queries.append(True) or dependencies,
-    )
-    for module_name, _ in dependencies:
-        if already_loaded:
-            monkeypatch.setitem(sys.modules, module_name, SimpleNamespace())
-        else:
-            monkeypatch.delitem(sys.modules, module_name, raising=False)
-
-    with pytest.warns(RuntimeWarning, match="no runnable pip") as caught:
-        assert not installer.run()
-
-    message = str(caught[0].message)
-    assert (
-        shlex.join(
-            ["uv", "pip", "install", "--python", sys.executable, *installer.missing]
-        )
-        in message
-    )
-    assert "optional features may be unavailable" in message
-    assert "restart Python" in message
-    assert len(installer.prompts) == 1
-    assert dependency_queries == [True]
-    assert installer.commands == []
-    assert installer.invalidations == []
 
 
 @pytest.mark.parametrize(
@@ -371,26 +327,20 @@ def test_optional_install_without_pip_warns_even_for_loaded_backends(
         "main_is_namespace",
     ],
 )
-def test_unusable_pip_preserves_loaded_optional_startup_and_uv_recovery(
+def test_unusable_pip_reports_required_startup_uv_recovery(
     monkeypatch, dependency_check_environment, pip_search_path, installer, files
 ):
     executable = "/python env's/bin/python"
-    requirement = "rpi_ws281x>=4.0.0"
+    (requirement,) = installer.missing
     loaded_module = SimpleNamespace()
-    installer.missing = [requirement]
     monkeypatch.setattr(platform_dependencies.sys, "executable", executable)
     monkeypatch.setattr(
         platform_dependencies, "_pip_available", dependency_check_environment
     )
     monkeypatch.setattr(
-        platform_dependencies,
-        "get_platform_dependencies",
-        lambda *_args: [("_rpi_ws281x", requirement)],
-    )
-    monkeypatch.setattr(
         platform_dependencies.shutil, "which", lambda _name: "/uv tools/bin/uv"
     )
-    monkeypatch.setitem(sys.modules, "_rpi_ws281x", loaded_module)
+    monkeypatch.setitem(sys.modules, "Adafruit_BBIO", loaded_module)
     pip_search_path(files)
 
     command = platform_dependencies.format_install_command([requirement], executable)
@@ -402,10 +352,11 @@ def test_unusable_pip_preserves_loaded_optional_startup_and_uv_recovery(
         executable,
         requirement,
     ]
-    with pytest.warns(RuntimeWarning, match="no runnable pip"):
-        assert not installer.run()
+    with pytest.raises(RuntimeError, match="no runnable pip") as raised:
+        installer.run()
 
-    assert sys.modules["_rpi_ws281x"] is loaded_module
+    assert command in str(raised.value)
+    assert sys.modules["Adafruit_BBIO"] is loaded_module
     assert not any(name == "pip" or name.startswith("pip.") for name in sys.modules)
     assert len(installer.prompts) == 1
     assert installer.commands == []

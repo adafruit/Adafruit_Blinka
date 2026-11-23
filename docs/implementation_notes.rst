@@ -35,15 +35,15 @@ an output object is constructed instead. This lets CircuitPython libraries
 import those classes for type annotations without requiring an unused backend.
 
 Creating a GPIO or PWM object still requires its platform dependencies, and
-missing or unsupported dependencies retain their installation guidance. This
-does not change ``board`` detection, board-startup dependency prompts, or the
-requirements for initializing an actual bus or pin.
+missing or unsupported dependencies retain their installation guidance.
+``board`` startup checks only required dependencies. On Raspberry Pi,
+importing ``neopixel_write`` checks the selected optional NeoPixel backend
+and reports manual setup guidance before any NeoPixel GPIO is opened.
 
 An import is therefore not a GPIO/PWM availability check. Code that chooses a
 fallback by catching an error from ``import digitalio`` or Raspberry Pi
 ``import pwmio`` must also handle errors when constructing ``DigitalInOut`` or
-``PWMOut``. Missing-backend errors now occur at construction, with the same
-installation guidance as before.
+``PWMOut``.
 
 MCP2222 USB bridge
 ------------------

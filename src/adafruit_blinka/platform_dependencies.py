@@ -14,7 +14,6 @@ import shlex
 import shutil
 import subprocess
 import sys
-import warnings
 from functools import lru_cache
 from importlib.resources import files
 
@@ -114,11 +113,19 @@ def _requirement_available(module_name, requirement):
     )
 
 
+def _required_platform_dependencies(detector, python_version):
+    """Yield only the dependencies checked and installed at board startup."""
+    packages = _registry()["packages"]
+    for module_name, requirement in get_platform_dependencies(detector, python_version):
+        if not packages.get(module_name, {}).get("optional", False):
+            yield module_name, requirement
+
+
 def get_missing_platform_dependencies(detector, python_version=None):
-    """Return platform requirements whose imports are unavailable or outdated."""
+    """Return required platform dependencies that are unavailable or outdated."""
     return [
         requirement
-        for module_name, requirement in get_platform_dependencies(
+        for module_name, requirement in _required_platform_dependencies(
             detector, python_version
         )
         if not _requirement_available(module_name, requirement)
@@ -240,9 +247,11 @@ def check_platform_dependency(detector, import_name, python_version=None):
 
 
 def _outdated_platform_dependencies(detector, python_version):
-    """Return installed distributions outside this platform's version bounds."""
+    """Return installed required distributions with unsupported versions."""
     outdated = []
-    for module_name, requirement in get_platform_dependencies(detector, python_version):
+    for module_name, requirement in _required_platform_dependencies(
+        detector, python_version
+    ):
         parsed_requirement = Requirement(requirement)
         if not parsed_requirement.specifier:
             continue
@@ -257,13 +266,9 @@ def _outdated_platform_dependencies(detector, python_version):
     return outdated
 
 
-def _raise_for_outdated_dependencies(detector, python_version, optional):
-    """Reject unsupported GPIO backends, deferring optional ones to feature use."""
-    outdated = [
-        requirement
-        for requirement in _outdated_platform_dependencies(detector, python_version)
-        if requirement not in optional
-    ]
+def _raise_for_outdated_dependencies(detector, python_version):
+    """Reject unsupported required dependencies."""
+    outdated = _outdated_platform_dependencies(detector, python_version)
     if outdated:
         install_command = format_install_command(outdated, executable=sys.executable)
         raise RuntimeError(
@@ -276,30 +281,21 @@ def _raise_for_outdated_dependencies(detector, python_version, optional):
 def install_missing_platform_dependencies(
     detector, python_version=None, input_func=input
 ):
-    """Offer to install missing or outdated dependencies into the environment."""
+    """Offer to install missing or outdated required dependencies."""
     if os.environ.get("BLINKA_SKIP_DEPENDENCY_CHECK") == "1":
         return False
     missing = get_missing_platform_dependencies(detector, python_version)
     if not missing:
         return False
-    packages = _registry()["packages"]
-    optional = {
-        requirement
-        for module_name, requirement in get_platform_dependencies(
-            detector, python_version
-        )
-        if packages.get(module_name, {}).get("optional", False)
-    }
-
     if (
         sys.stdin is None
         or sys.stdout is None
         or not (sys.stdin.isatty() and sys.stdout.isatty())
     ):
-        _raise_for_outdated_dependencies(detector, python_version, optional)
+        _raise_for_outdated_dependencies(detector, python_version)
         return False
 
-    print("\nBlinka detected missing or outdated platform dependencies:")
+    print("\nBlinka detected missing or outdated required platform dependencies:")
     for requirement in missing:
         print(f"  - {requirement}")
 
@@ -308,43 +304,34 @@ def install_missing_platform_dependencies(
             "Install them into the current Python environment? [Y/n] "
         )
     except EOFError:
-        _raise_for_outdated_dependencies(detector, python_version, optional)
+        _raise_for_outdated_dependencies(detector, python_version)
         return False
     if response.strip().lower() not in ("", "y", "yes"):
-        _raise_for_outdated_dependencies(detector, python_version, optional)
+        _raise_for_outdated_dependencies(detector, python_version)
         return False
 
-    return _install_platform_dependencies(detector, python_version, missing, optional)
+    return _install_platform_dependencies(detector, python_version, missing)
 
 
-def _install_platform_dependencies(detector, python_version, missing, optional):
+def _install_platform_dependencies(detector, python_version, missing):
     """Install confirmed requirements and check same-process usability."""
     if not _pip_available():
         uv_command = shlex.join(
             ["uv", "pip", "install", "--python", sys.executable, *missing]
         )
-        message = (
+        raise RuntimeError(
             "The current Python environment has no runnable pip entry point, so Blinka cannot "
             "install its platform dependencies automatically. Install them with "
             "your environment's package manager, or install pip into this "
             f"environment and retry. If using uv, run: {uv_command}\n"
             "Then restart Python before using Blinka."
         )
-        if set(missing).issubset(optional):
-            warnings.warn(
-                message
-                + " Blinka startup will continue; optional features may be unavailable.",
-                RuntimeWarning,
-                stacklevel=2,
-            )
-            return False
-        raise RuntimeError(message)
 
     # OS-provided modules can be importable without distribution metadata.
     # Any loaded module being installed must be restarted, not just known old ones.
     loaded = [
         module_name
-        for module_name, requirement in get_platform_dependencies(
+        for module_name, requirement in _required_platform_dependencies(
             detector, python_version
         )
         if requirement in missing and sys.modules.get(module_name) is not None
@@ -354,17 +341,6 @@ def _install_platform_dependencies(detector, python_version, missing, optional):
         subprocess.run(command, check=True)
     except (OSError, subprocess.CalledProcessError) as error:
         install_command = shlex.join(command)
-        if set(missing).issubset(optional) and (
-            not loaded or isinstance(error, OSError)
-        ):
-            warnings.warn(
-                "Unable to install optional platform dependencies. Blinka startup "
-                "will continue; features that need them may be unavailable. "
-                f"Try: {install_command}",
-                RuntimeWarning,
-                stacklevel=2,
-            )
-            return False
         raise RuntimeError(
             f"Unable to install the platform dependencies. Try: {install_command}"
         ) from error
@@ -378,14 +354,10 @@ def _install_platform_dependencies(detector, python_version, missing, optional):
     remaining = get_missing_platform_dependencies(detector, python_version)
     if remaining:
         install_command = format_install_command(remaining, executable=sys.executable)
-        message = (
+        raise RuntimeError(
             "Installation completed, but these platform dependencies are still "
             f"missing or incompatible in this Python process: {', '.join(remaining)}. "
             "Restart Python before using Blinka. If the problem persists, try: "
             f"{install_command}"
         )
-        if set(remaining).issubset(optional):
-            warnings.warn(message, RuntimeWarning, stacklevel=2)
-            return False
-        raise RuntimeError(message)
     return True
