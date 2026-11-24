@@ -11,6 +11,9 @@
 import os
 
 
+_settings = None
+
+
 class Enum:
     """
     Object supporting CircuitPython-style of static symbols
@@ -77,31 +80,58 @@ class Lockable(ContextManaged):
             self._locked = False
 
 
-def load_settings_toml():
-    """Load values from settings.toml into os.environ, so that os.getenv returns them.
-    Note: This does not work in MicroPython because of the tomllib module not being available.
-    """
-    try:
-        import tomllib
-    except ImportError:
-        import toml as tomllib
+def _read_settings_toml():
+    """Read settings.toml from the current working directory on CPython."""
+    # pylint: disable=import-outside-toplevel
+    with open("settings.toml", "rb") as toml_file:
+        try:
+            import tomllib
+        except ImportError:
+            import tomli as tomllib
+        try:
+            return tomllib.load(toml_file)
+        except tomllib.TOMLDecodeError as error:
+            message = "Error with settings.toml file."
+            if hasattr(error, "doc"):
+                raise tomllib.TOMLDecodeError(message, error.doc, error.pos) from error
+            raise tomllib.TOMLDecodeError(message) from error
 
+
+def get_setting(name):
+    """Return a setting from the environment or the shared settings.toml dictionary.
+
+    The file is read on the first lookup that needs it. A missing setting raises
+    KeyError. This function is for CPython.
+    """
+    global _settings  # pylint: disable=global-statement
+    value = os.getenv(name)
+    if value is not None:
+        return value
+
+    if _settings is None:
+        try:
+            _settings = _read_settings_toml()
+        except FileNotFoundError:
+            _settings = {}
+    return _settings[name]
+
+
+def load_settings_toml():
+    """Reload settings.toml and export its scalar values to os.environ on CPython."""
+    global _settings  # pylint: disable=global-statement
     if not os.path.isfile("settings.toml"):
         raise FileNotFoundError("settings.toml not found in current directory.")
 
+    settings = _read_settings_toml()
     print("settings.toml found. Updating environment variables:")
-    with open("settings.toml", "rb") as toml_file:
-        try:
-            settings = tomllib.load(toml_file)
-        except tomllib.TOMLDecodeError as e:
-            raise tomllib.TOMLDecodeError("Error with settings.toml file.") from e
 
-    invalid_types = set()
-    for key, value in settings.items():
-        if not isinstance(value, (bool, int, float, str)):
-            invalid_types.add(type(value).__name__)
+    invalid_types = {
+        type(value).__name__
+        for value in settings.values()
+        if not isinstance(value, (bool, int, float, str))
+    }
     if invalid_types:
-        invalid_types_string = ", ".join(invalid_types)
+        invalid_types_string = ", ".join(sorted(invalid_types))
         raise ValueError(
             f"The types: '{invalid_types_string}' are not supported in settings.toml."
         )
@@ -114,6 +144,7 @@ def load_settings_toml():
         os.environ[key] = str(value)
         print(f" - {key} added")
 
+    _settings = settings.copy()
     return settings
 
 
