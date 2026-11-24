@@ -179,9 +179,23 @@ directory. Put application settings at the top level of the file.
 
     brightness = float(get_setting("APP_BRIGHTNESS"))
 
-Blinka reads the file on the first lookup that needs it and shares the parsed
-settings across modules. An environment variable with the same name takes
-precedence. A missing setting raises ``KeyError``.
+A missing setting raises ``KeyError``.
+
+* Values from the file keep their TOML types. An environment variable with the
+  same name takes precedence and returns a string. Calling
+  ``load_settings_toml()`` exports scalar values as strings, so a later lookup
+  for the same key can return a different type. Convert settings to the
+  expected type before using them. For example, Python treats the string
+  ``"False"`` as true in a Boolean test.
+* Blinka caches the file from the working directory of the first lookup that
+  needs it. A missing file is cached as an empty dictionary, even if a file is
+  created later. A successful call to ``load_settings_toml()`` rereads the
+  file from the current working directory and refreshes the cache. Existing
+  environment variables still take precedence.
+* Tables and lists returned by ``get_setting()`` are shared across modules.
+  Treat them as read-only or copy them before making changes.
+  ``load_settings_toml()`` accepts only scalar values for environment export
+  and raises ``ValueError`` for tables and lists.
 
 Installing on MicroPython
 =========================
