@@ -123,7 +123,7 @@ def requirements_file():
 def assert_minimal_requirements(requirements, environment):
     """Only portable base dependencies belong in installation metadata."""
     assert set(requirements).isdisjoint(BOARD_REQUIREMENTS)
-    assert set(requirements) == CORE_REQUIREMENTS | {"sysv-ipc", "toml"}
+    assert set(requirements) == CORE_REQUIREMENTS | {"sysv-ipc", "tomli"}
     for name, specifier in (
         ("adafruit-platformdetect", ">=3.91.0"),
         ("packaging", ">=20.0"),
@@ -140,12 +140,12 @@ def assert_minimal_requirements(requirements, environment):
     expected = set(CORE_REQUIREMENTS)
     if environment["sys_platform"] == "linux":
         expected.add("sysv-ipc")
-    if environment["python_version"] == "3.9":
-        expected.add("toml")
+    if environment["python_version"] in ("3.9", "3.10"):
+        expected.add("tomli")
     assert active == expected
 
 
-@pytest.mark.parametrize("python_version", ["3.9", "3.12", "3.13"])
+@pytest.mark.parametrize("python_version", ["3.9", "3.10", "3.11", "3.12", "3.13"])
 @pytest.mark.parametrize("system, machine", PLATFORM_CASES)
 def test_static_requirements_are_minimal(system, machine, python_version):
     """Static requirements do not install hardware backends on any platform."""
@@ -158,7 +158,7 @@ def test_static_requirements_are_minimal(system, machine, python_version):
     assert_minimal_requirements(requirements, environment)
 
 
-@pytest.mark.parametrize("python_minor", [9, 12, 13])
+@pytest.mark.parametrize("python_minor", [9, 10, 11, 12, 13])
 @pytest.mark.parametrize("system, machine", PLATFORM_CASES)
 def test_metadata_is_minimal_without_hardware_detection(
     monkeypatch, system, machine, python_minor
