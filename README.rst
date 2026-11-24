@@ -163,6 +163,26 @@ automatic dependency checks and installation prompts:
 This does not install packages or make unsupported backends supported. Missing
 backend imports and PWM/NeoPixel feature checks still report errors.
 
+Application settings
+====================
+
+On CPython, Blinka can read ``settings.toml`` from your application's working
+directory. Put application settings at the top level of the file.
+
+.. code-block:: toml
+
+    APP_BRIGHTNESS = 0.5
+
+.. code-block:: python
+
+    from adafruit_blinka import get_setting
+
+    brightness = float(get_setting("APP_BRIGHTNESS"))
+
+Blinka reads the file on the first lookup that needs it and shares the parsed
+settings across modules. An environment variable with the same name takes
+precedence. A missing setting raises ``KeyError``.
+
 Installing on MicroPython
 =========================
 
